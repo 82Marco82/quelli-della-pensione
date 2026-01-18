@@ -35,6 +35,7 @@
     <div class="card">
       <div id="status" class="muted">Caricamento…</div>
       <div id="info" style="margin-top:10px"></div>
+
       <div style="margin-top:12px;font-weight:900">Convocati</div>
       <div id="called" class="muted">—</div>
     </div>
@@ -51,44 +52,53 @@
     const infoEl = document.getElementById("info");
     const calledEl = document.getElementById("called");
 
-    function err(msg){ statusEl.innerHTML = '<span class="err">'+msg+'</span>'; }
+    function showErr(msg){
+      statusEl.innerHTML = '<span class="err">'+msg+'</span>';
+    }
 
     if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
-      err("Config Supabase non valida (controlla config.js).");
+      showErr("Config Supabase non valida (controlla config.js).");
       throw new Error("Missing config");
     }
 
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     async function load(){
+      // ✅ usa keeper_a / keeper_b (NON goalkeeper_a)
       const { data: match, error } = await client
         .from("matches")
-        .select("id,match_date,match_time,venue,called_up,voting_open,goalkeeper_a,goalkeeper_b")
+        .select("id,match_date,match_time,venue,called_up,keeper_a,keeper_b")
         .order("match_date",{ascending:false})
         .order("match_time",{ascending:false})
         .limit(1)
         .single();
 
-      if(error){ err("Errore matches: "+error.message); return; }
+      if(error){ showErr("Errore matches: " + error.message); return; }
       if(!match){ statusEl.textContent="Nessuna partita creata."; return; }
 
       statusEl.textContent = "Partita trovata ✅";
+
+      const time = String(match.match_time || "").slice(0,5);
+      const venue = match.venue || "Campo a 6 - Aradeo";
+
       infoEl.innerHTML = `
-        <div><b>Data:</b> ${match.match_date} ${String(match.match_time||"").slice(0,5)}</div>
-        <div><b>Campo:</b> ${match.venue || "Campo a 6 - Aradeo"}</div>
-        <div><b>Squadra A:</b> ${match.goalkeeper_a || "-"}</div>
-        <div><b>Squadra B:</b> ${match.goalkeeper_b || "-"}</div>
-        <div style="margin-top:8px"><b>Voto MVP:</b> ${match.voting_open ? "APERTO 🟢" : "CHIUSO 🔴"}</div>
+        <div><b>Data:</b> ${match.match_date} ${time}</div>
+        <div><b>Campo:</b> ${venue}</div>
+        <div style="margin-top:8px"><b>Squadra A:</b> ${match.keeper_a || "-"}</div>
+        <div><b>Squadra B:</b> ${match.keeper_b || "-"}</div>
       `;
 
       const ids = Array.isArray(match.called_up) ? match.called_up : [];
       if(ids.length===0){ calledEl.textContent="Nessun convocato"; return; }
 
       const { data: players, error: e2 } = await client
-        .from("players").select("id,name").in("id", ids);
+        .from("players")
+        .select("id,name")
+        .in("id", ids);
 
-      if(e2){ err("Errore players: "+e2.message); return; }
+      if(e2){ showErr("Errore players: " + e2.message); return; }
 
+      // mantieni l’ordine come salvato in called_up
       const map = new Map((players||[]).map(p=>[p.id,p]));
       const ordered = ids.map(id=>map.get(id)).filter(Boolean);
 
