@@ -166,7 +166,6 @@
       padding:12px;
     }
 
-    /* Banner partita attuale */
     .banner{
       border:1px solid var(--border);
       background:linear-gradient(135deg, rgba(11,95,255,.10), rgba(34,197,94,.08));
@@ -180,7 +179,6 @@
     .bannerTitle{font-weight:900}
     .bannerLine{margin-top:6px;color:var(--muted);font-size:13px}
 
-    /* Floating theme button */
     .fab{
       position:fixed;right:16px;bottom:16px;
       width:54px;height:54px;border-radius:999px;
@@ -213,7 +211,7 @@
     </div>
 
     <div class="grid">
-      <!-- LEFT: editor -->
+      <!-- LEFT -->
       <div class="card">
         <h2>Gestione partita</h2>
         <div id="msg" class="msg">Caricamento…</div>
@@ -258,15 +256,18 @@
         </div>
       </div>
 
-      <!-- RIGHT: preview + share -->
+      <!-- RIGHT -->
       <div class="card">
         <div class="banner">
           <div class="bannerTitle">📌 Partita attuale</div>
           <div id="bannerText" class="bannerLine">Nessuna partita caricata.</div>
+
           <div class="row" style="margin-top:10px">
             <button id="btnCopyLink" class="btn ghost small" style="flex:1">📋 Copia link</button>
+            <button id="btnCopyCalled" class="btn ghost small" style="flex:1">📋 Copia convocati</button>
             <button id="btnWhatsApp" class="btn ghost small" style="flex:1">📤 WhatsApp</button>
           </div>
+
           <div id="shareMsg" class="hint"></div>
         </div>
 
@@ -312,7 +313,6 @@
     const bannerTextEl = $("bannerText");
     const shareMsgEl = $("shareMsg");
 
-    // link pubblico (index)
     const SITE_LINK = (location.origin + location.pathname).replace(/dashboard\.html$/i, "index.html");
 
     function setMsg(t, kind="info"){
@@ -321,14 +321,8 @@
       if(kind==="err") msgEl.classList.add("err");
       msgEl.textContent = t;
     }
-
-    function setBanner(text){
-      bannerTextEl.textContent = text;
-    }
-
-    function setShareMsg(text){
-      shareMsgEl.textContent = text || "";
-    }
+    function setBanner(text){ bannerTextEl.textContent = text; }
+    function setShareMsg(text){ shareMsgEl.textContent = text || ""; }
 
     if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
       setMsg("Config mancante: controlla config.js","err");
@@ -473,6 +467,12 @@
       `;
     }
 
+    function getCalledUpNames(){
+      const ids = getCalledUp();
+      const map = new Map(PLAYERS.map(p=>[String(p.id), p.name]));
+      return ids.map(id => map.get(String(id))).filter(Boolean);
+    }
+
     function renderBannerFromForm(){
       const d = $("matchDate").value || "-";
       const t = $("matchTime").value || "21:00";
@@ -483,38 +483,69 @@
       setShareMsg(`Link: ${SITE_LINK}`);
     }
 
-    async function copyLink(){
+    async function copyText(text, okMsg){
       try{
-        await navigator.clipboard.writeText(SITE_LINK);
-        setShareMsg("✅ Link copiato! Incollalo su WhatsApp.");
-        setMsg("✅ Link copiato negli appunti.","ok");
+        await navigator.clipboard.writeText(text);
+        setMsg(okMsg, "ok");
       }catch(e){
-        // fallback
         const ta = document.createElement("textarea");
-        ta.value = SITE_LINK;
+        ta.value = text;
         document.body.appendChild(ta);
         ta.select();
         document.execCommand("copy");
         document.body.removeChild(ta);
-        setShareMsg("✅ Link copiato! Incollalo su WhatsApp.");
-        setMsg("✅ Link copiato negli appunti.","ok");
+        setMsg(okMsg, "ok");
       }
+    }
+
+    async function copyLink(){
+      await copyText(SITE_LINK, "✅ Link copiato negli appunti.");
+      setShareMsg("✅ Link copiato! Incollalo su WhatsApp.");
+    }
+
+    async function copyCalled(){
+      const names = getCalledUpNames();
+      if(!names.length){
+        setMsg("ℹ️ Nessun convocato da copiare.","err");
+        return;
+      }
+
+      const d = $("matchDate").value || "";
+      const t = $("matchTime").value || "21:00";
+      const v = $("venue").value || "Campo a 6 - Aradeo";
+      const a = $("keeperA").value.trim() || "-";
+      const b = $("keeperB").value.trim() || "-";
+
+      const text =
+        `⚽ Quelli della pensione\n` +
+        `📅 ${d} ore ${t}\n` +
+        `📍 ${v}\n` +
+        `🥅 ${a} vs ${b}\n\n` +
+        `👥 Convocati (${names.length}/12):\n` +
+        names.map((n,i)=>`${i+1}. ${n}`).join("\n") +
+        `\n\n🔗 ${SITE_LINK}`;
+
+      await copyText(text, "✅ Convocati copiati! Incollali su WhatsApp.");
+      setShareMsg("✅ Convocati copiati negli appunti.");
     }
 
     function openWhatsApp(){
       const d = $("matchDate").value || "";
       const t = $("matchTime").value || "21:00";
+      const v = $("venue").value || "Campo a 6 - Aradeo";
       const a = $("keeperA").value.trim() || "-";
       const b = $("keeperB").value.trim() || "-";
-      const v = $("venue").value || "Campo a 6 - Aradeo";
+      const names = getCalledUpNames();
+
       const msg =
         `⚽ Quelli della pensione\n` +
         `📅 ${d} ore ${t}\n` +
         `📍 ${v}\n` +
-        `🥅 ${a} vs ${b}\n` +
+        `🥅 ${a} vs ${b}\n\n` +
+        (names.length ? `👥 Convocati (${names.length}/12):\n${names.map((n,i)=>`${i+1}. ${n}`).join("\n")}\n\n` : "") +
         `🔗 ${SITE_LINK}`;
-      const url = "https://wa.me/?text=" + encodeURIComponent(msg);
-      window.open(url, "_blank", "noopener");
+
+      window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank", "noopener");
     }
 
     async function save(){
@@ -606,6 +637,7 @@
     $("btnLogout").addEventListener("click", logout);
 
     $("btnCopyLink").addEventListener("click", copyLink);
+    $("btnCopyCalled").addEventListener("click", copyCalled);
     $("btnWhatsApp").addEventListener("click", openWhatsApp);
 
     ["matchDate","matchTime","venue","keeperA","keeperB"].forEach(id=>{
