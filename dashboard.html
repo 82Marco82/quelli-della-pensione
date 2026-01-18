@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard • Quelli della pensione</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -213,7 +213,7 @@
         <h2>Fine partita</h2>
         <span class="pill" id="currentHint">Nessuna partita selezionata</span>
       </div>
-      <div class="mini">Risultato e marcatori sono <b>facoltativi</b>. I marcatori li inserisce solo l’admin.</div>
+      <div class="mini">Risultato, formazioni e marcatori sono <b>facoltativi</b>. I marcatori li inserisce solo l’admin.</div>
 
       <div class="hr"></div>
 
@@ -230,6 +230,24 @@
 
       <div class="hr"></div>
 
+      <!-- FORMAZIONI (FACOLTATIVE) -->
+      <div class="twoCols">
+        <div>
+          <div class="teamTitle" id="formATitle"></div>
+          <div class="mini">Seleziona i giocatori convocati per la formazione (facoltativo)</div>
+          <div id="teamABox" class="playersBox" style="max-height:220px;margin-top:10px"></div>
+        </div>
+
+        <div>
+          <div class="teamTitle" id="formBTitle"></div>
+          <div class="mini">Seleziona i giocatori convocati per la formazione (facoltativo)</div>
+          <div id="teamBBox" class="playersBox" style="max-height:220px;margin-top:10px"></div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <!-- MARCATORI -->
       <div class="twoCols">
         <div>
           <div class="teamTitle" id="teamATitle"></div>
@@ -263,11 +281,11 @@
       </div>
 
       <div class="row">
-        <button id="btnSaveResult" class="btn full">🏁 Salva risultato + marcatori</button>
+        <button id="btnSaveResult" class="btn full">🏁 Salva risultato + formazioni + marcatori</button>
       </div>
 
       <div class="mini" style="margin-top:10px">
-        Se non metti il risultato, salva comunque i marcatori (o viceversa).
+        Se non metti il risultato, salva comunque formazioni/marcatori (o viceversa). Le formazioni sono opzionali.
       </div>
     </div>
   </div>
@@ -317,8 +335,10 @@ function shirtSVG(color){
         fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
     </svg>`;
 }
-$("teamATitle").innerHTML = `${shirtSVG("#facc15")} <b>Squadra A</b>`;
-$("teamBTitle").innerHTML = `${shirtSVG("#ef4444")} <b>Squadra B</b>`;
+$("teamATitle").innerHTML = `${shirtSVG("#facc15")} <b>Marcatori Squadra A</b>`;
+$("teamBTitle").innerHTML = `${shirtSVG("#ef4444")} <b>Marcatori Squadra B</b>`;
+$("formATitle").innerHTML = `${shirtSVG("#facc15")} <b>Formazione Squadra A</b>`;
+$("formBTitle").innerHTML = `${shirtSVG("#ef4444")} <b>Formazione Squadra B</b>`;
 
 function escapeHtml(s){
   return String(s ?? "")
@@ -366,7 +386,7 @@ async function loadPlayers(){
 
 async function loadMatches(){
   const { data, error } = await client.from("matches")
-    .select("id,match_date,match_time,venue,keeper_a,keeper_b,called_up,score_a,score_b,scorers,scorers_text")
+    .select("id,match_date,match_time,venue,keeper_a,keeper_b,called_up,score_a,score_b,team_a,team_b,scorers,scorers_text")
     .order("match_date",{ascending:false})
     .order("match_time",{ascending:false})
     .limit(200);
@@ -418,8 +438,12 @@ function renderPlayersBox(checkedIds = []){
         setMsg("Convocati aggiornati (ricorda di salvare).", "ok");
       }
       updateCount();
-      // aggiornare le select dei marcatori con i convocati
+
+      // aggiornare select marcatori
       refreshScorersSelectOptions();
+
+      // aggiornare box formazioni (solo convocati) e pulire selezioni non valide
+      refreshTeamsUI();
     };
 
     const name = document.createElement("span");
@@ -433,12 +457,70 @@ function renderPlayersBox(checkedIds = []){
   updateCount();
 }
 
-/* ===== Marcatori UI ===== */
+/* ===== FORMAZIONI UI (solo convocati) ===== */
 function getCalledUpPlayers(){
   const ids = new Set(getCalledUp().map(String));
   return PLAYERS.filter(p => ids.has(String(p.id)));
 }
 
+function renderTeamBox(boxId, presetIds = []){
+  const preset = new Set((presetIds||[]).map(String));
+  const box = $(boxId);
+  box.innerHTML = "";
+
+  const calledPlayers = getCalledUpPlayers();
+  if(!calledPlayers.length){
+    box.innerHTML = `<div class="mini">Seleziona i convocati a sinistra.</div>`;
+    return;
+  }
+
+  calledPlayers.forEach(p=>{
+    const row = document.createElement("label");
+    row.className = "pRow";
+
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.value = p.id;
+    cb.checked = preset.has(String(p.id));
+
+    cb.onchange = () => {
+      // evita che un giocatore stia in entrambe
+      if(cb.checked){
+        const otherBox = (boxId === "teamABox") ? $("teamBBox") : $("teamABox");
+        const otherCb = otherBox.querySelector(`input[value="${p.id}"]`);
+        if(otherCb) otherCb.checked = false;
+      }
+    };
+
+    const name = document.createElement("span");
+    name.textContent = p.name;
+
+    row.appendChild(cb);
+    row.appendChild(name);
+    box.appendChild(row);
+  });
+}
+
+function getTeamIds(boxId){
+  return [...$(boxId).querySelectorAll('input[type="checkbox"]')]
+    .filter(x=>x.checked)
+    .map(x=>x.value);
+}
+
+function refreshTeamsUI(){
+  // mantiene le scelte attuali (se ancora convocati), ma pulisce i non-validi
+  const aNow = new Set(getTeamIds("teamABox").map(String));
+  const bNow = new Set(getTeamIds("teamBBox").map(String));
+
+  const called = new Set(getCalledUp().map(String));
+  const aKeep = [...aNow].filter(id => called.has(id));
+  const bKeep = [...bNow].filter(id => called.has(id) && !aKeep.includes(id));
+
+  renderTeamBox("teamABox", aKeep);
+  renderTeamBox("teamBBox", bKeep);
+}
+
+/* ===== Marcatori UI ===== */
 function buildOptionsHTML(selectedValue){
   const called = getCalledUpPlayers();
   const opts = [`<option value="">— scegli —</option>`];
@@ -486,13 +568,11 @@ function addScorerRow(tbodyId, presetPlayerId="", presetGoals=""){
 function clearScorersUI(){
   $("tbodyA").innerHTML = "";
   $("tbodyB").innerHTML = "";
-  // almeno una riga vuota per lato
   addScorerRow("tbodyA");
   addScorerRow("tbodyB");
 }
 
 function refreshScorersSelectOptions(){
-  // rigenera le option mantenendo le scelte attuali (se ancora valide)
   ["tbodyA","tbodyB"].forEach(tid=>{
     const rows = [...$(tid).querySelectorAll("tr")];
     rows.forEach(r=>{
@@ -500,10 +580,6 @@ function refreshScorersSelectOptions(){
       if(!sel) return;
       const current = sel.value;
       sel.innerHTML = buildOptionsHTML(current);
-      // se quello scelto non è più tra i convocati, diventa vuoto
-      if(sel.value !== current){
-        // se current non più presente, resta ""
-      }
     });
   });
 }
@@ -524,7 +600,6 @@ function readScorersFromUI(tbodyId){
 }
 
 function buildScorersText(teamA, teamB){
-  // Converte player_id -> name, e produce testo semplice (compatibilità index)
   const idToName = new Map(PLAYERS.map(p=>[String(p.id), p.name]));
   const fmt = (arr) => arr.map(x => `${idToName.get(String(x.player_id)) || x.player_id} ${x.goals}`).join(", ");
   const a = teamA.length ? `Squadra A: ${fmt(teamA)}` : "";
@@ -545,6 +620,8 @@ function clearForm(){
   $("scoreA").value = "";
   $("scoreB").value = "";
   renderPlayersBox([]);
+  renderTeamBox("teamABox", []);
+  renderTeamBox("teamBBox", []);
   clearScorersUI();
   updateCurrentHint();
 }
@@ -564,27 +641,32 @@ function fillForm(m){
   $("scoreA").value = (m.score_a==null ? "" : m.score_a);
   $("scoreB").value = (m.score_b==null ? "" : m.score_b);
 
+  // FORMAZIONI
+  const taIds = Array.isArray(m.team_a) ? m.team_a : [];
+  const tbIds = Array.isArray(m.team_b) ? m.team_b : [];
+  renderTeamBox("teamABox", taIds);
+  renderTeamBox("teamBBox", tbIds);
+
   // scorers
   $("tbodyA").innerHTML = "";
   $("tbodyB").innerHTML = "";
 
   const sc = m.scorers || {};
-  const ta = Array.isArray(sc.team_a) ? sc.team_a : [];
-  const tb = Array.isArray(sc.team_b) ? sc.team_b : [];
+  const sA = Array.isArray(sc.team_a) ? sc.team_a : [];
+  const sB = Array.isArray(sc.team_b) ? sc.team_b : [];
 
-  if(ta.length){
-    ta.forEach(x => addScorerRow("tbodyA", x.player_id || "", x.goals || ""));
+  if(sA.length){
+    sA.forEach(x => addScorerRow("tbodyA", x.player_id || "", x.goals || ""));
   }else addScorerRow("tbodyA");
 
-  if(tb.length){
-    tb.forEach(x => addScorerRow("tbodyB", x.player_id || "", x.goals || ""));
+  if(sB.length){
+    sB.forEach(x => addScorerRow("tbodyB", x.player_id || "", x.goals || ""));
   }else addScorerRow("tbodyB");
 
-  // aggiornare option select in base ai convocati
   refreshScorersSelectOptions();
 
   updateCurrentHint();
-  setMsg("Partita caricata. Puoi salvare o inserire marcatori.", "ok");
+  setMsg("Partita caricata. Puoi salvare o inserire dati fine partita.", "ok");
 }
 
 /* ===== Actions ===== */
@@ -618,7 +700,6 @@ async function saveMatch(){
     }
 
     await loadMatches();
-    // ricarica fresco dalla lista
     const fresh = CURRENT ? MATCHES.find(x=>String(x.id)===String(CURRENT.id)) : null;
     if(fresh) fillForm(fresh);
 
@@ -636,19 +717,14 @@ async function deleteMatch(){
   const { error } = await client.from("matches").delete().eq("id", CURRENT.id);
   if(error) return setMsg("❌ Errore eliminazione: " + error.message, "err");
 
-  // reset stato
-  CURRENT = null;
-  $("matchSelect").value = "";
   clearForm();
   await loadMatches();
-
   setMsg("✅ Partita eliminata.", "ok");
 }
 
-async function saveResultAndScorers(){
+async function saveResultTeamsAndScorers(){
   if(!CURRENT) return setMsg("ℹ️ Seleziona una partita prima.", "err");
 
-  // risultato facoltativo
   const sAraw = $("scoreA").value;
   const sBraw = $("scoreB").value;
 
@@ -657,31 +733,33 @@ async function saveResultAndScorers(){
   if(score_a != null && Number.isNaN(score_a)) return setMsg("Goal A non valido.", "err");
   if(score_b != null && Number.isNaN(score_b)) return setMsg("Goal B non valido.", "err");
 
-  // marcatori facoltativi
-  const team_a = readScorersFromUI("tbodyA");
-  const team_b = readScorersFromUI("tbodyB");
+  // FORMAZIONI (facoltative)
+  const team_a = getTeamIds("teamABox");
+  const team_b = getTeamIds("teamBBox");
+  const dup = team_a.filter(id => team_b.includes(id));
+  if(dup.length) return setMsg("Un giocatore non può stare in entrambe le formazioni.", "err");
 
-  const scorers = (team_a.length || team_b.length) ? { team_a, team_b } : null;
-  const scorers_text = buildScorersText(team_a, team_b);
+  // MARCATORI (facoltativi)
+  const scorA = readScorersFromUI("tbodyA");
+  const scorB = readScorersFromUI("tbodyB");
+  const scorers = (scorA.length || scorB.length) ? { team_a: scorA, team_b: scorB } : null;
+  const scorers_text = buildScorersText(scorA, scorB);
 
-  setMsg("🏁 Salvataggio risultato + marcatori…");
+  setMsg("🏁 Salvataggio fine partita…");
 
-  // Proviamo a salvare anche scorers_text; se la colonna non esiste, riproviamo senza.
-  const payload1 = { score_a, score_b, scorers, scorers_text };
+  const payload1 = { score_a, score_b, team_a, team_b, scorers, scorers_text };
 
   let { error } = await client.from("matches").update(payload1).eq("id", CURRENT.id);
 
   if(error && String(error.message||"").toLowerCase().includes("scorers_text")){
-    const payload2 = { score_a, score_b, scorers };
+    const payload2 = { score_a, score_b, team_a, team_b, scorers };
     const r2 = await client.from("matches").update(payload2).eq("id", CURRENT.id);
     error = r2.error;
   }
 
-  if(error){
-    return setMsg("❌ Errore: " + error.message, "err");
-  }
+  if(error) return setMsg("❌ Errore: " + error.message, "err");
 
-  setMsg("✅ Salvato! (risultato + marcatori)", "ok");
+  setMsg("✅ Salvato! (risultato + formazioni + marcatori)", "ok");
 
   await loadMatches();
   const fresh = MATCHES.find(x=>String(x.id)===String(CURRENT.id));
@@ -691,7 +769,7 @@ async function saveResultAndScorers(){
 /* ===== Events ===== */
 $("btnSave").onclick = saveMatch;
 $("btnDelete").onclick = deleteMatch;
-$("btnSaveResult").onclick = saveResultAndScorers;
+$("btnSaveResult").onclick = saveResultTeamsAndScorers;
 
 $("btnNew").onclick = () => { clearForm(); setMsg("➕ Nuova partita: compila e salva.", "ok"); };
 $("btnRefresh").onclick = async () => { setMsg("🔄 Aggiorno…"); await loadMatches(); setMsg("✅ Lista aggiornata.", "ok"); };
