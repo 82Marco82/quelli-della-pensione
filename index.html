@@ -1,576 +1,260 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quelli della pensione</title>
 
-  <!-- Font "bello" -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#0b1220;
-      --card:#0f1b33;
-      --card2:#0c162b;
-      --txt:#eaf2ff;
-      --muted:#aab6d3;
-      --line:rgba(255,255,255,.10);
-      --accent:#64b5ff;
-      --good:#39d98a;
-      --warn:#ffcc66;
-      --bad:#ff6b6b;
-      --shadow: 0 18px 55px rgba(0,0,0,.45);
-      --r: 18px;
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --pill:#eeeeee;
+      --logo1:#111;
+      --logo2:#333;
+    }
+    body.dark{
+      --bg:#0f1115;
+      --card:#171a21;
+      --text:#e5e7eb;
+      --muted:#a1a1aa;
+      --border:#2a2f3a;
+      --shadow:0 10px 28px rgba(0,0,0,.45);
+      --pill:#222631;
+      --logo1:#0b0e14;
+      --logo2:#2a3242;
     }
 
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: radial-gradient(1200px 600px at 20% -10%, rgba(100,181,255,.20), transparent 55%),
-                  radial-gradient(900px 500px at 90% 10%, rgba(57,217,138,.12), transparent 60%),
-                  var(--bg);
-      color:var(--txt);
-      min-height:100vh;
-      padding:16px;
-      display:flex;
-      justify-content:center;
+      font-family:Inter,system-ui;
+      background:var(--bg);
+      color:var(--text);
+      transition:.2s;
     }
-
-    .wrap{
-      width:100%;
-      max-width: 780px;
-    }
-
-    .top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:14px;
-    }
-
-    .brand{
-      display:flex; align-items:center; gap:12px;
-    }
-
-    .logo{
-      width:46px; height:46px;
-      border-radius:50%;
-      background: linear-gradient(135deg, rgba(100,181,255,.35), rgba(57,217,138,.25));
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-      display:grid; place-items:center;
-      font-weight:900;
-      letter-spacing:.5px;
-    }
-
-    h1{
-      margin:0;
-      font-family: Anton, Inter, sans-serif;
-      font-size: 42px;
-      letter-spacing: 1px;
-      line-height: 1;
-      text-transform: uppercase;
-    }
-    .sub{
-      margin-top:6px;
-      color:var(--muted);
-      font-weight:600;
-    }
-
-    .actions{
-      display:flex; gap:10px; flex-wrap:wrap;
-      justify-content:flex-end;
-      margin-top:6px;
-    }
-
-    .btn{
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color:var(--txt);
-      text-decoration:none;
-      padding:10px 12px;
-      border-radius: 14px;
-      font-weight:700;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      transition: transform .12s ease, background .12s ease, border .12s ease;
-      user-select:none;
-    }
-    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.22);}
-    .btn.primary{ background: rgba(100,181,255,.14); border-color: rgba(100,181,255,.35); }
-    .btn.primary:hover{ background: rgba(100,181,255,.22); }
-    .btn.good{ background: rgba(57,217,138,.14); border-color: rgba(57,217,138,.35); }
-    .btn.good:hover{ background: rgba(57,217,138,.22); }
+    .wrap{max-width:760px;margin:auto;padding:16px}
 
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: var(--r);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-
-    .hero{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
       padding:14px;
-    }
-    .photo{
-      position:relative;
-      border-radius: 16px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.14);
-      background:#000;
-    }
-    .photo img{
-      width:100%;
-      display:block;
-      height:auto;
-    }
-    .photo .caption{
-      position:absolute;
-      left:12px;
-      bottom:10px;
-      padding:8px 10px;
-      font-weight:900;
-      letter-spacing:.6px;
-      border-radius: 12px;
-      background: rgba(0,0,0,.50);
-      border:1px solid rgba(255,255,255,.18);
-      backdrop-filter: blur(6px);
-      text-transform: uppercase;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:14px;
-      padding:14px;
-    }
-
-    @media (min-width: 760px){
-      .grid{
-        grid-template-columns: 1.15fr .85fr;
-        align-items:start;
-      }
-    }
-
-    .box{
-      background: rgba(0,0,0,.18);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 16px;
-      padding:14px;
-    }
-    .box h2{
-      margin:0 0 10px 0;
-      font-size:16px;
-      letter-spacing:.2px;
-    }
-
-    .muted{ color:var(--muted); }
-
-    .row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.07);
-      border:1px solid rgba(255,255,255,.10);
-      font-weight:800;
-    }
-    .pill.ok{ background: rgba(57,217,138,.12); border-color: rgba(57,217,138,.25); }
-    .pill.warn{ background: rgba(255,204,102,.12); border-color: rgba(255,204,102,.25); }
-    .pill.bad{ background: rgba(255,107,107,.12); border-color: rgba(255,107,107,.25); }
-
-    .divider{
-      height:1px;
-      background: var(--line);
+      box-shadow:var(--shadow);
       margin:12px 0;
     }
 
-    .teams{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:10px;
+    /* Header */
+    .header{text-align:center}
+    .logo{
+      width:80px;height:80px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      margin:auto;
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:34px;
+      letter-spacing:2px;
     }
-    @media (min-width: 520px){
-      .teams{
-        grid-template-columns: 1fr 1fr;
-      }
+    h1{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:48px;
+      margin:10px 0 0;
+    }
+    .subtitle{color:var(--muted);font-size:14px}
+
+    /* Hero */
+    .hero{position:relative;border-radius:16px;overflow:hidden}
+    .hero img{width:100%;display:block}
+    .hero .txt{
+      position:absolute;left:0;right:0;bottom:0;
+      padding:14px;color:#fff;font-weight:900;
+      background:linear-gradient(to top,rgba(0,0,0,.75),transparent);
     }
 
-    .team{
-      padding:12px;
-      border-radius: 14px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      min-height:54px;
-    }
-    .team .left{
-      display:flex; align-items:center; gap:10px;
-      min-width: 0;
-    }
-    .jersey{
-      width:26px; height:26px;
-      border-radius:8px;
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow: 0 8px 25px rgba(0,0,0,.25);
-      flex: 0 0 auto;
-    }
-    .jersey.yellow{ background: linear-gradient(180deg, #ffd54d, #ffb300); }
-    .jersey.red{ background: linear-gradient(180deg, #ff5c5c, #d81b60); }
-
-    .team .title{
+    .line{margin-top:8px}
+    .pill{
+      display:inline-block;
+      background:var(--pill);
+      border-radius:999px;
+      padding:6px 10px;
+      margin:4px 6px 0 0;
       font-weight:900;
-      letter-spacing:.2px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      border:1px solid var(--border);
     }
-    .team .label{
-      color:var(--muted);
-      font-weight:800;
-      font-size:12px;
-      text-transform: uppercase;
-      letter-spacing:.7px;
+    .badge{
+      display:inline-block;
+      background:#111;
+      color:#fff;
+      padding:6px 12px;
+      border-radius:999px;
+      font-weight:900;
     }
+    body.dark .badge{background:#0b0e14}
 
-    .result{
+    .muted{color:var(--muted)}
+
+    /* Map */
+    .mapWrap{
+      margin-top:12px;
+      border-radius:12px;
+      overflow:hidden;
+      border:1px solid var(--border)
+    }
+    iframe{width:100%;height:260px;border:0}
+
+    /* Nav */
+    .nav{
       display:flex;
-      align-items:center;
       justify-content:space-between;
       gap:10px;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.20);
-      margin-top:10px;
-      animation: fadeUp .25s ease-out;
-    }
-    @keyframes fadeUp{
-      from{ opacity:0; transform: translateY(6px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
-    .result strong{ font-size:18px; }
-    .small{ font-size:13px; }
-
-    .called{
-      display:flex;
       flex-wrap:wrap;
-      gap:8px;
-      margin-top:10px;
+      font-size:14px;
     }
-    .chip{
-      padding:8px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.07);
-      border:1px solid rgba(255,255,255,.10);
+    .nav a{
+      color:var(--text);
+      text-decoration:none;
       font-weight:800;
-      font-size:13px;
     }
+    .nav a:hover{text-decoration:underline}
 
-    .map{
-      margin-top:12px;
-      border-radius: 16px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.20);
-    }
-    .map iframe{
-      width:100%;
-      height:260px;
-      border:0;
-      display:block;
-    }
-
-    .error{
-      margin-top:10px;
-      color: var(--bad);
-      font-weight:800;
-    }
-    .loading{
-      color:var(--muted);
-      font-weight:800;
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-    .dot{
-      width:10px;height:10px;border-radius:50%;
-      background: rgba(100,181,255,.9);
-      box-shadow: 0 0 0 0 rgba(100,181,255,.65);
-      animation: pulse 1.2s infinite;
-    }
-    @keyframes pulse{
-      0%{ box-shadow: 0 0 0 0 rgba(100,181,255,.45); }
-      70%{ box-shadow: 0 0 0 12px rgba(100,181,255,0); }
-      100%{ box-shadow: 0 0 0 0 rgba(100,181,255,0); }
+    /* Theme toggle */
+    .fab{
+      position:fixed;
+      right:16px;bottom:16px;
+      width:54px;height:54px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      font-size:22px;
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="top">
-      <div>
-        <div class="brand">
-          <div class="logo">QP</div>
-          <div>
-            <h1>Quelli della pensione</h1>
-            <div class="sub">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
-          </div>
-        </div>
-      </div>
+<div class="wrap">
 
-      <div class="actions">
-        <a class="btn" href="dashboard.html">📚 Storico</a>
-        <a class="btn primary" href="admin.html">🔧 Area Admin</a>
-      </div>
-    </div>
-
-    <div class="card hero">
-      <div class="photo">
-        <img src="foto.jpg" alt="Quelli della pensione">
-        <div class="caption">Ogni maledetto giovedì</div>
-      </div>
-    </div>
-
-    <div class="grid">
-      <div class="box">
-        <h2>Partita</h2>
-        <div id="status" class="loading"><span class="dot"></span>Caricamento…</div>
-        <div id="match" style="margin-top:12px;"></div>
-        <div id="err" class="error"></div>
-      </div>
-
-      <div class="box">
-        <h2>Convocati</h2>
-        <div class="muted small">Massimo 12. Se non ci sono convocati, qui resta vuoto.</div>
-        <div id="called" class="called"></div>
-
-        <div class="divider"></div>
-
-        <h2>Voto MVP</h2>
-        <div id="voteBox" class="muted small">Il voto appare solo quando l’admin lo apre.</div>
-      </div>
-    </div>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">QDP</div>
+    <h1>Quelli della pensione</h1>
+    <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
   </div>
 
-  <!-- 1) Config (DEVE esistere e impostare window.SUPABASE_URL / window.SUPABASE_ANON_KEY) -->
-  <script src="config.js" onerror="document.getElementById('err').textContent='ERRORE: config.js non caricato';"></script>
+  <!-- HERO -->
+  <div class="card hero">
+    <img src="foto.jpg" alt="Quelli della pensione">
+    <div class="txt">OGNI MALEDETTO GIOVEDÌ</div>
+  </div>
 
-  <!-- 2) Supabase JS -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- PARTITA -->
+  <div class="card">
+    <div id="status" class="muted">Caricamento…</div>
+    <div id="info"></div>
 
-  <script>
-    // ===== Helpers =====
-    function fmtDate(d){
-      // d: 'YYYY-MM-DD'
-      if(!d) return '';
-      const [y,m,dd]=d.split('-');
-      return `${dd}/${m}/${y}`;
-    }
+    <div id="mapBox" class="mapWrap" style="display:none">
+      <iframe src="https://www.google.com/maps?q=Campo%20a%206%20Aradeo&output=embed"></iframe>
+    </div>
 
-    function safeText(s){ return (s ?? '').toString(); }
+    <div style="margin-top:12px;font-weight:900">Convocati</div>
+    <div id="called" class="muted">—</div>
+  </div>
 
-    // ===== Init =====
-    const errEl = document.getElementById('err');
-    const statusEl = document.getElementById('status');
-    const matchEl = document.getElementById('match');
-    const calledEl = document.getElementById('called');
-    const voteBox = document.getElementById('voteBox');
+  <!-- NAV -->
+  <div class="card nav muted">
+    <a href="storico.html">📚 Storico</a>
+    <a href="marcatori.html">⚽ Marcatori</a>
+    <a href="admin.html">🔐 Admin</a>
+  </div>
 
-    function setError(msg){
-      errEl.textContent = msg || '';
-    }
+</div>
 
-    function supabaseConfigOk(){
-      return window.SUPABASE_URL && window.SUPABASE_ANON_KEY &&
-             window.SUPABASE_URL.startsWith('http') &&
-             window.SUPABASE_ANON_KEY.startsWith('ey');
-    }
+<button id="themeToggle" class="fab">🌙</button>
 
-    if(!supabaseConfigOk()){
-      statusEl.innerHTML = `<span class="pill bad">⚠️ Config Supabase non valida</span>`;
-      setError('Controlla config.js: devono esserci SUPABASE_URL e SUPABASE_ANON_KEY corretti.');
-      throw new Error('Supabase config missing/invalid');
-    }
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
-    const client = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+<script>
+const statusEl = document.getElementById("status");
+const infoEl = document.getElementById("info");
+const calledEl = document.getElementById("called");
+const mapBox = document.getElementById("mapBox");
 
-    async function loadLatestMatch(){
-      setError('');
-      statusEl.innerHTML = `<span class="dot"></span>Caricamento…`;
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      // Prendo l’ultima partita inserita (match_date + match_time)
-      // Se preferisci “la prossima”, poi la adattiamo con un filtro su data >= oggi.
-      const { data: matches, error } = await client
-        .from('matches')
-        .select('id, match_date, match_time, venue, voting_open, team_a_keeper_id, team_b_keeper_id, score_a, score_b, called_up')
-        .order('match_date', { ascending: false })
-        .order('match_time', { ascending: false })
-        .limit(1);
+// THEME
+function setTheme(mode){
+  document.body.classList.toggle("dark", mode === "dark");
+  document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
+  localStorage.setItem("qdp_theme", mode);
+}
+setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
+document.getElementById("themeToggle").onclick = () => {
+  setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+};
 
-      if(error){
-        statusEl.innerHTML = `<span class="pill bad">❌ Errore</span>`;
-        setError('Errore matches: ' + error.message);
-        return;
-      }
+// LOAD MATCH
+async function load(){
+  const { data, error } = await client
+    .from("matches")
+    .select("match_date,match_time,venue,called_up,keeper_a,keeper_b,score_a,score_b,scorers_text")
+    .order("match_date",{ascending:false})
+    .order("match_time",{ascending:false})
+    .limit(1);
 
-      if(!matches || matches.length === 0){
-        statusEl.innerHTML = `<span class="pill warn">📌 Nessuna partita creata</span>`;
-        matchEl.innerHTML = `<div class="muted">Quando crei una partita dall’Admin, apparirà qui.</div>`;
-        calledEl.innerHTML = '';
-        voteBox.innerHTML = `<div class="muted small">Nessuna partita: niente voto.</div>`;
-        return;
-      }
+  if(error || !data.length){
+    statusEl.textContent = "Nessuna partita creata";
+    return;
+  }
 
-      const m = matches[0];
+  const m = data[0];
+  statusEl.textContent = "Partita trovata ✅";
 
-      // Carico i portieri (nomi) dalla tabella players
-      let keeperA = 'Squadra A';
-      let keeperB = 'Squadra B';
+  infoEl.innerHTML = `
+    <div class="line"><b>📅 ${m.match_date}</b></div>
+    <div class="line"><b>🥅 ${m.keeper_a} vs ${m.keeper_b}</b></div>
+    <div class="line"><span class="badge">🏁 ${m.score_a}-${m.score_b}</span></div>
+  `;
 
-      const keeperIds = [m.team_a_keeper_id, m.team_b_keeper_id].filter(Boolean);
-      if(keeperIds.length){
-        const { data: keepers, error: kerr } = await client
-          .from('players')
-          .select('id, name')
-          .in('id', keeperIds);
+  // MARCATORI (FACOLTATIVI)
+  if(m.scorers_text && m.scorers_text.trim() !== ""){
+    infoEl.innerHTML += `
+      <div class="line" style="margin-top:10px">
+        <b>⚽ Marcatori</b><br>
+        ${m.scorers_text}
+      </div>
+    `;
+  }
 
-        if(!kerr && keepers){
-          const map = new Map(keepers.map(x => [x.id, x.name]));
-          keeperA = map.get(m.team_a_keeper_id) || keeperA;
-          keeperB = map.get(m.team_b_keeper_id) || keeperB;
-        }
-      }
+  mapBox.style.display = "block";
 
-      // Stato partita
-      const played = (m.score_a !== null && m.score_b !== null);
-      statusEl.innerHTML = played
-        ? `<span class="pill ok">✅ Partita giocata</span>`
-        : `<span class="pill warn">🕒 Da giocare</span>`;
+  if(!m.called_up || !m.called_up.length){
+    calledEl.textContent = "—";
+    return;
+  }
 
-      // Card partita
-      const dateStr = fmtDate(m.match_date);
-      const timeStr = safeText(m.match_time || '21:00');
-      const venueStr = safeText(m.venue || 'Campo a 6 - Aradeo');
+  const { data: players, error: e2 } = await client
+    .from("players")
+    .select("id,name")
+    .in("id", m.called_up);
 
-      // Risultato
-      const resultHtml = played
-        ? `<div class="result">
-             <div>
-               <div class="muted small">Risultato</div>
-               <strong>🏁 ${m.score_a}-${m.score_b}</strong>
-             </div>
-             <span class="pill ok">GIOCATA</span>
-           </div>`
-        : `<div class="result">
-             <div>
-               <div class="muted small">Risultato</div>
-               <strong>🏁 Risultato: da giocare</strong>
-             </div>
-             <span class="pill warn">DA GIOCARE</span>
-           </div>`;
+  if(e2){
+    calledEl.textContent = "Errore convocati";
+    return;
+  }
 
-      matchEl.innerHTML = `
-        <div class="row">
-          <span class="pill">📅 ${dateStr}</span>
-          <span class="pill">🕘 ${timeStr}</span>
-          <span class="pill">📍 ${venueStr}</span>
-        </div>
+  const map = new Map((players||[]).map(p => [p.id, p.name]));
+  calledEl.innerHTML = m.called_up.map(id => `<span class="pill">${map.get(id) || ""}</span>`).join("");
+}
 
-        <div class="divider"></div>
-
-        <div class="teams">
-          <div class="team">
-            <div class="left">
-              <div class="jersey yellow" title="Squadra A"></div>
-              <div style="min-width:0">
-                <div class="label">Squadra A</div>
-                <div class="title">${safeText(keeperA)}</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="team">
-            <div class="left">
-              <div class="jersey red" title="Squadra B"></div>
-              <div style="min-width:0">
-                <div class="label">Squadra B</div>
-                <div class="title">${safeText(keeperB)}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        ${resultHtml}
-
-        <div class="map">
-          <iframe
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps?q=Campo%20a%206%20Aradeo&output=embed">
-          </iframe>
-        </div>
-      `;
-
-      // Convocati (called_up: array uuid)
-      calledEl.innerHTML = '';
-      const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
-
-      if(calledIds.length){
-        const { data: players, error: perr } = await client
-          .from('players')
-          .select('id, name')
-          .in('id', calledIds);
-
-        if(perr){
-          // non blocchiamo pagina, solo messaggio
-          calledEl.innerHTML = `<div class="muted small">Convocati non disponibili.</div>`;
-        } else {
-          // ordina per nome
-          players.sort((a,b) => a.name.localeCompare(b.name, 'it'));
-          players.forEach(p => {
-            const chip = document.createElement('div');
-            chip.className = 'chip';
-            chip.textContent = p.name;
-            calledEl.appendChild(chip);
-          });
-        }
-      } else {
-        calledEl.innerHTML = `<div class="muted">Nessun convocato</div>`;
-      }
-
-      // Voto MVP (se aperto mostra link)
-      if(m.voting_open){
-        voteBox.innerHTML = `
-          <a class="btn good" href="vota.html?match=${encodeURIComponent(m.id)}">
-            ⭐ Vota MVP
-          </a>
-        `;
-      } else {
-        voteBox.innerHTML = `<div class="muted small">Voto MVP: <b>chiuso</b>.</div>`;
-      }
-    }
-
-    loadLatestMatch();
-  </script>
+load();
+</script>
 </body>
 </html>
