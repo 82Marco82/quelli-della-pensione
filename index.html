@@ -50,7 +50,6 @@
       margin:12px 0;
     }
 
-    /* Header */
     .header{text-align:center}
     .logo{
       width:80px;height:80px;border-radius:999px;
@@ -69,21 +68,15 @@
     }
     .subtitle{color:var(--muted);font-size:14px}
 
-    /* HERO */
-    .heroImgWrap{
-      border-radius:16px;
-      overflow:hidden;
-    }
+    .heroImgWrap{border-radius:16px;overflow:hidden}
     .heroImgWrap img{
       width:100%;
       display:block;
-      max-height:360px;     /* desktop */
+      max-height:360px;
       object-fit:cover;
     }
     @media(max-width:600px){
-      .heroImgWrap img{
-        max-height:240px;   /* mobile */
-      }
+      .heroImgWrap img{max-height:240px}
     }
     .heroCaption{
       margin-top:10px;
@@ -93,7 +86,6 @@
       font-size:26px;
       font-weight:900;
       text-transform:uppercase;
-      color:var(--text);
     }
 
     .line{margin-top:8px}
@@ -117,7 +109,6 @@
     body.dark .badge{background:#0b0e14}
     .muted{color:var(--muted)}
 
-    /* Map */
     .mapWrap{
       margin-top:12px;
       border-radius:12px;
@@ -126,7 +117,6 @@
     }
     iframe{width:100%;height:260px;border:0}
 
-    /* Nav */
     .nav{
       display:flex;
       justify-content:space-between;
@@ -140,7 +130,6 @@
       font-weight:800;
     }
 
-    /* Theme toggle */
     .fab{
       position:fixed;
       right:16px;bottom:16px;
@@ -192,6 +181,12 @@
       <iframe src="https://www.google.com/maps?q=Campo%20a%206%20Aradeo&output=embed"></iframe>
     </div>
 
+    <!-- MARCATORI -->
+    <div id="scorersBox" style="display:none;margin-top:12px">
+      <div class="line"><b>⚽ Marcatori</b></div>
+      <div id="scorersText" class="muted"></div>
+    </div>
+
     <div class="line"><b>Convocati</b></div>
     <div id="called" class="muted">—</div>
 
@@ -237,6 +232,10 @@ const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
 const calledEl = document.getElementById("called");
 const mapBox = document.getElementById("mapBox");
+
+const scorersBox = document.getElementById("scorersBox");
+const scorersText = document.getElementById("scorersText");
+
 const teamsBox = document.getElementById("teamsBox");
 const teamAEl = document.getElementById("teamA");
 const teamBEl = document.getElementById("teamB");
@@ -282,7 +281,14 @@ async function load(){
     <div class="line"><span class="badge">🏁 ${result}</span></div>
   `;
 
-  mapBox.style.display = "block";
+  if(m.scorers_text && String(m.scorers_text).trim() !== ""){
+    scorersBox.style.display="block";
+    scorersText.innerHTML = m.scorers_text.replaceAll("\n","<br>");
+  }else{
+    scorersBox.style.display="none";
+  }
+
+  mapBox.style.display="block";
 
   if(m.called_up?.length){
     const { data:p } = await client.from("players").select("id,name").in("id", m.called_up);
