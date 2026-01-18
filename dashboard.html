@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Dashboard • Quelli della pensione</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -27,786 +27,144 @@
       --pill:#222631;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
-    a{color:inherit}
+    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text)}
     .wrap{max-width:980px;margin:20px auto;padding:16px}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-    .brand{display:flex;align-items:center;gap:10px}
-    .logo{
-      width:56px;height:56px;border-radius:999px;
-      background:linear-gradient(135deg,#111,#333);
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:26px;letter-spacing:2px;
-      box-shadow:var(--shadow);
-      border:2px solid rgba(255,255,255,.85);
-    }
-    body.dark .logo{border:2px solid rgba(255,255,255,.12)}
-    h1{margin:0;font-family:'Bebas Neue';letter-spacing:2px}
-    .muted{color:var(--muted);font-size:13px}
-
-    .grid{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:980px){ .grid{grid-template-columns:440px 1fr;} }
-
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:16px;
-      box-shadow:var(--shadow);
-    }
-
-    label{display:block;margin-top:12px;font-size:12px;color:var(--muted);font-weight:800}
-    input,select{
-      width:100%;
-      padding:12px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:transparent;
-      color:var(--text);
-      outline:none;
-      font-family:Inter;
-    }
-
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
     .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .btn{
-      padding:12px 14px;border-radius:14px;border:0;
-      background:var(--btn);color:#fff;font-weight:900;cursor:pointer;
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      user-select:none;
-    }
+    .btn{padding:12px 14px;border-radius:14px;border:0;background:var(--btn);color:#fff;font-weight:900;cursor:pointer}
     .btn.secondary{background:var(--btn2)}
     .btn.danger{background:var(--danger)}
     .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
     .btn.full{width:100%}
     .btn.small{padding:10px 12px;border-radius:12px;font-weight:800}
-
-    .msg{
-      margin-top:12px;padding:12px;border-radius:12px;
-      font-size:13px;border:1px solid var(--border);
-      background:var(--chipBg);white-space:pre-wrap;
-    }
-    .msg.ok{background:var(--okBg);color:var(--okText);border-color:rgba(34,197,94,.35)}
-    .msg.err{background:var(--errBg);color:var(--errText);border-color:rgba(244,63,94,.35);font-weight:900}
-
-    .fab{
-      position:fixed;right:16px;bottom:16px;
-      width:54px;height:54px;border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--card);color:var(--text);font-size:22px;
-      cursor:pointer;box-shadow:var(--shadow);
-      display:flex;align-items:center;justify-content:center;
-      z-index:9999;
-    }
-
-    .playersBox{
-      max-height:320px;
-      overflow:auto;
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:10px;
-      background:var(--chipBg);
-    }
-    .pRow{
-      display:flex;align-items:center;gap:10px;
-      padding:10px 8px;border-radius:12px;
-    }
-    .pRow:hover{background:rgba(0,0,0,.03)}
-    body.dark .pRow:hover{background:rgba(255,255,255,.04)}
-    .pRow input{width:auto;transform:scale(1.15)}
-    .countChip{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 10px;border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--chipBg);
-      font-weight:900;font-size:12px;margin-top:10px;
-    }
-
-    .sectionTitle{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      margin:0 0 8px;
-    }
-    .sectionTitle h2{margin:0;font-size:16px}
-    .hr{height:1px;background:var(--border);margin:12px 0}
-
-    table{width:100%;border-collapse:separate;border-spacing:0 8px}
-    th{font-size:12px;color:var(--muted);text-align:left;padding:0 6px}
-    td{padding:0 6px;vertical-align:top}
-    .mini{font-size:12px;color:var(--muted)}
-    .pill{
-      display:inline-block;background:var(--pill);
-      border:1px solid var(--border);
-      border-radius:999px;padding:6px 10px;font-weight:900
-    }
-
-    .teamTitle{display:flex;align-items:center;gap:10px;margin:0 0 8px}
-    .shirt{width:18px;height:18px;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
-    .twoCols{display:grid;grid-template-columns:1fr;gap:10px}
-    @media(min-width:560px){ .twoCols{grid-template-columns:1fr 1fr} }
+    label{display:block;margin-top:12px;font-size:12px;color:var(--muted);font-weight:800}
+    input,select{width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--text)}
+    .msg{margin-top:12px;padding:12px;border-radius:12px;font-size:13px;border:1px solid var(--border);background:var(--chipBg)}
+    .msg.ok{background:var(--okBg);color:var(--okText)}
+    .msg.err{background:var(--errBg);color:var(--errText);font-weight:900}
   </style>
 </head>
 
 <body>
 <div class="wrap">
+  <div class="card">
+    <h2>Dashboard – Quelli della pensione</h2>
+    <div id="msg" class="msg">Caricamento…</div>
 
-  <div class="top">
-    <div class="brand">
-      <div class="logo">QDP</div>
-      <div>
-        <h1>Dashboard</h1>
-        <div class="muted">Quelli della pensione • gestione partita • marcatori</div>
-      </div>
-    </div>
-    <div class="row" style="margin-top:0">
-      <a class="btn ghost small" href="index.html" style="text-decoration:none">⬅️ Sito</a>
-      <a class="btn ghost small" href="storico.html" style="text-decoration:none">📚 Storico</a>
-      <button id="btnLogout" class="btn secondary small">🚪 Esci</button>
-    </div>
-  </div>
+    <label>Partita</label>
+    <select id="matchSelect">
+      <option value="">— Nuova partita —</option>
+    </select>
 
-  <div class="grid">
-    <!-- LEFT: partita -->
-    <div class="card">
-      <div class="sectionTitle">
-        <h2>Gestione partita</h2>
-        <span id="countInfo" class="countChip">👥 Convocati: 0/12</span>
-      </div>
-
-      <div id="msg" class="msg">Caricamento…</div>
-
-      <label>Partita</label>
-      <select id="matchSelect">
-        <option value="">— Nuova partita —</option>
-      </select>
-
-      <div class="row">
-        <button id="btnNew" class="btn ghost small">➕ Nuova</button>
-        <button id="btnRefresh" class="btn ghost small">🔄 Aggiorna</button>
-      </div>
-
-      <label>Data</label>
-      <input id="matchDate" type="date">
-
-      <label>Ora</label>
-      <input id="matchTime" type="time" value="21:00">
-
-      <label>Campo</label>
-      <input id="venue" type="text" value="Campo a 6 - Aradeo">
-
-      <label>Portiere Squadra A</label>
-      <input id="keeperA" type="text" placeholder="Es. Gianni">
-
-      <label>Portiere Squadra B</label>
-      <input id="keeperB" type="text" placeholder="Es. Andrea o Tonino">
-
-      <label>Convocati (max 12)</label>
-      <div id="playersBox" class="playersBox"></div>
-
-      <div class="row">
-        <button id="btnSave" class="btn full">💾 Salva partita</button>
-        <button id="btnDelete" class="btn danger full">🗑 Elimina partita</button>
-      </div>
+    <div class="row">
+      <button id="btnNew" class="btn ghost small">➕ Nuova</button>
+      <button id="btnRefresh" class="btn ghost small">🔄 Aggiorna</button>
     </div>
 
-    <!-- RIGHT: fine partita -->
-    <div class="card">
-      <div class="sectionTitle">
-        <h2>Fine partita</h2>
-        <span class="pill" id="currentHint">Nessuna partita selezionata</span>
-      </div>
-      <div class="mini">Risultato, formazioni e marcatori sono <b>facoltativi</b>. I marcatori li inserisce solo l’admin.</div>
+    <label>Data</label>
+    <input id="matchDate" type="date">
 
-      <div class="hr"></div>
+    <label>Ora</label>
+    <input id="matchTime" type="time" value="21:00">
 
-      <div class="twoCols">
-        <div>
-          <label>Goal Squadra A</label>
-          <input id="scoreA" type="number" min="0" step="1" placeholder="es. 5">
-        </div>
-        <div>
-          <label>Goal Squadra B</label>
-          <input id="scoreB" type="number" min="0" step="1" placeholder="es. 4">
-        </div>
-      </div>
+    <label>Campo</label>
+    <input id="venue" type="text" value="Campo a 6 - Aradeo">
 
-      <div class="hr"></div>
+    <label>Portiere Squadra A</label>
+    <input id="keeperA" type="text">
 
-      <!-- FORMAZIONI (FACOLTATIVE) -->
-      <div class="twoCols">
-        <div>
-          <div class="teamTitle" id="formATitle"></div>
-          <div class="mini">Seleziona i giocatori convocati per la formazione (facoltativo)</div>
-          <div id="teamABox" class="playersBox" style="max-height:220px;margin-top:10px"></div>
-        </div>
+    <label>Portiere Squadra B</label>
+    <input id="keeperB" type="text">
 
-        <div>
-          <div class="teamTitle" id="formBTitle"></div>
-          <div class="mini">Seleziona i giocatori convocati per la formazione (facoltativo)</div>
-          <div id="teamBBox" class="playersBox" style="max-height:220px;margin-top:10px"></div>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <!-- MARCATORI -->
-      <div class="twoCols">
-        <div>
-          <div class="teamTitle" id="teamATitle"></div>
-          <table>
-            <thead>
-              <tr>
-                <th>Giocatore (convocato)</th>
-                <th style="width:90px">Gol</th>
-                <th style="width:70px"></th>
-              </tr>
-            </thead>
-            <tbody id="tbodyA"></tbody>
-          </table>
-          <button id="addRowA" class="btn ghost small">+ Aggiungi</button>
-        </div>
-
-        <div>
-          <div class="teamTitle" id="teamBTitle"></div>
-          <table>
-            <thead>
-              <tr>
-                <th>Giocatore (convocato)</th>
-                <th style="width:90px">Gol</th>
-                <th style="width:70px"></th>
-              </tr>
-            </thead>
-            <tbody id="tbodyB"></tbody>
-          </table>
-          <button id="addRowB" class="btn ghost small">+ Aggiungi</button>
-        </div>
-      </div>
-
-      <div class="row">
-        <button id="btnSaveResult" class="btn full">🏁 Salva risultato + formazioni + marcatori</button>
-      </div>
-
-      <div class="mini" style="margin-top:10px">
-        Se non metti il risultato, salva comunque formazioni/marcatori (o viceversa). Le formazioni sono opzionali.
-      </div>
+    <div class="row">
+      <button id="btnSave" class="btn full">💾 Salva partita</button>
+      <button id="btnDelete" class="btn danger full">🗑 Elimina partita</button>
+      <button id="btnWhatsApp" class="btn ghost full">📤 Condividi su WhatsApp</button>
     </div>
   </div>
-
 </div>
-
-<button id="themeToggle" class="fab">🌙</button>
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
-/* ===== THEME ===== */
-function setTheme(m){
-  document.body.classList.toggle("dark", m==="dark");
-  document.getElementById("themeToggle").textContent = m==="dark" ? "☀️" : "🌙";
-  localStorage.setItem("qdp_theme", m);
-}
-setTheme(localStorage.getItem("qdp_theme")==="dark" ? "dark" : "light");
-document.getElementById("themeToggle").onclick=()=> {
-  setTheme(document.body.classList.contains("dark") ? "light" : "dark");
-};
-
-/* ===== SUPABASE ===== */
-if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
-  alert("config.js non caricato o non valido");
-  throw new Error("Missing config");
-}
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const $ = (id)=>document.getElementById(id);
-
-function setMsg(t, kind=""){
-  const el = $("msg");
-  el.className = "msg" + (kind ? " " + kind : "");
-  el.textContent = t;
-}
-
-let PLAYERS = [];
+const $ = id => document.getElementById(id);
 let MATCHES = [];
-let CURRENT = null; // match object completo (quando caricato)
+let CURRENT = null;
 
-/* ===== UI helpers ===== */
-function shirtSVG(color){
-  return `
-    <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M20 10 L28 6 H36 L44 10 L56 18 L50 30 L44 26 V58 H20 V26 L14 30 L8 18 Z"
-        fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
-    </svg>`;
-}
-$("teamATitle").innerHTML = `${shirtSVG("#facc15")} <b>Marcatori Squadra A</b>`;
-$("teamBTitle").innerHTML = `${shirtSVG("#ef4444")} <b>Marcatori Squadra B</b>`;
-$("formATitle").innerHTML = `${shirtSVG("#facc15")} <b>Formazione Squadra A</b>`;
-$("formBTitle").innerHTML = `${shirtSVG("#ef4444")} <b>Formazione Squadra B</b>`;
-
-function escapeHtml(s){
-  return String(s ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-function updateCurrentHint(){
-  const hint = $("currentHint");
-  if(!CURRENT){
-    hint.textContent = "Nessuna partita selezionata";
-    return;
-  }
-  const t = String(CURRENT.match_time||"").slice(0,5);
-  hint.textContent = `${CURRENT.match_date} ${t} • ${CURRENT.venue||""}`.trim();
-}
-
-function getCalledUp(){
-  return [...$("playersBox").querySelectorAll('input[type="checkbox"]')]
-    .filter(x=>x.checked)
-    .map(x=>x.value);
-}
-
-function updateCount(){
-  $("countInfo").textContent = `👥 Convocati: ${getCalledUp().length}/12`;
-}
-
-/* ===== Auth ===== */
-async function requireSession(){
-  const { data:{session}, error } = await client.auth.getSession();
-  if(error){ setMsg("Errore sessione: " + error.message, "err"); return false; }
-  if(!session){ location.href="admin.html"; return false; }
-  return true;
-}
-
-/* ===== Load players & matches ===== */
-async function loadPlayers(){
-  const { data, error } = await client.from("players").select("id,name").order("name",{ascending:true});
-  if(error) throw error;
-  PLAYERS = data || [];
-}
+function setMsg(t,k=""){ $("msg").className="msg "+k; $("msg").textContent=t; }
 
 async function loadMatches(){
-  const { data, error } = await client.from("matches")
-    .select("id,match_date,match_time,venue,keeper_a,keeper_b,called_up,score_a,score_b,team_a,team_b,scorers,scorers_text")
-    .order("match_date",{ascending:false})
-    .order("match_time",{ascending:false})
-    .limit(200);
-
-  if(error) throw error;
+  const { data } = await client.from("matches").select("*").order("match_date",{ascending:false});
   MATCHES = data || [];
-
   const sel = $("matchSelect");
   sel.innerHTML = `<option value="">— Nuova partita —</option>`;
   MATCHES.forEach(m=>{
-    const time = String(m.match_time||"").slice(0,5);
-    const res = (m.score_a!=null && m.score_b!=null) ? ` • ${m.score_a}-${m.score_b}` : "";
-    const opt = document.createElement("option");
-    opt.value = m.id;
-    opt.textContent = `${m.match_date} ${time} • ${m.venue||""}${res}`.trim();
-    sel.appendChild(opt);
+    const o=document.createElement("option");
+    o.value=m.id;
+    o.textContent=`${m.match_date} ${String(m.match_time||"").slice(0,5)}`;
+    sel.appendChild(o);
   });
-
-  // se CURRENT non esiste più (es. dopo delete), lo azzeriamo
-  if(CURRENT){
-    const still = MATCHES.find(x => String(x.id) === String(CURRENT.id));
-    if(!still){
-      CURRENT = null;
-      $("matchSelect").value = "";
-    }
-  }
-}
-
-/* ===== Convocati UI ===== */
-function renderPlayersBox(checkedIds = []){
-  const checked = new Set((checkedIds||[]).map(String));
-  const box = $("playersBox");
-  box.innerHTML = "";
-
-  PLAYERS.forEach(p=>{
-    const row = document.createElement("label");
-    row.className = "pRow";
-
-    const cb = document.createElement("input");
-    cb.type = "checkbox";
-    cb.value = p.id;
-    cb.checked = checked.has(String(p.id));
-    cb.onchange = () => {
-      const ids = getCalledUp();
-      if(ids.length > 12){
-        cb.checked = false;
-        setMsg("⚠️ Massimo 12 convocati.", "err");
-      }else{
-        setMsg("Convocati aggiornati (ricorda di salvare).", "ok");
-      }
-      updateCount();
-
-      // aggiornare select marcatori
-      refreshScorersSelectOptions();
-
-      // aggiornare box formazioni (solo convocati) e pulire selezioni non valide
-      refreshTeamsUI();
-    };
-
-    const name = document.createElement("span");
-    name.textContent = p.name;
-
-    row.appendChild(cb);
-    row.appendChild(name);
-    box.appendChild(row);
-  });
-
-  updateCount();
-}
-
-/* ===== FORMAZIONI UI (solo convocati) ===== */
-function getCalledUpPlayers(){
-  const ids = new Set(getCalledUp().map(String));
-  return PLAYERS.filter(p => ids.has(String(p.id)));
-}
-
-function renderTeamBox(boxId, presetIds = []){
-  const preset = new Set((presetIds||[]).map(String));
-  const box = $(boxId);
-  box.innerHTML = "";
-
-  const calledPlayers = getCalledUpPlayers();
-  if(!calledPlayers.length){
-    box.innerHTML = `<div class="mini">Seleziona i convocati a sinistra.</div>`;
-    return;
-  }
-
-  calledPlayers.forEach(p=>{
-    const row = document.createElement("label");
-    row.className = "pRow";
-
-    const cb = document.createElement("input");
-    cb.type = "checkbox";
-    cb.value = p.id;
-    cb.checked = preset.has(String(p.id));
-
-    cb.onchange = () => {
-      // evita che un giocatore stia in entrambe
-      if(cb.checked){
-        const otherBox = (boxId === "teamABox") ? $("teamBBox") : $("teamABox");
-        const otherCb = otherBox.querySelector(`input[value="${p.id}"]`);
-        if(otherCb) otherCb.checked = false;
-      }
-    };
-
-    const name = document.createElement("span");
-    name.textContent = p.name;
-
-    row.appendChild(cb);
-    row.appendChild(name);
-    box.appendChild(row);
-  });
-}
-
-function getTeamIds(boxId){
-  return [...$(boxId).querySelectorAll('input[type="checkbox"]')]
-    .filter(x=>x.checked)
-    .map(x=>x.value);
-}
-
-function refreshTeamsUI(){
-  // mantiene le scelte attuali (se ancora convocati), ma pulisce i non-validi
-  const aNow = new Set(getTeamIds("teamABox").map(String));
-  const bNow = new Set(getTeamIds("teamBBox").map(String));
-
-  const called = new Set(getCalledUp().map(String));
-  const aKeep = [...aNow].filter(id => called.has(id));
-  const bKeep = [...bNow].filter(id => called.has(id) && !aKeep.includes(id));
-
-  renderTeamBox("teamABox", aKeep);
-  renderTeamBox("teamBBox", bKeep);
-}
-
-/* ===== Marcatori UI ===== */
-function buildOptionsHTML(selectedValue){
-  const called = getCalledUpPlayers();
-  const opts = [`<option value="">— scegli —</option>`];
-  called.forEach(p=>{
-    const sel = (String(selectedValue||"") === String(p.id)) ? "selected" : "";
-    opts.push(`<option value="${escapeHtml(p.id)}" ${sel}>${escapeHtml(p.name)}</option>`);
-  });
-  return opts.join("");
-}
-
-function addScorerRow(tbodyId, presetPlayerId="", presetGoals=""){
-  const tbody = $(tbodyId);
-  const tr = document.createElement("tr");
-
-  // player select
-  const tdP = document.createElement("td");
-  const sel = document.createElement("select");
-  sel.innerHTML = buildOptionsHTML(presetPlayerId);
-  sel.setAttribute("data-role","player");
-  tdP.appendChild(sel);
-
-  // goals
-  const tdG = document.createElement("td");
-  const g = document.createElement("input");
-  g.type="number"; g.min="0"; g.step="1";
-  g.placeholder="gol";
-  g.value = presetGoals;
-  g.setAttribute("data-role","goals");
-  tdG.appendChild(g);
-
-  // remove
-  const tdX = document.createElement("td");
-  const del = document.createElement("button");
-  del.className="btn ghost small";
-  del.textContent="✖";
-  del.onclick = () => tr.remove();
-  tdX.appendChild(del);
-
-  tr.appendChild(tdP);
-  tr.appendChild(tdG);
-  tr.appendChild(tdX);
-  tbody.appendChild(tr);
-}
-
-function clearScorersUI(){
-  $("tbodyA").innerHTML = "";
-  $("tbodyB").innerHTML = "";
-  addScorerRow("tbodyA");
-  addScorerRow("tbodyB");
-}
-
-function refreshScorersSelectOptions(){
-  ["tbodyA","tbodyB"].forEach(tid=>{
-    const rows = [...$(tid).querySelectorAll("tr")];
-    rows.forEach(r=>{
-      const sel = r.querySelector("select[data-role='player']");
-      if(!sel) return;
-      const current = sel.value;
-      sel.innerHTML = buildOptionsHTML(current);
-    });
-  });
-}
-
-function readScorersFromUI(tbodyId){
-  const rows = [...$(tbodyId).querySelectorAll("tr")];
-  const out = [];
-  for(const r of rows){
-    const sel = r.querySelector("select[data-role='player']");
-    const g = r.querySelector("input[data-role='goals']");
-    const pid = String(sel?.value || "").trim();
-    const goals = Number(g?.value || 0);
-    if(!pid) continue;
-    if(!Number.isFinite(goals) || goals <= 0) continue;
-    out.push({ player_id: pid, goals });
-  }
-  return out;
-}
-
-function buildScorersText(teamA, teamB){
-  const idToName = new Map(PLAYERS.map(p=>[String(p.id), p.name]));
-  const fmt = (arr) => arr.map(x => `${idToName.get(String(x.player_id)) || x.player_id} ${x.goals}`).join(", ");
-  const a = teamA.length ? `Squadra A: ${fmt(teamA)}` : "";
-  const b = teamB.length ? `Squadra B: ${fmt(teamB)}` : "";
-  if(a && b) return `${a}\n${b}`;
-  return a || b || null;
-}
-
-/* ===== Form fill/clear ===== */
-function clearForm(){
-  CURRENT = null;
-  $("matchSelect").value = "";
-  $("matchDate").value = "";
-  $("matchTime").value = "21:00";
-  $("venue").value = "Campo a 6 - Aradeo";
-  $("keeperA").value = "";
-  $("keeperB").value = "";
-  $("scoreA").value = "";
-  $("scoreB").value = "";
-  renderPlayersBox([]);
-  renderTeamBox("teamABox", []);
-  renderTeamBox("teamBBox", []);
-  clearScorersUI();
-  updateCurrentHint();
 }
 
 function fillForm(m){
-  CURRENT = m;
-
-  $("matchSelect").value = m.id;
-  $("matchDate").value = m.match_date || "";
-  $("matchTime").value = String(m.match_time || "21:00:00").slice(0,5);
-  $("venue").value = m.venue || "Campo a 6 - Aradeo";
-  $("keeperA").value = m.keeper_a || "";
-  $("keeperB").value = m.keeper_b || "";
-
-  renderPlayersBox(m.called_up || []);
-
-  $("scoreA").value = (m.score_a==null ? "" : m.score_a);
-  $("scoreB").value = (m.score_b==null ? "" : m.score_b);
-
-  // FORMAZIONI
-  const taIds = Array.isArray(m.team_a) ? m.team_a : [];
-  const tbIds = Array.isArray(m.team_b) ? m.team_b : [];
-  renderTeamBox("teamABox", taIds);
-  renderTeamBox("teamBBox", tbIds);
-
-  // scorers
-  $("tbodyA").innerHTML = "";
-  $("tbodyB").innerHTML = "";
-
-  const sc = m.scorers || {};
-  const sA = Array.isArray(sc.team_a) ? sc.team_a : [];
-  const sB = Array.isArray(sc.team_b) ? sc.team_b : [];
-
-  if(sA.length){
-    sA.forEach(x => addScorerRow("tbodyA", x.player_id || "", x.goals || ""));
-  }else addScorerRow("tbodyA");
-
-  if(sB.length){
-    sB.forEach(x => addScorerRow("tbodyB", x.player_id || "", x.goals || ""));
-  }else addScorerRow("tbodyB");
-
-  refreshScorersSelectOptions();
-
-  updateCurrentHint();
-  setMsg("Partita caricata. Puoi salvare o inserire dati fine partita.", "ok");
+  CURRENT=m;
+  $("matchDate").value=m.match_date;
+  $("matchTime").value=String(m.match_time||"").slice(0,5);
+  $("venue").value=m.venue||"";
+  $("keeperA").value=m.keeper_a||"";
+  $("keeperB").value=m.keeper_b||"";
 }
 
-/* ===== Actions ===== */
-async function saveMatch(){
-  const match_date = $("matchDate").value;
-  const match_time = $("matchTime").value ? ($("matchTime").value + ":00") : "21:00:00";
-  const venue = $("venue").value || "Campo a 6 - Aradeo";
-  const keeper_a = $("keeperA").value.trim();
-  const keeper_b = $("keeperB").value.trim();
-  const called_up = getCalledUp();
-
-  if(!match_date) return setMsg("📅 Inserisci la data.", "err");
-  if(!keeper_a || !keeper_b) return setMsg("🥅 Inserisci i 2 portieri.", "err");
-  if(keeper_a.toLowerCase() === keeper_b.toLowerCase()) return setMsg("🥅 I portieri devono essere diversi.", "err");
-  if(called_up.length > 12) return setMsg("👥 Max 12 convocati.", "err");
-
-  const payload = { match_date, match_time, venue, keeper_a, keeper_b, called_up };
-
-  try{
-    if(CURRENT && CURRENT.id){
-      setMsg("💾 Salvataggio partita…");
-      const { error } = await client.from("matches").update(payload).eq("id", CURRENT.id);
-      if(error) throw error;
-      setMsg("✅ Partita aggiornata.", "ok");
-    }else{
-      setMsg("💾 Creazione partita…");
-      const { data, error } = await client.from("matches").insert([payload]).select("*").single();
-      if(error) throw error;
-      CURRENT = data;
-      setMsg("✅ Partita creata.", "ok");
-    }
-
-    await loadMatches();
-    const fresh = CURRENT ? MATCHES.find(x=>String(x.id)===String(CURRENT.id)) : null;
-    if(fresh) fillForm(fresh);
-
-  }catch(e){
-    console.error(e);
-    setMsg("❌ Errore salvataggio: " + (e.message||e), "err");
-  }
-}
-
-async function deleteMatch(){
-  if(!CURRENT) return setMsg("ℹ️ Seleziona una partita.", "err");
-  if(!confirm("Sicuro di eliminare questa partita?")) return;
-
-  setMsg("🗑 Eliminazione…");
-  const { error } = await client.from("matches").delete().eq("id", CURRENT.id);
-  if(error) return setMsg("❌ Errore eliminazione: " + error.message, "err");
-
-  clearForm();
-  await loadMatches();
-  setMsg("✅ Partita eliminata.", "ok");
-}
-
-async function saveResultTeamsAndScorers(){
-  if(!CURRENT) return setMsg("ℹ️ Seleziona una partita prima.", "err");
-
-  const sAraw = $("scoreA").value;
-  const sBraw = $("scoreB").value;
-
-  const score_a = (sAraw === "" ? null : parseInt(sAraw, 10));
-  const score_b = (sBraw === "" ? null : parseInt(sBraw, 10));
-  if(score_a != null && Number.isNaN(score_a)) return setMsg("Goal A non valido.", "err");
-  if(score_b != null && Number.isNaN(score_b)) return setMsg("Goal B non valido.", "err");
-
-  // FORMAZIONI (facoltative)
-  const team_a = getTeamIds("teamABox");
-  const team_b = getTeamIds("teamBBox");
-  const dup = team_a.filter(id => team_b.includes(id));
-  if(dup.length) return setMsg("Un giocatore non può stare in entrambe le formazioni.", "err");
-
-  // MARCATORI (facoltativi)
-  const scorA = readScorersFromUI("tbodyA");
-  const scorB = readScorersFromUI("tbodyB");
-  const scorers = (scorA.length || scorB.length) ? { team_a: scorA, team_b: scorB } : null;
-  const scorers_text = buildScorersText(scorA, scorB);
-
-  setMsg("🏁 Salvataggio fine partita…");
-
-  const payload1 = { score_a, score_b, team_a, team_b, scorers, scorers_text };
-
-  let { error } = await client.from("matches").update(payload1).eq("id", CURRENT.id);
-
-  if(error && String(error.message||"").toLowerCase().includes("scorers_text")){
-    const payload2 = { score_a, score_b, team_a, team_b, scorers };
-    const r2 = await client.from("matches").update(payload2).eq("id", CURRENT.id);
-    error = r2.error;
-  }
-
-  if(error) return setMsg("❌ Errore: " + error.message, "err");
-
-  setMsg("✅ Salvato! (risultato + formazioni + marcatori)", "ok");
-
-  await loadMatches();
-  const fresh = MATCHES.find(x=>String(x.id)===String(CURRENT.id));
-  if(fresh) fillForm(fresh);
-}
-
-/* ===== Events ===== */
-$("btnSave").onclick = saveMatch;
-$("btnDelete").onclick = deleteMatch;
-$("btnSaveResult").onclick = saveResultTeamsAndScorers;
-
-$("btnNew").onclick = () => { clearForm(); setMsg("➕ Nuova partita: compila e salva.", "ok"); };
-$("btnRefresh").onclick = async () => { setMsg("🔄 Aggiorno…"); await loadMatches(); setMsg("✅ Lista aggiornata.", "ok"); };
-
-$("addRowA").onclick = () => addScorerRow("tbodyA");
-$("addRowB").onclick = () => addScorerRow("tbodyB");
-
-$("matchSelect").onchange = () => {
-  const id = $("matchSelect").value;
-  if(!id){ clearForm(); return; }
-  const m = MATCHES.find(x => String(x.id) === String(id));
+$("matchSelect").onchange=()=>{
+  const m=MATCHES.find(x=>x.id===$("matchSelect").value);
   if(m) fillForm(m);
 };
 
-$("btnLogout").onclick = async () => {
-  setMsg("🚪 Logout…");
-  const { error } = await client.auth.signOut();
-  if(error) return setMsg("❌ Errore logout: " + error.message, "err");
-  location.href = "admin.html";
+$("btnSave").onclick=async()=>{
+  const payload={
+    match_date:$("matchDate").value,
+    match_time:$("matchTime").value+":00",
+    venue:$("venue").value,
+    keeper_a:$("keeperA").value,
+    keeper_b:$("keeperB").value
+  };
+  if(CURRENT){
+    await client.from("matches").update(payload).eq("id",CURRENT.id);
+    setMsg("Partita aggiornata","ok");
+  }else{
+    const { data }=await client.from("matches").insert([payload]).select("*").single();
+    CURRENT=data;
+    setMsg("Partita creata","ok");
+  }
+  loadMatches();
 };
 
-/* ===== Init ===== */
-(async()=>{
-  const ok = await requireSession();
-  if(!ok) return;
+$("btnDelete").onclick=async()=>{
+  if(!CURRENT) return;
+  await client.from("matches").delete().eq("id",CURRENT.id);
+  CURRENT=null;
+  setMsg("Partita eliminata","ok");
+  loadMatches();
+};
 
-  try{
-    setMsg("⏳ Caricamento…");
-    await loadPlayers();
-    await loadMatches();
-    clearForm();
-    setMsg("✅ Pronto.", "ok");
-  }catch(e){
-    console.error(e);
-    setMsg("❌ Errore init: " + (e.message||e), "err");
-  }
-})();
+$("btnWhatsApp").onclick=()=>{
+  if(!CURRENT) return setMsg("Crea o seleziona una partita","err");
+  const text =
+`⚽ Quelli della pensione
+
+📅 ${CURRENT.match_date} ore ${String(CURRENT.match_time||"").slice(0,5)}
+📍 ${CURRENT.venue}
+
+🥅 Squadra A: ${CURRENT.keeper_a}
+🥅 Squadra B: ${CURRENT.keeper_b}
+
+👉 ${location.origin + location.pathname.replace("dashboard.html","index.html")}`;
+  window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank");
+};
+
+loadMatches();
 </script>
 </body>
 </html>
