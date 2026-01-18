@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Admin • Quelli della pensione</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -13,571 +13,285 @@
       --card:#ffffff;
       --text:#111827;
       --muted:#6b7280;
-      --border:#e5e7eb;
       --shadow:0 6px 20px rgba(0,0,0,.08);
-      --pill:#eeeeee;
+      --border:#e5e7eb;
+      --logo1:#111;
+      --logo2:#333;
       --btn:#111;
-      --btnText:#fff;
-      --danger:#b91c1c;
-      --ok:#15803d;
-      --warn:#b45309;
+      --btn2:#444;
+      --okBg:#dcfce7; --okText:#166534;
+      --errBg:#ffe4e6; --errText:#9f1239;
+      --chipBg:rgba(0,0,0,.04);
+      --link:#0b5fff;
     }
     body.dark{
       --bg:#0f1115;
       --card:#171a21;
       --text:#e5e7eb;
       --muted:#a1a1aa;
-      --border:#2a2f3a;
       --shadow:0 10px 28px rgba(0,0,0,.45);
-      --pill:#222631;
+      --border:#2a2f3a;
+      --logo1:#0b0e14;
+      --logo2:#2a3242;
       --btn:#0b0e14;
-      --btnText:#fff;
-      --danger:#ef4444;
-      --ok:#22c55e;
-      --warn:#f59e0b;
+      --btn2:#2a3242;
+      --okBg:rgba(34,197,94,.15); --okText:#86efac;
+      --errBg:rgba(244,63,94,.16); --errText:#fda4af;
+      --chipBg:rgba(255,255,255,.04);
+      --link:#7aa7ff;
     }
 
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
-    .wrap{max-width:900px;margin:auto;padding:16px}
+    body{
+      font-family:Inter,system-ui;
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      transition:.2s;
+    }
+    a{color:var(--link);text-decoration:none}
+
+    .wrap{max-width:520px;margin:22px auto;padding:16px}
     .card{
       background:var(--card);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:14px;
+      border-radius:18px;
+      padding:18px;
       box-shadow:var(--shadow);
-      margin:12px 0;
-    }
-    h1{font-family:'Bebas Neue';letter-spacing:2px;font-size:44px;margin:6px 0 0;text-transform:uppercase}
-    .muted{color:var(--muted)}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .spacer{height:8px}
-    label{font-weight:800;font-size:13px}
-    input, select, textarea{
-      width:100%;
-      padding:10px 12px;
-      border-radius:12px;
       border:1px solid var(--border);
-      background:transparent;
-      color:var(--text);
-      outline:none;
-      font-family:Inter;
     }
-    textarea{min-height:72px}
-    .grid2{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:760px){ .grid2{grid-template-columns:1fr 1fr} }
-    .btn{
-      border:1px solid var(--border);
-      background:var(--btn);
-      color:var(--btnText);
-      padding:10px 14px;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:900;
+    .header{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      text-align:center;
+      margin-bottom:10px;
     }
-    .btn.secondary{
-      background:transparent;
-      color:var(--text);
+    .logo{
+      width:76px;height:76px;border-radius:999px;
+      background:linear-gradient(135deg, var(--logo1), var(--logo2));
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 10px 22px rgba(0,0,0,.18);
+      border:3px solid rgba(255,255,255,.85);
     }
-    .btn.danger{background:var(--danger);border-color:transparent}
-    .btn.ok{background:var(--ok);border-color:transparent}
-    .btn.warn{background:var(--warn);border-color:transparent;color:#111}
-    .pill{
-      display:inline-block;background:var(--pill);border:1px solid var(--border);
-      border-radius:999px;padding:6px 10px;font-weight:900
+    body.dark .logo{ border:3px solid rgba(255,255,255,.12); }
+    .logo span{
+      font-family:'Bebas Neue';
+      color:#fff;font-size:30px;letter-spacing:2px;line-height:1;
     }
-    .topbar{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
-    .fab{
-      width:48px;height:48px;border-radius:999px;border:1px solid var(--border);
-      background:var(--card);box-shadow:var(--shadow);cursor:pointer;font-size:20px
-    }
-    .msgOk{color:var(--ok);font-weight:900}
-    .msgErr{color:var(--danger);font-weight:900}
-    .msgWarn{color:var(--warn);font-weight:900}
 
-    table{width:100%;border-collapse:separate;border-spacing:0 8px}
-    th{font-size:12px;color:var(--muted);text-align:left;padding:0 6px}
-    td{padding:0 6px}
-    .mini{font-size:12px;color:var(--muted)}
-    .hr{height:1px;background:var(--border);margin:12px 0}
-    .shirt{width:18px;height:18px;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
-    .teamTitle{display:flex;align-items:center;gap:10px;margin:0 0 8px}
+    h2{margin:0;font-size:18px}
+    .sub{color:var(--muted);font-size:12px;margin-top:2px;line-height:1.35}
+
+    .msg{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      background:var(--chipBg);
+      border:1px solid var(--border);
+      font-size:13px;
+      white-space:pre-wrap;
+    }
+    .msg.ok{background:var(--okBg); color:var(--okText); border-color:rgba(34,197,94,.35); font-weight:900}
+    .msg.err{background:var(--errBg); color:var(--errText); border-color:rgba(244,63,94,.35); font-weight:900}
+
+    label{display:block;font-size:12px;margin:12px 0 6px;color:var(--muted);font-weight:800}
+    input{
+      width:100%;
+      padding:12px 12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:transparent;
+      color:var(--text);
+      font-size:14px;
+      outline:none;
+    }
+
+    .btn{
+      width:100%;
+      margin-top:12px;
+      padding:13px 14px;
+      border-radius:16px;
+      border:1px solid transparent;
+      background:var(--btn);
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      user-select:none;
+    }
+    .btn.secondary{background:var(--btn2)}
+    .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+    .btn:active{transform:scale(.99)}
+
+    .footer{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+    }
+
+    .fab{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      width:54px;height:54px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      color:var(--text);
+      font-size:22px;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:var(--shadow);
+      display:flex;align-items:center;justify-content:center;
+      z-index:9999;
+      user-select:none;
+    }
   </style>
 </head>
 
 <body>
-<div class="wrap">
+  <div class="wrap">
+    <div class="card">
+      <div class="header">
+        <div class="logo"><span>QDP</span></div>
+        <div>
+          <h2>Area Admin</h2>
+          <div class="sub">Qui fai solo l’accesso. La creazione partita è in <b>Dashboard</b>.</div>
+        </div>
+      </div>
 
-  <div class="topbar">
-    <div>
-      <div class="pill">Admin</div>
-      <h1>Quelli della pensione</h1>
-      <div class="muted">Gestione partite • risultato • marcatori</div>
-    </div>
-    <button id="themeToggle" class="fab">🌙</button>
-  </div>
+      <div id="msg" class="msg">Caricamento…</div>
 
-  <!-- LOGIN -->
-  <div id="loginCard" class="card" style="display:none">
-    <h2 style="margin:0 0 8px">Accesso</h2>
-    <div class="muted" style="margin-bottom:12px">Solo admin.</div>
+      <!-- se sei già loggato o dopo login -->
+      <div id="goDash" style="display:none">
+        <button id="btnDash" class="btn">⚙️ Vai alla Dashboard</button>
+        <button id="btnLogout" class="btn secondary">🚪 Esci</button>
+      </div>
 
-    <div class="grid2">
-      <div>
+      <!-- login -->
+      <div id="box" style="display:none">
         <label>Email</label>
-        <input id="loginEmail" type="email" placeholder="email">
-      </div>
-      <div>
+        <input id="email" type="email" autocomplete="email" placeholder="nome@email.it" />
+
         <label>Password</label>
-        <input id="loginPass" type="password" placeholder="password">
+        <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••" />
+
+        <button id="login" class="btn">🔐 Entra</button>
+      </div>
+
+      <div class="footer">
+        <a href="index.html">⬅️ Torna al sito</a>
       </div>
     </div>
-
-    <div class="spacer"></div>
-    <div class="row">
-      <button class="btn ok" id="btnLogin">Entra</button>
-      <a class="btn secondary" href="index.html" style="text-decoration:none;display:inline-block">⬅️ Home</a>
-    </div>
-
-    <div class="spacer"></div>
-    <div id="loginMsg" class="muted"></div>
   </div>
 
-  <!-- ADMIN UI -->
-  <div id="adminCard" class="card" style="display:none">
-    <div class="row" style="justify-content:space-between">
-      <div>
-        <h2 style="margin:0 0 4px">Gestione partita</h2>
-        <div class="mini">Seleziona la partita, inserisci risultato e marcatori (facoltativi), salva.</div>
-      </div>
-      <div class="row">
-        <button class="btn secondary" id="btnReload">Aggiorna</button>
-        <button class="btn danger" id="btnLogout">Esci</button>
-      </div>
-    </div>
+  <button id="themeToggle" class="fab" title="Tema chiaro/scuro">🌙</button>
 
-    <div class="hr"></div>
-
-    <!-- Selettore partite -->
-    <div class="grid2">
-      <div>
-        <label>Partita</label>
-        <select id="matchSelect"></select>
-        <div class="mini">Ultime 10 partite</div>
-      </div>
-      <div>
-        <label>Azioni</label>
-        <div class="row">
-          <button class="btn secondary" id="btnLoadMatch">Carica</button>
-          <button class="btn danger" id="btnDeleteMatch">Elimina partita</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="hr"></div>
-
-    <!-- Risultato -->
-    <h3 style="margin:0 0 10px">Risultato (facoltativo)</h3>
-    <div class="grid2">
-      <div>
-        <label>Goal Squadra A</label>
-        <input id="scoreA" type="number" min="0" placeholder="es. 5">
-      </div>
-      <div>
-        <label>Goal Squadra B</label>
-        <input id="scoreB" type="number" min="0" placeholder="es. 4">
-      </div>
-    </div>
-
-    <div class="hr"></div>
-
-    <!-- Marcatori -->
-    <h3 style="margin:0 0 6px">Marcatori (facoltativi)</h3>
-    <div class="mini">Puoi inserire giocatori dalla lista convocati oppure scrivere un nome a mano.</div>
-
-    <div class="grid2" style="margin-top:12px">
-      <!-- TEAM A -->
-      <div>
-        <div class="teamTitle">
-          <span id="shirtA"></span>
-          <b>Squadra A</b>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Giocatore</th>
-              <th style="width:90px">Gol</th>
-              <th style="width:70px"></th>
-            </tr>
-          </thead>
-          <tbody id="tbodyA"></tbody>
-        </table>
-        <button class="btn secondary" id="addRowA">+ Aggiungi riga</button>
-      </div>
-
-      <!-- TEAM B -->
-      <div>
-        <div class="teamTitle">
-          <span id="shirtB"></span>
-          <b>Squadra B</b>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Giocatore</th>
-              <th style="width:90px">Gol</th>
-              <th style="width:70px"></th>
-            </tr>
-          </thead>
-          <tbody id="tbodyB"></tbody>
-        </table>
-        <button class="btn secondary" id="addRowB">+ Aggiungi riga</button>
-      </div>
-    </div>
-
-    <div class="hr"></div>
-
-    <div class="row">
-      <button class="btn ok" id="btnSave">💾 Salva risultato + marcatori</button>
-      <a class="btn secondary" href="index.html" style="text-decoration:none;display:inline-block">⬅️ Home</a>
-    </div>
-
-    <div class="spacer"></div>
-    <div id="msg"></div>
-  </div>
-
-</div>
-
-<script src="config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-
-<script>
-/* ===== Theme ===== */
-function setTheme(mode){
-  document.body.classList.toggle("dark", mode==="dark");
-  document.getElementById("themeToggle").textContent = mode==="dark" ? "☀️" : "🌙";
-  localStorage.setItem("qdp_theme", mode);
-}
-setTheme(localStorage.getItem("qdp_theme")==="dark" ? "dark" : "light");
-document.getElementById("themeToggle").onclick = () => {
-  setTheme(document.body.classList.contains("dark") ? "light" : "dark");
-};
-
-/* ===== Supabase ===== */
-if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
-  alert("config.js mancante o non valido");
-  throw new Error("Missing config");
-}
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-/* ===== DOM ===== */
-const loginCard = document.getElementById("loginCard");
-const adminCard = document.getElementById("adminCard");
-const loginMsg = document.getElementById("loginMsg");
-
-const matchSelect = document.getElementById("matchSelect");
-const scoreA = document.getElementById("scoreA");
-const scoreB = document.getElementById("scoreB");
-
-const tbodyA = document.getElementById("tbodyA");
-const tbodyB = document.getElementById("tbodyB");
-
-const msg = document.getElementById("msg");
-
-let CURRENT_MATCH_ID = null;
-let CALLED_UP_NAMES = []; // elenco nomi convocati (per select)
-
-/* ===== Utils ===== */
-function shirtSVG(color){
-  return `
-    <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M20 10 L28 6 H36 L44 10 L56 18 L50 30 L44 26 V58 H20 V26 L14 30 L8 18 Z"
-        fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
-    </svg>`;
-}
-document.getElementById("shirtA").innerHTML = shirtSVG("#facc15");
-document.getElementById("shirtB").innerHTML = shirtSVG("#ef4444");
-
-function setMsgOk(t){ msg.innerHTML = `<div class="msgOk">✅ ${t}</div>`; }
-function setMsgErr(t){ msg.innerHTML = `<div class="msgErr">❌ ${t}</div>`; }
-function setMsgWarn(t){ msg.innerHTML = `<div class="msgWarn">⚠️ ${t}</div>`; }
-
-function toHHMMSS(n){
-  if(n===null || n===undefined || n==="") return null;
-  const v = Number(n);
-  if(Number.isNaN(v)) return null;
-  return v;
-}
-
-function normalizeScorersRows(tbody){
-  const rows = [...tbody.querySelectorAll("tr")];
-  const out = [];
-  for(const r of rows){
-    const nameSel = r.querySelector("select");
-    const nameInp = r.querySelector("input[data-role='name']");
-    const goalsInp = r.querySelector("input[data-role='goals']");
-    const selVal = nameSel ? String(nameSel.value || "").trim() : "";
-    const inpVal = nameInp ? String(nameInp.value || "").trim() : "";
-    const name = inpVal || selVal;
-    const goals = Number(goalsInp ? goalsInp.value : 0);
-    if(!name) continue;
-    if(!Number.isFinite(goals) || goals <= 0) continue;
-    out.push({ name, goals });
-  }
-  return out;
-}
-
-function buildScorersText(teamA, teamB){
-  // testo semplice per compatibilità con index attuale
-  const fmt = (arr) => arr.map(x => `${x.name} ${x.goals}`).join(", ");
-  const a = teamA.length ? `Squadra A: ${fmt(teamA)}` : "";
-  const b = teamB.length ? `Squadra B: ${fmt(teamB)}` : "";
-  if(a && b) return `${a}\n${b}`;
-  return a || b || null;
-}
-
-function addRow(tbody, presetName="", presetGoals=""){
-  const tr = document.createElement("tr");
-
-  const tdName = document.createElement("td");
-  const sel = document.createElement("select");
-  sel.innerHTML = `
-    <option value="">(scegli convocato)</option>
-    ${CALLED_UP_NAMES.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join("")}
-  `;
-  sel.value = presetName && CALLED_UP_NAMES.includes(presetName) ? presetName : "";
-
-  const inp = document.createElement("input");
-  inp.placeholder = "oppure scrivi nome";
-  inp.setAttribute("data-role","name");
-  inp.value = (presetName && !CALLED_UP_NAMES.includes(presetName)) ? presetName : "";
-
-  tdName.appendChild(sel);
-  tdName.appendChild(document.createElement("div")).className="spacer";
-  tdName.appendChild(inp);
-
-  const tdGoals = document.createElement("td");
-  const g = document.createElement("input");
-  g.type="number"; g.min="0";
-  g.placeholder="gol";
-  g.setAttribute("data-role","goals");
-  g.value = presetGoals;
-  tdGoals.appendChild(g);
-
-  const tdX = document.createElement("td");
-  const del = document.createElement("button");
-  del.className="btn secondary";
-  del.textContent="✖";
-  del.onclick = () => tr.remove();
-  tdX.appendChild(del);
-
-  tr.appendChild(tdName);
-  tr.appendChild(tdGoals);
-  tr.appendChild(tdX);
-
-  tbody.appendChild(tr);
-}
-
-function escapeHtml(s){
-  return String(s)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-/* ===== Auth ===== */
-async function refreshAuthUI(){
-  const { data } = await client.auth.getSession();
-  const logged = !!(data && data.session);
-  loginCard.style.display = logged ? "none" : "block";
-  adminCard.style.display = logged ? "block" : "none";
-  if(logged){
-    await loadMatchesList();
-  }
-}
-
-document.getElementById("btnLogin").onclick = async () => {
-  loginMsg.textContent = "";
-  const email = document.getElementById("loginEmail").value.trim();
-  const pass  = document.getElementById("loginPass").value.trim();
-  const { error } = await client.auth.signInWithPassword({ email, password: pass });
-  if(error){
-    loginMsg.innerHTML = `<span class="msgErr">❌ ${error.message}</span>`;
-    return;
-  }
-  await refreshAuthUI();
-};
-
-document.getElementById("btnLogout").onclick = async () => {
-  await client.auth.signOut();
-  await refreshAuthUI();
-};
-
-document.getElementById("btnReload").onclick = async () => {
-  msg.innerHTML = "";
-  await loadMatchesList();
-};
-
-/* ===== Matches ===== */
-async function loadMatchesList(){
-  const { data, error } = await client
-    .from("matches")
-    .select("id, match_date, match_time, keeper_a, keeper_b")
-    .order("match_date",{ascending:false})
-    .order("match_time",{ascending:false})
-    .limit(10);
-
-  if(error){
-    setMsgErr("Errore caricamento partite: " + error.message);
-    return;
-  }
-
-  matchSelect.innerHTML = "";
-  (data||[]).forEach(m=>{
-    const opt = document.createElement("option");
-    const time = (m.match_time ? String(m.match_time).slice(0,5) : "");
-    opt.value = m.id;
-    opt.textContent = `${m.match_date} ${time} • ${m.keeper_a||"A"} / ${m.keeper_b||"B"}`;
-    matchSelect.appendChild(opt);
-  });
-
-  if(data && data.length){
-    matchSelect.value = data[0].id;
-    await loadSelectedMatch();
-  }else{
-    CURRENT_MATCH_ID = null;
-    scoreA.value = "";
-    scoreB.value = "";
-    tbodyA.innerHTML = "";
-    tbodyB.innerHTML = "";
-    CALLED_UP_NAMES = [];
-    setMsgWarn("Nessuna partita trovata.");
-  }
-}
-
-document.getElementById("btnLoadMatch").onclick = loadSelectedMatch;
-
-async function loadSelectedMatch(){
-  msg.innerHTML = "";
-  const id = matchSelect.value;
-  if(!id) return;
-
-  const { data, error } = await client
-    .from("matches")
-    .select("id, score_a, score_b, called_up, scorers, scorers_text")
-    .eq("id", id)
-    .single();
-
-  if(error){
-    setMsgErr("Errore caricamento partita: " + error.message);
-    return;
-  }
-
-  CURRENT_MATCH_ID = data.id;
-
-  scoreA.value = (data.score_a ?? "");
-  scoreB.value = (data.score_b ?? "");
-
-  // carico convocati come NOMI (dalla tabella players)
-  const ids = Array.isArray(data.called_up) ? data.called_up : [];
-  CALLED_UP_NAMES = [];
-
-  if(ids.length){
-    const { data: players, error: e2 } = await client
-      .from("players")
-      .select("id,name")
-      .in("id", ids);
-
-    if(!e2 && players){
-      CALLED_UP_NAMES = players.map(p=>p.name).sort((a,b)=>a.localeCompare(b,'it'));
+  <script>
+    // THEME
+    const btnTheme = document.getElementById("themeToggle");
+    function setTheme(mode){
+      document.body.classList.toggle("dark", mode === "dark");
+      btnTheme.textContent = (mode === "dark") ? "☀️" : "🌙";
+      localStorage.setItem("qdp_theme", mode);
     }
-  }
+    setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
+    btnTheme.addEventListener("click", () => {
+      setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+    });
+  </script>
 
-  // ricostruisco tabelle marcatori
-  tbodyA.innerHTML = "";
-  tbodyB.innerHTML = "";
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
-  // scorers è jsonb: { team_a: [{name,goals}], team_b: [...] }
-  const sc = data.scorers || {};
-  const teamA = Array.isArray(sc.team_a) ? sc.team_a : [];
-  const teamB = Array.isArray(sc.team_b) ? sc.team_b : [];
+  <script>
+    const msgEl = document.getElementById("msg");
+    const box = document.getElementById("box");
+    const goDash = document.getElementById("goDash");
 
-  if(teamA.length){ teamA.forEach(x => addRow(tbodyA, x.name||"", x.goals||"")); }
-  else addRow(tbodyA);
+    function setMsg(t, kind="info"){
+      msgEl.className = "msg";
+      if(kind==="ok") msgEl.classList.add("ok");
+      if(kind==="err") msgEl.classList.add("err");
+      msgEl.textContent = t;
+    }
 
-  if(teamB.length){ teamB.forEach(x => addRow(tbodyB, x.name||"", x.goals||"")); }
-  else addRow(tbodyB);
+    function goDashboard(){
+      // sempre relativo al repo: /quelli-della-pensione/dashboard.html
+      location.href = "dashboard.html";
+    }
 
-  setMsgOk("Partita caricata. Puoi salvare risultato e marcatori.");
-}
+    if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+      setMsg("Config mancante: controlla config.js","err");
+      throw new Error("Missing config");
+    }
 
-document.getElementById("addRowA").onclick = () => addRow(tbodyA);
-document.getElementById("addRowB").onclick = () => addRow(tbodyB);
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-document.getElementById("btnSave").onclick = async () => {
-  msg.innerHTML = "";
-  if(!CURRENT_MATCH_ID){
-    setMsgErr("Nessuna partita selezionata.");
-    return;
-  }
+    async function showLoggedUI(){
+      box.style.display = "none";
+      goDash.style.display = "block";
+      setMsg("✅ Accesso attivo. Vai in Dashboard per creare/modificare la partita.", "ok");
 
-  const a = toHHMMSS(scoreA.value);
-  const b = toHHMMSS(scoreB.value);
+      // prova a mandarti subito in dashboard (così non ti blocchi qui)
+      setTimeout(goDashboard, 300);
+    }
 
-  // marcatori
-  const teamA = normalizeScorersRows(tbodyA);
-  const teamB = normalizeScorersRows(tbodyB);
+    (async () => {
+      const { data: { session }, error } = await client.auth.getSession();
+      if(error){
+        setMsg("Errore sessione: " + error.message, "err");
+        box.style.display = "block";
+        return;
+      }
 
-  const scorers = (teamA.length || teamB.length) ? { team_a: teamA, team_b: teamB } : null;
+      if(session){
+        await showLoggedUI();
+        return;
+      }
 
-  // compatibilità: aggiornamo anche scorers_text (per index attuale)
-  const scorersText = buildScorersText(teamA, teamB);
+      setMsg("Inserisci email e password per entrare.", "ok");
+      box.style.display = "block";
+    })();
 
-  const payload = {
-    score_a: (a===null ? null : a),
-    score_b: (b===null ? null : b),
-    scorers: scorers,
-    scorers_text: scorersText
-  };
+    document.getElementById("login").onclick = async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("pass").value;
 
-  const { error } = await client
-    .from("matches")
-    .update(payload)
-    .eq("id", CURRENT_MATCH_ID);
+      if(!email || !password){
+        setMsg("Compila email e password.", "err");
+        return;
+      }
 
-  if(error){
-    setMsgErr("Errore salvataggio: " + error.message);
-    return;
-  }
-  setMsgOk("Salvato! (risultato + marcatori)");
-};
+      setMsg("🔐 Login…");
+      const { error } = await client.auth.signInWithPassword({ email, password });
 
-document.getElementById("btnDeleteMatch").onclick = async () => {
-  msg.innerHTML = "";
-  if(!CURRENT_MATCH_ID){
-    setMsgErr("Nessuna partita selezionata.");
-    return;
-  }
-  const ok = confirm("Vuoi eliminare questa partita? (azione definitiva)");
-  if(!ok) return;
+      if(error){
+        setMsg("Errore login: " + error.message, "err");
+        return;
+      }
 
-  const { error } = await client
-    .from("matches")
-    .delete()
-    .eq("id", CURRENT_MATCH_ID);
+      await showLoggedUI();
+    };
 
-  if(error){
-    setMsgErr("Errore eliminazione: " + error.message);
-    return;
-  }
-  setMsgOk("Partita eliminata.");
-  await loadMatchesList();
-};
+    document.getElementById("btnDash").onclick = goDashboard;
 
-/* ===== Init ===== */
-refreshAuthUI();
-</script>
+    document.getElementById("btnLogout").onclick = async () => {
+      setMsg("🚪 Logout…");
+      const { error } = await client.auth.signOut();
+      if(error){
+        setMsg("Errore logout: " + error.message, "err");
+        return;
+      }
+      goDash.style.display = "none";
+      box.style.display = "block";
+      setMsg("Sei uscito. Inserisci email e password per entrare.", "ok");
+    };
+  </script>
 </body>
 </html>
