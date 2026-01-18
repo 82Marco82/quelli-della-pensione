@@ -256,7 +256,7 @@ async function load(){
 
     const { data: matches, error: eM } = await client
       .from("matches")
-      .select("id,match_date,match_time,venue,keeper_a,keeper_b,score_a,score_b,called_up,scorers")
+      .select("id,match_date,match_time,venue,keeper_a,keeper_b,score_a,score_b,called_up,team_a,team_b,scorers")
       .order("match_date",{ascending:false})
       .order("match_time",{ascending:false})
       .limit(200);
@@ -281,6 +281,11 @@ async function load(){
       const called = Array.isArray(m.called_up) ? m.called_up : [];
       const calledNames = called.map(id => idToName.get(String(id)) || String(id));
 
+      const teamAIds = Array.isArray(m.team_a) ? m.team_a : [];
+      const teamBIds = Array.isArray(m.team_b) ? m.team_b : [];
+      const teamANames = teamAIds.map(id => idToName.get(String(id)) || String(id));
+      const teamBNames = teamBIds.map(id => idToName.get(String(id)) || String(id));
+
       const sc = m.scorers || {};
       const ta = Array.isArray(sc.team_a) ? sc.team_a : [];
       const tb = Array.isArray(sc.team_b) ? sc.team_b : [];
@@ -301,6 +306,11 @@ async function load(){
           <thead><tr><th>Giocatore</th><th style="width:70px">Gol</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>`;
+      };
+
+      const renderPills = (arr) => {
+        if(!arr.length) return `<div class="muted">—</div>`;
+        return `<div>${arr.map(n=>`<span class="pill">${escapeHtml(n)}</span>`).join("")}</div>`;
       };
 
       const detailsId = `det_${m.id}`;
@@ -326,11 +336,20 @@ async function load(){
             <div class="chipBox">
               <div style="font-weight:900">Convocati</div>
               <div class="muted" style="margin-top:8px">
-                ${
-                  calledNames.length
-                    ? calledNames.map(n=>`<span class="pill">${escapeHtml(n)}</span>`).join("")
-                    : "—"
-                }
+                ${ calledNames.length ? calledNames.map(n=>`<span class="pill">${escapeHtml(n)}</span>`).join("") : "—" }
+              </div>
+            </div>
+
+            <div class="space"></div>
+
+            <div class="twoCols">
+              <div class="chipBox">
+                <div class="teamTitle">${shirtSVG("#facc15")} <b>Formazione Squadra A</b></div>
+                ${renderPills(teamANames)}
+              </div>
+              <div class="chipBox">
+                <div class="teamTitle">${shirtSVG("#ef4444")} <b>Formazione Squadra B</b></div>
+                ${renderPills(teamBNames)}
               </div>
             </div>
 
@@ -359,11 +378,9 @@ async function load(){
         const box = document.getElementById(id);
         const isOpen = box.classList.contains("open");
 
-        // chiudi tutto
         document.querySelectorAll(".details.open").forEach(d => d.classList.remove("open"));
         buttons.forEach(b => b.textContent = "Dettagli ▾");
 
-        // se era chiuso, apri solo questo
         if(!isOpen){
           box.classList.add("open");
           btn.textContent = "Dettagli ▴";
