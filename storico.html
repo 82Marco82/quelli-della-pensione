@@ -9,84 +9,39 @@
 
   <style>
     :root{
-      --bg:#f4f6f8; --card:#fff; --text:#111827; --muted:#6b7280;
-      --border:#e5e7eb; --shadow:0 6px 20px rgba(0,0,0,.08);
-      --pill:#eee; --link:#0b5fff; --chipBg:rgba(0,0,0,.04);
-      --badgeBg:#111; --badgeText:#fff;
-      --detailBg: rgba(0,0,0,.02);
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --pill:#eeeeee;
+      --logo1:#111;
+      --logo2:#333;
+      --badge:#111;
+      --chipBg:rgba(0,0,0,.04);
+      --btnBg:#111;
+      --btnText:#fff;
     }
     body.dark{
-      --bg:#0f1115; --card:#171a21; --text:#e5e7eb; --muted:#a1a1aa;
-      --border:#2a2f3a; --shadow:0 10px 28px rgba(0,0,0,.45);
-      --pill:#222631; --link:#7aa7ff; --chipBg:rgba(255,255,255,.04);
-      --badgeBg:#0b0e14; --badgeText:#fff;
-      --detailBg: rgba(255,255,255,.03);
+      --bg:#0f1115;
+      --card:#171a21;
+      --text:#e5e7eb;
+      --muted:#a1a1aa;
+      --border:#2a2f3a;
+      --shadow:0 10px 28px rgba(0,0,0,.45);
+      --pill:#222631;
+      --logo1:#0b0e14;
+      --logo2:#2a3242;
+      --badge:#0b0e14;
+      --chipBg:rgba(255,255,255,.04);
+      --btnBg:#0b0e14;
+      --btnText:#fff;
     }
+
     *{box-sizing:border-box}
-    body{font-family:Inter,system-ui;margin:0;background:var(--bg);color:var(--text);transition:.2s}
-    a{color:var(--link);text-decoration:none}
-
-    .wrap{max-width:900px;margin:0 auto;padding:16px}
-
-    .top{
-      display:flex;justify-content:space-between;align-items:flex-end;gap:10px;
-      flex-wrap:wrap;
-    }
-    h1{
-      font-family:'Bebas Neue',sans-serif;
-      letter-spacing:2px;
-      margin:10px 0 4px;
-      font-size:44px;
-      line-height:1;
-    }
-    .sub{color:var(--muted);font-size:12px}
-
-    .nav{
-      display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end;
-      margin-bottom:6px;
-    }
-
-    .toolbar{
-      margin-top:14px;
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
-    .toggle{
-      display:flex;align-items:center;gap:10px;
-      padding:10px 12px;border-radius:14px;
-      background:var(--card);
-      border:1px solid var(--border);
-      box-shadow:var(--shadow);
-      user-select:none;
-    }
-    .toggle input{transform:scale(1.2)}
-
-    .search{
-      flex:1;
-      min-width:220px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 12px;
-      border-radius:14px;
-      background:var(--card);
-      border:1px solid var(--border);
-      box-shadow:var(--shadow);
-    }
-    .search span{opacity:.75}
-    .search input{
-      width:100%;
-      border:0;
-      outline:none;
-      background:transparent;
-      color:var(--text);
-      font-size:14px;
-    }
-
-    .hint{color:var(--muted);font-size:12px}
+    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
+    .wrap{max-width:860px;margin:auto;padding:16px}
 
     .card{
       background:var(--card);
@@ -97,36 +52,39 @@
       margin:12px 0;
     }
 
-    .row{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:flex-start;
-      flex-wrap:wrap;
+    .header{text-align:center}
+    .logo{
+      width:74px;height:74px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      margin:auto;
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:30px;
+      letter-spacing:2px;
     }
-    .meta{min-width:240px}
-    .meta .line{margin-top:6px;color:var(--muted);font-size:13px}
+    h1{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:44px;
+      margin:10px 0 0;
+      text-transform:uppercase;
+    }
+    .subtitle{color:var(--muted);font-size:14px}
+
+    .muted{color:var(--muted)}
+    .space{height:8px}
 
     .badge{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:10px 14px;
+      display:inline-block;
+      background:var(--badge);
+      color:#fff;
+      padding:6px 12px;
       border-radius:999px;
-      background:var(--badgeBg);
-      color:var(--badgeText);
       font-weight:900;
-      font-size:16px;
-      letter-spacing:.5px;
+      font-size:13px;
       white-space:nowrap;
     }
-    .badge.muted{
-      background:var(--chipBg);
-      color:var(--muted);
-      border:1px solid var(--border);
-      font-weight:800;
-    }
+
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 
     .pill{
       display:inline-block;
@@ -134,263 +92,294 @@
       border:1px solid var(--border);
       border-radius:999px;
       padding:6px 10px;
-      margin:6px 8px 0 0;
       font-weight:900;
-      font-size:12px;
+      margin:6px 8px 0 0;
+      white-space:nowrap;
     }
 
-    .listEmpty{margin-top:14px;color:var(--muted)}
+    .btn{
+      border:1px solid var(--border);
+      background:var(--btnBg);
+      color:var(--btnText);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:900;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+    }
+    .btn.ghost{
+      background:transparent;
+      color:var(--text);
+    }
 
-    details{
+    .details{
       margin-top:12px;
+      border-top:1px solid var(--border);
+      padding-top:12px;
+      display:none;
+    }
+    .details.open{display:block}
+
+    .twoCols{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+    @media(min-width:760px){ .twoCols{grid-template-columns:1fr 1fr} }
+
+    table{width:100%;border-collapse:separate;border-spacing:0 8px}
+    th{font-size:12px;color:var(--muted);text-align:left;padding:0 6px}
+    td{padding:0 6px;vertical-align:middle}
+
+    .teamTitle{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+    .shirt{width:18px;height:18px;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
+
+    .chipBox{
+      background:var(--chipBg);
       border:1px solid var(--border);
       border-radius:14px;
-      background:var(--detailBg);
-      overflow:hidden;
+      padding:12px;
     }
-    summary{
-      list-style:none;
-      cursor:pointer;
-      padding:12px 12px;
-      font-weight:900;
-      user-select:none;
+
+    .nav{
       display:flex;
-      align-items:center;
       justify-content:space-between;
       gap:10px;
+      flex-wrap:wrap;
+      font-size:14px;
     }
-    summary::-webkit-details-marker{display:none}
-    .chev{opacity:.7}
-    details[open] .chev{transform:rotate(180deg)}
-    .detailBody{padding:12px;border-top:1px solid var(--border)}
-    .sectionTitle{font-weight:900;margin-top:10px}
+    .nav a{color:var(--text);text-decoration:none;font-weight:800}
+    .nav a:hover{text-decoration:underline}
 
     .fab{
-      position:fixed;right:16px;bottom:16px;
-      width:54px;height:54px;border-radius:999px;
+      position:fixed;
+      right:16px;bottom:16px;
+      width:54px;height:54px;
+      border-radius:999px;
       border:1px solid var(--border);
-      background:var(--card);color:var(--text);
-      font-size:22px;font-weight:900;cursor:pointer;
+      background:var(--card);
       box-shadow:var(--shadow);
-      display:flex;align-items:center;justify-content:center;
-      z-index:9999;user-select:none;
+      cursor:pointer;
+      font-size:22px;
     }
-    .fab:active{transform:scale(.98)}
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="top">
-      <div>
-        <h1>Storico partite</h1>
-        <div class="sub">Quelli della pensione</div>
-      </div>
+<div class="wrap">
 
-      <div class="nav">
-        <a href="index.html">⬅️ Home</a>
-        <a href="admin.html">🔐 Admin</a>
-      </div>
-    </div>
-
-    <div class="toolbar">
-      <label class="toggle">
-        <input id="onlyFinished" type="checkbox" />
-        <span><b>Solo partite con risultato</b></span>
-      </label>
-
-      <div class="search">
-        <span>🔎</span>
-        <input id="searchName" type="text" placeholder="Cerca nome (es. Marco)" />
-      </div>
-
-      <span class="hint" id="countHint"></span>
-    </div>
-
-    <div id="list" class="listEmpty">Caricamento…</div>
+  <div class="header">
+    <div class="logo">QDP</div>
+    <h1>Storico</h1>
+    <div class="subtitle">Quelli della pensione</div>
   </div>
 
-  <button id="themeToggle" class="fab" title="Tema chiaro/scuro">🌙</button>
+  <div class="card">
+    <div id="status" class="muted">Caricamento…</div>
+  </div>
 
-  <script>
-    const btnTheme = document.getElementById("themeToggle");
-    function setTheme(mode){
-      document.body.classList.toggle("dark", mode === "dark");
-      btnTheme.textContent = (mode === "dark") ? "☀️" : "🌙";
-      localStorage.setItem("qdp_theme", mode);
+  <div id="list"></div>
+
+  <div class="card nav muted">
+    <a href="index.html">🏠 Home</a>
+    <a href="marcatori.html">⚽ Marcatori</a>
+    <a href="componenti.html">👥 Componenti</a>
+    <a href="admin.html">🔐 Admin</a>
+  </div>
+
+</div>
+
+<button id="themeToggle" class="fab">🌙</button>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<script>
+/* THEME */
+function setTheme(mode){
+  document.body.classList.toggle("dark", mode === "dark");
+  document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
+  localStorage.setItem("qdp_theme", mode);
+}
+setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
+document.getElementById("themeToggle").onclick = () => {
+  setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+};
+
+/* HELPERS */
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function formatDateFull(iso){
+  if(!iso) return "";
+  const d = new Date(iso);
+  return d.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+}
+function formatTimeHHMM(t){
+  return t ? String(t).slice(0,5) : "";
+}
+function shirtSVG(color){
+  return `
+    <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 10 L28 6 H36 L44 10 L56 18 L50 30 L44 26 V58 H20 V26 L14 30 L8 18 Z"
+        fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
+    </svg>`;
+}
+function resultBadge(m){
+  if(m.score_a != null && m.score_b != null) return `🏁 ${m.score_a}-${m.score_b}`;
+  return `🏁 da giocare`;
+}
+
+/* SUPABASE */
+if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+  document.getElementById("status").textContent = "Errore: config.js non caricato";
+  throw new Error("Missing config");
+}
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const statusEl = document.getElementById("status");
+const listEl = document.getElementById("list");
+
+async function load(){
+  try{
+    const { data: players, error: eP } = await client.from("players").select("id,name");
+    if(eP) throw eP;
+    const idToName = new Map((players||[]).map(p=>[String(p.id), p.name]));
+
+    const { data: matches, error: eM } = await client
+      .from("matches")
+      .select("id,match_date,match_time,venue,keeper_a,keeper_b,score_a,score_b,called_up,scorers")
+      .order("match_date",{ascending:false})
+      .order("match_time",{ascending:false})
+      .limit(200);
+
+    if(eM) throw eM;
+
+    if(!matches || !matches.length){
+      statusEl.textContent = "Nessuna partita nello storico";
+      listEl.innerHTML = "";
+      return;
     }
-    const savedTheme = localStorage.getItem("qdp_theme");
-    setTheme(savedTheme === "dark" ? "dark" : "light");
-    btnTheme.addEventListener("click", () => setTheme(document.body.classList.contains("dark") ? "light" : "dark"));
-  </script>
 
-  <script src="config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    statusEl.textContent = `Partite: ${matches.length}`;
 
-  <script>
-    const listEl = document.getElementById("list");
-    const onlyFinishedEl = document.getElementById("onlyFinished");
-    const searchNameEl = document.getElementById("searchName");
-    const countHintEl = document.getElementById("countHint");
+    listEl.innerHTML = matches.map(m => {
+      const dateFull = formatDateFull(m.match_date);
+      const time = formatTimeHHMM(m.match_time);
+      const keepA = escapeHtml(m.keeper_a || "—");
+      const keepB = escapeHtml(m.keeper_b || "—");
+      const venue = escapeHtml(m.venue || "");
 
-    if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
-      listEl.innerHTML = "<b>Config mancante (config.js)</b>";
-      throw new Error("Missing config");
-    }
+      const called = Array.isArray(m.called_up) ? m.called_up : [];
+      const calledNames = called.map(id => idToName.get(String(id)) || String(id));
 
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const sc = m.scorers || {};
+      const ta = Array.isArray(sc.team_a) ? sc.team_a : [];
+      const tb = Array.isArray(sc.team_b) ? sc.team_b : [];
 
-    let ALL = [];
-    let ID_TO_NAME = new Map();
-    let MATCH_SEARCH_TEXT = new Map(); // matchId -> stringa ricercabile
+      const renderScTable = (arr) => {
+        if(!arr.length) return `<div class="muted">Nessun marcatore inserito</div>`;
+        const rows = arr
+          .slice()
+          .sort((a,b)=>Number(b.goals||0)-Number(a.goals||0))
+          .map(x=>{
+            const nm = idToName.get(String(x.player_id)) || x.player_id || "-";
+            return `<tr>
+              <td><span class="pill">${escapeHtml(nm)}</span></td>
+              <td><b>${escapeHtml(x.goals)}</b></td>
+            </tr>`;
+          }).join("");
+        return `<table>
+          <thead><tr><th>Giocatore</th><th style="width:70px">Gol</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+      };
 
-    function pill(s){ return `<span class="pill">${s}</span>`; }
-    function hasScore(m){ return (m.score_a != null && m.score_b != null); }
+      const detailsId = `det_${m.id}`;
 
-    function namesFromIds(ids){
-      return (Array.isArray(ids) ? ids : [])
-        .map(id => ID_TO_NAME.get(String(id)))
-        .filter(Boolean);
-    }
-
-    function buildSearchIndex(){
-      MATCH_SEARCH_TEXT = new Map();
-      ALL.forEach(m=>{
-        const called = namesFromIds(m.called_up);
-        const teamA  = namesFromIds(m.team_a);
-        const teamB  = namesFromIds(m.team_b);
-        const str = (called.concat(teamA, teamB).join(" ") || "").toLowerCase();
-        MATCH_SEARCH_TEXT.set(String(m.id), str);
-      });
-    }
-
-    function render(){
-      const onlyFinished = onlyFinishedEl.checked;
-      const q = (searchNameEl.value || "").trim().toLowerCase();
-
-      let arr = ALL;
-      if(onlyFinished) arr = arr.filter(hasScore);
-
-      if(q){
-        arr = arr.filter(m => (MATCH_SEARCH_TEXT.get(String(m.id)) || "").includes(q));
-      }
-
-      countHintEl.textContent = `Totale: ${arr.length}`;
-
-      if(!arr.length){
-        listEl.innerHTML = `<div class="listEmpty">Nessuna partita da mostrare.</div>`;
-        return;
-      }
-
-      listEl.innerHTML = arr.map(m=>{
-        const time = String(m.match_time||"").slice(0,5);
-        const badge = hasScore(m)
-          ? `<span class="badge">🏁 ${m.score_a}-${m.score_b}</span>`
-          : `<span class="badge muted">Risultato —</span>`;
-
-        const called = namesFromIds(m.called_up);
-        const teamA  = namesFromIds(m.team_a);
-        const teamB  = namesFromIds(m.team_b);
-        const hasTeams = teamA.length || teamB.length;
-
-        return `
-          <div class="card">
-            <div class="row">
-              <div class="meta">
-                <div><b>${m.match_date}</b> ${time} • ${m.venue||""}</div>
-                <div class="line"><b>Portieri:</b> ${m.keeper_a||"-"} vs ${m.keeper_b||"-"}</div>
+      return `
+        <div class="card">
+          <div class="row" style="justify-content:space-between">
+            <div>
+              <div><b>📅 ${escapeHtml(dateFull)} • ⏰ ${escapeHtml(time)}</b></div>
+              <div class="muted" style="margin-top:6px">📍 ${venue}</div>
+              <div class="row" style="margin-top:10px">
+                <span class="badge">${escapeHtml(resultBadge(m))}</span>
+                <span class="pill">🟨 ${keepA}</span>
+                <span class="pill">🟥 ${keepB}</span>
               </div>
-              ${badge}
             </div>
+            <div>
+              <button class="btn ghost" data-target="${detailsId}">Dettagli ▾</button>
+            </div>
+          </div>
 
-            <details>
-              <summary>
-                <span>Apri dettagli</span>
-                <span class="chev">▾</span>
-              </summary>
-              <div class="detailBody">
-                <div class="sectionTitle">Convocati</div>
-                <div>${called.length ? called.map(pill).join("") : "<span class='hint'>—</span>"}</div>
-
-                <div class="sectionTitle">Formazioni</div>
+          <div class="details" id="${detailsId}">
+            <div class="chipBox">
+              <div style="font-weight:900">Convocati</div>
+              <div class="muted" style="margin-top:8px">
                 ${
-                  hasTeams
-                    ? `
-                      <div class="hint" style="margin-top:6px"><b>Squadra A</b></div>
-                      <div>${teamA.length ? teamA.map(pill).join("") : "<span class='hint'>—</span>"}</div>
-
-                      <div class="hint" style="margin-top:10px"><b>Squadra B</b></div>
-                      <div>${teamB.length ? teamB.map(pill).join("") : "<span class='hint'>—</span>"}</div>
-                    `
-                    : `<div class="hint" style="margin-top:6px">Formazioni non inserite.</div>`
+                  calledNames.length
+                    ? calledNames.map(n=>`<span class="pill">${escapeHtml(n)}</span>`).join("")
+                    : "—"
                 }
               </div>
-            </details>
+            </div>
+
+            <div class="space"></div>
+
+            <div class="twoCols">
+              <div class="chipBox">
+                <div class="teamTitle">${shirtSVG("#facc15")} <b>Marcatori Squadra A</b></div>
+                ${renderScTable(ta)}
+              </div>
+              <div class="chipBox">
+                <div class="teamTitle">${shirtSVG("#ef4444")} <b>Marcatori Squadra B</b></div>
+                ${renderScTable(tb)}
+              </div>
+            </div>
           </div>
-        `;
-      }).join("");
-    }
+        </div>
+      `;
+    }).join("");
 
-    async function load(){
-      listEl.textContent = "Caricamento…";
+    // ACCORDION: apri uno, chiudi gli altri
+    const buttons = [...document.querySelectorAll("button[data-target]")];
+    buttons.forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const id = btn.getAttribute("data-target");
+        const box = document.getElementById(id);
+        const isOpen = box.classList.contains("open");
 
-      const { data: matches, error } = await client
-        .from("matches")
-        .select("id,match_date,match_time,venue,keeper_a,keeper_b,called_up,score_a,score_b,is_finished,team_a,team_b")
-        .order("match_date",{ascending:false})
-        .order("match_time",{ascending:false})
-        .limit(300);
+        // chiudi tutto
+        document.querySelectorAll(".details.open").forEach(d => d.classList.remove("open"));
+        buttons.forEach(b => b.textContent = "Dettagli ▾");
 
-      if(error){
-        listEl.innerHTML = `<b style="color:#ff4d4d">Errore: ${error.message}</b>`;
-        return;
-      }
-
-      ALL = matches || [];
-
-      const allIds = [...new Set(
-        ALL.flatMap(m => []
-          .concat(Array.isArray(m.called_up) ? m.called_up : [])
-          .concat(Array.isArray(m.team_a) ? m.team_a : [])
-          .concat(Array.isArray(m.team_b) ? m.team_b : [])
-        )
-      )];
-
-      ID_TO_NAME = new Map();
-      if(allIds.length){
-        const { data: players, error: e2 } = await client
-          .from("players")
-          .select("id,name")
-          .in("id", allIds);
-
-        if(!e2){
-          (players||[]).forEach(p => ID_TO_NAME.set(String(p.id), p.name));
+        // se era chiuso, apri solo questo
+        if(!isOpen){
+          box.classList.add("open");
+          btn.textContent = "Dettagli ▴";
         }
-      }
-
-      buildSearchIndex();
-      render();
-    }
-
-    // remember filter
-    onlyFinishedEl.checked = (localStorage.getItem("qdp_only_finished") === "1");
-    onlyFinishedEl.addEventListener("change", ()=>{
-      localStorage.setItem("qdp_only_finished", onlyFinishedEl.checked ? "1" : "0");
-      render();
+      });
     });
 
-    // remember search
-    searchNameEl.value = localStorage.getItem("qdp_search_name") || "";
-    let t = null;
-    searchNameEl.addEventListener("input", ()=>{
-      clearTimeout(t);
-      t = setTimeout(()=>{
-        localStorage.setItem("qdp_search_name", searchNameEl.value);
-        render();
-      }, 120);
-    });
+  }catch(err){
+    console.error(err);
+    statusEl.textContent = "Errore caricamento storico";
+    listEl.innerHTML = `<div class="card"><div class="muted">${escapeHtml(err.message || String(err))}</div></div>`;
+  }
+}
 
-    load();
-  </script>
+load();
+</script>
 </body>
 </html>
+```0
