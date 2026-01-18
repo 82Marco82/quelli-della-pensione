@@ -1,150 +1,297 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Marcatori • Quelli della pensione</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
-    body{
-      font-family:Inter,system-ui;
-      background:#f4f6f8;
-      margin:0;
-      padding:20px;
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --pill:#eeeeee;
+      --logo1:#111;
+      --logo2:#333;
+      --badge:#111;
     }
-    .box{
-      max-width:600px;
+    body.dark{
+      --bg:#0f1115;
+      --card:#171a21;
+      --text:#e5e7eb;
+      --muted:#a1a1aa;
+      --border:#2a2f3a;
+      --shadow:0 10px 28px rgba(0,0,0,.45);
+      --pill:#222631;
+      --logo1:#0b0e14;
+      --logo2:#2a3242;
+      --badge:#0b0e14;
+    }
+
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
+    .wrap{max-width:760px;margin:auto;padding:16px}
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      margin:12px 0;
+    }
+
+    .header{text-align:center}
+    .logo{
+      width:74px;height:74px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
       margin:auto;
-      background:#fff;
-      padding:20px;
-      border-radius:14px;
-      box-shadow:0 6px 20px rgba(0,0,0,.08);
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:30px;
+      letter-spacing:2px;
     }
-    h1{margin-top:0}
-    .muted{color:#666;font-size:13px}
-    .row{margin-top:12px}
-    textarea{
-      width:100%;
-      min-height:100px;
-      padding:12px;
-      border-radius:10px;
-      border:1px solid #ccc;
-      font-family:Inter;
-      font-size:14px;
+    h1{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:44px;
+      margin:10px 0 0;
+      text-transform:uppercase;
     }
-    button{
-      margin-top:14px;
-      padding:12px 16px;
-      border-radius:12px;
-      border:0;
-      background:#111;
-      color:#fff;
-      font-weight:700;
-      cursor:pointer;
-    }
-    .ok{color:#0a7a32;font-weight:700;margin-top:10px}
-    .err{color:#c00;font-weight:700;margin-top:10px}
+    .subtitle{color:var(--muted);font-size:14px}
+
     .badge{
       display:inline-block;
-      background:#eee;
-      padding:6px 10px;
+      background:var(--badge);
+      color:#fff;
+      padding:6px 12px;
       border-radius:999px;
-      font-weight:700;
-      margin-right:6px;
+      font-weight:900;
+      font-size:13px;
     }
+
+    .muted{color:var(--muted)}
+    .line{margin-top:8px}
+
+    .twoCols{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+    @media(min-width:720px){ .twoCols{grid-template-columns:1fr 1fr} }
+
+    table{width:100%;border-collapse:separate;border-spacing:0 8px}
+    th{font-size:12px;color:var(--muted);text-align:left;padding:0 6px}
+    td{padding:0 6px;vertical-align:middle}
+    .pill{
+      display:inline-block;
+      background:var(--pill);
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:6px 10px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .shirt{width:18px;height:18px;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
+    .teamTitle{display:flex;align-items:center;gap:10px;margin:0 0 10px}
     .nav{
       display:flex;
       justify-content:space-between;
-      margin-bottom:12px;
+      gap:10px;
+      flex-wrap:wrap;
       font-size:14px;
     }
-    a{text-decoration:none;color:#0b5fff}
+    .nav a{color:var(--text);text-decoration:none;font-weight:800}
+    .nav a:hover{text-decoration:underline}
+
+    .fab{
+      position:fixed;
+      right:16px;bottom:16px;
+      width:54px;height:54px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      font-size:22px;
+    }
   </style>
 </head>
 
 <body>
-<div class="box">
+<div class="wrap">
 
-  <div class="nav">
-    <a href="index.html">⬅️ Home</a>
+  <div class="header">
+    <div class="logo">QDP</div>
+    <h1>Marcatori</h1>
+    <div class="subtitle">Quelli della pensione</div>
+  </div>
+
+  <div class="card">
+    <div id="status" class="muted">Caricamento…</div>
+    <div id="meta"></div>
+  </div>
+
+  <div class="card">
+    <div class="twoCols">
+      <div>
+        <div class="teamTitle" id="titleA"></div>
+        <div id="boxA" class="muted">—</div>
+      </div>
+      <div>
+        <div class="teamTitle" id="titleB"></div>
+        <div id="boxB" class="muted">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card nav muted">
+    <a href="index.html">🏠 Home</a>
+    <a href="storico.html">📚 Storico</a>
+    <a href="componenti.html">👥 Componenti</a>
     <a href="admin.html">🔐 Admin</a>
   </div>
 
-  <h1>⚽ Marcatori</h1>
-  <div id="info" class="muted">Caricamento partita…</div>
-
-  <div class="row">
-    <label><b>Inserisci marcatori (facoltativo)</b></label>
-    <textarea id="scorersText" placeholder="Es. Marco 2, Luca 1"></textarea>
-  </div>
-
-  <button id="saveBtn">💾 Salva</button>
-
-  <div id="msg"></div>
 </div>
+
+<button id="themeToggle" class="fab">🌙</button>
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
-const info = document.getElementById("info");
-const msg  = document.getElementById("msg");
-const textarea = document.getElementById("scorersText");
-const btn = document.getElementById("saveBtn");
+  // THEME
+  function setTheme(mode){
+    document.body.classList.toggle("dark", mode === "dark");
+    document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
+    localStorage.setItem("qdp_theme", mode);
+  }
+  setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
+  document.getElementById("themeToggle").onclick = () => {
+    setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+  };
 
-if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
-  info.textContent = "Config mancante (config.js)";
-  throw new Error("Missing config");
-}
+  // HELPERS
+  function shirtSVG(color){
+    return `
+      <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M20 10 L28 6 H36 L44 10 L56 18 L50 30 L44 26 V58 H20 V26 L14 30 L8 18 Z"
+          fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
+      </svg>`;
+  }
+  document.getElementById("titleA").innerHTML = `${shirtSVG("#facc15")} <b>Squadra A</b>`;
+  document.getElementById("titleB").innerHTML = `${shirtSVG("#ef4444")} <b>Squadra B</b>`;
 
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-let CURRENT_MATCH_ID = null;
-
-async function loadLastMatch(){
-  const { data, error } = await client
-    .from("matches")
-    .select("id,match_date,match_time,score_a,score_b,scorers_text")
-    .order("match_date",{ascending:false})
-    .order("match_time",{ascending:false})
-    .limit(1)
-    .single();
-
-  if(error || !data){
-    info.textContent = "Nessuna partita trovata.";
-    return;
+  function formatDateFull(iso){
+    if(!iso) return "";
+    const d = new Date(iso);
+    return d.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  }
+  function formatTimeHHMM(t){
+    return t ? String(t).slice(0,5) : "";
+  }
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
   }
 
-  CURRENT_MATCH_ID = data.id;
-
-  info.innerHTML = `
-    <div class="badge">${data.match_date}</div>
-    <div class="badge">${data.score_a} - ${data.score_b}</div>
-  `;
-
-  textarea.value = data.scorers_text || "";
-}
-
-btn.onclick = async ()=>{
-  if(!CURRENT_MATCH_ID) return;
-
-  const text = textarea.value.trim();
-
-  const { error } = await client
-    .from("matches")
-    .update({ scorers_text: text || null })
-    .eq("id", CURRENT_MATCH_ID);
-
-  if(error){
-    msg.innerHTML = `<div class="err">Errore: ${error.message}</div>`;
-  }else{
-    msg.innerHTML = `<div class="ok">✅ Marcatori salvati</div>`;
+  // SUPABASE
+  if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+    document.getElementById("status").textContent = "Errore: config.js non caricato";
+    throw new Error("Missing config");
   }
-};
+  const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-loadLastMatch();
+  const statusEl = document.getElementById("status");
+  const metaEl = document.getElementById("meta");
+  const boxA = document.getElementById("boxA");
+  const boxB = document.getElementById("boxB");
+
+  async function load(){
+    try{
+      const { data, error } = await client
+        .from("matches")
+        .select("match_date,match_time,venue,score_a,score_b,scorers")
+        .order("match_date",{ascending:false})
+        .order("match_time",{ascending:false})
+        .limit(1);
+
+      if(error) throw error;
+      if(!data || !data.length){
+        statusEl.textContent = "Nessuna partita trovata";
+        boxA.textContent = "—";
+        boxB.textContent = "—";
+        return;
+      }
+
+      const m = data[0];
+      statusEl.textContent = "Ultima partita ✅";
+
+      const dateFull = formatDateFull(m.match_date);
+      const time = formatTimeHHMM(m.match_time);
+
+      const result = (m.score_a != null && m.score_b != null)
+        ? `<span class="badge">🏁 ${m.score_a}-${m.score_b}</span>`
+        : `<span class="badge">🏁 da giocare</span>`;
+
+      metaEl.innerHTML = `
+        <div class="line"><b>📅 ${escapeHtml(dateFull)} • ⏰ ${escapeHtml(time)}</b></div>
+        <div class="line muted">📍 ${escapeHtml(m.venue || "")}</div>
+        <div class="line">${result}</div>
+      `;
+
+      const sc = m.scorers || {};
+      const ta = Array.isArray(sc.team_a) ? sc.team_a : [];
+      const tb = Array.isArray(sc.team_b) ? sc.team_b : [];
+
+      // serve mappa id->name, quindi carico players
+      const { data: players, error: e2 } = await client
+        .from("players")
+        .select("id,name");
+
+      if(e2) throw e2;
+
+      const idToName = new Map((players||[]).map(p=>[String(p.id), p.name]));
+
+      function renderTable(list){
+        if(!list.length) return `<div class="muted">Nessun marcatore inserito</div>`;
+        const rows = list
+          .slice()
+          .sort((a,b)=>Number(b.goals||0)-Number(a.goals||0))
+          .map(x=>{
+            const nm = idToName.get(String(x.player_id)) || x.player_id || "-";
+            return `<tr>
+              <td><span class="pill">${escapeHtml(nm)}</span></td>
+              <td><b>${escapeHtml(x.goals)}</b></td>
+            </tr>`;
+          }).join("");
+        return `<table>
+          <thead><tr><th>Giocatore</th><th style="width:70px">Gol</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+      }
+
+      boxA.innerHTML = renderTable(ta);
+      boxB.innerHTML = renderTable(tb);
+
+    }catch(err){
+      console.error(err);
+      statusEl.textContent = "Errore caricamento marcatori";
+      metaEl.innerHTML = `<div class="muted" style="margin-top:8px">${escapeHtml(err.message || String(err))}</div>`;
+      boxA.textContent = "—";
+      boxB.textContent = "—";
+    }
+  }
+
+  load();
 </script>
-
 </body>
 </html>
