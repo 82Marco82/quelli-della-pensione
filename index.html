@@ -22,6 +22,7 @@
     a{color:#0b5fff;text-decoration:none}
     .mapWrap{margin-top:12px;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb}
     iframe{width:100%;height:260px;border:0;display:block}
+    .mapLink{display:inline-block;margin-top:10px}
   </style>
 </head>
 <body>
@@ -38,6 +39,7 @@
       <div id="status" class="muted">Caricamento…</div>
       <div id="info" style="margin-top:10px"></div>
 
+      <!-- MAPPA -->
       <div id="mapBox" class="mapWrap" style="display:none">
         <iframe
           id="mapFrame"
@@ -46,6 +48,9 @@
           allowfullscreen
         ></iframe>
       </div>
+      <a id="mapOpen" class="mapLink" href="https://maps.app.goo.gl/gLHp6hEHMW8jmwKK7?g_st=ac" target="_blank" rel="noopener" style="display:none">
+        Apri in Google Maps
+      </a>
 
       <div style="margin-top:12px;font-weight:900">Convocati</div>
       <div id="called" class="muted">—</div>
@@ -64,6 +69,7 @@
     const calledEl = document.getElementById("called");
     const mapBox = document.getElementById("mapBox");
     const mapFrame = document.getElementById("mapFrame");
+    const mapOpen = document.getElementById("mapOpen");
 
     function showErr(msg){
       statusEl.innerHTML = '<span class="err">'+msg+'</span>';
@@ -74,6 +80,7 @@
       infoEl.innerHTML = '<div class="muted">Torna più tardi oppure chiedi a Marco di crearla dall’Area Admin.</div>';
       calledEl.textContent = "—";
       mapBox.style.display = "none";
+      mapOpen.style.display = "none";
     }
 
     if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
@@ -108,11 +115,10 @@
         <div><b>Squadra B:</b> ${match.keeper_b || "-"}</div>
       `;
 
-      // ✅ MAPPA (gratis, senza API key)
-      // Se vuoi essere super preciso, puoi cambiare questo in futuro con un link "Incorpora mappa" di Google Maps.
-      const q = encodeURIComponent(venue);
-      mapFrame.src = `https://www.google.com/maps?q=${q}&output=embed`;
+      // ✅ MAPPA FISSA (Campo a 6 - Aradeo)
+      mapFrame.src = "https://www.google.com/maps?q=Campo%20a%206%20Aradeo&output=embed";
       mapBox.style.display = "block";
+      mapOpen.style.display = "inline-block";
 
       const ids = Array.isArray(match.called_up) ? match.called_up : [];
       if(ids.length===0){ calledEl.textContent="Nessun convocato"; return; }
@@ -133,4 +139,4 @@
     load();
   </script>
 </body>
-</html>
+</html>    
