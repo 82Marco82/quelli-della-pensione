@@ -1,1 +1,469 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard – Quelli della pensione</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:#f4f6f8}
+    .wrap{max-width:980px;margin:24px auto;padding:16px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+    .top a{color:#0b5fff;text-decoration:none}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:900px){.grid{grid-template-columns:420px 1fr}}
+    .card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+    h1{margin:0;font-size:20px}
+    h2{margin:0 0 10px;font-size:16px}
+    label{display:block;font-size:12px;margin:10px 0 6px;color:#333}
+    input,select{width:100%;padding:10px;border:1px solid #cfd6dd;border-radius:10px;font-size:14px;background:#fff}
+    button{padding:10px 12px;border:0;border-radius:10px;background:#111;color:#fff;font-weight:800;cursor:pointer}
+    button.secondary{background:#444}
+    button.danger{background:#b00020}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .msg{margin-top:10px;padding:10px;border-radius:10px;background:#f1f5f9;color:#111;font-size:13px;white-space:pre-wrap}
+    .ok{background:#dcfce7;color:#166534}
+    .err{background:#ffe4e6;color:#9f1239}
+    .muted{color:#666;font-size:12px}
+    .playersBox{max-height:420px;overflow:auto;border:1px solid #e5e7eb;border-radius:12px;padding:10px}
+    .pRow{display:flex;align-items:center;gap:8px;padding:6px 4px;border-radius:10px}
+    .pRow:hover{background:#f6f7fb}
+    .pill{display:inline-block;background:#eee;border-radius:999px;padding:6px 10px;margin:4px 6px 0 0;font-weight:800}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>Dashboard</h1>
+        <div class="muted">Quelli della pensione</div>
+      </div>
+      <div class="row">
+        <a href="index.html">Torna al sito</a>
+        <button id="btnLogout" class="secondary">Esci</button>
+      </div>
+    </div>
 
+    <div class="grid">
+
+      <!-- COLONNA SINISTRA: CREA/AGGIORNA -->
+      <div class="card">
+        <h2>Crea / aggiorna partita</h2>
+
+        <div id="msg" class="msg">Caricamento…</div>
+
+        <label>Seleziona partita (per modificare)</label>
+        <select id="matchSelect">
+          <option value="">-- nuova partita --</option>
+        </select>
+
+        <div class="row" style="margin-top:10px">
+          <button id="btnNew">Nuova partita</button>
+          <button id="btnRefresh" class="secondary">Aggiorna lista</button>
+        </div>
+
+        <label>Data</label>
+        <input id="matchDate" type="date" />
+
+        <label>Ora</label>
+        <input id="matchTime" type="time" value="21:00" />
+
+        <label>Campo</label>
+        <input id="venue" type="text" value="Campo a 6 - Aradeo" />
+
+        <label>Portiere Squadra A</label>
+        <select id="keeperA">
+          <option value="">-- scegli --</option>
+        </select>
+
+        <label>Portiere Squadra B</label>
+        <select id="keeperB">
+          <option value="">-- scegli --</option>
+        </select>
+
+        <label>Convocati (max 12)</label>
+        <div class="playersBox" id="playersBox"></div>
+        <div class="muted" id="countInfo">Convocati: 0/12</div>
+
+        <div class="row" style="margin-top:12px">
+          <button id="btnSave">Salva</button>
+          <button id="btnToggleVote" class="secondary">Apri/Chiudi voto</button>
+          <button id="btnDelete" class="danger">Elimina partita</button>
+        </div>
+
+        <div class="muted" style="margin-top:10px">
+          Nota: i convocati vengono salvati automaticamente in <b>matches.called_up</b> come UUID.
+        </div>
+      </div>
+
+      <!-- COLONNA DESTRA: ANTEPRIMA -->
+      <div class="card">
+        <h2>Anteprima (come la vedono i giocatori)</h2>
+        <div id="preview" class="muted">Nessuna partita selezionata.</div>
+
+        <div class="muted" style="margin-top:14px">
+          Suggerimento: dopo “Salva”, condividi solo il link della home (index). I convocati si vedono lì.
+        </div>
+
+        <div style="margin-top:14px">
+          <button id="btnAddPlayer" class="secondary">Aggiungi nuovo giocatore</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONFIG + SUPABASE -->
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+  <script>
+    // --------- Helpers UI ----------
+    const $ = (id) => document.getElementById(id);
+    const msgEl = $("msg");
+    const previewEl = $("preview");
+    const countInfoEl = $("countInfo");
+
+    function setMsg(text, kind="info"){
+      msgEl.className = "msg";
+      if(kind==="ok") msgEl.classList.add("ok");
+      if(kind==="err") msgEl.classList.add("err");
+      msgEl.textContent = text;
+    }
+
+    function escapeHtml(s){
+      return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+    }
+
+    // --------- Config checks ----------
+    if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+      setMsg("Config mancante: controlla config.js (SUPABASE_URL e SUPABASE_ANON_KEY).","err");
+      throw new Error("Missing config");
+    }
+    if(!window.supabase || !window.supabase.createClient){
+      setMsg("Libreria Supabase non caricata.","err");
+      throw new Error("Supabase SDK missing");
+    }
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // --------- State ----------
+    let PLAYERS = [];   // [{id,name,is_goalkeeper}]
+    let MATCHES = [];   // [{...}]
+    let CURRENT_MATCH = null;
+
+    // --------- Auth guard ----------
+    async function requireSession(){
+      const { data: { session }, error } = await client.auth.getSession();
+      if(error) { setMsg("Errore sessione: "+error.message,"err"); return false; }
+      if(!session){
+        location.href = "admin.html";
+        return false;
+      }
+      return true;
+    }
+
+    // --------- Load data ----------
+    async function loadPlayers(){
+      const { data, error } = await client
+        .from("players")
+        .select("id,name,is_goalkeeper")
+        .order("name",{ascending:true});
+      if(error) throw error;
+      PLAYERS = data || [];
+      renderKeepers();
+      renderPlayersBox();
+    }
+
+    async function loadMatches(){
+      const { data, error } = await client
+        .from("matches")
+        .select("id,match_date,match_time,venue,team_a,team_b,team_a_keeper_id,team_b_keeper_id,called_up,voting_open,created_at")
+        .order("match_date",{ascending:false})
+        .order("match_time",{ascending:false})
+        .limit(50);
+      if(error) throw error;
+      MATCHES = data || [];
+      renderMatchesSelect();
+    }
+
+    // --------- Render ----------
+    function renderKeepers(){
+      const keepers = PLAYERS.filter(p => !!p.is_goalkeeper);
+      const a = $("keeperA"), b = $("keeperB");
+      a.innerHTML = `<option value="">-- scegli --</option>`;
+      b.innerHTML = `<option value="">-- scegli --</option>`;
+      keepers.forEach(k=>{
+        const o1 = document.createElement("option");
+        o1.value = k.id;
+        o1.textContent = k.name;
+        a.appendChild(o1);
+
+        const o2 = document.createElement("option");
+        o2.value = k.id;
+        o2.textContent = k.name;
+        b.appendChild(o2);
+      });
+    }
+
+    function renderPlayersBox(checkedIds=[]){
+      const box = $("playersBox");
+      const checked = new Set((checkedIds||[]).map(String));
+      box.innerHTML = "";
+
+      PLAYERS.filter(p=>!p.is_goalkeeper).forEach(p=>{
+        const row = document.createElement("label");
+        row.className = "pRow";
+
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.value = p.id;             // ✅ VALUE = UUID
+        cb.checked = checked.has(String(p.id));
+        cb.onchange = () => {
+          const ids = getSelectedCalledUp();
+          if(ids.length > 12){
+            cb.checked = false;
+            setMsg("Max 12 convocati.","err");
+          }
+          updateCount();
+          renderPreview();
+        };
+
+        const name = document.createElement("span");
+        name.textContent = p.name;
+
+        row.appendChild(cb);
+        row.appendChild(name);
+        box.appendChild(row);
+      });
+
+      updateCount();
+    }
+
+    function renderMatchesSelect(){
+      const sel = $("matchSelect");
+      sel.innerHTML = `<option value="">-- nuova partita --</option>`;
+      MATCHES.forEach(m=>{
+        const opt = document.createElement("option");
+        opt.value = m.id;
+        opt.textContent = `${m.match_date} ${String(m.match_time||"").slice(0,5)} – ${m.venue||""}`.trim();
+        sel.appendChild(opt);
+      });
+    }
+
+    function updateCount(){
+      const n = getSelectedCalledUp().length;
+      countInfoEl.textContent = `Convocati: ${n}/12`;
+    }
+
+    // --------- Form helpers ----------
+    function getSelectedCalledUp(){
+      const box = $("playersBox");
+      return [...box.querySelectorAll('input[type="checkbox"]')]
+        .filter(x=>x.checked)
+        .map(x=>x.value);
+    }
+
+    function getPlayerNameById(id){
+      const p = PLAYERS.find(x=>String(x.id)===String(id));
+      return p ? p.name : "";
+    }
+
+    function getFormData(){
+      return {
+        match_date: $("matchDate").value || null,
+        match_time: ($("matchTime").value ? $("matchTime").value + ":00" : "21:00:00"),
+        venue: $("venue").value || "Campo a 6 - Aradeo",
+        team_a_keeper_id: $("keeperA").value || null,
+        team_b_keeper_id: $("keeperB").value || null,
+        called_up: getSelectedCalledUp()
+      };
+    }
+
+    function fillFormFromMatch(m){
+      CURRENT_MATCH = m;
+      $("matchDate").value = m.match_date || "";
+      $("matchTime").value = String(m.match_time||"21:00:00").slice(0,5);
+      $("venue").value = m.venue || "Campo a 6 - Aradeo";
+      $("keeperA").value = m.team_a_keeper_id || "";
+      $("keeperB").value = m.team_b_keeper_id || "";
+      renderPlayersBox(m.called_up || []);
+      renderPreview();
+    }
+
+    function clearForm(){
+      CURRENT_MATCH = null;
+      $("matchSelect").value = "";
+      $("matchDate").value = "";
+      $("matchTime").value = "21:00";
+      $("venue").value = "Campo a 6 - Aradeo";
+      $("keeperA").value = "";
+      $("keeperB").value = "";
+      renderPlayersBox([]);
+      previewEl.innerHTML = `<div class="muted">Nessuna partita selezionata.</div>`;
+    }
+
+    // --------- Preview ----------
+    function renderPreview(){
+      const f = getFormData();
+      const keeperAName = getPlayerNameById(f.team_a_keeper_id) || "-";
+      const keeperBName = getPlayerNameById(f.team_b_keeper_id) || "-";
+
+      const called = f.called_up.map(id=>{
+        const name = getPlayerNameById(id);
+        return name ? `<span class="pill">${escapeHtml(name)}</span>` : "";
+      }).join("");
+
+      previewEl.innerHTML = `
+        <div><b>Data:</b> ${escapeHtml(f.match_date||"-")} ${escapeHtml(String(f.match_time||"").slice(0,5))}</div>
+        <div><b>Campo:</b> ${escapeHtml(f.venue||"-")}</div>
+        <div style="margin-top:8px"><b>Squadra A:</b> ${escapeHtml(keeperAName)}</div>
+        <div><b>Squadra B:</b> ${escapeHtml(keeperBName)}</div>
+        <div style="margin-top:12px"><b>Convocati (${f.called_up.length}/12)</b></div>
+        <div>${called || "<span class='muted'>Nessun convocato</span>"}</div>
+      `;
+    }
+
+    // --------- Actions ----------
+    async function saveMatch(){
+      const f = getFormData();
+
+      if(!f.match_date) return setMsg("Inserisci la data.","err");
+      if(!f.team_a_keeper_id || !f.team_b_keeper_id) return setMsg("Seleziona 2 portieri.","err");
+      if(String(f.team_a_keeper_id) === String(f.team_b_keeper_id)) return setMsg("I portieri devono essere diversi.","err");
+      if(f.called_up.length > 12) return setMsg("Max 12 convocati.","err");
+
+      // team_a / team_b = nomi portieri (come volevi)
+      const payload = {
+        match_date: f.match_date,
+        match_time: f.match_time,
+        venue: f.venue,
+        team_a_keeper_id: f.team_a_keeper_id,
+        team_b_keeper_id: f.team_b_keeper_id,
+        team_a: getPlayerNameById(f.team_a_keeper_id),
+        team_b: getPlayerNameById(f.team_b_keeper_id),
+        called_up: f.called_up,
+      };
+
+      try{
+        if(CURRENT_MATCH && CURRENT_MATCH.id){
+          const { error } = await client.from("matches").update(payload).eq("id", CURRENT_MATCH.id);
+          if(error) throw error;
+          setMsg("Partita aggiornata ✅","ok");
+        } else {
+          payload.voting_open = false;
+          const { data, error } = await client.from("matches").insert([payload]).select("*").single();
+          if(error) throw error;
+          setMsg("Partita creata ✅","ok");
+          CURRENT_MATCH = data;
+          $("matchSelect").value = data.id;
+        }
+        await loadMatches();
+      } catch(e){
+        console.error(e);
+        setMsg("Errore salvataggio: " + (e.message||e),"err");
+      }
+    }
+
+    async function toggleVote(){
+      if(!CURRENT_MATCH) return setMsg("Seleziona una partita prima.","err");
+      const newVal = !CURRENT_MATCH.voting_open;
+      const { error } = await client.from("matches").update({ voting_open: newVal }).eq("id", CURRENT_MATCH.id);
+      if(error) return setMsg("Errore voto: "+error.message,"err");
+      setMsg(newVal ? "Voto aperto 🟢" : "Voto chiuso 🔴","ok");
+      // aggiorna state
+      CURRENT_MATCH.voting_open = newVal;
+      await loadMatches();
+    }
+
+    async function deleteMatch(){
+      if(!CURRENT_MATCH) return setMsg("Seleziona una partita prima.","err");
+      if(!confirm("Sicuro di eliminare questa partita?")) return;
+
+      try{
+        // elimina voti (se tabella esiste)
+        try { await client.from("mvp_votes").delete().eq("match_id", CURRENT_MATCH.id); } catch(_) {}
+
+        const { error } = await client.from("matches").delete().eq("id", CURRENT_MATCH.id);
+        if(error) throw error;
+
+        setMsg("Partita eliminata ✅","ok");
+        clearForm();
+        await loadMatches();
+      } catch(e){
+        console.error(e);
+        setMsg("Errore eliminazione: " + (e.message||e),"err");
+      }
+    }
+
+    async function addPlayer(){
+      const name = prompt("Nome nuovo giocatore:");
+      if(!name) return;
+      const clean = name.trim();
+      if(!clean) return;
+
+      try{
+        const { data: existing, error: e1 } = await client
+          .from("players").select("id").ilike("name", clean).limit(1);
+        if(e1) throw e1;
+        if(existing && existing.length){
+          setMsg("Giocatore già presente.","err");
+          return;
+        }
+
+        const { error } = await client.from("players").insert([{ name: clean, is_goalkeeper: false }]);
+        if(error) throw error;
+
+        setMsg("Giocatore aggiunto ✅","ok");
+        await loadPlayers();
+      } catch(e){
+        console.error(e);
+        setMsg("Errore aggiunta giocatore: " + (e.message||e),"err");
+      }
+    }
+
+    async function logout(){
+      setMsg("Logout…");
+      const { error } = await client.auth.signOut();
+      if(error) return setMsg("Errore logout: "+error.message,"err");
+      location.href = "admin.html";
+    }
+
+    // --------- Events ----------
+    $("matchSelect").addEventListener("change", () => {
+      const id = $("matchSelect").value;
+      if(!id){ clearForm(); return; }
+      const m = MATCHES.find(x=>String(x.id)===String(id));
+      if(m) fillFormFromMatch(m);
+    });
+
+    $("btnSave").addEventListener("click", saveMatch);
+    $("btnToggleVote").addEventListener("click", toggleVote);
+    $("btnDelete").addEventListener("click", deleteMatch);
+    $("btnRefresh").addEventListener("click", async ()=>{ setMsg("Aggiorno…"); await loadMatches(); setMsg("Lista aggiornata ✅","ok"); });
+    $("btnNew").addEventListener("click", ()=>{ clearForm(); setMsg("Nuova partita: compila e salva.","ok"); });
+    $("btnAddPlayer").addEventListener("click", addPlayer);
+    $("btnLogout").addEventListener("click", logout);
+
+    $("keeperA").addEventListener("change", ()=>{ renderPreview(); });
+    $("keeperB").addEventListener("change", ()=>{ renderPreview(); });
+    $("matchDate").addEventListener("change", ()=>{ renderPreview(); });
+    $("matchTime").addEventListener("change", ()=>{ renderPreview(); });
+    $("venue").addEventListener("input", ()=>{ renderPreview(); });
+
+    // --------- Init ----------
+    (async function init(){
+      const ok = await requireSession();
+      if(!ok) return;
+      try{
+        setMsg("Caricamento…");
+        await loadPlayers();
+        await loadMatches();
+        clearForm();
+        setMsg("Pronto ✅ Seleziona una partita o crea una nuova.","ok");
+      } catch(e){
+        console.error(e);
+        setMsg("Errore init: " + (e.message||e),"err");
+      }
+    })();
+  </script>
+</body>
+  </html>
