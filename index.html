@@ -151,6 +151,35 @@
       width:18px;height:18px;
       filter:drop-shadow(0 2px 2px rgba(0,0,0,.25));
     }
+
+    /* MVP box */
+    .mvpBox{
+      margin-top:12px;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(0,0,0,.02);
+    }
+    body.dark .mvpBox{background:rgba(255,255,255,.03)}
+    .mvpTitle{font-weight:900}
+    .mvpTop3{margin-top:8px}
+    .mvpRow{
+      display:flex;align-items:center;justify-content:space-between;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:8px 10px;
+      background:transparent;
+      margin-top:8px;
+      font-weight:800;
+    }
+    .mvpLeft{display:flex;align-items:center;gap:8px}
+    .medal{
+      width:28px;height:28px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      border:1px solid var(--border);
+      background:var(--card);
+      font-weight:900;
+    }
   </style>
 </head>
 
@@ -176,6 +205,13 @@
   <div class="card">
     <div id="status" class="muted">Caricamento…</div>
     <div id="info"></div>
+
+    <!-- MVP -->
+    <div id="mvpBox" class="mvpBox" style="display:none">
+      <div class="mvpTitle" id="mvpTitle">🏆 MVP</div>
+      <div id="mvpMain" class="muted" style="margin-top:6px">Caricamento…</div>
+      <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
+    </div>
 
     <div id="mapBox" class="mapWrap" style="display:none">
       <iframe src="https://www.google.com/maps?q=Campo%20a%206%20Aradeo&output=embed"></iframe>
@@ -243,6 +279,12 @@ const teamBEl = document.getElementById("teamB");
 const tAIcon = document.getElementById("tAIcon");
 const tBIcon = document.getElementById("tBIcon");
 
+/* MVP DOM */
+const mvpBox = document.getElementById("mvpBox");
+const mvpTitle = document.getElementById("mvpTitle");
+const mvpMain = document.getElementById("mvpMain");
+const mvpTop3 = document.getElementById("mvpTop3");
+
 function kitSVG(main, stripe){
   return `
   <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
@@ -254,6 +296,79 @@ function kitSVG(main, stripe){
 
 function formatDateFull(iso){
   return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+}
+
+function medal(i){
+  if(i===0) return "🥇";
+  if(i===1) return "🥈";
+  if(i===2) return "🥉";
+  return String(i+1);
+}
+
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+async function loadMVP(matchId, calledPlayers){
+  // calledPlayers: [{id,name}] (solo convocati)
+  try{
+    const { data: votes, error } = await client
+      .from("mvp_votes")
+      .select("voted_player")
+      .eq("match_id", matchId);
+
+    if(error) throw error;
+
+    const counts = new Map();
+    (votes||[]).forEach(v=>{
+      const id = String(v.voted_player || "");
+      if(!id) return;
+      counts.set(id, (counts.get(id)||0) + 1);
+    });
+
+    if(counts.size === 0){
+      mvpMain.textContent = "Nessun voto ancora.";
+      mvpTop3.style.display = "none";
+      return;
+    }
+
+    const idToName = new Map((calledPlayers||[]).map(p=>[String(p.id), p.name]));
+    const rows = [...counts.entries()]
+      .map(([id,c])=>({ id, name: idToName.get(String(id)) || id, votes: c }))
+      .sort((a,b)=> b.votes - a.votes || String(a.name).localeCompare(String(b.name),"it"));
+
+    const topVotes = rows[0].votes;
+    const tops = rows.filter(r=>r.votes===topVotes).map(r=>r.name);
+
+    if(tops.length === 1){
+      mvpMain.textContent = `${tops[0]} (${topVotes} voto/i)`;
+    }else{
+      mvpMain.textContent = `Parità: ${tops.join(", ")} (${topVotes} voto/i)`;
+    }
+
+    // Top 3 carina
+    const top3 = rows.slice(0,3);
+    mvpTop3.innerHTML = top3.map((r,i)=>`
+      <div class="mvpRow">
+        <div class="mvpLeft">
+          <div class="medal">${escapeHtml(medal(i))}</div>
+          <div>${escapeHtml(r.name)}</div>
+        </div>
+        <div>${r.votes}</div>
+      </div>
+    `).join("");
+    mvpTop3.style.display = "block";
+
+  }catch(e){
+    console.error(e);
+    mvpMain.textContent = "Errore MVP";
+    mvpTop3.style.display = "none";
+  }
 }
 
 async function load(){
@@ -274,28 +389,43 @@ async function load(){
   const time = String(m.match_time||"").slice(0,5);
   const result = (m.score_a!=null && m.score_b!=null) ? `${m.score_a}-${m.score_b}` : "da giocare";
 
+  const voteOpen = (m.vote_open === true) || (m.voting_open === true);
+  mvpBox.style.display = "block";
+  mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
+  mvpMain.textContent = "Caricamento…";
+  mvpTop3.style.display = "none";
+
   infoEl.innerHTML = `
     <div class="line"><b>📅 ${formatDateFull(m.match_date)}</b></div>
     <div class="line"><b>⏰ ${time}</b></div>
-    <div class="line kit">${kitSVG("#facc15","#111")} <b>Squadra A:</b> ${m.keeper_a}</div>
-    <div class="line kit">${kitSVG("#ef4444","#fff")} <b>Squadra B:</b> ${m.keeper_b}</div>
-    <div class="line"><span class="badge">🏁 ${result}</span></div>
+    <div class="line kit">${kitSVG("#facc15","#111")} <b>Squadra A:</b> ${escapeHtml(m.keeper_a || "")}</div>
+    <div class="line kit">${kitSVG("#ef4444","#fff")} <b>Squadra B:</b> ${escapeHtml(m.keeper_b || "")}</div>
+    <div class="line"><span class="badge">🏁 ${escapeHtml(result)}</span></div>
   `;
 
   if(m.scorers_text && String(m.scorers_text).trim() !== ""){
     scorersBox.style.display="block";
-    scorersText.innerHTML = m.scorers_text.replaceAll("\n","<br>");
+    scorersText.innerHTML = escapeHtml(m.scorers_text).replaceAll("\n","<br>");
   }else{
     scorersBox.style.display="none";
   }
 
   mapBox.style.display="block";
 
+  // players map per convocati / squadre / MVP
+  let playersForCalled = [];
+
   if(m.called_up?.length){
     const { data:p } = await client.from("players").select("id,name").in("id", m.called_up);
-    const map=new Map(p.map(x=>[x.id,x.name]));
-    calledEl.innerHTML=m.called_up.map(id=>`<span class="pill">${map.get(id)}</span>`).join("");
+    const map=new Map((p||[]).map(x=>[x.id,x.name]));
+    playersForCalled = (p||[]);
+    calledEl.innerHTML=m.called_up.map(id=>`<span class="pill">${escapeHtml(map.get(id) || "")}</span>`).join("");
+  } else {
+    calledEl.textContent = "—";
   }
+
+  // MVP (usa i convocati se disponibili, altrimenti mostra ID)
+  await loadMVP(m.id, playersForCalled);
 
   if(m.team_a?.length || m.team_b?.length){
     teamsBox.style.display="block";
@@ -304,10 +434,12 @@ async function load(){
 
     const ids=[...(m.team_a||[]),...(m.team_b||[])];
     const { data:p2 }=await client.from("players").select("id,name").in("id",ids);
-    const map2=new Map(p2.map(x=>[x.id,x.name]));
+    const map2=new Map((p2||[]).map(x=>[x.id,x.name]));
 
-    teamAEl.innerHTML=(m.team_a||[]).map(id=>`<span class="pill">${map2.get(id)}</span>`).join("")||"—";
-    teamBEl.innerHTML=(m.team_b||[]).map(id=>`<span class="pill">${map2.get(id)}</span>`).join("")||"—";
+    teamAEl.innerHTML=(m.team_a||[]).map(id=>`<span class="pill">${escapeHtml(map2.get(id) || "")}</span>`).join("")||"—";
+    teamBEl.innerHTML=(m.team_b||[]).map(id=>`<span class="pill">${escapeHtml(map2.get(id) || "")}</span>`).join("")||"—";
+  } else {
+    teamsBox.style.display="none";
   }
 }
 
