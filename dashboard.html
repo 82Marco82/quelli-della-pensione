@@ -67,11 +67,11 @@
         <label>Campo</label>
         <input id="venue" type="text" value="Campo a 6 - Aradeo" />
 
-        <label>Portiere Squadra A (scegli nome)</label>
-        <select id="keeperA"></select>
+        <label>Portiere Squadra A (testo)</label>
+        <input id="keeperA" type="text" placeholder="Es. Gianni" />
 
-        <label>Portiere Squadra B (scegli nome)</label>
-        <select id="keeperB"></select>
+        <label>Portiere Squadra B (testo)</label>
+        <input id="keeperB" type="text" placeholder="Es. Andrea o Tonino" />
 
         <label>Convocati (max 12)</label>
         <div class="playersBox" id="playersBox"></div>
@@ -81,16 +81,11 @@
           <button id="btnSave">Salva</button>
           <button id="btnDelete" class="danger">Elimina partita</button>
         </div>
-
-        <div class="muted" style="margin-top:10px">
-          Questo usa SOLO: matches.team_a_keeper_id / team_b_keeper_id / called_up.
-        </div>
       </div>
 
       <div class="card">
         <h2>Anteprima</h2>
         <div id="preview" class="muted">Nessuna partita selezionata.</div>
-
         <div style="margin-top:14px">
           <button id="btnAddPlayer" class="secondary">Aggiungi nuovo giocatore</button>
         </div>
@@ -124,9 +119,6 @@
     let MATCHES = [];
     let CURRENT = null;
 
-    // nomi portieri fissi (come il vostro gruppo)
-    const KEEPER_NAMES = ["Gianni","Andrea","Tonino"];
-
     async function requireSession(){
       const { data: { session }, error } = await client.auth.getSession();
       if(error){ setMsg("Errore sessione: "+error.message,"err"); return false; }
@@ -139,13 +131,12 @@
       if(error) throw error;
       PLAYERS = data || [];
       renderPlayersBox();
-      renderKeepers();
     }
 
     async function loadMatches(){
       const { data, error } = await client
         .from("matches")
-        .select("id,match_date,match_time,venue,called_up,team_a_keeper_id,team_b_keeper_id")
+        .select("id,match_date,match_time,venue,called_up,keeper_a,keeper_b")
         .order("match_date",{ascending:false})
         .order("match_time",{ascending:false})
         .limit(50);
@@ -163,13 +154,6 @@
         opt.textContent = `${m.match_date} ${String(m.match_time||"").slice(0,5)} – ${m.venue||""}`.trim();
         sel.appendChild(opt);
       });
-    }
-
-    function renderKeepers(){
-      // i portieri li scegliamo per NOME, ma salviamo gli UUID corrispondenti in players
-      const a = $("keeperA"), b = $("keeperB");
-      a.innerHTML = `<option value="">-- scegli --</option>` + KEEPER_NAMES.map(n=>`<option value="${n}">${n}</option>`).join("");
-      b.innerHTML = `<option value="">-- scegli --</option>` + KEEPER_NAMES.map(n=>`<option value="${n}">${n}</option>`).join("");
     }
 
     function renderPlayersBox(checkedIds=[]){
@@ -216,22 +200,13 @@
       countInfoEl.textContent = `Convocati: ${getCalledUp().length}/12`;
     }
 
-    function nameToPlayerId(name){
-      const p = PLAYERS.find(x => (x.name||"").trim().toLowerCase() === (name||"").trim().toLowerCase());
-      return p ? p.id : null;
-    }
-
     function fillForm(m){
       CURRENT = m;
       $("matchDate").value = m.match_date || "";
       $("matchTime").value = String(m.match_time||"21:00:00").slice(0,5);
       $("venue").value = m.venue || "Campo a 6 - Aradeo";
-
-      // set keeper selects based on keeper_id -> name
-      const map = new Map(PLAYERS.map(p=>[String(p.id), p.name]));
-      $("keeperA").value = map.get(String(m.team_a_keeper_id)) || "";
-      $("keeperB").value = map.get(String(m.team_b_keeper_id)) || "";
-
+      $("keeperA").value = m.keeper_a || "";
+      $("keeperB").value = m.keeper_b || "";
       renderPlayersBox(m.called_up || []);
       renderPreview();
     }
@@ -273,23 +248,16 @@
       const match_date = $("matchDate").value;
       const match_time = ($("matchTime").value ? $("matchTime").value + ":00" : "21:00:00");
       const venue = $("venue").value || "Campo a 6 - Aradeo";
-      const keeperAName = $("keeperA").value;
-      const keeperBName = $("keeperB").value;
+      const keeper_a = $("keeperA").value.trim();
+      const keeper_b = $("keeperB").value.trim();
       const called_up = getCalledUp();
 
       if(!match_date) return setMsg("Inserisci la data.","err");
-      if(!keeperAName || !keeperBName) return setMsg("Seleziona 2 portieri.","err");
-      if(keeperAName === keeperBName) return setMsg("I portieri devono essere diversi.","err");
+      if(!keeper_a || !keeper_b) return setMsg("Inserisci i 2 portieri.","err");
+      if(keeper_a.toLowerCase() === keeper_b.toLowerCase()) return setMsg("I portieri devono essere diversi.","err");
       if(called_up.length > 12) return setMsg("Max 12 convocati.","err");
 
-      const team_a_keeper_id = nameToPlayerId(keeperAName);
-      const team_b_keeper_id = nameToPlayerId(keeperBName);
-
-      if(!team_a_keeper_id || !team_b_keeper_id){
-        return setMsg("ERRORE: i portieri devono esistere nella tabella players (con lo stesso nome).","err");
-      }
-
-      const payload = { match_date, match_time, venue, called_up, team_a_keeper_id, team_b_keeper_id };
+      const payload = { match_date, match_time, venue, called_up, keeper_a, keeper_b };
 
       try{
         if(CURRENT && CURRENT.id){
