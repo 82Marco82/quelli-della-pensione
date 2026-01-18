@@ -67,13 +67,9 @@
 
     .wrap{max-width:1020px;margin:22px auto;padding:16px}
 
-    /* Top bar */
     .top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:12px;
+      display:flex;justify-content:space-between;align-items:center;
+      gap:10px;margin-bottom:12px;
     }
     .brand{display:flex;align-items:center;gap:10px}
     .logo{
@@ -85,15 +81,11 @@
       flex:0 0 auto;
     }
     body.dark .logo{border:2px solid rgba(255,255,255,.12)}
-    .logo span{
-      font-family:'Bebas Neue', sans-serif;
-      color:#fff;font-size:22px;letter-spacing:2px;line-height:1;
-    }
+    .logo span{font-family:'Bebas Neue', sans-serif;color:#fff;font-size:22px;letter-spacing:2px;line-height:1}
     h1{margin:0;font-size:20px}
     .muted{color:var(--muted);font-size:12px}
     .topRight{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 
-    /* Layout */
     .grid{display:grid;grid-template-columns:1fr;gap:12px}
     @media(min-width:980px){.grid{grid-template-columns:440px 1fr}}
 
@@ -107,7 +99,6 @@
     }
     h2{margin:0 0 10px;font-size:16px}
 
-    /* Inputs */
     label{display:block;font-size:12px;margin:10px 0 6px;color:var(--muted)}
     input,select{
       width:100%;
@@ -121,129 +112,86 @@
     }
     input:focus,select:focus{border-color:rgba(11,95,255,.45)}
 
-    /* App-like buttons */
     .row{display:flex;gap:10px;flex-wrap:wrap}
     .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid transparent;
-      background:var(--btn);
-      color:#fff;
-      font-weight:900;
-      cursor:pointer;
-      user-select:none;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:12px 14px;border-radius:14px;
+      border:1px solid transparent;background:var(--btn);color:#fff;
+      font-weight:900;cursor:pointer;user-select:none;
     }
     .btn:active{transform:scale(.99)}
     .btn.secondary{background:var(--btn2)}
     .btn.danger{background:var(--danger)}
-    .btn.ghost{
-      background:transparent;
-      border:1px solid var(--border);
-      color:var(--text);
-    }
+    .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
     .btn.small{padding:10px 12px;border-radius:12px;font-weight:800}
+    .btn.full{width:100%}
 
-    /* Sticky action bar inside left card */
     .actionBar{
-      position:sticky;
-      bottom:12px;
-      margin-top:12px;
-      padding:10px;
-      border-radius:16px;
-      background:var(--card);
-      border:1px solid var(--border);
-      box-shadow:var(--shadow);
+      position:sticky;bottom:12px;margin-top:12px;
+      padding:10px;border-radius:16px;background:var(--card);
+      border:1px solid var(--border);box-shadow:var(--shadow);
     }
 
-    /* Message (toast-like) */
     .msg{
-      margin-top:10px;
-      padding:12px;
-      border-radius:14px;
-      background:var(--chipBg);
-      border:1px solid var(--border);
-      font-size:13px;
-      white-space:pre-wrap;
+      margin-top:10px;padding:12px;border-radius:14px;
+      background:var(--chipBg);border:1px solid var(--border);
+      font-size:13px;white-space:pre-wrap;
     }
     .msg.ok{background:var(--okBg); color:var(--okText); border-color:rgba(34,197,94,.35)}
-    .msg.err{background:var(--errBg); color:var(--errText); border-color:rgba(244,63,94,.35)}
+    .msg.err{background:var(--errBg); color:var(--errText); border-color:rgba(244,63,94,.35); font-weight:800}
 
-    /* Players list */
     .playersBox{
-      max-height:420px;
-      overflow:auto;
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:10px
+      max-height:420px;overflow:auto;border:1px solid var(--border);
+      border-radius:14px;padding:10px
     }
-    .pRow{
-      display:flex;align-items:center;gap:10px;
-      padding:10px 8px;
-      border-radius:12px;
-    }
+    .pRow{display:flex;align-items:center;gap:10px;padding:10px 8px;border-radius:12px}
     .pRow:hover{background:var(--chipBg)}
     .pRow input{width:auto; transform:scale(1.15)}
     .countChip{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--chipBg);
-      font-weight:900;
-      font-size:12px;
-      margin-top:10px;
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;border:1px solid var(--border);
+      background:var(--chipBg);font-weight:900;font-size:12px;margin-top:10px;
     }
     .pill{
-      display:inline-block;
-      background:var(--pill);
-      border-radius:999px;
-      padding:8px 10px;
-      margin:6px 8px 0 0;
-      font-weight:900;
-      border:1px solid var(--border);
+      display:inline-block;background:var(--pill);border-radius:999px;
+      padding:8px 10px;margin:6px 8px 0 0;font-weight:900;border:1px solid var(--border);
     }
 
-    /* Floating theme button */
-    .fab{
-      position:fixed;
-      right:16px;
-      bottom:16px;
-      width:54px;height:54px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--card);
-      color:var(--text);
-      font-size:22px;
-      font-weight:900;
-      cursor:pointer;
-      box-shadow:var(--shadow);
-      display:flex;align-items:center;justify-content:center;
-      z-index:9999;
-      user-select:none;
-    }
-    .fab:active{transform:scale(.98)}
+    .hint{color:var(--muted);font-size:12px;margin-top:10px;line-height:1.35}
 
-    /* Tiny helper text */
-    .hint{
-      color:var(--muted);
-      font-size:12px;
-      margin-top:10px;
-      line-height:1.35;
-    }
-
-    /* Preview */
     .previewBox{
       border:1px solid var(--border);
       background:var(--chipBg);
       border-radius:16px;
       padding:12px;
     }
+
+    /* Banner partita attuale */
+    .banner{
+      border:1px solid var(--border);
+      background:linear-gradient(135deg, rgba(11,95,255,.10), rgba(34,197,94,.08));
+      border-radius:16px;
+      padding:12px;
+      margin-bottom:12px;
+    }
+    body.dark .banner{
+      background:linear-gradient(135deg, rgba(122,167,255,.12), rgba(34,197,94,.10));
+    }
+    .bannerTitle{font-weight:900}
+    .bannerLine{margin-top:6px;color:var(--muted);font-size:13px}
+
+    /* Floating theme button */
+    .fab{
+      position:fixed;right:16px;bottom:16px;
+      width:54px;height:54px;border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);color:var(--text);
+      font-size:22px;font-weight:900;cursor:pointer;
+      box-shadow:var(--shadow);
+      display:flex;align-items:center;justify-content:center;
+      z-index:9999;user-select:none;
+    }
+    .fab:active{transform:scale(.98)}
   </style>
 </head>
 
@@ -299,25 +247,34 @@
         <div class="playersBox" id="playersBox"></div>
         <div class="countChip" id="countInfo">👥 Convocati: 0/12</div>
 
-        <!-- Sticky action bar -->
         <div class="actionBar">
           <div class="row" style="justify-content:space-between;width:100%">
             <button id="btnSave" class="btn" style="flex:1">💾 Salva</button>
             <button id="btnDelete" class="btn danger" style="flex:1">🗑 Elimina</button>
           </div>
           <div class="hint">
-            Tip: se devi annullare una partita, premi <b>Elimina</b>. Se hai sbagliato data/ora, cambia e premi <b>Salva</b>.
+            Tip: per annullare una partita usa <b>Elimina</b>. Se hai sbagliato data/ora cambia e premi <b>Salva</b>.
           </div>
         </div>
       </div>
 
-      <!-- RIGHT: preview -->
+      <!-- RIGHT: preview + share -->
       <div class="card">
+        <div class="banner">
+          <div class="bannerTitle">📌 Partita attuale</div>
+          <div id="bannerText" class="bannerLine">Nessuna partita caricata.</div>
+          <div class="row" style="margin-top:10px">
+            <button id="btnCopyLink" class="btn ghost small" style="flex:1">📋 Copia link</button>
+            <button id="btnWhatsApp" class="btn ghost small" style="flex:1">📤 WhatsApp</button>
+          </div>
+          <div id="shareMsg" class="hint"></div>
+        </div>
+
         <h2>Anteprima (come la vedono i giocatori)</h2>
-        <div class="previewBox" id="preview" class="muted">Nessuna partita selezionata.</div>
+        <div class="previewBox" id="preview"><span class="muted">Nessuna partita selezionata.</span></div>
 
         <div style="margin-top:14px" class="row">
-          <button id="btnAddPlayer" class="btn secondary">➕ Aggiungi giocatore</button>
+          <button id="btnAddPlayer" class="btn secondary full">➕ Aggiungi giocatore</button>
         </div>
 
         <div class="hint">
@@ -327,7 +284,6 @@
     </div>
   </div>
 
-  <!-- Floating theme toggle -->
   <button id="themeToggle" class="fab" title="Tema chiaro/scuro">🌙</button>
 
   <script>
@@ -353,12 +309,25 @@
     const msgEl = $("msg");
     const previewEl = $("preview");
     const countInfoEl = $("countInfo");
+    const bannerTextEl = $("bannerText");
+    const shareMsgEl = $("shareMsg");
+
+    // link pubblico (index)
+    const SITE_LINK = (location.origin + location.pathname).replace(/dashboard\.html$/i, "index.html");
 
     function setMsg(t, kind="info"){
       msgEl.className = "msg";
       if(kind==="ok") msgEl.classList.add("ok");
       if(kind==="err") msgEl.classList.add("err");
       msgEl.textContent = t;
+    }
+
+    function setBanner(text){
+      bannerTextEl.textContent = text;
+    }
+
+    function setShareMsg(text){
+      shareMsgEl.textContent = text || "";
     }
 
     if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
@@ -432,6 +401,7 @@
           }
           updateCount();
           renderPreview();
+          renderBannerFromForm();
         };
 
         const name = document.createElement("span");
@@ -464,6 +434,7 @@
       $("keeperB").value = m.keeper_b || "";
       renderPlayersBox(m.called_up || []);
       renderPreview();
+      renderBannerFromForm();
       setMsg("📌 Partita caricata. Modifica e salva quando vuoi.","ok");
     }
 
@@ -477,6 +448,8 @@
       $("keeperB").value = "";
       renderPlayersBox([]);
       previewEl.innerHTML = `<span class="muted">Nessuna partita selezionata.</span>`;
+      setBanner("Nessuna partita caricata.");
+      setShareMsg("");
     }
 
     function renderPreview(){
@@ -498,6 +471,50 @@
         <div style="margin-top:12px"><b>Convocati (${names.length}/12)</b></div>
         <div>${names.length ? names.map(n=>`<span class="pill">${n}</span>`).join("") : "<span class='muted'>Nessun convocato</span>"}</div>
       `;
+    }
+
+    function renderBannerFromForm(){
+      const d = $("matchDate").value || "-";
+      const t = $("matchTime").value || "21:00";
+      const a = $("keeperA").value.trim() || "-";
+      const b = $("keeperB").value.trim() || "-";
+      const n = getCalledUp().length;
+      setBanner(`${d} ore ${t} • ${a} vs ${b} • convocati: ${n}/12`);
+      setShareMsg(`Link: ${SITE_LINK}`);
+    }
+
+    async function copyLink(){
+      try{
+        await navigator.clipboard.writeText(SITE_LINK);
+        setShareMsg("✅ Link copiato! Incollalo su WhatsApp.");
+        setMsg("✅ Link copiato negli appunti.","ok");
+      }catch(e){
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = SITE_LINK;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        setShareMsg("✅ Link copiato! Incollalo su WhatsApp.");
+        setMsg("✅ Link copiato negli appunti.","ok");
+      }
+    }
+
+    function openWhatsApp(){
+      const d = $("matchDate").value || "";
+      const t = $("matchTime").value || "21:00";
+      const a = $("keeperA").value.trim() || "-";
+      const b = $("keeperB").value.trim() || "-";
+      const v = $("venue").value || "Campo a 6 - Aradeo";
+      const msg =
+        `⚽ Quelli della pensione\n` +
+        `📅 ${d} ore ${t}\n` +
+        `📍 ${v}\n` +
+        `🥅 ${a} vs ${b}\n` +
+        `🔗 ${SITE_LINK}`;
+      const url = "https://wa.me/?text=" + encodeURIComponent(msg);
+      window.open(url, "_blank", "noopener");
     }
 
     async function save(){
@@ -530,6 +547,7 @@
           setMsg("✅ Partita creata.","ok");
         }
         await loadMatches();
+        renderBannerFromForm();
       }catch(e){
         console.error(e);
         setMsg("❌ Errore salvataggio: " + (e.message||e),"err");
@@ -563,6 +581,7 @@
       setMsg("✅ Giocatore aggiunto.","ok");
       await loadPlayers();
       renderPreview();
+      renderBannerFromForm();
     }
 
     async function logout(){
@@ -579,16 +598,19 @@
       if(m) fillForm(m);
     });
 
-    $("btnNew").addEventListener("click", ()=>{ clearForm(); setMsg("➕ Nuova partita: compila e salva.","ok"); });
+    $("btnNew").addEventListener("click", ()=>{ clearForm(); setMsg("➕ Nuova partita: compila e salva.","ok"); renderBannerFromForm(); });
     $("btnRefresh").addEventListener("click", async ()=>{ setMsg("🔄 Aggiorno…"); await loadMatches(); setMsg("✅ Lista aggiornata.","ok"); });
     $("btnSave").addEventListener("click", save);
     $("btnDelete").addEventListener("click", del);
     $("btnAddPlayer").addEventListener("click", addPlayer);
     $("btnLogout").addEventListener("click", logout);
 
+    $("btnCopyLink").addEventListener("click", copyLink);
+    $("btnWhatsApp").addEventListener("click", openWhatsApp);
+
     ["matchDate","matchTime","venue","keeperA","keeperB"].forEach(id=>{
-      $(id).addEventListener("input", renderPreview);
-      $(id).addEventListener("change", renderPreview);
+      $(id).addEventListener("input", ()=>{ renderPreview(); renderBannerFromForm(); });
+      $(id).addEventListener("change", ()=>{ renderPreview(); renderBannerFromForm(); });
     });
 
     (async function init(){
