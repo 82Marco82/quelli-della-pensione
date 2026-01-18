@@ -4,90 +4,23 @@
   <meta charset="UTF-8" />
   <title>Quelli della Pensione</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-      background: #0f172a;
-      color: #e5e7eb;
-    }
-
-    .container {
-      max-width: 420px;
-      margin: auto;
-      padding: 16px;
-    }
-
-    h1 {
-      text-align: center;
-      font-weight: 900;
-      letter-spacing: 1px;
-      margin-bottom: 4px;
-    }
-
-    .subtitle {
-      text-align: center;
-      opacity: 0.85;
-      margin-bottom: 16px;
-    }
-
-    .card {
-      background: #020617;
-      border-radius: 18px;
-      padding: 14px;
-      margin-bottom: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-    }
-
-    img {
-      width: 100%;
-      border-radius: 14px;
-      margin-bottom: 8px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .ok { background: #16a34a; }
-    .wait { background: #f59e0b; }
-    .info { background: #334155; }
-
-    .row {
-      margin: 6px 0;
-    }
-
-    iframe {
-      width: 100%;
-      height: 260px;
-      border: 0;
-      border-radius: 14px;
-      margin-top: 10px;
-    }
-
-    .admin {
-      text-align: center;
-      margin-top: 12px;
-    }
-
-    .admin a {
-      color: #60a5fa;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .error {
-      background: #7f1d1d;
-      padding: 10px;
-      border-radius: 12px;
-      margin-top: 10px;
-      font-size: 14px;
-    }
+    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;background:#0f172a;color:#e5e7eb}
+    .container{max-width:420px;margin:auto;padding:16px}
+    h1{text-align:center;font-weight:900;letter-spacing:1px;margin:10px 0 4px}
+    .subtitle{text-align:center;opacity:.85;margin-bottom:16px}
+    .card{background:#020617;border-radius:18px;padding:14px;margin-bottom:16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    img{width:100%;border-radius:14px;margin-bottom:8px}
+    .row{margin:8px 0}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:13px;font-weight:700;margin-left:8px}
+    .ok{background:#16a34a}
+    .wait{background:#f59e0b;color:#111827}
+    .info{background:#334155}
+    iframe{width:100%;height:260px;border:0;border-radius:14px;margin-top:10px}
+    .admin{text-align:center;margin-top:12px}
+    .admin a{color:#60a5fa;text-decoration:none;font-weight:700}
+    .error{background:#7f1d1d;padding:10px;border-radius:12px;margin-top:10px;font-size:14px}
+    .debug{background:#0b1224;border:1px solid rgba(255,255,255,.08);padding:10px;border-radius:12px;font-size:13px;opacity:.95}
   </style>
 </head>
 
@@ -100,6 +33,8 @@
       <img src="foto.jpg" alt="Quelli della Pensione">
     </div>
 
+    <div id="debugBox" class="card debug">Verifica script…</div>
+
     <div id="content" class="card">Caricamento…</div>
 
     <div class="admin">
@@ -107,33 +42,61 @@
     </div>
   </div>
 
-  <!-- CONFIG -->
-  <script src="config.js"></script>
+  <!-- 1) CONFIG: deve esistere in repo nella stessa cartella -->
+  <script src="./config.js"></script>
+
+  <!-- 2) Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    const supabase = supabaseJs.createClient(
+    const debugBox = document.getElementById("debugBox");
+    const content = document.getElementById("content");
+
+    function debug(msg){
+      debugBox.innerHTML = msg;
+    }
+
+    // ✅ Controllo config.js
+    if (!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) {
+      debug("❌ config.js non caricato (o valori mancanti). Controlla che esista ./config.js e contenga SUPABASE_URL e SUPABASE_ANON_KEY.");
+      content.innerHTML = "<div class='error'>Errore: config.js non caricato</div>";
+      throw new Error("config.js missing");
+    }
+
+    // ✅ Controllo supabase lib
+    // Con questo CDN l’oggetto corretto è spesso window.supabase
+    if (!window.supabase || !window.supabase.createClient) {
+      debug("❌ Supabase CDN non caricato. (window.supabase non trovato)");
+      content.innerHTML = "<div class='error'>Errore: Supabase CDN non caricato</div>";
+      throw new Error("supabase CDN missing");
+    }
+
+    debug("✅ Supabase OK");
+
+    const client = window.supabase.createClient(
       window.SUPABASE_URL,
       window.SUPABASE_ANON_KEY
     );
 
-    const content = document.getElementById("content");
-
     async function loadMatch() {
       try {
-        const { data, error } = await supabase
+        const { data, error } = await client
           .from("matches")
           .select("*")
           .order("match_date", { ascending: false })
           .limit(1);
 
         if (error) throw error;
+
         if (!data || data.length === 0) {
           content.innerHTML = "<div class='row'>Nessuna partita creata</div>";
           return;
         }
 
         const m = data[0];
+
+        const teamA = m.team_a || "-";
+        const teamB = m.team_b || "-";
 
         let risultatoHTML = "";
         if (m.goals_a == null || m.goals_b == null) {
@@ -145,26 +108,25 @@
         } else {
           risultatoHTML = `
             <div class="row">
-              🏁 <strong>${m.goals_a} - ${m.goals_b}</strong>
+              🏁 <strong>Risultato:</strong> ${m.goals_a} - ${m.goals_b}
               <span class="badge ok">GIOCATA</span>
             </div>`;
         }
 
         content.innerHTML = `
           <div class="row">📅 <strong>${m.match_date}</strong></div>
-          <div class="row">🟡 <strong>Squadra A:</strong> ${m.team_a || "-"}</div>
-          <div class="row">🔴 <strong>Squadra B:</strong> ${m.team_b || "-"}</div>
+          <div class="row">🟡 <strong>Squadra A:</strong> ${teamA}</div>
+          <div class="row">🔴 <strong>Squadra B:</strong> ${teamB}</div>
           ${risultatoHTML}
 
           <iframe
             src="https://maps.google.com/maps?q=Campo%20Sportivo%20Aradeo&t=&z=15&ie=UTF8&iwloc=&output=embed">
           </iframe>
         `;
-
       } catch (err) {
         content.innerHTML = `
           <div class="error">
-            Errore caricamento partita<br>
+            Errore caricamento partita:<br>
             ${err.message}
           </div>`;
       }
