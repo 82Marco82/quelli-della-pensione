@@ -21,6 +21,13 @@
       --logo2:#333;
       --heroGrad:linear-gradient(to top, rgba(0,0,0,.72), rgba(0,0,0,0));
       --heroShadow:0 2px 8px rgba(0,0,0,.7);
+      --chipBg:rgba(0,0,0,.04);
+
+      /* jersey colors */
+      --jerseyStroke: rgba(0,0,0,.35);
+      --jerseyY:#facc15;   /* giallo */
+      --jerseyR:#ef4444;   /* rosso */
+      --jerseyDetail: rgba(255,255,255,.55);
     }
     body.dark{
       --bg:#0f1115;
@@ -35,8 +42,13 @@
       --logo2:#2a3242;
       --heroGrad:linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,0));
       --heroShadow:0 2px 10px rgba(0,0,0,.85);
+      --chipBg:rgba(255,255,255,.04);
+
+      --jerseyStroke: rgba(255,255,255,.22);
+      --jerseyDetail: rgba(0,0,0,.20);
     }
 
+    *{box-sizing:border-box}
     body{
       font-family:Inter,system-ui;
       margin:0;
@@ -52,11 +64,13 @@
       padding:14px;
       box-shadow:var(--shadow);
       margin:12px 0;
+      border:1px solid var(--border);
       transition:background .2s ease, box-shadow .2s ease;
     }
+
     a{color:var(--link);text-decoration:none}
     .muted{color:var(--muted)}
-    .err{color:#ff4d4d;font-weight:800}
+    .err{color:#ff4d4d;font-weight:900}
 
     .header{
       display:flex;
@@ -64,8 +78,8 @@
       align-items:center;
       gap:10px;
       margin-bottom:10px;
+      text-align:center;
     }
-
     .logo{
       width:84px;height:84px;border-radius:999px;
       background:linear-gradient(135deg, var(--logo1), var(--logo2));
@@ -74,12 +88,10 @@
       border:3px solid rgba(255,255,255,.85);
     }
     body.dark .logo{ border:3px solid rgba(255,255,255,.12); }
-
     .logo span{
       font-family:'Bebas Neue', sans-serif;
       color:#fff;font-size:34px;letter-spacing:2px;line-height:1;
     }
-
     .title{
       font-family:'Bebas Neue', sans-serif;
       font-size:48px;
@@ -106,13 +118,28 @@
     }
 
     .pill{
-      display:inline-block;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
       background:var(--pill);
       border-radius:999px;
       padding:6px 10px;
       margin:4px 6px 0 0;
-      font-weight:800;
+      font-weight:900;
       border:1px solid var(--border);
+    }
+
+    .line{margin-top:8px}
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      font-weight:900;
+      font-size:12px;
     }
 
     .mapWrap{
@@ -124,7 +151,14 @@
     iframe{width:100%;height:260px;border:0;display:block}
     .mapLink{display:inline-block;margin-top:10px}
 
-    /* ✅ FLOATING THEME BUTTON */
+    /* Jersey SVG */
+    .jersey{
+      width:22px;
+      height:22px;
+      display:inline-block;
+      flex:0 0 auto;
+    }
+
     .fab{
       position:fixed;
       right:16px;
@@ -187,31 +221,25 @@
       <div id="called" class="muted">—</div>
     </div>
 
-    <div class="card muted">
-      <a href="admin.html">Area Admin</a>
+    <div class="card muted" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+      <a href="storico.html">📚 Storico</a>
+      <a href="admin.html">🔐 Area Admin</a>
     </div>
   </div>
 
-  <!-- ✅ floating toggle -->
   <button id="themeToggle" class="fab" title="Tema chiaro/scuro">🌙</button>
 
   <script>
-    // THEME TOGGLE (saved)
+    // THEME TOGGLE
     const btn = document.getElementById("themeToggle");
-
     function setTheme(mode){
       document.body.classList.toggle("dark", mode === "dark");
       btn.textContent = (mode === "dark") ? "☀️" : "🌙";
       localStorage.setItem("qdp_theme", mode);
     }
-
     const saved = localStorage.getItem("qdp_theme");
     setTheme(saved === "dark" ? "dark" : "light");
-
-    btn.addEventListener("click", () => {
-      const isDark = document.body.classList.contains("dark");
-      setTheme(isDark ? "light" : "dark");
-    });
+    btn.addEventListener("click", () => setTheme(document.body.classList.contains("dark") ? "light" : "dark"));
   </script>
 
   <script src="config.js"></script>
@@ -226,7 +254,7 @@
     const mapOpen = document.getElementById("mapOpen");
 
     function showErr(msg){
-      statusEl.innerHTML = '<span class="err">'+msg+'</span>';
+      statusEl.innerHTML = '<span class="err">Errore: ' + msg + '</span>';
     }
     function showEmpty(){
       statusEl.textContent = "Nessuna partita creata (per ora) ⚽️";
@@ -236,12 +264,28 @@
       mapOpen.style.display = "none";
     }
 
+    // Inline SVG jerseys
+    function jerseySVG(colorVar){
+      return `
+        <svg class="jersey" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <path d="M18 10 L10 16 L4 28 L14 36 L18 28 L18 58 L46 58 L46 28 L50 36 L60 28 L54 16 L46 10
+                   L38 16 L32 12 L26 16 Z"
+                fill="var(${colorVar})"
+                stroke="var(--jerseyStroke)" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M26 16 C27.5 22 36.5 22 38 16"
+                fill="none" stroke="var(--jerseyDetail)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M22 26 L42 26"
+                fill="none" stroke="var(--jerseyDetail)" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      `;
+    }
+
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     async function load(){
       const { data, error } = await client
         .from("matches")
-        .select("match_date,match_time,venue,called_up,keeper_a,keeper_b")
+        .select("match_date,match_time,venue,called_up,keeper_a,keeper_b,score_a,score_b")
         .order("match_date",{ascending:false})
         .order("match_time",{ascending:false})
         .limit(1);
@@ -252,11 +296,33 @@
 
       statusEl.textContent = "Partita trovata ✅";
 
+      const time = String(match.match_time||"").slice(0,5);
+      const hasScore = (match.score_a != null && match.score_b != null);
+
       infoEl.innerHTML = `
-        <div><b>Data:</b> ${match.match_date} ${String(match.match_time||'').slice(0,5)}</div>
-        <div><b>Campo:</b> ${match.venue}</div>
-        <div style="margin-top:8px"><b>Squadra A:</b> ${match.keeper_a}</div>
-        <div><b>Squadra B:</b> ${match.keeper_b}</div>
+        <div class="line"><span class="chip">📅 ${match.match_date} • ⏰ ${time || "21:00"}</span></div>
+        <div class="line"><b>Campo:</b> ${match.venue}</div>
+
+        <div class="line" style="margin-top:10px">
+          <b>Squadra A:</b>
+          <span class="pill">
+            ${jerseySVG("--jerseyY")}
+            ${match.keeper_a || "-"}
+          </span>
+        </div>
+
+        <div class="line">
+          <b>Squadra B:</b>
+          <span class="pill">
+            ${jerseySVG("--jerseyR")}
+            ${match.keeper_b || "-"}
+          </span>
+        </div>
+
+        <div class="line" style="margin-top:10px">
+          <b>Risultato:</b>
+          ${hasScore ? `<span class="pill">${match.score_a}-${match.score_b}</span>` : `<span class="muted">—</span>`}
+        </div>
       `;
 
       mapFrame.src = "https://www.google.com/maps?q=Campo%20a%206%20Aradeo&output=embed";
@@ -273,8 +339,8 @@
 
       if(e2){ showErr(e2.message); return; }
 
-      const map = new Map(players.map(p=>[p.id,p.name]));
-      calledEl.innerHTML = ids.map(id=>`<span class="pill">${map.get(id) || ""}</span>`).join("");
+      const map = new Map((players||[]).map(p=>[String(p.id), p.name]));
+      calledEl.innerHTML = ids.map(id=>`<span class="pill">${map.get(String(id)) || ""}</span>`).join("");
     }
 
     load();
