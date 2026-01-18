@@ -1,260 +1,176 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quelli della pensione</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>Quelli della Pensione</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    :root{
-      --bg:#f4f6f8;
-      --card:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --border:#e5e7eb;
-      --shadow:0 6px 20px rgba(0,0,0,.08);
-      --pill:#eeeeee;
-      --logo1:#111;
-      --logo2:#333;
-    }
-    body.dark{
-      --bg:#0f1115;
-      --card:#171a21;
-      --text:#e5e7eb;
-      --muted:#a1a1aa;
-      --border:#2a2f3a;
-      --shadow:0 10px 28px rgba(0,0,0,.45);
-      --pill:#222631;
-      --logo1:#0b0e14;
-      --logo2:#2a3242;
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+      background: #0f172a;
+      color: #e5e7eb;
     }
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,system-ui;
-      background:var(--bg);
-      color:var(--text);
-      transition:.2s;
-    }
-    .wrap{max-width:760px;margin:auto;padding:16px}
-
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:14px;
-      box-shadow:var(--shadow);
-      margin:12px 0;
+    .container {
+      max-width: 420px;
+      margin: auto;
+      padding: 16px;
     }
 
-    /* Header */
-    .header{text-align:center}
-    .logo{
-      width:80px;height:80px;border-radius:999px;
-      background:linear-gradient(135deg,var(--logo1),var(--logo2));
-      margin:auto;
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:34px;
-      letter-spacing:2px;
-    }
-    h1{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:48px;
-      margin:10px 0 0;
-    }
-    .subtitle{color:var(--muted);font-size:14px}
-
-    /* Hero */
-    .hero{position:relative;border-radius:16px;overflow:hidden}
-    .hero img{width:100%;display:block}
-    .hero .txt{
-      position:absolute;left:0;right:0;bottom:0;
-      padding:14px;color:#fff;font-weight:900;
-      background:linear-gradient(to top,rgba(0,0,0,.75),transparent);
+    h1 {
+      text-align: center;
+      font-weight: 900;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
     }
 
-    .line{margin-top:8px}
-    .pill{
-      display:inline-block;
-      background:var(--pill);
-      border-radius:999px;
-      padding:6px 10px;
-      margin:4px 6px 0 0;
-      font-weight:900;
-      border:1px solid var(--border);
+    .subtitle {
+      text-align: center;
+      opacity: 0.85;
+      margin-bottom: 16px;
     }
-    .badge{
-      display:inline-block;
-      background:#111;
-      color:#fff;
-      padding:6px 12px;
-      border-radius:999px;
-      font-weight:900;
-    }
-    body.dark .badge{background:#0b0e14}
 
-    .muted{color:var(--muted)}
-
-    /* Map */
-    .mapWrap{
-      margin-top:12px;
-      border-radius:12px;
-      overflow:hidden;
-      border:1px solid var(--border)
+    .card {
+      background: #020617;
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
     }
-    iframe{width:100%;height:260px;border:0}
 
-    /* Nav */
-    .nav{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      font-size:14px;
+    img {
+      width: 100%;
+      border-radius: 14px;
+      margin-bottom: 8px;
     }
-    .nav a{
-      color:var(--text);
-      text-decoration:none;
-      font-weight:800;
-    }
-    .nav a:hover{text-decoration:underline}
 
-    /* Theme toggle */
-    .fab{
-      position:fixed;
-      right:16px;bottom:16px;
-      width:54px;height:54px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--card);
-      box-shadow:var(--shadow);
-      cursor:pointer;
-      font-size:22px;
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .ok { background: #16a34a; }
+    .wait { background: #f59e0b; }
+    .info { background: #334155; }
+
+    .row {
+      margin: 6px 0;
+    }
+
+    iframe {
+      width: 100%;
+      height: 260px;
+      border: 0;
+      border-radius: 14px;
+      margin-top: 10px;
+    }
+
+    .admin {
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    .admin a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .error {
+      background: #7f1d1d;
+      padding: 10px;
+      border-radius: 12px;
+      margin-top: 10px;
+      font-size: 14px;
     }
   </style>
 </head>
 
 <body>
-<div class="wrap">
-
-  <!-- HEADER -->
-  <div class="header">
-    <div class="logo">QDP</div>
-    <h1>Quelli della pensione</h1>
+  <div class="container">
+    <h1>QUELLI DELLA PENSIONE</h1>
     <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
-  </div>
 
-  <!-- HERO -->
-  <div class="card hero">
-    <img src="foto.jpg" alt="Quelli della pensione">
-    <div class="txt">OGNI MALEDETTO GIOVEDÌ</div>
-  </div>
-
-  <!-- PARTITA -->
-  <div class="card">
-    <div id="status" class="muted">Caricamento…</div>
-    <div id="info"></div>
-
-    <div id="mapBox" class="mapWrap" style="display:none">
-      <iframe src="https://www.google.com/maps?q=Campo%20a%206%20Aradeo&output=embed"></iframe>
+    <div class="card">
+      <img src="foto.jpg" alt="Quelli della Pensione">
     </div>
 
-    <div style="margin-top:12px;font-weight:900">Convocati</div>
-    <div id="called" class="muted">—</div>
+    <div id="content" class="card">Caricamento…</div>
+
+    <div class="admin">
+      <a href="admin.html">Area Admin</a>
+    </div>
   </div>
 
-  <!-- NAV -->
-  <div class="card nav muted">
-    <a href="storico.html">📚 Storico</a>
-    <a href="marcatori.html">⚽ Marcatori</a>
-    <a href="admin.html">🔐 Admin</a>
-  </div>
+  <!-- CONFIG -->
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-</div>
+  <script>
+    const supabase = supabaseJs.createClient(
+      window.SUPABASE_URL,
+      window.SUPABASE_ANON_KEY
+    );
 
-<button id="themeToggle" class="fab">🌙</button>
+    const content = document.getElementById("content");
 
-<script src="config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    async function loadMatch() {
+      try {
+        const { data, error } = await supabase
+          .from("matches")
+          .select("*")
+          .order("match_date", { ascending: false })
+          .limit(1);
 
-<script>
-const statusEl = document.getElementById("status");
-const infoEl = document.getElementById("info");
-const calledEl = document.getElementById("called");
-const mapBox = document.getElementById("mapBox");
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          content.innerHTML = "<div class='row'>Nessuna partita creata</div>";
+          return;
+        }
 
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const m = data[0];
 
-// THEME
-function setTheme(mode){
-  document.body.classList.toggle("dark", mode === "dark");
-  document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
-  localStorage.setItem("qdp_theme", mode);
-}
-setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
-document.getElementById("themeToggle").onclick = () => {
-  setTheme(document.body.classList.contains("dark") ? "light" : "dark");
-};
+        let risultatoHTML = "";
+        if (m.goals_a == null || m.goals_b == null) {
+          risultatoHTML = `
+            <div class="row">
+              🏁 <strong>Risultato:</strong> da giocare
+              <span class="badge wait">DA GIOCARE</span>
+            </div>`;
+        } else {
+          risultatoHTML = `
+            <div class="row">
+              🏁 <strong>${m.goals_a} - ${m.goals_b}</strong>
+              <span class="badge ok">GIOCATA</span>
+            </div>`;
+        }
 
-// LOAD MATCH
-async function load(){
-  const { data, error } = await client
-    .from("matches")
-    .select("match_date,match_time,venue,called_up,keeper_a,keeper_b,score_a,score_b,scorers_text")
-    .order("match_date",{ascending:false})
-    .order("match_time",{ascending:false})
-    .limit(1);
+        content.innerHTML = `
+          <div class="row">📅 <strong>${m.match_date}</strong></div>
+          <div class="row">🟡 <strong>Squadra A:</strong> ${m.team_a || "-"}</div>
+          <div class="row">🔴 <strong>Squadra B:</strong> ${m.team_b || "-"}</div>
+          ${risultatoHTML}
 
-  if(error || !data.length){
-    statusEl.textContent = "Nessuna partita creata";
-    return;
-  }
+          <iframe
+            src="https://maps.google.com/maps?q=Campo%20Sportivo%20Aradeo&t=&z=15&ie=UTF8&iwloc=&output=embed">
+          </iframe>
+        `;
 
-  const m = data[0];
-  statusEl.textContent = "Partita trovata ✅";
+      } catch (err) {
+        content.innerHTML = `
+          <div class="error">
+            Errore caricamento partita<br>
+            ${err.message}
+          </div>`;
+      }
+    }
 
-  infoEl.innerHTML = `
-    <div class="line"><b>📅 ${m.match_date}</b></div>
-    <div class="line"><b>🥅 ${m.keeper_a} vs ${m.keeper_b}</b></div>
-    <div class="line"><span class="badge">🏁 ${m.score_a}-${m.score_b}</span></div>
-  `;
-
-  // MARCATORI (FACOLTATIVI)
-  if(m.scorers_text && m.scorers_text.trim() !== ""){
-    infoEl.innerHTML += `
-      <div class="line" style="margin-top:10px">
-        <b>⚽ Marcatori</b><br>
-        ${m.scorers_text}
-      </div>
-    `;
-  }
-
-  mapBox.style.display = "block";
-
-  if(!m.called_up || !m.called_up.length){
-    calledEl.textContent = "—";
-    return;
-  }
-
-  const { data: players, error: e2 } = await client
-    .from("players")
-    .select("id,name")
-    .in("id", m.called_up);
-
-  if(e2){
-    calledEl.textContent = "Errore convocati";
-    return;
-  }
-
-  const map = new Map((players||[]).map(p => [p.id, p.name]));
-  calledEl.innerHTML = m.called_up.map(id => `<span class="pill">${map.get(id) || ""}</span>`).join("");
-}
-
-load();
-</script>
+    loadMatch();
+  </script>
 </body>
 </html>
