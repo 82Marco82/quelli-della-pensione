@@ -5,22 +5,55 @@
   <title>Quelli della Pensione</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;background:#0f172a;color:#e5e7eb}
+    :root{
+      --bg:#0f172a;
+      --card:#020617;
+      --text:#e5e7eb;
+      --muted:rgba(229,231,235,.75);
+      --shadow:rgba(0,0,0,.35);
+      --line:rgba(255,255,255,.08);
+      --blue:#60a5fa;
+      --green:#16a34a;
+      --amber:#f59e0b;
+      --red:#ef4444;
+    }
+    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--text)}
     .container{max-width:420px;margin:auto;padding:16px}
     h1{text-align:center;font-weight:900;letter-spacing:1px;margin:10px 0 4px}
-    .subtitle{text-align:center;opacity:.85;margin-bottom:16px}
-    .card{background:#020617;border-radius:18px;padding:14px;margin-bottom:16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-    img{width:100%;border-radius:14px;margin-bottom:8px}
-    .row{margin:8px 0}
-    .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:13px;font-weight:700;margin-left:8px}
-    .ok{background:#16a34a}
-    .wait{background:#f59e0b;color:#111827}
+    .subtitle{text-align:center;color:var(--muted);margin-bottom:16px}
+    .card{background:var(--card);border-radius:18px;padding:14px;margin-bottom:16px;box-shadow:0 10px 30px var(--shadow);border:1px solid var(--line)}
+    .heroWrap{position:relative;border-radius:16px;overflow:hidden}
+    .heroWrap img{width:100%;display:block}
+    .heroText{
+      position:absolute;left:0;right:0;bottom:0;
+      padding:12px 12px;
+      font-weight:900;letter-spacing:.5px;
+      background:linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,0));
+    }
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:13px;font-weight:800;margin-left:8px}
+    .ok{background:var(--green)}
+    .wait{background:var(--amber);color:#111827}
     .info{background:#334155}
-    iframe{width:100%;height:260px;border:0;border-radius:14px;margin-top:10px}
-    .admin{text-align:center;margin-top:12px}
-    .admin a{color:#60a5fa;text-decoration:none;font-weight:700}
     .error{background:#7f1d1d;padding:10px;border-radius:12px;margin-top:10px;font-size:14px}
-    .debug{background:#0b1224;border:1px solid rgba(255,255,255,.08);padding:10px;border-radius:12px;font-size:13px;opacity:.95}
+    .debug{background:#0b1224;border:1px solid var(--line);padding:10px;border-radius:12px;font-size:13px;opacity:.95}
+    .row{margin:10px 0;line-height:1.25}
+    .big{font-size:18px;font-weight:900}
+    .hr{height:1px;background:var(--line);margin:12px 0}
+    .pillRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    .pill{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;background:#0b1224;border:1px solid var(--line)}
+    .iconShirt{
+      width:14px;height:14px;border-radius:4px;display:inline-block;
+      border:1px solid rgba(255,255,255,.35);
+      box-shadow:0 2px 10px rgba(0,0,0,.25) inset;
+    }
+    .yellow{background:#facc15}
+    .red{background:#ef4444}
+    iframe{width:100%;height:260px;border:0;border-radius:14px;margin-top:10px}
+    .links{display:flex;justify-content:center;gap:18px;margin-top:12px}
+    .links a{color:var(--blue);text-decoration:none;font-weight:800}
+    ul{margin:8px 0 0 18px;padding:0}
+    li{margin:6px 0}
+    .small{font-size:13px;color:var(--muted)}
   </style>
 </head>
 
@@ -30,43 +63,42 @@
     <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
 
     <div class="card">
-      <img src="foto.jpg" alt="Quelli della Pensione">
+      <div class="heroWrap">
+        <img src="foto.jpg" alt="Quelli della Pensione">
+        <div class="heroText">OGNI MALEDETTO GIOVEDÌ</div>
+      </div>
     </div>
 
     <div id="debugBox" class="card debug">Verifica script…</div>
 
     <div id="content" class="card">Caricamento…</div>
 
-    <div class="admin">
+    <div class="links">
       <a href="admin.html">Area Admin</a>
+      <a href="storico.html">Storico</a>
     </div>
   </div>
 
-  <!-- 1) CONFIG: deve esistere in repo nella stessa cartella -->
+  <!-- config.js deve stare nella stessa cartella -->
   <script src="./config.js"></script>
-
-  <!-- 2) Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
     const debugBox = document.getElementById("debugBox");
     const content = document.getElementById("content");
 
-    function debug(msg){
-      debugBox.innerHTML = msg;
-    }
+    function debug(msg){ debugBox.innerHTML = msg; }
 
-    // ✅ Controllo config.js
+    // 1) Config
     if (!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) {
-      debug("❌ config.js non caricato (o valori mancanti). Controlla che esista ./config.js e contenga SUPABASE_URL e SUPABASE_ANON_KEY.");
+      debug("❌ config.js non caricato (o valori mancanti).");
       content.innerHTML = "<div class='error'>Errore: config.js non caricato</div>";
       throw new Error("config.js missing");
     }
 
-    // ✅ Controllo supabase lib
-    // Con questo CDN l’oggetto corretto è spesso window.supabase
+    // 2) Supabase lib
     if (!window.supabase || !window.supabase.createClient) {
-      debug("❌ Supabase CDN non caricato. (window.supabase non trovato)");
+      debug("❌ Supabase CDN non caricato.");
       content.innerHTML = "<div class='error'>Errore: Supabase CDN non caricato</div>";
       throw new Error("supabase CDN missing");
     }
@@ -78,8 +110,66 @@
       window.SUPABASE_ANON_KEY
     );
 
-    async function loadMatch() {
-      try {
+    function safeText(v){
+      if (v === null || v === undefined) return "";
+      return String(v);
+    }
+
+    function formatDateISO(isoDate){
+      // isoDate tipo "2026-01-22"
+      if(!isoDate) return "";
+      const parts = isoDate.split("-");
+      if(parts.length !== 3) return isoDate;
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    function renderScorers(m){
+      // scorers FACOLTATIVO
+      // supporta:
+      // - array di stringhe: ["Marco","Luca"]
+      // - array di oggetti: [{name:"Marco",goals:2}]
+      if (m.scorers === null || m.scorers === undefined) return "";
+      const s = m.scorers;
+
+      let arr = [];
+      if (Array.isArray(s)) arr = s;
+      else if (typeof s === "object") {
+        // a volte può arrivare come oggetto, prova a leggere s.list
+        if (Array.isArray(s.list)) arr = s.list;
+      } else {
+        // se è stringa, prova JSON parse
+        try {
+          const parsed = JSON.parse(s);
+          if (Array.isArray(parsed)) arr = parsed;
+        } catch(e){}
+      }
+
+      if (!arr || arr.length === 0) return "";
+
+      const items = arr.map(x=>{
+        if (typeof x === "string") return `<li>${x}</li>`;
+        if (x && typeof x === "object") {
+          const n = safeText(x.name || x.player || x.nome);
+          const g = (x.goals !== undefined && x.goals !== null) ? ` (${x.goals})` : "";
+          if(!n) return "";
+          return `<li>${n}${g}</li>`;
+        }
+        return "";
+      }).filter(Boolean).join("");
+
+      if (!items) return "";
+
+      return `
+        <div class="hr"></div>
+        <div class="row big">⚽ Marcatori</div>
+        <ul>${items}</ul>
+        <div class="small">*(facoltativo: se non li inserisci, non appare nulla)*</div>
+      `;
+    }
+
+    async function loadMatch(){
+      try{
+        // prende l’ultima partita
         const { data, error } = await client
           .from("matches")
           .select("*")
@@ -89,15 +179,32 @@
         if (error) throw error;
 
         if (!data || data.length === 0) {
-          content.innerHTML = "<div class='row'>Nessuna partita creata</div>";
+          content.innerHTML = "<div class='row big'>Nessuna partita creata</div>";
           return;
         }
 
         const m = data[0];
 
-        const teamA = m.team_a || "-";
-        const teamB = m.team_b || "-";
+        const dateTxt = formatDateISO(m.match_date);
+        const timeTxt = safeText(m.match_time) || "21:00";
+        const venueTxt = safeText(m.venue) || "Campo a 6 - Aradeo";
 
+        const keeperA = safeText(m.team_a_keeper || m.goalkeeper_a || m.goalkeeper_a_name || m.goalkeeper_a_text);
+        const keeperB = safeText(m.team_b_keeper || m.goalkeeper_b || m.goalkeeper_b_name || m.goalkeeper_b_text);
+
+        // Convocati: supporta called_up come array o stringa JSON
+        let called = [];
+        if (Array.isArray(m.called_up)) called = m.called_up;
+        else if (typeof m.called_up === "string") {
+          try { called = JSON.parse(m.called_up); } catch(e){ called = []; }
+        }
+        if (!Array.isArray(called)) called = [];
+
+        const convocatiHtml = (called.length === 0)
+          ? `<div class="row">Nessun convocato</div>`
+          : `<ul>${called.map(n=>`<li>${safeText(n)}</li>`).join("")}</ul>`;
+
+        // Risultato: NO null-null
         let risultatoHTML = "";
         if (m.goals_a == null || m.goals_b == null) {
           risultatoHTML = `
@@ -114,16 +221,38 @@
         }
 
         content.innerHTML = `
-          <div class="row">📅 <strong>${m.match_date}</strong></div>
-          <div class="row">🟡 <strong>Squadra A:</strong> ${teamA}</div>
-          <div class="row">🔴 <strong>Squadra B:</strong> ${teamB}</div>
+          <div class="row big">Partita trovata <span class="badge ok">✅</span></div>
+
+          <div class="row">📅 <strong>${dateTxt}</strong> • 🕘 <strong>${timeTxt}</strong></div>
+          <div class="row">📍 <strong>${venueTxt}</strong></div>
+
+          <div class="pillRow">
+            <div class="pill">
+              <span class="iconShirt yellow"></span>
+              <div><strong>Squadra A</strong>: ${keeperA || "-"}</div>
+            </div>
+            <div class="pill">
+              <span class="iconShirt red"></span>
+              <div><strong>Squadra B</strong>: ${keeperB || "-"}</div>
+            </div>
+          </div>
+
           ${risultatoHTML}
 
+          <div class="hr"></div>
+          <div class="row big">Convocati (${called.length}/12)</div>
+          ${convocatiHtml}
+
+          ${renderScorers(m)}
+
+          <div class="hr"></div>
+          <div class="row big">📍 Mappa campo</div>
           <iframe
             src="https://maps.google.com/maps?q=Campo%20Sportivo%20Aradeo&t=&z=15&ie=UTF8&iwloc=&output=embed">
           </iframe>
         `;
-      } catch (err) {
+
+      } catch(err){
         content.innerHTML = `
           <div class="error">
             Errore caricamento partita:<br>
