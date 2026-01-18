@@ -56,6 +56,12 @@
       statusEl.innerHTML = '<span class="err">'+msg+'</span>';
     }
 
+    function showEmpty(){
+      statusEl.textContent = "Nessuna partita creata (per ora) ⚽️";
+      infoEl.innerHTML = '<div class="muted">Torna più tardi oppure chiedi a Marco di crearla dall’Area Admin.</div>';
+      calledEl.textContent = "—";
+    }
+
     if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
       showErr("Config Supabase non valida (controlla config.js).");
       throw new Error("Missing config");
@@ -64,17 +70,18 @@
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     async function load(){
-      // ✅ usa keeper_a / keeper_b (NON goalkeeper_a)
-      const { data: match, error } = await client
+      // ✅ NIENTE .single() → così non esplode quando non c’è nessuna partita
+      const { data, error } = await client
         .from("matches")
         .select("id,match_date,match_time,venue,called_up,keeper_a,keeper_b")
         .order("match_date",{ascending:false})
         .order("match_time",{ascending:false})
-        .limit(1)
-        .single();
+        .limit(1);
 
       if(error){ showErr("Errore matches: " + error.message); return; }
-      if(!match){ statusEl.textContent="Nessuna partita creata."; return; }
+
+      const match = (data && data.length) ? data[0] : null;
+      if(!match){ showEmpty(); return; }
 
       statusEl.textContent = "Partita trovata ✅";
 
@@ -98,7 +105,6 @@
 
       if(e2){ showErr("Errore players: " + e2.message); return; }
 
-      // mantieni l’ordine come salvato in called_up
       const map = new Map((players||[]).map(p=>[p.id,p]));
       const ordered = ids.map(id=>map.get(id)).filter(Boolean);
 
