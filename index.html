@@ -90,7 +90,7 @@
       background:var(--pill);
       border-radius:999px;
       padding:6px 10px;
-      margin:4px 6px 0 0;
+      margin-left:6px;
       font-weight:900;
       border:1px solid var(--border);
       white-space:nowrap;
@@ -106,12 +106,23 @@
     body.dark .badge{background:#0b0e14}
 
     .muted{color:var(--muted)}
-    .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+    /* Squadre in colonna */
+    .teams{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-top:6px;
+    }
+    .teamRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
 
     /* Shirt SVG */
     .shirt{
-      width:22px;height:22px;
-      vertical-align:middle;
+      width:24px;height:24px;
       filter:drop-shadow(0 2px 2px rgba(0,0,0,.2));
     }
 
@@ -187,6 +198,7 @@
   <div class="card nav muted">
     <a href="storico.html">📚 Storico</a>
     <a href="marcatori.html">⚽ Marcatori</a>
+    <a href="componenti.html">👥 Componenti</a>
     <a href="admin.html">🔐 Admin</a>
   </div>
 
@@ -218,21 +230,12 @@ document.getElementById("themeToggle").onclick = () => {
 
 // HELPERS
 function safe(v){ return v ?? ""; }
-
 function formatDateFull(iso){
   if(!iso) return "";
   const d = new Date(iso);
-  return d.toLocaleDateString("it-IT", {
-    weekday:"long",
-    day:"numeric",
-    month:"long",
-    year:"numeric"
-  });
+  return d.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 }
-function formatTimeHHMM(t){
-  if(!t) return "";
-  return String(t).slice(0,5); // 21:00:00 -> 21:00
-}
+function formatTime(t){ return t ? String(t).slice(0,5) : ""; }
 
 // SVG maglia
 function shirtSVG(color){
@@ -240,8 +243,6 @@ function shirtSVG(color){
     <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
       <path d="M20 10 L28 6 H36 L44 10 L56 18 L50 30 L44 26 V58 H20 V26 L14 30 L8 18 Z"
         fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
-      <path d="M28 6 L32 14 L36 6" fill="none"
-        stroke="rgba(0,0,0,.35)" stroke-width="2"/>
     </svg>`;
 }
 
@@ -263,32 +264,28 @@ async function load(){
   const m = data[0];
   statusEl.textContent = "Partita trovata ✅";
 
-  const dateFull = formatDateFull(m.match_date);
-  const time = formatTimeHHMM(m.match_time);
-
-  let resultHtml = (m.score_a != null && m.score_b != null)
+  const resultHtml = (m.score_a!=null && m.score_b!=null)
     ? `<div class="line"><span class="badge">🏁 ${m.score_a}-${m.score_b}</span></div>`
     : `<div class="line muted">🏁 <b>Risultato:</b> da giocare</div>`;
 
   infoEl.innerHTML = `
-    <div class="line"><b>📅 ${dateFull} • ⏰ ${time}</b></div>
+    <div class="line"><b>📅 ${formatDateFull(m.match_date)} • ⏰ ${formatTime(m.match_time)}</b></div>
 
-    <div class="line row">
-      ${shirtSVG("#facc15")} <b>Squadra A:</b>
-      <span class="pill">${safe(m.keeper_a) || "—"}</span>
-      ${shirtSVG("#ef4444")} <b>Squadra B:</b>
-      <span class="pill">${safe(m.keeper_b) || "—"}</span>
+    <div class="teams">
+      <div class="teamRow">
+        ${shirtSVG("#facc15")}
+        <b>Squadra A</b>
+        <span class="pill">${safe(m.keeper_a) || "—"}</span>
+      </div>
+      <div class="teamRow">
+        ${shirtSVG("#ef4444")}
+        <b>Squadra B</b>
+        <span class="pill">${safe(m.keeper_b) || "—"}</span>
+      </div>
     </div>
 
     ${resultHtml}
   `;
-
-  if(m.scorers_text && m.scorers_text.trim()){
-    infoEl.innerHTML += `
-      <div class="line">
-        <b>⚽ Marcatori</b><br>${m.scorers_text}
-      </div>`;
-  }
 
   mapBox.style.display = "block";
 
@@ -303,9 +300,9 @@ async function load(){
     .in("id", m.called_up);
 
   const map = new Map((players||[]).map(p=>[p.id,p.name]));
-  calledEl.innerHTML = m.called_up
-    .map(id => `<span class="pill">${map.get(id) || id}</span>`)
-    .join("");
+  calledEl.innerHTML = m.called_up.map(id =>
+    `<span class="pill">${map.get(id) || id}</span>`
+  ).join("");
 }
 
 load();
