@@ -80,8 +80,8 @@
       font-weight:900;
       letter-spacing:.6px;
       text-transform:uppercase;
-      text-align:center;           /* ✅ centrata */
-      background:linear-gradient(to top,rgba(0,0,0,.75),transparent); /* ✅ solo in basso */
+      text-align:center;
+      background:linear-gradient(to top,rgba(0,0,0,.75),transparent);
     }
 
     .line{margin-top:8px}
@@ -205,7 +205,7 @@ const mapBox = document.getElementById("mapBox");
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ===== THEME =====
+// THEME
 function setTheme(mode){
   document.body.classList.toggle("dark", mode === "dark");
   document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
@@ -216,30 +216,28 @@ document.getElementById("themeToggle").onclick = () => {
   setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 };
 
-// ===== HELPERS =====
+// HELPERS
 function safe(v){ return v ?? ""; }
 
 function formatDateFull(iso){
   if(!iso) return "";
   const d = new Date(iso);
   return d.toLocaleDateString("it-IT", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric"
+    weekday:"long",
+    day:"numeric",
+    month:"long",
+    year:"numeric"
   });
 }
 function formatTimeHHMM(t){
   if(!t) return "";
-  const s = String(t);
-  // "21:00:00" -> "21:00"
-  return s.length >= 5 ? s.slice(0,5) : s;
+  return String(t).slice(0,5); // 21:00:00 -> 21:00
 }
 
 // SVG maglia
 function shirtSVG(color){
   return `
-    <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
       <path d="M20 10 L28 6 H36 L44 10 L56 18 L50 30 L44 26 V58 H20 V26 L14 30 L8 18 Z"
         fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
       <path d="M28 6 L32 14 L36 6" fill="none"
@@ -247,7 +245,7 @@ function shirtSVG(color){
     </svg>`;
 }
 
-// ===== LOAD MATCH =====
+// LOAD MATCH
 async function load(){
   const { data, error } = await client
     .from("matches")
@@ -278,7 +276,6 @@ async function load(){
     <div class="line row">
       ${shirtSVG("#facc15")} <b>Squadra A:</b>
       <span class="pill">${safe(m.keeper_a) || "—"}</span>
-      <span class="muted">vs</span>
       ${shirtSVG("#ef4444")} <b>Squadra B:</b>
       <span class="pill">${safe(m.keeper_b) || "—"}</span>
     </div>
