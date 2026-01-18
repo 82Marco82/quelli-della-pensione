@@ -72,16 +72,28 @@
     /* Hero */
     .hero{position:relative;border-radius:16px;overflow:hidden}
     .hero img{width:100%;display:block}
+    /* Testo centrato senza fascia: non copre la foto */
     .hero .txt{
-      position:absolute;left:50%;transform:translateX(-50%);
-      bottom:12px;
-      padding:10px 12px;
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      padding:0;
       color:#fff;
       font-weight:900;
-      letter-spacing:1px;
+      letter-spacing:2px;
       text-transform:uppercase;
       text-align:center;
-      text-shadow:0 3px 12px rgba(0,0,0,.65);
+      font-size:26px;
+      text-shadow:
+        0 4px 16px rgba(0,0,0,.75),
+        0 2px 6px rgba(0,0,0,.65);
+      pointer-events:none;
+      user-select:none;
+      white-space:nowrap;
+    }
+    @media(max-width:420px){
+      .hero .txt{font-size:20px;white-space:normal;line-height:1.1}
     }
 
     .line{margin-top:8px}
@@ -144,9 +156,19 @@
       font-size:22px;
     }
 
-    .shirt{width:16px;height:16px;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
     .blockTitle{margin-top:12px;font-weight:900}
     .mini{font-size:12px;color:var(--muted);margin-top:6px}
+
+    /* Icona maglia */
+    .kit{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .kit svg{
+      width:18px;height:18px;
+      filter:drop-shadow(0 2px 2px rgba(0,0,0,.22));
+    }
   </style>
 </head>
 
@@ -183,13 +205,13 @@
       <div class="mini">Se le vedi qui, sono quelle inserite dall’admin a fine partita.</div>
 
       <div class="line">
-        <span class="shirtWrap" id="tAIcon"></span>
+        <span class="kit" id="tAIcon"></span>
         <b>Squadra A</b>
       </div>
       <div id="teamA" class="muted">—</div>
 
       <div class="line" style="margin-top:10px">
-        <span class="shirtWrap" id="tBIcon"></span>
+        <span class="kit" id="tBIcon"></span>
         <b>Squadra B</b>
       </div>
       <div id="teamB" class="muted">—</div>
@@ -223,12 +245,15 @@ const teamBEl = document.getElementById("teamB");
 const tAIcon = document.getElementById("tAIcon");
 const tBIcon = document.getElementById("tBIcon");
 
-function shirtSVG(color){
+/* Maglia più bella */
+function kitSVG(colorMain, colorStripe){
   return `
-    <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M20 10 L28 6 H36 L44 10 L56 18 L50 30 L44 26 V58 H20 V26 L14 30 L8 18 Z"
-        fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
-    </svg>`;
+  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M18 12 L26 6 H38 L46 12 L58 20 L52 33 L46 29 V58 H18 V29 L12 33 L6 20 Z"
+      fill="${colorMain}" stroke="rgba(0,0,0,.35)" stroke-width="2" />
+    <path d="M30 10 H34 V58 H30 Z" fill="${colorStripe}" opacity="0.85"/>
+    <path d="M26 6 L32 12 L38 6" fill="none" stroke="rgba(255,255,255,.65)" stroke-width="2" stroke-linecap="round"/>
+  </svg>`;
 }
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -313,12 +338,11 @@ async function load(){
   const hasTeams = (Array.isArray(m.team_a) && m.team_a.length) || (Array.isArray(m.team_b) && m.team_b.length);
   if(hasTeams){
     teamsBox.style.display = "block";
-    tAIcon.innerHTML = shirtSVG("#facc15");
-    tBIcon.innerHTML = shirtSVG("#ef4444");
+    tAIcon.innerHTML = kitSVG("#facc15","#111827"); // gialla con riga scura
+    tBIcon.innerHTML = kitSVG("#ef4444","#ffffff"); // rossa con riga chiara
 
-    // serve mappa id->nome per team
     const ids = Array.from(new Set([...(m.team_a||[]), ...(m.team_b||[])]));
-    const { data: p2, error: e3 } = await client.from("players").select("id,name").in("id", ids);
+    const { data: p2 } = await client.from("players").select("id,name").in("id", ids);
     const map2 = new Map((p2||[]).map(p=>[String(p.id), p.name]));
 
     const renderTeam = (arr) => {
