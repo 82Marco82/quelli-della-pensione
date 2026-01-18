@@ -67,10 +67,10 @@
         <label>Campo</label>
         <input id="venue" type="text" value="Campo a 6 - Aradeo" />
 
-        <label>Portiere Squadra A (nome)</label>
+        <label>Portiere Squadra A (scegli nome)</label>
         <select id="keeperA"></select>
 
-        <label>Portiere Squadra B (nome)</label>
+        <label>Portiere Squadra B (scegli nome)</label>
         <select id="keeperB"></select>
 
         <label>Convocati (max 12)</label>
@@ -79,12 +79,11 @@
 
         <div class="row" style="margin-top:12px">
           <button id="btnSave">Salva</button>
-          <button id="btnToggleVote" class="secondary">Apri/Chiudi voto</button>
           <button id="btnDelete" class="danger">Elimina partita</button>
         </div>
 
         <div class="muted" style="margin-top:10px">
-          Questo dashboard NON usa la colonna is_goalkeeper (che nel tuo DB non esiste).
+          Questo usa SOLO: matches.team_a_keeper_id / team_b_keeper_id / called_up.
         </div>
       </div>
 
@@ -125,7 +124,7 @@
     let MATCHES = [];
     let CURRENT = null;
 
-    // Portieri “fissi” (come mi avevi detto)
+    // nomi portieri fissi (come il vostro gruppo)
     const KEEPER_NAMES = ["Gianni","Andrea","Tonino"];
 
     async function requireSession(){
@@ -146,7 +145,7 @@
     async function loadMatches(){
       const { data, error } = await client
         .from("matches")
-        .select("id,match_date,match_time,venue,called_up,voting_open,goalkeeper_a,goalkeeper_b")
+        .select("id,match_date,match_time,venue,called_up,team_a_keeper_id,team_b_keeper_id")
         .order("match_date",{ascending:false})
         .order("match_time",{ascending:false})
         .limit(50);
@@ -167,6 +166,7 @@
     }
 
     function renderKeepers(){
+      // i portieri li scegliamo per NOME, ma salviamo gli UUID corrispondenti in players
       const a = $("keeperA"), b = $("keeperB");
       a.innerHTML = `<option value="">-- scegli --</option>` + KEEPER_NAMES.map(n=>`<option value="${n}">${n}</option>`).join("");
       b.innerHTML = `<option value="">-- scegli --</option>` + KEEPER_NAMES.map(n=>`<option value="${n}">${n}</option>`).join("");
@@ -216,13 +216,22 @@
       countInfoEl.textContent = `Convocati: ${getCalledUp().length}/12`;
     }
 
+    function nameToPlayerId(name){
+      const p = PLAYERS.find(x => (x.name||"").trim().toLowerCase() === (name||"").trim().toLowerCase());
+      return p ? p.id : null;
+    }
+
     function fillForm(m){
       CURRENT = m;
       $("matchDate").value = m.match_date || "";
       $("matchTime").value = String(m.match_time||"21:00:00").slice(0,5);
       $("venue").value = m.venue || "Campo a 6 - Aradeo";
-      $("keeperA").value = m.goalkeeper_a || "";
-      $("keeperB").value = m.goalkeeper_b || "";
+
+      // set keeper selects based on keeper_id -> name
+      const map = new Map(PLAYERS.map(p=>[String(p.id), p.name]));
+      $("keeperA").value = map.get(String(m.team_a_keeper_id)) || "";
+      $("keeperB").value = map.get(String(m.team_b_keeper_id)) || "";
+
       renderPlayersBox(m.called_up || []);
       renderPreview();
     }
@@ -264,16 +273,23 @@
       const match_date = $("matchDate").value;
       const match_time = ($("matchTime").value ? $("matchTime").value + ":00" : "21:00:00");
       const venue = $("venue").value || "Campo a 6 - Aradeo";
-      const goalkeeper_a = $("keeperA").value;
-      const goalkeeper_b = $("keeperB").value;
+      const keeperAName = $("keeperA").value;
+      const keeperBName = $("keeperB").value;
       const called_up = getCalledUp();
 
       if(!match_date) return setMsg("Inserisci la data.","err");
-      if(!goalkeeper_a || !goalkeeper_b) return setMsg("Seleziona 2 portieri.","err");
-      if(goalkeeper_a === goalkeeper_b) return setMsg("I portieri devono essere diversi.","err");
+      if(!keeperAName || !keeperBName) return setMsg("Seleziona 2 portieri.","err");
+      if(keeperAName === keeperBName) return setMsg("I portieri devono essere diversi.","err");
       if(called_up.length > 12) return setMsg("Max 12 convocati.","err");
 
-      const payload = { match_date, match_time, venue, goalkeeper_a, goalkeeper_b, called_up };
+      const team_a_keeper_id = nameToPlayerId(keeperAName);
+      const team_b_keeper_id = nameToPlayerId(keeperBName);
+
+      if(!team_a_keeper_id || !team_b_keeper_id){
+        return setMsg("ERRORE: i portieri devono esistere nella tabella players (con lo stesso nome).","err");
+      }
+
+      const payload = { match_date, match_time, venue, called_up, team_a_keeper_id, team_b_keeper_id };
 
       try{
         if(CURRENT && CURRENT.id){
@@ -281,7 +297,6 @@
           if(error) throw error;
           setMsg("Partita aggiornata ✅","ok");
         }else{
-          payload.voting_open = false;
           const { data, error } = await client.from("matches").insert([payload]).select("*").single();
           if(error) throw error;
           setMsg("Partita creata ✅","ok");
@@ -293,16 +308,6 @@
         console.error(e);
         setMsg("Errore salvataggio: " + (e.message||e),"err");
       }
-    }
-
-    async function toggleVote(){
-      if(!CURRENT) return setMsg("Seleziona una partita.","err");
-      const newVal = !CURRENT.voting_open;
-      const { error } = await client.from("matches").update({ voting_open: newVal }).eq("id", CURRENT.id);
-      if(error) return setMsg("Errore voto: "+error.message,"err");
-      CURRENT.voting_open = newVal;
-      setMsg(newVal ? "Voto aperto 🟢" : "Voto chiuso 🔴","ok");
-      await loadMatches();
     }
 
     async function del(){
@@ -350,7 +355,6 @@
     $("btnNew").addEventListener("click", ()=>{ clearForm(); setMsg("Nuova partita: compila e salva.","ok"); });
     $("btnRefresh").addEventListener("click", async ()=>{ setMsg("Aggiorno…"); await loadMatches(); setMsg("Lista aggiornata ✅","ok"); });
     $("btnSave").addEventListener("click", save);
-    $("btnToggleVote").addEventListener("click", toggleVote);
     $("btnDelete").addEventListener("click", del);
     $("btnAddPlayer").addEventListener("click", addPlayer);
     $("btnLogout").addEventListener("click", logout);
