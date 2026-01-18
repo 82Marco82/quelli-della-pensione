@@ -1,1 +1,73 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin</title>
+  <style>
+    body{font-family:system-ui;margin:0;background:#f4f6f8}
+    .wrap{max-width:520px;margin:24px auto;padding:16px}
+    .card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+    label{display:block;font-size:12px;margin:10px 0 6px}
+    input{width:100%;padding:10px;border:1px solid #cfd6dd;border-radius:10px}
+    button{margin-top:12px;width:100%;padding:10px;border:0;border-radius:10px;background:#111;color:#fff;font-weight:800}
+    .msg{margin-top:10px;color:#666;white-space:pre-wrap}
+    .err{color:#b00020;font-weight:800}
+    a{color:#0b5fff;text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h2 style="margin:0 0 10px">Area Admin</h2>
+      <div id="msg" class="msg">Caricamento…</div>
 
+      <div id="box" style="display:none">
+        <label>Email</label>
+        <input id="email" type="email" />
+        <label>Password</label>
+        <input id="pass" type="password" />
+        <button id="login">Entra</button>
+      </div>
+
+      <div style="margin-top:12px">
+        <a href="index.html">Torna al sito</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script>
+    const msg = document.getElementById("msg");
+    const box = document.getElementById("box");
+    function setMsg(t, bad=false){
+      msg.className = "msg" + (bad ? " err" : "");
+      msg.textContent = t;
+    }
+
+    if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+      setMsg("Config mancante: controlla config.js", true);
+      throw new Error("Missing config");
+    }
+
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    (async () => {
+      const { data: { session } } = await client.auth.getSession();
+      if(session){ location.href = "dashboard.html"; return; }
+      setMsg("Inserisci email e password.");
+      box.style.display = "block";
+    })();
+
+    document.getElementById("login").onclick = async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("pass").value;
+      setMsg("Login…");
+      const { error } = await client.auth.signInWithPassword({ email, password });
+      if(error){ setMsg(error.message, true); return; }
+      location.href = "dashboard.html";
+    };
+  </script>
+</body>
+</html>
