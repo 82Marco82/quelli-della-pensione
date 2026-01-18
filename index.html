@@ -110,8 +110,12 @@
     .nav{
       display:flex;
       justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
       font-size:14px;
     }
+    .nav a{color:var(--text);text-decoration:none;font-weight:800}
+    .nav a:hover{text-decoration:underline}
 
     .fab{
       position:fixed;
@@ -153,10 +157,13 @@
     <div id="called" class="muted">—</div>
   </div>
 
+  <!-- NAV con Marcatori -->
   <div class="card nav muted">
     <a href="storico.html">📚 Storico</a>
+    <a href="marcatori.html">⚽ Marcatori</a>
     <a href="admin.html">🔐 Admin</a>
   </div>
+
 </div>
 
 <button id="themeToggle" class="fab">🌙</button>
@@ -221,10 +228,15 @@ async function load(){
     return;
   }
 
-  const { data: players } = await client
+  const { data: players, error: e2 } = await client
     .from("players")
     .select("id,name")
     .in("id",m.called_up);
+
+  if(e2){
+    calledEl.textContent = "Errore convocati";
+    return;
+  }
 
   const map = new Map((players||[]).map(p=>[p.id,p.name]));
   calledEl.innerHTML = m.called_up.map(id=>`<span class="pill">${map.get(id)||""}</span>`).join("");
