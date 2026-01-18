@@ -72,12 +72,12 @@
     /* Hero */
     .hero{position:relative;border-radius:16px;overflow:hidden}
     .hero img{width:100%;display:block}
-    /* Testo centrato senza fascia: non copre la foto */
+    /* TESTO: centrato orizzontalmente, in basso, senza fascia (non copre i volti) */
     .hero .txt{
       position:absolute;
       left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
+      bottom:14px;              /* <<< in basso */
+      transform:translateX(-50%);
       padding:0;
       color:#fff;
       font-weight:900;
@@ -93,7 +93,12 @@
       white-space:nowrap;
     }
     @media(max-width:420px){
-      .hero .txt{font-size:20px;white-space:normal;line-height:1.1}
+      .hero .txt{
+        font-size:20px;
+        white-space:normal;
+        line-height:1.1;
+        padding:0 10px;
+      }
     }
 
     .line{margin-top:8px}
@@ -300,8 +305,8 @@ async function load(){
   infoEl.innerHTML = `
     <div class="line"><b>📅 ${dateFull}</b></div>
     <div class="line"><b>⏰ ${timeHHMM}</b></div>
-    <div class="line"><b>🟨 Squadra A:</b> ${m.keeper_a || "—"}</div>
-    <div class="line"><b>🟥 Squadra B:</b> ${m.keeper_b || "—"}</div>
+    <div class="line"><b>Squadra A:</b> ${m.keeper_a || "—"}</div>
+    <div class="line"><b>Squadra B:</b> ${m.keeper_b || "—"}</div>
     <div class="line"><span class="badge">🏁 ${resultText}</span></div>
   `;
 
