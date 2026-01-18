@@ -69,19 +69,19 @@
     }
     .subtitle{color:var(--muted);font-size:14px}
 
-    /* HERO */
+    /* Hero */
     .hero{position:relative;border-radius:16px;overflow:hidden}
     .hero img{width:100%;display:block}
     .hero .txt{
-      position:absolute;
-      left:0;right:0;bottom:0;
-      padding:14px;
+      position:absolute;left:50%;transform:translateX(-50%);
+      bottom:12px;
+      padding:10px 12px;
       color:#fff;
       font-weight:900;
-      letter-spacing:.6px;
+      letter-spacing:1px;
       text-transform:uppercase;
       text-align:center;
-      background:linear-gradient(to top,rgba(0,0,0,.75),transparent);
+      text-shadow:0 3px 12px rgba(0,0,0,.65);
     }
 
     .line{margin-top:8px}
@@ -90,7 +90,7 @@
       background:var(--pill);
       border-radius:999px;
       padding:6px 10px;
-      margin-left:6px;
+      margin:4px 6px 0 0;
       font-weight:900;
       border:1px solid var(--border);
       white-space:nowrap;
@@ -106,25 +106,6 @@
     body.dark .badge{background:#0b0e14}
 
     .muted{color:var(--muted)}
-
-    /* Squadre in colonna */
-    .teams{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      margin-top:6px;
-    }
-    .teamRow{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-
-    /* Shirt SVG */
-    .shirt{
-      width:24px;height:24px;
-      filter:drop-shadow(0 2px 2px rgba(0,0,0,.2));
-    }
 
     /* Map */
     .mapWrap{
@@ -162,6 +143,10 @@
       cursor:pointer;
       font-size:22px;
     }
+
+    .shirt{width:16px;height:16px;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
+    .blockTitle{margin-top:12px;font-weight:900}
+    .mini{font-size:12px;color:var(--muted);margin-top:6px}
   </style>
 </head>
 
@@ -190,8 +175,25 @@
       <iframe src="https://www.google.com/maps?q=Campo%20a%206%20Aradeo&output=embed"></iframe>
     </div>
 
-    <div style="margin-top:12px;font-weight:900">Convocati</div>
+    <div class="blockTitle">Convocati</div>
     <div id="called" class="muted">—</div>
+
+    <div id="teamsBox" style="display:none">
+      <div class="blockTitle">Formazioni (facoltative)</div>
+      <div class="mini">Se le vedi qui, sono quelle inserite dall’admin a fine partita.</div>
+
+      <div class="line">
+        <span class="shirtWrap" id="tAIcon"></span>
+        <b>Squadra A</b>
+      </div>
+      <div id="teamA" class="muted">—</div>
+
+      <div class="line" style="margin-top:10px">
+        <span class="shirtWrap" id="tBIcon"></span>
+        <b>Squadra B</b>
+      </div>
+      <div id="teamB" class="muted">—</div>
+    </div>
   </div>
 
   <!-- NAV -->
@@ -215,6 +217,20 @@ const infoEl = document.getElementById("info");
 const calledEl = document.getElementById("called");
 const mapBox = document.getElementById("mapBox");
 
+const teamsBox = document.getElementById("teamsBox");
+const teamAEl = document.getElementById("teamA");
+const teamBEl = document.getElementById("teamB");
+const tAIcon = document.getElementById("tAIcon");
+const tBIcon = document.getElementById("tBIcon");
+
+function shirtSVG(color){
+  return `
+    <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 10 L28 6 H36 L44 10 L56 18 L50 30 L44 26 V58 H20 V26 L14 30 L8 18 Z"
+        fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
+    </svg>`;
+}
+
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // THEME
@@ -228,81 +244,93 @@ document.getElementById("themeToggle").onclick = () => {
   setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 };
 
-// HELPERS
-function safe(v){ return v ?? ""; }
+// date full (giorno mese anno)
 function formatDateFull(iso){
   if(!iso) return "";
   const d = new Date(iso);
   return d.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-}
-function formatTime(t){ return t ? String(t).slice(0,5) : ""; }
-
-// SVG maglia
-function shirtSVG(color){
-  return `
-    <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 10 L28 6 H36 L44 10 L56 18 L50 30 L44 26 V58 H20 V26 L14 30 L8 18 Z"
-        fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
-    </svg>`;
 }
 
 // LOAD MATCH
 async function load(){
   const { data, error } = await client
     .from("matches")
-    .select("match_date,match_time,called_up,keeper_a,keeper_b,score_a,score_b,scorers_text")
+    .select("match_date,match_time,venue,called_up,keeper_a,keeper_b,score_a,score_b,scorers_text,team_a,team_b")
     .order("match_date",{ascending:false})
     .order("match_time",{ascending:false})
     .limit(1);
 
   if(error || !data.length){
     statusEl.textContent = "Nessuna partita creata";
-    mapBox.style.display = "none";
     return;
   }
 
   const m = data[0];
   statusEl.textContent = "Partita trovata ✅";
 
-  const resultHtml = (m.score_a!=null && m.score_b!=null)
-    ? `<div class="line"><span class="badge">🏁 ${m.score_a}-${m.score_b}</span></div>`
-    : `<div class="line muted">🏁 <b>Risultato:</b> da giocare</div>`;
+  const dateFull = formatDateFull(m.match_date);
+  const timeHHMM = String(m.match_time||"").slice(0,5);
+  const resultText = (m.score_a!=null && m.score_b!=null) ? `${m.score_a}-${m.score_b}` : "da giocare";
 
   infoEl.innerHTML = `
-    <div class="line"><b>📅 ${formatDateFull(m.match_date)} • ⏰ ${formatTime(m.match_time)}</b></div>
-
-    <div class="teams">
-      <div class="teamRow">
-        ${shirtSVG("#facc15")}
-        <b>Squadra A</b>
-        <span class="pill">${safe(m.keeper_a) || "—"}</span>
-      </div>
-      <div class="teamRow">
-        ${shirtSVG("#ef4444")}
-        <b>Squadra B</b>
-        <span class="pill">${safe(m.keeper_b) || "—"}</span>
-      </div>
-    </div>
-
-    ${resultHtml}
+    <div class="line"><b>📅 ${dateFull}</b></div>
+    <div class="line"><b>⏰ ${timeHHMM}</b></div>
+    <div class="line"><b>🟨 Squadra A:</b> ${m.keeper_a || "—"}</div>
+    <div class="line"><b>🟥 Squadra B:</b> ${m.keeper_b || "—"}</div>
+    <div class="line"><span class="badge">🏁 ${resultText}</span></div>
   `;
+
+  // MARCATORI (FACOLTATIVI)
+  if(m.scorers_text && String(m.scorers_text).trim() !== ""){
+    infoEl.innerHTML += `
+      <div class="line" style="margin-top:10px">
+        <b>⚽ Marcatori</b><br>
+        ${String(m.scorers_text).replaceAll("\n","<br>")}
+      </div>
+    `;
+  }
 
   mapBox.style.display = "block";
 
+  // Convocati
   if(!m.called_up || !m.called_up.length){
     calledEl.textContent = "—";
-    return;
+  }else{
+    const { data: players, error: e2 } = await client
+      .from("players")
+      .select("id,name")
+      .in("id", m.called_up);
+
+    if(e2){
+      calledEl.textContent = "Errore convocati";
+    }else{
+      const map = new Map((players||[]).map(p => [String(p.id), p.name]));
+      calledEl.innerHTML = m.called_up.map(id => `<span class="pill">${map.get(String(id)) || ""}</span>`).join("");
+    }
   }
 
-  const { data: players } = await client
-    .from("players")
-    .select("id,name")
-    .in("id", m.called_up);
+  // FORMAZIONI (FACOLTATIVE)
+  const hasTeams = (Array.isArray(m.team_a) && m.team_a.length) || (Array.isArray(m.team_b) && m.team_b.length);
+  if(hasTeams){
+    teamsBox.style.display = "block";
+    tAIcon.innerHTML = shirtSVG("#facc15");
+    tBIcon.innerHTML = shirtSVG("#ef4444");
 
-  const map = new Map((players||[]).map(p=>[p.id,p.name]));
-  calledEl.innerHTML = m.called_up.map(id =>
-    `<span class="pill">${map.get(id) || id}</span>`
-  ).join("");
+    // serve mappa id->nome per team
+    const ids = Array.from(new Set([...(m.team_a||[]), ...(m.team_b||[])]));
+    const { data: p2, error: e3 } = await client.from("players").select("id,name").in("id", ids);
+    const map2 = new Map((p2||[]).map(p=>[String(p.id), p.name]));
+
+    const renderTeam = (arr) => {
+      if(!Array.isArray(arr) || !arr.length) return "—";
+      return arr.map(id => `<span class="pill">${map2.get(String(id)) || ""}</span>`).join("");
+    };
+
+    teamAEl.innerHTML = renderTeam(m.team_a);
+    teamBEl.innerHTML = renderTeam(m.team_b);
+  }else{
+    teamsBox.style.display = "none";
+  }
 }
 
 load();
