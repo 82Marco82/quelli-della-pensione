@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard – Quelli della pensione</title>
+  <title>Dashboard</title>
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:#f4f6f8}
+    body{font-family:system-ui;margin:0;background:#f4f6f8}
     .wrap{max-width:980px;margin:24px auto;padding:16px}
     .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
     .top a{color:#0b5fff;text-decoration:none}
@@ -44,14 +44,11 @@
     </div>
 
     <div class="grid">
-
-      <!-- COLONNA SINISTRA: CREA/AGGIORNA -->
       <div class="card">
         <h2>Crea / aggiorna partita</h2>
-
         <div id="msg" class="msg">Caricamento…</div>
 
-        <label>Seleziona partita (per modificare)</label>
+        <label>Seleziona partita</label>
         <select id="matchSelect">
           <option value="">-- nuova partita --</option>
         </select>
@@ -70,15 +67,11 @@
         <label>Campo</label>
         <input id="venue" type="text" value="Campo a 6 - Aradeo" />
 
-        <label>Portiere Squadra A</label>
-        <select id="keeperA">
-          <option value="">-- scegli --</option>
-        </select>
+        <label>Portiere Squadra A (nome)</label>
+        <select id="keeperA"></select>
 
-        <label>Portiere Squadra B</label>
-        <select id="keeperB">
-          <option value="">-- scegli --</option>
-        </select>
+        <label>Portiere Squadra B (nome)</label>
+        <select id="keeperB"></select>
 
         <label>Convocati (max 12)</label>
         <div class="playersBox" id="playersBox"></div>
@@ -91,92 +84,69 @@
         </div>
 
         <div class="muted" style="margin-top:10px">
-          Nota: i convocati vengono salvati automaticamente in <b>matches.called_up</b> come UUID.
+          Questo dashboard NON usa la colonna is_goalkeeper (che nel tuo DB non esiste).
         </div>
       </div>
 
-      <!-- COLONNA DESTRA: ANTEPRIMA -->
       <div class="card">
-        <h2>Anteprima (come la vedono i giocatori)</h2>
+        <h2>Anteprima</h2>
         <div id="preview" class="muted">Nessuna partita selezionata.</div>
-
-        <div class="muted" style="margin-top:14px">
-          Suggerimento: dopo “Salva”, condividi solo il link della home (index). I convocati si vedono lì.
-        </div>
 
         <div style="margin-top:14px">
           <button id="btnAddPlayer" class="secondary">Aggiungi nuovo giocatore</button>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- CONFIG + SUPABASE -->
   <script src="config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
   <script>
-    // --------- Helpers UI ----------
     const $ = (id) => document.getElementById(id);
     const msgEl = $("msg");
     const previewEl = $("preview");
     const countInfoEl = $("countInfo");
 
-    function setMsg(text, kind="info"){
+    function setMsg(t, kind="info"){
       msgEl.className = "msg";
       if(kind==="ok") msgEl.classList.add("ok");
       if(kind==="err") msgEl.classList.add("err");
-      msgEl.textContent = text;
+      msgEl.textContent = t;
     }
 
-    function escapeHtml(s){
-      return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
-    }
-
-    // --------- Config checks ----------
     if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
-      setMsg("Config mancante: controlla config.js (SUPABASE_URL e SUPABASE_ANON_KEY).","err");
+      setMsg("Config mancante: controlla config.js","err");
       throw new Error("Missing config");
-    }
-    if(!window.supabase || !window.supabase.createClient){
-      setMsg("Libreria Supabase non caricata.","err");
-      throw new Error("Supabase SDK missing");
     }
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // --------- State ----------
-    let PLAYERS = [];   // [{id,name,is_goalkeeper}]
-    let MATCHES = [];   // [{...}]
-    let CURRENT_MATCH = null;
+    let PLAYERS = [];
+    let MATCHES = [];
+    let CURRENT = null;
 
-    // --------- Auth guard ----------
+    // Portieri “fissi” (come mi avevi detto)
+    const KEEPER_NAMES = ["Gianni","Andrea","Tonino"];
+
     async function requireSession(){
       const { data: { session }, error } = await client.auth.getSession();
-      if(error) { setMsg("Errore sessione: "+error.message,"err"); return false; }
-      if(!session){
-        location.href = "admin.html";
-        return false;
-      }
+      if(error){ setMsg("Errore sessione: "+error.message,"err"); return false; }
+      if(!session){ location.href="admin.html"; return false; }
       return true;
     }
 
-    // --------- Load data ----------
     async function loadPlayers(){
-      const { data, error } = await client
-        .from("players")
-        .select("id,name,is_goalkeeper")
-        .order("name",{ascending:true});
+      const { data, error } = await client.from("players").select("id,name").order("name",{ascending:true});
       if(error) throw error;
       PLAYERS = data || [];
-      renderKeepers();
       renderPlayersBox();
+      renderKeepers();
     }
 
     async function loadMatches(){
       const { data, error } = await client
         .from("matches")
-        .select("id,match_date,match_time,venue,team_a,team_b,team_a_keeper_id,team_b_keeper_id,called_up,voting_open,created_at")
+        .select("id,match_date,match_time,venue,called_up,voting_open,goalkeeper_a,goalkeeper_b")
         .order("match_date",{ascending:false})
         .order("match_time",{ascending:false})
         .limit(50);
@@ -185,23 +155,21 @@
       renderMatchesSelect();
     }
 
-    // --------- Render ----------
-    function renderKeepers(){
-      const keepers = PLAYERS.filter(p => !!p.is_goalkeeper);
-      const a = $("keeperA"), b = $("keeperB");
-      a.innerHTML = `<option value="">-- scegli --</option>`;
-      b.innerHTML = `<option value="">-- scegli --</option>`;
-      keepers.forEach(k=>{
-        const o1 = document.createElement("option");
-        o1.value = k.id;
-        o1.textContent = k.name;
-        a.appendChild(o1);
-
-        const o2 = document.createElement("option");
-        o2.value = k.id;
-        o2.textContent = k.name;
-        b.appendChild(o2);
+    function renderMatchesSelect(){
+      const sel = $("matchSelect");
+      sel.innerHTML = `<option value="">-- nuova partita --</option>`;
+      MATCHES.forEach(m=>{
+        const opt = document.createElement("option");
+        opt.value = m.id;
+        opt.textContent = `${m.match_date} ${String(m.match_time||"").slice(0,5)} – ${m.venue||""}`.trim();
+        sel.appendChild(opt);
       });
+    }
+
+    function renderKeepers(){
+      const a = $("keeperA"), b = $("keeperB");
+      a.innerHTML = `<option value="">-- scegli --</option>` + KEEPER_NAMES.map(n=>`<option value="${n}">${n}</option>`).join("");
+      b.innerHTML = `<option value="">-- scegli --</option>` + KEEPER_NAMES.map(n=>`<option value="${n}">${n}</option>`).join("");
     }
 
     function renderPlayersBox(checkedIds=[]){
@@ -209,16 +177,16 @@
       const checked = new Set((checkedIds||[]).map(String));
       box.innerHTML = "";
 
-      PLAYERS.filter(p=>!p.is_goalkeeper).forEach(p=>{
+      PLAYERS.forEach(p=>{
         const row = document.createElement("label");
         row.className = "pRow";
 
         const cb = document.createElement("input");
         cb.type = "checkbox";
-        cb.value = p.id;             // ✅ VALUE = UUID
+        cb.value = p.id;
         cb.checked = checked.has(String(p.id));
         cb.onchange = () => {
-          const ids = getSelectedCalledUp();
+          const ids = getCalledUp();
           if(ids.length > 12){
             cb.checked = false;
             setMsg("Max 12 convocati.","err");
@@ -238,59 +206,29 @@
       updateCount();
     }
 
-    function renderMatchesSelect(){
-      const sel = $("matchSelect");
-      sel.innerHTML = `<option value="">-- nuova partita --</option>`;
-      MATCHES.forEach(m=>{
-        const opt = document.createElement("option");
-        opt.value = m.id;
-        opt.textContent = `${m.match_date} ${String(m.match_time||"").slice(0,5)} – ${m.venue||""}`.trim();
-        sel.appendChild(opt);
-      });
-    }
-
-    function updateCount(){
-      const n = getSelectedCalledUp().length;
-      countInfoEl.textContent = `Convocati: ${n}/12`;
-    }
-
-    // --------- Form helpers ----------
-    function getSelectedCalledUp(){
-      const box = $("playersBox");
-      return [...box.querySelectorAll('input[type="checkbox"]')]
+    function getCalledUp(){
+      return [...$("playersBox").querySelectorAll('input[type="checkbox"]')]
         .filter(x=>x.checked)
         .map(x=>x.value);
     }
 
-    function getPlayerNameById(id){
-      const p = PLAYERS.find(x=>String(x.id)===String(id));
-      return p ? p.name : "";
+    function updateCount(){
+      countInfoEl.textContent = `Convocati: ${getCalledUp().length}/12`;
     }
 
-    function getFormData(){
-      return {
-        match_date: $("matchDate").value || null,
-        match_time: ($("matchTime").value ? $("matchTime").value + ":00" : "21:00:00"),
-        venue: $("venue").value || "Campo a 6 - Aradeo",
-        team_a_keeper_id: $("keeperA").value || null,
-        team_b_keeper_id: $("keeperB").value || null,
-        called_up: getSelectedCalledUp()
-      };
-    }
-
-    function fillFormFromMatch(m){
-      CURRENT_MATCH = m;
+    function fillForm(m){
+      CURRENT = m;
       $("matchDate").value = m.match_date || "";
       $("matchTime").value = String(m.match_time||"21:00:00").slice(0,5);
       $("venue").value = m.venue || "Campo a 6 - Aradeo";
-      $("keeperA").value = m.team_a_keeper_id || "";
-      $("keeperB").value = m.team_b_keeper_id || "";
+      $("keeperA").value = m.goalkeeper_a || "";
+      $("keeperB").value = m.goalkeeper_b || "";
       renderPlayersBox(m.called_up || []);
       renderPreview();
     }
 
     function clearForm(){
-      CURRENT_MATCH = null;
+      CURRENT = null;
       $("matchSelect").value = "";
       $("matchDate").value = "";
       $("matchTime").value = "21:00";
@@ -298,100 +236,83 @@
       $("keeperA").value = "";
       $("keeperB").value = "";
       renderPlayersBox([]);
-      previewEl.innerHTML = `<div class="muted">Nessuna partita selezionata.</div>`;
+      previewEl.textContent = "Nessuna partita selezionata.";
     }
 
-    // --------- Preview ----------
     function renderPreview(){
-      const f = getFormData();
-      const keeperAName = getPlayerNameById(f.team_a_keeper_id) || "-";
-      const keeperBName = getPlayerNameById(f.team_b_keeper_id) || "-";
+      const d = $("matchDate").value || "-";
+      const t = $("matchTime").value || "21:00";
+      const v = $("venue").value || "-";
+      const a = $("keeperA").value || "-";
+      const b = $("keeperB").value || "-";
+      const ids = getCalledUp();
 
-      const called = f.called_up.map(id=>{
-        const name = getPlayerNameById(id);
-        return name ? `<span class="pill">${escapeHtml(name)}</span>` : "";
-      }).join("");
+      const map = new Map(PLAYERS.map(p=>[String(p.id), p.name]));
+      const names = ids.map(id=>map.get(String(id))).filter(Boolean);
 
       previewEl.innerHTML = `
-        <div><b>Data:</b> ${escapeHtml(f.match_date||"-")} ${escapeHtml(String(f.match_time||"").slice(0,5))}</div>
-        <div><b>Campo:</b> ${escapeHtml(f.venue||"-")}</div>
-        <div style="margin-top:8px"><b>Squadra A:</b> ${escapeHtml(keeperAName)}</div>
-        <div><b>Squadra B:</b> ${escapeHtml(keeperBName)}</div>
-        <div style="margin-top:12px"><b>Convocati (${f.called_up.length}/12)</b></div>
-        <div>${called || "<span class='muted'>Nessun convocato</span>"}</div>
+        <div><b>Data:</b> ${d} ${t}</div>
+        <div><b>Campo:</b> ${v}</div>
+        <div style="margin-top:8px"><b>Squadra A:</b> ${a}</div>
+        <div><b>Squadra B:</b> ${b}</div>
+        <div style="margin-top:12px"><b>Convocati (${names.length}/12)</b></div>
+        <div>${names.length ? names.map(n=>`<span class="pill">${n}</span>`).join("") : "<span class='muted'>Nessun convocato</span>"}</div>
       `;
     }
 
-    // --------- Actions ----------
-    async function saveMatch(){
-      const f = getFormData();
+    async function save(){
+      const match_date = $("matchDate").value;
+      const match_time = ($("matchTime").value ? $("matchTime").value + ":00" : "21:00:00");
+      const venue = $("venue").value || "Campo a 6 - Aradeo";
+      const goalkeeper_a = $("keeperA").value;
+      const goalkeeper_b = $("keeperB").value;
+      const called_up = getCalledUp();
 
-      if(!f.match_date) return setMsg("Inserisci la data.","err");
-      if(!f.team_a_keeper_id || !f.team_b_keeper_id) return setMsg("Seleziona 2 portieri.","err");
-      if(String(f.team_a_keeper_id) === String(f.team_b_keeper_id)) return setMsg("I portieri devono essere diversi.","err");
-      if(f.called_up.length > 12) return setMsg("Max 12 convocati.","err");
+      if(!match_date) return setMsg("Inserisci la data.","err");
+      if(!goalkeeper_a || !goalkeeper_b) return setMsg("Seleziona 2 portieri.","err");
+      if(goalkeeper_a === goalkeeper_b) return setMsg("I portieri devono essere diversi.","err");
+      if(called_up.length > 12) return setMsg("Max 12 convocati.","err");
 
-      // team_a / team_b = nomi portieri (come volevi)
-      const payload = {
-        match_date: f.match_date,
-        match_time: f.match_time,
-        venue: f.venue,
-        team_a_keeper_id: f.team_a_keeper_id,
-        team_b_keeper_id: f.team_b_keeper_id,
-        team_a: getPlayerNameById(f.team_a_keeper_id),
-        team_b: getPlayerNameById(f.team_b_keeper_id),
-        called_up: f.called_up,
-      };
+      const payload = { match_date, match_time, venue, goalkeeper_a, goalkeeper_b, called_up };
 
       try{
-        if(CURRENT_MATCH && CURRENT_MATCH.id){
-          const { error } = await client.from("matches").update(payload).eq("id", CURRENT_MATCH.id);
+        if(CURRENT && CURRENT.id){
+          const { error } = await client.from("matches").update(payload).eq("id", CURRENT.id);
           if(error) throw error;
           setMsg("Partita aggiornata ✅","ok");
-        } else {
+        }else{
           payload.voting_open = false;
           const { data, error } = await client.from("matches").insert([payload]).select("*").single();
           if(error) throw error;
           setMsg("Partita creata ✅","ok");
-          CURRENT_MATCH = data;
+          CURRENT = data;
           $("matchSelect").value = data.id;
         }
         await loadMatches();
-      } catch(e){
+      }catch(e){
         console.error(e);
         setMsg("Errore salvataggio: " + (e.message||e),"err");
       }
     }
 
     async function toggleVote(){
-      if(!CURRENT_MATCH) return setMsg("Seleziona una partita prima.","err");
-      const newVal = !CURRENT_MATCH.voting_open;
-      const { error } = await client.from("matches").update({ voting_open: newVal }).eq("id", CURRENT_MATCH.id);
+      if(!CURRENT) return setMsg("Seleziona una partita.","err");
+      const newVal = !CURRENT.voting_open;
+      const { error } = await client.from("matches").update({ voting_open: newVal }).eq("id", CURRENT.id);
       if(error) return setMsg("Errore voto: "+error.message,"err");
+      CURRENT.voting_open = newVal;
       setMsg(newVal ? "Voto aperto 🟢" : "Voto chiuso 🔴","ok");
-      // aggiorna state
-      CURRENT_MATCH.voting_open = newVal;
       await loadMatches();
     }
 
-    async function deleteMatch(){
-      if(!CURRENT_MATCH) return setMsg("Seleziona una partita prima.","err");
+    async function del(){
+      if(!CURRENT) return setMsg("Seleziona una partita.","err");
       if(!confirm("Sicuro di eliminare questa partita?")) return;
-
-      try{
-        // elimina voti (se tabella esiste)
-        try { await client.from("mvp_votes").delete().eq("match_id", CURRENT_MATCH.id); } catch(_) {}
-
-        const { error } = await client.from("matches").delete().eq("id", CURRENT_MATCH.id);
-        if(error) throw error;
-
-        setMsg("Partita eliminata ✅","ok");
-        clearForm();
-        await loadMatches();
-      } catch(e){
-        console.error(e);
-        setMsg("Errore eliminazione: " + (e.message||e),"err");
-      }
+      const { error } = await client.from("matches").delete().eq("id", CURRENT.id);
+      if(error) return setMsg("Errore eliminazione: "+error.message,"err");
+      setMsg("Partita eliminata ✅","ok");
+      clearForm();
+      await loadMatches();
     }
 
     async function addPlayer(){
@@ -400,56 +321,45 @@
       const clean = name.trim();
       if(!clean) return;
 
-      try{
-        const { data: existing, error: e1 } = await client
-          .from("players").select("id").ilike("name", clean).limit(1);
-        if(e1) throw e1;
-        if(existing && existing.length){
-          setMsg("Giocatore già presente.","err");
-          return;
-        }
+      const { data: existing, error: e1 } = await client.from("players").select("id").ilike("name", clean).limit(1);
+      if(e1) return setMsg("Errore: "+e1.message,"err");
+      if(existing && existing.length) return setMsg("Giocatore già presente.","err");
 
-        const { error } = await client.from("players").insert([{ name: clean, is_goalkeeper: false }]);
-        if(error) throw error;
+      const { error } = await client.from("players").insert([{ name: clean }]);
+      if(error) return setMsg("Errore insert: "+error.message,"err");
 
-        setMsg("Giocatore aggiunto ✅","ok");
-        await loadPlayers();
-      } catch(e){
-        console.error(e);
-        setMsg("Errore aggiunta giocatore: " + (e.message||e),"err");
-      }
+      setMsg("Giocatore aggiunto ✅","ok");
+      await loadPlayers();
+      renderPreview();
     }
 
     async function logout(){
       setMsg("Logout…");
       const { error } = await client.auth.signOut();
       if(error) return setMsg("Errore logout: "+error.message,"err");
-      location.href = "admin.html";
+      location.href="admin.html";
     }
 
-    // --------- Events ----------
-    $("matchSelect").addEventListener("change", () => {
+    $("matchSelect").addEventListener("change", ()=>{
       const id = $("matchSelect").value;
-      if(!id){ clearForm(); return; }
+      if(!id) return clearForm();
       const m = MATCHES.find(x=>String(x.id)===String(id));
-      if(m) fillFormFromMatch(m);
+      if(m) fillForm(m);
     });
 
-    $("btnSave").addEventListener("click", saveMatch);
-    $("btnToggleVote").addEventListener("click", toggleVote);
-    $("btnDelete").addEventListener("click", deleteMatch);
-    $("btnRefresh").addEventListener("click", async ()=>{ setMsg("Aggiorno…"); await loadMatches(); setMsg("Lista aggiornata ✅","ok"); });
     $("btnNew").addEventListener("click", ()=>{ clearForm(); setMsg("Nuova partita: compila e salva.","ok"); });
+    $("btnRefresh").addEventListener("click", async ()=>{ setMsg("Aggiorno…"); await loadMatches(); setMsg("Lista aggiornata ✅","ok"); });
+    $("btnSave").addEventListener("click", save);
+    $("btnToggleVote").addEventListener("click", toggleVote);
+    $("btnDelete").addEventListener("click", del);
     $("btnAddPlayer").addEventListener("click", addPlayer);
     $("btnLogout").addEventListener("click", logout);
 
-    $("keeperA").addEventListener("change", ()=>{ renderPreview(); });
-    $("keeperB").addEventListener("change", ()=>{ renderPreview(); });
-    $("matchDate").addEventListener("change", ()=>{ renderPreview(); });
-    $("matchTime").addEventListener("change", ()=>{ renderPreview(); });
-    $("venue").addEventListener("input", ()=>{ renderPreview(); });
+    ["matchDate","matchTime","venue","keeperA","keeperB"].forEach(id=>{
+      $(id).addEventListener("input", renderPreview);
+      $(id).addEventListener("change", renderPreview);
+    });
 
-    // --------- Init ----------
     (async function init(){
       const ok = await requireSession();
       if(!ok) return;
@@ -458,12 +368,12 @@
         await loadPlayers();
         await loadMatches();
         clearForm();
-        setMsg("Pronto ✅ Seleziona una partita o crea una nuova.","ok");
-      } catch(e){
+        setMsg("Pronto ✅","ok");
+      }catch(e){
         console.error(e);
         setMsg("Errore init: " + (e.message||e),"err");
       }
     })();
   </script>
 </body>
-  </html>
+</html>
