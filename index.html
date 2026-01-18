@@ -70,32 +70,18 @@
     .subtitle{color:var(--muted);font-size:14px}
 
     /* HERO */
-    .hero{
-      position:relative;
-      border-radius:16px;
-      overflow:hidden;
-    }
-    .hero img{
-      width:100%;
-      display:block;
-    }
+    .hero{position:relative;border-radius:16px;overflow:hidden}
+    .hero img{width:100%;display:block}
     .hero .txt{
       position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
+      left:0;right:0;bottom:0;
+      padding:14px;
       color:#fff;
-      font-family:'Bebas Neue';
-      font-size:42px;
-      letter-spacing:3px;
+      font-weight:900;
+      letter-spacing:.6px;
       text-transform:uppercase;
-      background:linear-gradient(
-        to bottom,
-        rgba(0,0,0,.35),
-        rgba(0,0,0,.55)
-      );
+      text-align:center;           /* ✅ centrata */
+      background:linear-gradient(to top,rgba(0,0,0,.75),transparent); /* ✅ solo in basso */
     }
 
     .line{margin-top:8px}
@@ -107,6 +93,7 @@
       margin:4px 6px 0 0;
       font-weight:900;
       border:1px solid var(--border);
+      white-space:nowrap;
     }
     .badge{
       display:inline-block;
@@ -242,11 +229,17 @@ function formatDateFull(iso){
     year: "numeric"
   });
 }
+function formatTimeHHMM(t){
+  if(!t) return "";
+  const s = String(t);
+  // "21:00:00" -> "21:00"
+  return s.length >= 5 ? s.slice(0,5) : s;
+}
 
 // SVG maglia
 function shirtSVG(color){
   return `
-    <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M20 10 L28 6 H36 L44 10 L56 18 L50 30 L44 26 V58 H20 V26 L14 30 L8 18 Z"
         fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
       <path d="M28 6 L32 14 L36 6" fill="none"
@@ -265,6 +258,7 @@ async function load(){
 
   if(error || !data.length){
     statusEl.textContent = "Nessuna partita creata";
+    mapBox.style.display = "none";
     return;
   }
 
@@ -272,7 +266,7 @@ async function load(){
   statusEl.textContent = "Partita trovata ✅";
 
   const dateFull = formatDateFull(m.match_date);
-  const time = safe(m.match_time);
+  const time = formatTimeHHMM(m.match_time);
 
   let resultHtml = (m.score_a != null && m.score_b != null)
     ? `<div class="line"><span class="badge">🏁 ${m.score_a}-${m.score_b}</span></div>`
