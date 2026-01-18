@@ -1,1 +1,103 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quelli della pensione</title>
+  <style>
+    body{font-family:system-ui;margin:0;background:#f4f6f8}
+    .wrap{max-width:760px;margin:0 auto;padding:16px}
+    .card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 6px 20px rgba(0,0,0,.08);margin:12px 0}
+    h1{margin:0 0 6px}
+    .sub{color:#555;margin:0 0 14px}
+    .hero{position:relative;border-radius:14px;overflow:hidden}
+    .hero img{width:100%;display:block}
+    .hero .txt{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;color:#fff;
+      font-weight:900;text-transform:uppercase;font-size:clamp(18px,3.2vw,34px);
+      background:linear-gradient(to top, rgba(0,0,0,.72), rgba(0,0,0,0));
+      text-shadow:0 2px 8px rgba(0,0,0,.7)}
+    .pill{display:inline-block;background:#eee;border-radius:999px;padding:6px 10px;margin:4px 6px 0 0;font-weight:800}
+    .muted{color:#666}
+    .err{color:#b00020;font-weight:800}
+    a{color:#0b5fff;text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Quelli della pensione</h1>
+    <p class="sub">Giovedì ore 21 – Campo a 6 Aradeo</p>
 
+    <div class="card hero">
+      <img src="foto.jpg" alt="Quelli della pensione">
+      <div class="txt">OGNI MALEDETTO GIOVEDÌ</div>
+    </div>
+
+    <div class="card">
+      <div id="status" class="muted">Caricamento…</div>
+      <div id="info" style="margin-top:10px"></div>
+      <div style="margin-top:12px;font-weight:900">Convocati</div>
+      <div id="called" class="muted">—</div>
+    </div>
+
+    <div class="card muted">
+      <a href="admin.html">Area Admin</a>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script>
+    const statusEl = document.getElementById("status");
+    const infoEl = document.getElementById("info");
+    const calledEl = document.getElementById("called");
+
+    function err(msg){ statusEl.innerHTML = '<span class="err">'+msg+'</span>'; }
+
+    if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+      err("Config Supabase non valida (controlla config.js).");
+      throw new Error("Missing config");
+    }
+
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function load(){
+      const { data: match, error } = await client
+        .from("matches")
+        .select("id,match_date,match_time,venue,called_up,voting_open,team_a,team_b")
+        .order("match_date",{ascending:false})
+        .order("match_time",{ascending:false})
+        .limit(1)
+        .single();
+
+      if(error){ err("Errore matches: "+error.message); return; }
+      if(!match){ statusEl.textContent="Nessuna partita creata."; return; }
+
+      statusEl.textContent = "Partita trovata ✅";
+      infoEl.innerHTML = `
+        <div><b>Data:</b> ${match.match_date} ${String(match.match_time||"").slice(0,5)}</div>
+        <div><b>Campo:</b> ${match.venue || "Campo a 6 - Aradeo"}</div>
+        <div><b>Squadra A:</b> ${match.team_a || "-"}</div>
+        <div><b>Squadra B:</b> ${match.team_b || "-"}</div>
+        <div style="margin-top:8px"><b>Voto MVP:</b> ${match.voting_open ? "APERTO 🟢" : "CHIUSO 🔴"}</div>
+      `;
+
+      const ids = Array.isArray(match.called_up) ? match.called_up : [];
+      if(ids.length===0){ calledEl.textContent="Nessun convocato"; return; }
+
+      const { data: players, error: e2 } = await client
+        .from("players").select("id,name,is_goalkeeper").in("id", ids);
+
+      if(e2){ err("Errore players: "+e2.message); return; }
+
+      const map = new Map((players||[]).map(p=>[p.id,p]));
+      const ordered = ids.map(id=>map.get(id)).filter(Boolean);
+
+      calledEl.innerHTML = ordered.map(p =>
+        `<span class="pill">${p.name}${p.is_goalkeeper ? " (P)" : ""}</span>`
+      ).join("");
+    }
+
+    load();
+  </script>
+</body>
+</html>
