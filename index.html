@@ -70,35 +70,25 @@
     .subtitle{color:var(--muted);font-size:14px}
 
     /* Hero */
-    .hero{position:relative;border-radius:16px;overflow:hidden}
-    .hero img{width:100%;display:block}
-    /* TESTO: centrato orizzontalmente, in basso, senza fascia (non copre i volti) */
-    .hero .txt{
-      position:absolute;
-      left:50%;
-      bottom:14px;              /* <<< in basso */
-      transform:translateX(-50%);
-      padding:0;
-      color:#fff;
-      font-weight:900;
-      letter-spacing:2px;
-      text-transform:uppercase;
-      text-align:center;
-      font-size:26px;
-      text-shadow:
-        0 4px 16px rgba(0,0,0,.75),
-        0 2px 6px rgba(0,0,0,.65);
-      pointer-events:none;
-      user-select:none;
-      white-space:nowrap;
+    .hero{
+      border-radius:16px;
+      overflow:hidden;
     }
-    @media(max-width:420px){
-      .hero .txt{
-        font-size:20px;
-        white-space:normal;
-        line-height:1.1;
-        padding:0 10px;
-      }
+    .hero img{
+      width:100%;
+      display:block;
+    }
+
+    /* Testo sotto la foto, centrato */
+    .hero-caption{
+      margin-top:10px;
+      text-align:center;
+      font-family:'Bebas Neue';
+      letter-spacing:3px;
+      font-size:26px;
+      font-weight:900;
+      color:var(--text);
+      text-transform:uppercase;
     }
 
     .line{margin-top:8px}
@@ -110,7 +100,6 @@
       margin:4px 6px 0 0;
       font-weight:900;
       border:1px solid var(--border);
-      white-space:nowrap;
     }
     .badge{
       display:inline-block;
@@ -121,7 +110,6 @@
       font-weight:900;
     }
     body.dark .badge{background:#0b0e14}
-
     .muted{color:var(--muted)}
 
     /* Map */
@@ -146,9 +134,7 @@
       text-decoration:none;
       font-weight:800;
     }
-    .nav a:hover{text-decoration:underline}
 
-    /* Theme toggle */
     .fab{
       position:fixed;
       right:16px;bottom:16px;
@@ -161,18 +147,11 @@
       font-size:22px;
     }
 
-    .blockTitle{margin-top:12px;font-weight:900}
-    .mini{font-size:12px;color:var(--muted);margin-top:6px}
-
-    /* Icona maglia */
-    .kit{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
     .kit svg{
-      width:18px;height:18px;
-      filter:drop-shadow(0 2px 2px rgba(0,0,0,.22));
+      width:20px;height:20px;
+      vertical-align:middle;
+      margin-right:6px;
+      filter:drop-shadow(0 2px 2px rgba(0,0,0,.25));
     }
   </style>
 </head>
@@ -184,13 +163,15 @@
   <div class="header">
     <div class="logo">QDP</div>
     <h1>Quelli della pensione</h1>
-    <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
+    <div class="subtitle">Campo a 6 Aradeo • Ore 21</div>
   </div>
 
   <!-- HERO -->
-  <div class="card hero">
-    <img src="foto.jpg" alt="Quelli della pensione">
-    <div class="txt">OGNI MALEDETTO GIOVEDÌ</div>
+  <div class="card">
+    <div class="hero">
+      <img src="foto.jpg" alt="Quelli della pensione">
+    </div>
+    <div class="hero-caption">OGNI MALEDETTO GIOVEDÌ</div>
   </div>
 
   <!-- PARTITA -->
@@ -202,24 +183,19 @@
       <iframe src="https://www.google.com/maps?q=Campo%20a%206%20Aradeo&output=embed"></iframe>
     </div>
 
-    <div class="blockTitle">Convocati</div>
+    <div class="line"><b>Convocati</b></div>
     <div id="called" class="muted">—</div>
 
-    <div id="teamsBox" style="display:none">
-      <div class="blockTitle">Formazioni (facoltative)</div>
-      <div class="mini">Se le vedi qui, sono quelle inserite dall’admin a fine partita.</div>
-
+    <div id="teamsBox" style="display:none;margin-top:12px">
       <div class="line">
-        <span class="kit" id="tAIcon"></span>
-        <b>Squadra A</b>
+        <span class="kit" id="tAIcon"></span><b>Squadra A</b>
       </div>
-      <div id="teamA" class="muted">—</div>
+      <div id="teamA" class="muted"></div>
 
-      <div class="line" style="margin-top:10px">
-        <span class="kit" id="tBIcon"></span>
-        <b>Squadra B</b>
+      <div class="line" style="margin-top:8px">
+        <span class="kit" id="tBIcon"></span><b>Squadra B</b>
       </div>
-      <div id="teamB" class="muted">—</div>
+      <div id="teamB" class="muted"></div>
     </div>
   </div>
 
@@ -239,58 +215,34 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
 const calledEl = document.getElementById("called");
 const mapBox = document.getElementById("mapBox");
-
 const teamsBox = document.getElementById("teamsBox");
 const teamAEl = document.getElementById("teamA");
 const teamBEl = document.getElementById("teamB");
 const tAIcon = document.getElementById("tAIcon");
 const tBIcon = document.getElementById("tBIcon");
 
-/* Maglia più bella */
-function kitSVG(colorMain, colorStripe){
+function kitSVG(color){
   return `
-  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
     <path d="M18 12 L26 6 H38 L46 12 L58 20 L52 33 L46 29 V58 H18 V29 L12 33 L6 20 Z"
-      fill="${colorMain}" stroke="rgba(0,0,0,.35)" stroke-width="2" />
-    <path d="M30 10 H34 V58 H30 Z" fill="${colorStripe}" opacity="0.85"/>
-    <path d="M26 6 L32 12 L38 6" fill="none" stroke="rgba(255,255,255,.65)" stroke-width="2" stroke-linecap="round"/>
+      fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
   </svg>`;
 }
 
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// THEME
-function setTheme(mode){
-  document.body.classList.toggle("dark", mode === "dark");
-  document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
-  localStorage.setItem("qdp_theme", mode);
-}
-setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
-document.getElementById("themeToggle").onclick = () => {
-  setTheme(document.body.classList.contains("dark") ? "light" : "dark");
-};
-
-// date full (giorno mese anno)
-function formatDateFull(iso){
-  if(!iso) return "";
-  const d = new Date(iso);
-  return d.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-}
-
-// LOAD MATCH
 async function load(){
-  const { data, error } = await client
+  const { data } = await client
     .from("matches")
-    .select("match_date,match_time,venue,called_up,keeper_a,keeper_b,score_a,score_b,scorers_text,team_a,team_b")
+    .select("*")
     .order("match_date",{ascending:false})
-    .order("match_time",{ascending:false})
     .limit(1);
 
-  if(error || !data.length){
+  if(!data || !data.length){
     statusEl.textContent = "Nessuna partita creata";
     return;
   }
@@ -298,67 +250,34 @@ async function load(){
   const m = data[0];
   statusEl.textContent = "Partita trovata ✅";
 
-  const dateFull = formatDateFull(m.match_date);
-  const timeHHMM = String(m.match_time||"").slice(0,5);
-  const resultText = (m.score_a!=null && m.score_b!=null) ? `${m.score_a}-${m.score_b}` : "da giocare";
+  const time = String(m.match_time||"").slice(0,5);
+  const result = (m.score_a!=null && m.score_b!=null) ? `${m.score_a}-${m.score_b}` : "da giocare";
 
   infoEl.innerHTML = `
-    <div class="line"><b>📅 ${dateFull}</b></div>
-    <div class="line"><b>⏰ ${timeHHMM}</b></div>
-    <div class="line"><b>Squadra A:</b> ${m.keeper_a || "—"}</div>
-    <div class="line"><b>Squadra B:</b> ${m.keeper_b || "—"}</div>
-    <div class="line"><span class="badge">🏁 ${resultText}</span></div>
+    <div class="line"><b>📅 ${m.match_date}</b></div>
+    <div class="line"><b>⏰ ${time}</b></div>
+    <div class="line"><span class="badge">🏁 ${result}</span></div>
   `;
 
-  // MARCATORI (FACOLTATIVI)
-  if(m.scorers_text && String(m.scorers_text).trim() !== ""){
-    infoEl.innerHTML += `
-      <div class="line" style="margin-top:10px">
-        <b>⚽ Marcatori</b><br>
-        ${String(m.scorers_text).replaceAll("\n","<br>")}
-      </div>
-    `;
+  mapBox.style.display="block";
+
+  if(m.called_up?.length){
+    const { data:p } = await client.from("players").select("id,name").in("id", m.called_up);
+    const map=new Map(p.map(x=>[x.id,x.name]));
+    calledEl.innerHTML=m.called_up.map(id=>`<span class="pill">${map.get(id)}</span>`).join("");
   }
 
-  mapBox.style.display = "block";
+  if(m.team_a?.length || m.team_b?.length){
+    teamsBox.style.display="block";
+    tAIcon.innerHTML=kitSVG("#facc15");
+    tBIcon.innerHTML=kitSVG("#ef4444");
 
-  // Convocati
-  if(!m.called_up || !m.called_up.length){
-    calledEl.textContent = "—";
-  }else{
-    const { data: players, error: e2 } = await client
-      .from("players")
-      .select("id,name")
-      .in("id", m.called_up);
+    const ids=[...(m.team_a||[]),...(m.team_b||[])];
+    const { data:p2 }=await client.from("players").select("id,name").in("id",ids);
+    const map2=new Map(p2.map(x=>[x.id,x.name]));
 
-    if(e2){
-      calledEl.textContent = "Errore convocati";
-    }else{
-      const map = new Map((players||[]).map(p => [String(p.id), p.name]));
-      calledEl.innerHTML = m.called_up.map(id => `<span class="pill">${map.get(String(id)) || ""}</span>`).join("");
-    }
-  }
-
-  // FORMAZIONI (FACOLTATIVE)
-  const hasTeams = (Array.isArray(m.team_a) && m.team_a.length) || (Array.isArray(m.team_b) && m.team_b.length);
-  if(hasTeams){
-    teamsBox.style.display = "block";
-    tAIcon.innerHTML = kitSVG("#facc15","#111827"); // gialla con riga scura
-    tBIcon.innerHTML = kitSVG("#ef4444","#ffffff"); // rossa con riga chiara
-
-    const ids = Array.from(new Set([...(m.team_a||[]), ...(m.team_b||[])]));
-    const { data: p2 } = await client.from("players").select("id,name").in("id", ids);
-    const map2 = new Map((p2||[]).map(p=>[String(p.id), p.name]));
-
-    const renderTeam = (arr) => {
-      if(!Array.isArray(arr) || !arr.length) return "—";
-      return arr.map(id => `<span class="pill">${map2.get(String(id)) || ""}</span>`).join("");
-    };
-
-    teamAEl.innerHTML = renderTeam(m.team_a);
-    teamBEl.innerHTML = renderTeam(m.team_b);
-  }else{
-    teamsBox.style.display = "none";
+    teamAEl.innerHTML=(m.team_a||[]).map(id=>`<span class="pill">${map2.get(id)}</span>`).join("")||"—";
+    teamBEl.innerHTML=(m.team_b||[]).map(id=>`<span class="pill">${map2.get(id)}</span>`).join("")||"—";
   }
 }
 
