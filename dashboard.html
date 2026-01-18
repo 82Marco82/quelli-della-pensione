@@ -142,6 +142,23 @@
     .shirt{width:18px;height:18px;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
     .twoCols{display:grid;grid-template-columns:1fr;gap:10px}
     @media(min-width:560px){ .twoCols{grid-template-columns:1fr 1fr} }
+
+    /* MVP toggle pill */
+    .togglePill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      font-weight:900;font-size:12px;
+    }
+    .togglePill button{
+      border:0; cursor:pointer;
+      padding:8px 10px;border-radius:999px;
+      font-weight:900;
+      background:var(--btn);
+      color:#fff;
+    }
+    .togglePill button.off{ background:var(--danger); }
   </style>
 </head>
 
@@ -204,7 +221,6 @@
       <div class="row">
         <button id="btnSave" class="btn full">💾 Salva partita</button>
         <button id="btnDelete" class="btn danger full">🗑 Elimina partita</button>
-        <button id="btnWhatsApp" class="btn ghost full">📤 Condividi su WhatsApp</button>
       </div>
     </div>
 
@@ -214,7 +230,17 @@
         <h2>Fine partita</h2>
         <span class="pill" id="currentHint">Nessuna partita selezionata</span>
       </div>
-      <div class="mini">Risultato, formazioni e marcatori sono <b>facoltativi</b>. I marcatori li inserisce solo l’admin.</div>
+
+      <div class="row" style="margin-top:8px">
+        <div class="togglePill" id="votePill">
+          🗳 MVP: <span id="voteState">—</span>
+          <button id="btnToggleVote" class="off" disabled>Caricamento…</button>
+        </div>
+      </div>
+
+      <div class="mini" style="margin-top:8px">
+        Risultato, formazioni e marcatori sono <b>facoltativi</b>. I marcatori li inserisce solo l’admin.
+      </div>
 
       <div class="hr"></div>
 
@@ -326,7 +352,7 @@ function setMsg(t, kind=""){
 
 let PLAYERS = [];
 let MATCHES = [];
-let CURRENT = null; // match object completo (quando caricato)
+let CURRENT = null;
 
 /* ===== UI helpers ===== */
 function shirtSVG(color){
@@ -348,6 +374,23 @@ function escapeHtml(s){
     .replaceAll(">","&gt;")
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
+}
+
+function updateVoteUI(){
+  const stateEl = $("voteState");
+  const btn = $("btnToggleVote");
+  if(!CURRENT){
+    stateEl.textContent = "—";
+    btn.textContent = "Seleziona partita";
+    btn.className = "off";
+    btn.disabled = true;
+    return;
+  }
+  const open = !!CURRENT.vote_open; // usiamo SOLO vote_open
+  stateEl.textContent = open ? "APERTA ✅" : "CHIUSA ❌";
+  btn.textContent = open ? "Chiudi" : "Apri";
+  btn.className = open ? "off" : ""; // rosso quando l'azione è "Chiudi"
+  btn.disabled = false;
 }
 
 function updateCurrentHint(){
@@ -387,7 +430,7 @@ async function loadPlayers(){
 
 async function loadMatches(){
   const { data, error } = await client.from("matches")
-    .select("id,match_date,match_time,venue,keeper_a,keeper_b,called_up,score_a,score_b,team_a,team_b,scorers,scorers_text")
+    .select("id,match_date,match_time,venue,keeper_a,keeper_b,called_up,score_a,score_b,team_a,team_b,scorers,scorers_text,vote_open")
     .order("match_date",{ascending:false})
     .order("match_time",{ascending:false})
     .limit(200);
@@ -413,6 +456,7 @@ async function loadMatches(){
       $("matchSelect").value = "";
     }
   }
+  updateVoteUI();
 }
 
 /* ===== Convocati UI ===== */
@@ -438,7 +482,6 @@ function renderPlayersBox(checkedIds = []){
         setMsg("Convocati aggiornati (ricorda di salvare).", "ok");
       }
       updateCount();
-
       refreshScorersSelectOptions();
       refreshTeamsUI();
     };
@@ -454,7 +497,7 @@ function renderPlayersBox(checkedIds = []){
   updateCount();
 }
 
-/* ===== FORMAZIONI UI (solo convocati) ===== */
+/* ===== FORMAZIONI UI ===== */
 function getCalledUpPlayers(){
   const ids = new Set(getCalledUp().map(String));
   return PLAYERS.filter(p => ids.has(String(p.id)));
@@ -616,6 +659,7 @@ function clearForm(){
   renderTeamBox("teamBBox", []);
   clearScorersUI();
   updateCurrentHint();
+  updateVoteUI();
 }
 
 function fillForm(m){
@@ -656,6 +700,7 @@ function fillForm(m){
   refreshScorersSelectOptions();
 
   updateCurrentHint();
+  updateVoteUI();
   setMsg("Partita caricata. Puoi salvare o inserire dati fine partita.", "ok");
 }
 
@@ -673,12 +718,15 @@ async function saveMatch(){
   if(keeper_a.toLowerCase() === keeper_b.toLowerCase()) return setMsg("🥅 I portieri devono essere diversi.", "err");
   if(called_up.length > 12) return setMsg("👥 Max 12 convocati.", "err");
 
-  const payload = { match_date, match_time, venue, keeper_a, keeper_b, called_up };
+  // NUOVA PARTITA: apriamo la votazione di default
+  const payload = { match_date, match_time, venue, keeper_a, keeper_b, called_up, vote_open: true };
 
   try{
     if(CURRENT && CURRENT.id){
+      // se stai aggiornando, NON forziamo vote_open (lo lasciamo com'è)
+      const upd = { match_date, match_time, venue, keeper_a, keeper_b, called_up };
       setMsg("💾 Salvataggio partita…");
-      const { error } = await client.from("matches").update(payload).eq("id", CURRENT.id);
+      const { error } = await client.from("matches").update(upd).eq("id", CURRENT.id);
       if(error) throw error;
       setMsg("✅ Partita aggiornata.", "ok");
     }else{
@@ -686,7 +734,7 @@ async function saveMatch(){
       const { data, error } = await client.from("matches").insert([payload]).select("*").single();
       if(error) throw error;
       CURRENT = data;
-      setMsg("✅ Partita creata.", "ok");
+      setMsg("✅ Partita creata (MVP aperto).", "ok");
     }
 
     await loadMatches();
@@ -701,15 +749,47 @@ async function saveMatch(){
 
 async function deleteMatch(){
   if(!CURRENT) return setMsg("ℹ️ Seleziona una partita.", "err");
-  if(!confirm("Sicuro di eliminare questa partita?")) return;
+  if(!confirm("Sicuro di eliminare questa partita? (eliminerà anche i voti MVP)")) return;
 
-  setMsg("🗑 Eliminazione…");
-  const { error } = await client.from("matches").delete().eq("id", CURRENT.id);
-  if(error) return setMsg("❌ Errore eliminazione: " + error.message, "err");
+  try{
+    setMsg("🗑 Eliminazione… (prima voto MVP)");
+    const delVotes = await client.from("mvp_votes").delete().eq("match_id", CURRENT.id);
+    if(delVotes.error){
+      console.warn("Delete mvp_votes:", delVotes.error);
+    }
 
-  clearForm();
+    setMsg("🗑 Eliminazione… (partita)");
+    const { error } = await client.from("matches").delete().eq("id", CURRENT.id);
+    if(error) throw error;
+
+    clearForm();
+    await loadMatches();
+    setMsg("✅ Partita eliminata (e voti MVP rimossi).", "ok");
+
+  }catch(e){
+    console.error(e);
+    setMsg("❌ Errore eliminazione: " + (e.message||e), "err");
+  }
+}
+
+async function toggleVote(){
+  if(!CURRENT) return;
+  const next = !CURRENT.vote_open;
+
+  setMsg("🗳 Aggiorno stato votazione…");
+  const { error } = await client.from("matches")
+    .update({ vote_open: next })
+    .eq("id", CURRENT.id);
+
+  if(error) return setMsg("❌ Errore votazione: " + error.message, "err");
+
+  // aggiorniamo in memoria e UI
+  CURRENT.vote_open = next;
+  setMsg(next ? "✅ Votazione MVP APERTA." : "✅ Votazione MVP CHIUSA.", "ok");
+  updateVoteUI();
+
+  // aggiorna anche lista matches
   await loadMatches();
-  setMsg("✅ Partita eliminata.", "ok");
 }
 
 async function saveResultTeamsAndScorers(){
@@ -754,78 +834,11 @@ async function saveResultTeamsAndScorers(){
   if(fresh) fillForm(fresh);
 }
 
-/* ===== WhatsApp share ===== */
-function buildSiteLink(){
-  return location.origin + location.pathname.replace(/dashboard\.html$/i, "index.html");
-}
-function formatDateForMsg(iso){
-  if(!iso) return "";
-  // rende "giovedì 18 gennaio 2026"
-  try{
-    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-  }catch(e){
-    return iso;
-  }
-}
-async function buildCalledUpNames(){
-  if(!CURRENT || !Array.isArray(CURRENT.called_up) || !CURRENT.called_up.length) return [];
-  const ids = CURRENT.called_up.map(String);
-  const idToName = new Map(PLAYERS.map(p=>[String(p.id), p.name]));
-  return ids.map(id => idToName.get(id)).filter(Boolean);
-}
-$("btnWhatsApp").onclick = async () => {
-  if(!CURRENT){
-    setMsg("Seleziona o crea una partita prima.", "err");
-    return;
-  }
-
-  // usa sempre i valori attuali dei campi (anche se non hai ancora salvato)
-  const dateIso = $("matchDate").value || CURRENT.match_date || "";
-  const dateTxt = formatDateForMsg(dateIso);
-  const time = ($("matchTime").value || String(CURRENT.match_time||"")).slice(0,5) || "21:00";
-  const venue = ($("venue").value || CURRENT.venue || "Campo a 6 - Aradeo").trim();
-  const keeperA = ($("keeperA").value || CURRENT.keeper_a || "").trim();
-  const keeperB = ($("keeperB").value || CURRENT.keeper_b || "").trim();
-
-  // convocati: se stai cambiando i checkbox ma non hai salvato, prendi quelli attuali UI
-  const calledIds = getCalledUp();
-  const idToName = new Map(PLAYERS.map(p=>[String(p.id), p.name]));
-  const calledNames = calledIds.map(id => idToName.get(String(id))).filter(Boolean);
-
-  const siteLink = buildSiteLink();
-
-  const header =
-`⚽ Quelli della pensione
-
-📅 ${dateTxt || dateIso} • ore ${time}
-📍 ${venue}
-
-🥅 Squadra A: ${keeperA || "-"}
-🥅 Squadra B: ${keeperB || "-"}`;
-
-  const calledBlock = calledNames.length
-    ? `
-
-👥 Convocati (${calledNames.length}/12):
-${calledNames.map((n,i)=>`${i+1}. ${n}`).join("\n")}`
-    : `
-
-👥 Convocati: ${calledIds.length}/12`;
-
-  const text =
-`${header}${calledBlock}
-
-👉 Link partita:
-${siteLink}`;
-
-  const url = "https://wa.me/?text=" + encodeURIComponent(text);
-  window.open(url, "_blank", "noopener");
-};
-
 /* ===== Events ===== */
 $("btnSave").onclick = saveMatch;
 $("btnDelete").onclick = deleteMatch;
 $("btnSaveResult").onclick = saveResultTeamsAndScorers;
+$("btnToggleVote").onclick = toggleVote;
 
 $("btnNew").onclick = () => { clearForm(); setMsg("➕ Nuova partita: compila e salva.", "ok"); };
 $("btnRefresh").onclick = async () => { setMsg("🔄 Aggiorno…"); await loadMatches(); setMsg("✅ Lista aggiornata.", "ok"); };
