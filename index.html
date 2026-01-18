@@ -9,39 +9,91 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
+    /* ========= THEME VARIABLES ========= */
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --pill:#eeeeee;
+      --border:#e5e7eb;
+      --link:#0b5fff;
+      --logo1:#111;
+      --logo2:#333;
+      --heroGrad:linear-gradient(to top, rgba(0,0,0,.72), rgba(0,0,0,0));
+      --heroShadow:0 2px 8px rgba(0,0,0,.7);
+    }
+
+    /* Dark theme overrides */
+    body.dark{
+      --bg:#0f1115;
+      --card:#171a21;
+      --text:#e5e7eb;
+      --muted:#a1a1aa;
+      --shadow:0 10px 28px rgba(0,0,0,.45);
+      --pill:#222631;
+      --border:#2a2f3a;
+      --link:#7aa7ff;
+      --logo1:#0b0e14;
+      --logo2:#2a3242;
+      --heroGrad:linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,0));
+      --heroShadow:0 2px 10px rgba(0,0,0,.85);
+    }
+
+    /* ========= BASE ========= */
     body{
       font-family:Inter,system-ui;
       margin:0;
-      background:#f4f6f8
+      background:var(--bg);
+      color:var(--text);
+      transition:background .2s ease, color .2s ease;
     }
     .wrap{max-width:760px;margin:0 auto;padding:16px}
 
-    /* HEADER */
+    .card{
+      background:var(--card);
+      border-radius:14px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      margin:12px 0;
+      transition:background .2s ease, box-shadow .2s ease;
+    }
+
+    a{color:var(--link);text-decoration:none}
+    .muted{color:var(--muted)}
+    .err{color:#ff4d4d;font-weight:800}
+
+    /* ========= HEADER ========= */
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+    }
     .header{
       display:flex;
       flex-direction:column;
       align-items:center;
       gap:10px;
-      margin-bottom:10px;
+      flex:1;
     }
 
     .logo{
-      width:84px;
-      height:84px;
-      border-radius:999px;
-      background:linear-gradient(135deg, #111, #333);
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      width:84px;height:84px;border-radius:999px;
+      background:linear-gradient(135deg, var(--logo1), var(--logo2));
+      display:flex;align-items:center;justify-content:center;
       box-shadow:0 10px 22px rgba(0,0,0,.18);
-      border:3px solid rgba(255,255,255,.9);
+      border:3px solid rgba(255,255,255,.85);
     }
+    body.dark .logo{
+      border:3px solid rgba(255,255,255,.12);
+    }
+
     .logo span{
       font-family:'Bebas Neue', sans-serif;
-      color:#fff;
-      font-size:34px;
-      letter-spacing:2px;
-      line-height:1;
+      color:#fff;font-size:34px;letter-spacing:2px;line-height:1;
     }
 
     .title{
@@ -53,52 +105,55 @@
     }
     .subtitle{
       text-align:center;
-      color:#555;
+      color:var(--muted);
       margin-top:4px;
       font-size:14px;
       letter-spacing:.5px;
     }
 
-    .card{
-      background:#fff;
-      border-radius:14px;
-      padding:14px;
-      box-shadow:0 6px 20px rgba(0,0,0,.08);
-      margin:12px 0
+    /* Theme toggle button */
+    .toggle{
+      border:1px solid var(--border);
+      background:var(--card);
+      color:var(--text);
+      border-radius:12px;
+      padding:10px 12px;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow:var(--shadow);
+      transition:transform .05s ease;
+      user-select:none;
     }
+    .toggle:active{transform:scale(.98)}
 
+    /* ========= HERO ========= */
     .hero{position:relative;border-radius:14px;overflow:hidden}
     .hero img{width:100%;display:block}
     .hero .txt{
-      position:absolute;
-      left:0;right:0;bottom:0;
-      padding:14px 16px;
-      color:#fff;
-      font-weight:900;
-      text-transform:uppercase;
+      position:absolute;left:0;right:0;bottom:0;
+      padding:14px 16px;color:#fff;font-weight:900;text-transform:uppercase;
       font-size:clamp(18px,3.2vw,34px);
-      background:linear-gradient(to top, rgba(0,0,0,.72), rgba(0,0,0,0));
-      text-shadow:0 2px 8px rgba(0,0,0,.7)
+      background:var(--heroGrad);
+      text-shadow:var(--heroShadow);
     }
 
+    /* ========= PILL ========= */
     .pill{
       display:inline-block;
-      background:#eee;
+      background:var(--pill);
       border-radius:999px;
       padding:6px 10px;
       margin:4px 6px 0 0;
-      font-weight:800
+      font-weight:800;
+      border:1px solid var(--border);
     }
 
-    .muted{color:#666}
-    .err{color:#b00020;font-weight:800}
-    a{color:#0b5fff;text-decoration:none}
-
+    /* ========= MAP ========= */
     .mapWrap{
       margin-top:12px;
       border-radius:12px;
       overflow:hidden;
-      border:1px solid #e5e7eb
+      border:1px solid var(--border)
     }
     iframe{width:100%;height:260px;border:0;display:block}
     .mapLink{display:inline-block;margin-top:10px}
@@ -108,25 +163,25 @@
 <body>
   <div class="wrap">
 
-    <!-- HEADER con logo rotondo -->
-    <div class="header">
-      <div class="logo" aria-label="Logo Quelli della pensione">
-        <span>QDP</span>
+    <div class="topbar">
+      <div class="header">
+        <div class="logo" aria-label="Logo Quelli della pensione">
+          <span>QDP</span>
+        </div>
+        <div>
+          <h1 class="title">Quelli della pensione</h1>
+          <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
+        </div>
       </div>
 
-      <div>
-        <h1 class="title">Quelli della pensione</h1>
-        <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
-      </div>
+      <button id="themeToggle" class="toggle" title="Tema chiaro/scuro">🌙</button>
     </div>
 
-    <!-- HERO -->
     <div class="card hero">
       <img src="foto.jpg" alt="Quelli della pensione">
       <div class="txt">OGNI MALEDETTO GIOVEDÌ</div>
     </div>
 
-    <!-- PARTITA -->
     <div class="card">
       <div id="status" class="muted">Caricamento…</div>
       <div id="info" style="margin-top:10px"></div>
@@ -151,6 +206,25 @@
       <a href="admin.html">Area Admin</a>
     </div>
   </div>
+
+  <script>
+    // ===== THEME TOGGLE (saved) =====
+    const btn = document.getElementById("themeToggle");
+
+    function setTheme(mode){
+      document.body.classList.toggle("dark", mode === "dark");
+      btn.textContent = (mode === "dark") ? "☀️" : "🌙";
+      localStorage.setItem("qdp_theme", mode);
+    }
+
+    const saved = localStorage.getItem("qdp_theme");
+    setTheme(saved === "dark" ? "dark" : "light");
+
+    btn.addEventListener("click", () => {
+      const isDark = document.body.classList.contains("dark");
+      setTheme(isDark ? "light" : "dark");
+    });
+  </script>
 
   <script src="config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
