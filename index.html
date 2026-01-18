@@ -1,267 +1,311 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <title>Quelli della Pensione</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quelli della pensione</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
   <style>
     :root{
-      --bg:#0f172a;
-      --card:#020617;
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --pill:#eeeeee;
+      --logo1:#111;
+      --logo2:#333;
+    }
+    body.dark{
+      --bg:#0f1115;
+      --card:#171a21;
       --text:#e5e7eb;
-      --muted:rgba(229,231,235,.75);
-      --shadow:rgba(0,0,0,.35);
-      --line:rgba(255,255,255,.08);
-      --blue:#60a5fa;
-      --green:#16a34a;
-      --amber:#f59e0b;
-      --red:#ef4444;
+      --muted:#a1a1aa;
+      --border:#2a2f3a;
+      --shadow:0 10px 28px rgba(0,0,0,.45);
+      --pill:#222631;
+      --logo1:#0b0e14;
+      --logo2:#2a3242;
     }
-    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--text)}
-    .container{max-width:420px;margin:auto;padding:16px}
-    h1{text-align:center;font-weight:900;letter-spacing:1px;margin:10px 0 4px}
-    .subtitle{text-align:center;color:var(--muted);margin-bottom:16px}
-    .card{background:var(--card);border-radius:18px;padding:14px;margin-bottom:16px;box-shadow:0 10px 30px var(--shadow);border:1px solid var(--line)}
-    .heroWrap{position:relative;border-radius:16px;overflow:hidden}
-    .heroWrap img{width:100%;display:block}
-    .heroText{
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui;
+      background:var(--bg);
+      color:var(--text);
+      transition:.2s;
+    }
+    .wrap{max-width:760px;margin:auto;padding:16px}
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      margin:12px 0;
+    }
+
+    /* Header */
+    .header{text-align:center}
+    .logo{
+      width:80px;height:80px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      margin:auto;
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:34px;
+      letter-spacing:2px;
+    }
+    h1{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:48px;
+      margin:10px 0 0;
+      text-transform:uppercase;
+    }
+    .subtitle{color:var(--muted);font-size:14px}
+
+    /* Hero */
+    .hero{position:relative;border-radius:16px;overflow:hidden}
+    .hero img{width:100%;display:block}
+    .hero .txt{
       position:absolute;left:0;right:0;bottom:0;
-      padding:12px 12px;
-      font-weight:900;letter-spacing:.5px;
-      background:linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,0));
+      padding:14px;color:#fff;font-weight:900;
+      background:linear-gradient(to top,rgba(0,0,0,.75),transparent);
+      letter-spacing:.4px;
     }
-    .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:13px;font-weight:800;margin-left:8px}
-    .ok{background:var(--green)}
-    .wait{background:var(--amber);color:#111827}
-    .info{background:#334155}
-    .error{background:#7f1d1d;padding:10px;border-radius:12px;margin-top:10px;font-size:14px}
-    .debug{background:#0b1224;border:1px solid var(--line);padding:10px;border-radius:12px;font-size:13px;opacity:.95}
-    .row{margin:10px 0;line-height:1.25}
-    .big{font-size:18px;font-weight:900}
-    .hr{height:1px;background:var(--line);margin:12px 0}
-    .pillRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-    .pill{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;background:#0b1224;border:1px solid var(--line)}
-    .iconShirt{
-      width:14px;height:14px;border-radius:4px;display:inline-block;
-      border:1px solid rgba(255,255,255,.35);
-      box-shadow:0 2px 10px rgba(0,0,0,.25) inset;
+
+    .line{margin-top:8px}
+    .pill{
+      display:inline-block;
+      background:var(--pill);
+      border-radius:999px;
+      padding:6px 10px;
+      margin:4px 6px 0 0;
+      font-weight:900;
+      border:1px solid var(--border);
+      white-space:nowrap;
     }
-    .yellow{background:#facc15}
-    .red{background:#ef4444}
-    iframe{width:100%;height:260px;border:0;border-radius:14px;margin-top:10px}
-    .links{display:flex;justify-content:center;gap:18px;margin-top:12px}
-    .links a{color:var(--blue);text-decoration:none;font-weight:800}
-    ul{margin:8px 0 0 18px;padding:0}
-    li{margin:6px 0}
-    .small{font-size:13px;color:var(--muted)}
+    .badge{
+      display:inline-block;
+      background:#111;
+      color:#fff;
+      padding:6px 12px;
+      border-radius:999px;
+      font-weight:900;
+    }
+    body.dark .badge{background:#0b0e14}
+
+    .muted{color:var(--muted)}
+
+    /* Map */
+    .mapWrap{
+      margin-top:12px;
+      border-radius:12px;
+      overflow:hidden;
+      border:1px solid var(--border)
+    }
+    iframe{width:100%;height:260px;border:0}
+
+    /* Nav */
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size:14px;
+    }
+    .nav a{
+      color:var(--text);
+      text-decoration:none;
+      font-weight:800;
+    }
+    .nav a:hover{text-decoration:underline}
+
+    /* Theme toggle */
+    .fab{
+      position:fixed;
+      right:16px;bottom:16px;
+      width:54px;height:54px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      font-size:22px;
+    }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>QUELLI DELLA PENSIONE</h1>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">QDP</div>
+    <h1>Quelli della pensione</h1>
     <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
-
-    <div class="card">
-      <div class="heroWrap">
-        <img src="foto.jpg" alt="Quelli della Pensione">
-        <div class="heroText">OGNI MALEDETTO GIOVEDÌ</div>
-      </div>
-    </div>
-
-    <div id="debugBox" class="card debug">Verifica script…</div>
-
-    <div id="content" class="card">Caricamento…</div>
-
-    <div class="links">
-      <a href="admin.html">Area Admin</a>
-      <a href="storico.html">Storico</a>
-    </div>
   </div>
 
-  <!-- config.js deve stare nella stessa cartella -->
-  <script src="./config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- HERO -->
+  <div class="card hero">
+    <img src="foto.jpg" alt="Quelli della pensione">
+    <div class="txt">OGNI MALEDETTO GIOVEDÌ</div>
+  </div>
 
-  <script>
-    const debugBox = document.getElementById("debugBox");
-    const content = document.getElementById("content");
+  <!-- PARTITA -->
+  <div class="card">
+    <div id="status" class="muted">Caricamento…</div>
+    <div id="info"></div>
 
-    function debug(msg){ debugBox.innerHTML = msg; }
+    <div id="mapBox" class="mapWrap" style="display:none">
+      <iframe src="https://www.google.com/maps?q=Campo%20a%206%20Aradeo&output=embed"></iframe>
+    </div>
 
-    // 1) Config
-    if (!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) {
-      debug("❌ config.js non caricato (o valori mancanti).");
-      content.innerHTML = "<div class='error'>Errore: config.js non caricato</div>";
-      throw new Error("config.js missing");
-    }
+    <div style="margin-top:12px;font-weight:900">Convocati</div>
+    <div id="called" class="muted">—</div>
+  </div>
 
-    // 2) Supabase lib
-    if (!window.supabase || !window.supabase.createClient) {
-      debug("❌ Supabase CDN non caricato.");
-      content.innerHTML = "<div class='error'>Errore: Supabase CDN non caricato</div>";
-      throw new Error("supabase CDN missing");
-    }
+  <!-- NAV -->
+  <div class="card nav muted">
+    <a href="storico.html">📚 Storico</a>
+    <a href="marcatori.html">⚽ Marcatori</a>
+    <a href="admin.html">🔐 Admin</a>
+  </div>
 
-    debug("✅ Supabase OK");
+</div>
 
-    const client = window.supabase.createClient(
-      window.SUPABASE_URL,
-      window.SUPABASE_ANON_KEY
-    );
+<button id="themeToggle" class="fab">🌙</button>
 
-    function safeText(v){
-      if (v === null || v === undefined) return "";
-      return String(v);
-    }
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
-    function formatDateISO(isoDate){
-      // isoDate tipo "2026-01-22"
-      if(!isoDate) return "";
-      const parts = isoDate.split("-");
-      if(parts.length !== 3) return isoDate;
-      return `${parts[2]}/${parts[1]}/${parts[0]}`;
-    }
+<script>
+const statusEl = document.getElementById("status");
+const infoEl = document.getElementById("info");
+const calledEl = document.getElementById("called");
+const mapBox = document.getElementById("mapBox");
 
-    function renderScorers(m){
-      // scorers FACOLTATIVO
-      // supporta:
-      // - array di stringhe: ["Marco","Luca"]
-      // - array di oggetti: [{name:"Marco",goals:2}]
-      if (m.scorers === null || m.scorers === undefined) return "";
-      const s = m.scorers;
+if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+  statusEl.textContent = "Errore: config.js non caricato";
+  throw new Error("Missing SUPABASE_URL / SUPABASE_ANON_KEY");
+}
 
-      let arr = [];
-      if (Array.isArray(s)) arr = s;
-      else if (typeof s === "object") {
-        // a volte può arrivare come oggetto, prova a leggere s.list
-        if (Array.isArray(s.list)) arr = s.list;
-      } else {
-        // se è stringa, prova JSON parse
-        try {
-          const parsed = JSON.parse(s);
-          if (Array.isArray(parsed)) arr = parsed;
-        } catch(e){}
-      }
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      if (!arr || arr.length === 0) return "";
+// THEME
+function setTheme(mode){
+  document.body.classList.toggle("dark", mode === "dark");
+  document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
+  localStorage.setItem("qdp_theme", mode);
+}
+setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
+document.getElementById("themeToggle").onclick = () => {
+  setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+};
 
-      const items = arr.map(x=>{
-        if (typeof x === "string") return `<li>${x}</li>`;
-        if (x && typeof x === "object") {
-          const n = safeText(x.name || x.player || x.nome);
-          const g = (x.goals !== undefined && x.goals !== null) ? ` (${x.goals})` : "";
-          if(!n) return "";
-          return `<li>${n}${g}</li>`;
-        }
-        return "";
-      }).filter(Boolean).join("");
+// helpers
+function isNil(v){ return v === null || v === undefined; }
+function safe(v){ return (v === null || v === undefined) ? "" : String(v); }
+function normalizeCalledUp(v){
+  if(Array.isArray(v)) return v;
+  if(typeof v === "string"){
+    try{
+      const parsed = JSON.parse(v);
+      if(Array.isArray(parsed)) return parsed;
+    }catch(e){}
+  }
+  return [];
+}
 
-      if (!items) return "";
+// LOAD MATCH
+async function load(){
+  const { data, error } = await client
+    .from("matches")
+    .select("match_date,match_time,venue,called_up,keeper_a,keeper_b,score_a,score_b,scorers_text")
+    .order("match_date",{ascending:false})
+    .order("match_time",{ascending:false})
+    .limit(1);
 
-      return `
-        <div class="hr"></div>
-        <div class="row big">⚽ Marcatori</div>
-        <ul>${items}</ul>
-        <div class="small">*(facoltativo: se non li inserisci, non appare nulla)*</div>
-      `;
-    }
+  if(error){
+    statusEl.textContent = "Errore caricamento partita";
+    infoEl.innerHTML = `<div class="line muted">${safe(error.message)}</div>`;
+    return;
+  }
 
-    async function loadMatch(){
-      try{
-        // prende l’ultima partita
-        const { data, error } = await client
-          .from("matches")
-          .select("*")
-          .order("match_date", { ascending: false })
-          .limit(1);
+  if(!data || !data.length){
+    statusEl.textContent = "Nessuna partita creata";
+    infoEl.innerHTML = "";
+    mapBox.style.display = "none";
+    calledEl.textContent = "—";
+    return;
+  }
 
-        if (error) throw error;
+  const m = data[0];
+  statusEl.textContent = "Partita trovata ✅";
 
-        if (!data || data.length === 0) {
-          content.innerHTML = "<div class='row big'>Nessuna partita creata</div>";
-          return;
-        }
+  // keeper
+  const ka = safe(m.keeper_a) || "—";
+  const kb = safe(m.keeper_b) || "—";
 
-        const m = data[0];
+  // RESULT: niente null-null
+  let resultHtml = "";
+  if(isNil(m.score_a) || isNil(m.score_b)){
+    resultHtml = `<div class="line"><span class="badge">🏁 Risultato: da giocare</span></div>`;
+  }else{
+    resultHtml = `<div class="line"><span class="badge">🏁 Risultato: ${m.score_a}-${m.score_b}</span></div>`;
+  }
 
-        const dateTxt = formatDateISO(m.match_date);
-        const timeTxt = safeText(m.match_time) || "21:00";
-        const venueTxt = safeText(m.venue) || "Campo a 6 - Aradeo";
+  infoEl.innerHTML = `
+    <div class="line"><b>📅 ${safe(m.match_date)}</b></div>
+    <div class="line"><b>🥅 ${ka} vs ${kb}</b></div>
+    ${resultHtml}
+  `;
 
-        const keeperA = safeText(m.team_a_keeper || m.goalkeeper_a || m.goalkeeper_a_name || m.goalkeeper_a_text);
-        const keeperB = safeText(m.team_b_keeper || m.goalkeeper_b || m.goalkeeper_b_name || m.goalkeeper_b_text);
+  // MARCATORI (FACOLTATIVI)
+  if(m.scorers_text && String(m.scorers_text).trim() !== ""){
+    infoEl.innerHTML += `
+      <div class="line" style="margin-top:10px">
+        <b>⚽ Marcatori</b><br>
+        ${m.scorers_text}
+      </div>
+    `;
+  }
 
-        // Convocati: supporta called_up come array o stringa JSON
-        let called = [];
-        if (Array.isArray(m.called_up)) called = m.called_up;
-        else if (typeof m.called_up === "string") {
-          try { called = JSON.parse(m.called_up); } catch(e){ called = []; }
-        }
-        if (!Array.isArray(called)) called = [];
+  // MAP solo se partita esiste
+  mapBox.style.display = "block";
 
-        const convocatiHtml = (called.length === 0)
-          ? `<div class="row">Nessun convocato</div>`
-          : `<ul>${called.map(n=>`<li>${safeText(n)}</li>`).join("")}</ul>`;
+  // CONVOCATI
+  const ids = normalizeCalledUp(m.called_up);
 
-        // Risultato: NO null-null
-        let risultatoHTML = "";
-        if (m.goals_a == null || m.goals_b == null) {
-          risultatoHTML = `
-            <div class="row">
-              🏁 <strong>Risultato:</strong> da giocare
-              <span class="badge wait">DA GIOCARE</span>
-            </div>`;
-        } else {
-          risultatoHTML = `
-            <div class="row">
-              🏁 <strong>Risultato:</strong> ${m.goals_a} - ${m.goals_b}
-              <span class="badge ok">GIOCATA</span>
-            </div>`;
-        }
+  if(!ids.length){
+    calledEl.textContent = "—";
+    return;
+  }
 
-        content.innerHTML = `
-          <div class="row big">Partita trovata <span class="badge ok">✅</span></div>
+  const { data: players, error: e2 } = await client
+    .from("players")
+    .select("id,name")
+    .in("id", ids);
 
-          <div class="row">📅 <strong>${dateTxt}</strong> • 🕘 <strong>${timeTxt}</strong></div>
-          <div class="row">📍 <strong>${venueTxt}</strong></div>
+  if(e2){
+    calledEl.textContent = "Errore convocati";
+    return;
+  }
 
-          <div class="pillRow">
-            <div class="pill">
-              <span class="iconShirt yellow"></span>
-              <div><strong>Squadra A</strong>: ${keeperA || "-"}</div>
-            </div>
-            <div class="pill">
-              <span class="iconShirt red"></span>
-              <div><strong>Squadra B</strong>: ${keeperB || "-"}</div>
-            </div>
-          </div>
+  const nameMap = new Map((players||[]).map(p => [p.id, p.name]));
 
-          ${risultatoHTML}
+  // se un id non viene trovato, lo mostro comunque come ID (così non sparisce)
+  calledEl.innerHTML = ids
+    .map(id => `<span class="pill">${safe(nameMap.get(id) || id)}</span>`)
+    .join("");
+}
 
-          <div class="hr"></div>
-          <div class="row big">Convocati (${called.length}/12)</div>
-          ${convocatiHtml}
-
-          ${renderScorers(m)}
-
-          <div class="hr"></div>
-          <div class="row big">📍 Mappa campo</div>
-          <iframe
-            src="https://maps.google.com/maps?q=Campo%20Sportivo%20Aradeo&t=&z=15&ie=UTF8&iwloc=&output=embed">
-          </iframe>
-        `;
-
-      } catch(err){
-        content.innerHTML = `
-          <div class="error">
-            Errore caricamento partita:<br>
-            ${err.message}
-          </div>`;
-      }
-    }
-
-    loadMatch();
-  </script>
+load();
+</script>
 </body>
 </html>
