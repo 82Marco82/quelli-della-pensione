@@ -26,7 +26,7 @@
     body{font-family:Inter,system-ui;margin:0;background:var(--bg);color:var(--text);transition:.2s}
     a{color:var(--link);text-decoration:none}
 
-    .wrap{max-width:860px;margin:0 auto;padding:16px}
+    .wrap{max-width:900px;margin:0 auto;padding:16px}
 
     .top{
       display:flex;justify-content:space-between;align-items:flex-end;gap:10px;
@@ -53,7 +53,20 @@
       align-items:center;
       flex-wrap:wrap;
     }
+
     .toggle{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:14px;
+      background:var(--card);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      user-select:none;
+    }
+    .toggle input{transform:scale(1.2)}
+
+    .search{
+      flex:1;
+      min-width:220px;
       display:flex;
       align-items:center;
       gap:10px;
@@ -62,9 +75,17 @@
       background:var(--card);
       border:1px solid var(--border);
       box-shadow:var(--shadow);
-      user-select:none;
     }
-    .toggle input{transform:scale(1.2)}
+    .search span{opacity:.75}
+    .search input{
+      width:100%;
+      border:0;
+      outline:none;
+      background:transparent;
+      color:var(--text);
+      font-size:14px;
+    }
+
     .hint{color:var(--muted);font-size:12px}
 
     .card{
@@ -118,12 +139,8 @@
       font-size:12px;
     }
 
-    .listEmpty{
-      margin-top:14px;
-      color:var(--muted);
-    }
+    .listEmpty{margin-top:14px;color:var(--muted)}
 
-    /* Details */
     details{
       margin-top:12px;
       border:1px solid var(--border);
@@ -145,16 +162,9 @@
     summary::-webkit-details-marker{display:none}
     .chev{opacity:.7}
     details[open] .chev{transform:rotate(180deg)}
-    .detailBody{
-      padding:12px;
-      border-top:1px solid var(--border);
-    }
-    .sectionTitle{
-      font-weight:900;
-      margin-top:10px;
-    }
+    .detailBody{padding:12px;border-top:1px solid var(--border)}
+    .sectionTitle{font-weight:900;margin-top:10px}
 
-    /* Floating theme */
     .fab{
       position:fixed;right:16px;bottom:16px;
       width:54px;height:54px;border-radius:999px;
@@ -188,6 +198,12 @@
         <input id="onlyFinished" type="checkbox" />
         <span><b>Solo partite con risultato</b></span>
       </label>
+
+      <div class="search">
+        <span>🔎</span>
+        <input id="searchName" type="text" placeholder="Cerca nome (es. Marco)" />
+      </div>
+
       <span class="hint" id="countHint"></span>
     </div>
 
@@ -197,15 +213,14 @@
   <button id="themeToggle" class="fab" title="Tema chiaro/scuro">🌙</button>
 
   <script>
-    // THEME TOGGLE
     const btnTheme = document.getElementById("themeToggle");
     function setTheme(mode){
       document.body.classList.toggle("dark", mode === "dark");
       btnTheme.textContent = (mode === "dark") ? "☀️" : "🌙";
       localStorage.setItem("qdp_theme", mode);
     }
-    const saved = localStorage.getItem("qdp_theme");
-    setTheme(saved === "dark" ? "dark" : "light");
+    const savedTheme = localStorage.getItem("qdp_theme");
+    setTheme(savedTheme === "dark" ? "dark" : "light");
     btnTheme.addEventListener("click", () => setTheme(document.body.classList.contains("dark") ? "light" : "dark"));
   </script>
 
@@ -215,6 +230,7 @@
   <script>
     const listEl = document.getElementById("list");
     const onlyFinishedEl = document.getElementById("onlyFinished");
+    const searchNameEl = document.getElementById("searchName");
     const countHintEl = document.getElementById("countHint");
 
     if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
@@ -223,8 +239,10 @@
     }
 
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     let ALL = [];
     let ID_TO_NAME = new Map();
+    let MATCH_SEARCH_TEXT = new Map(); // matchId -> stringa ricercabile
 
     function pill(s){ return `<span class="pill">${s}</span>`; }
     function hasScore(m){ return (m.score_a != null && m.score_b != null); }
@@ -235,9 +253,27 @@
         .filter(Boolean);
     }
 
+    function buildSearchIndex(){
+      MATCH_SEARCH_TEXT = new Map();
+      ALL.forEach(m=>{
+        const called = namesFromIds(m.called_up);
+        const teamA  = namesFromIds(m.team_a);
+        const teamB  = namesFromIds(m.team_b);
+        const str = (called.concat(teamA, teamB).join(" ") || "").toLowerCase();
+        MATCH_SEARCH_TEXT.set(String(m.id), str);
+      });
+    }
+
     function render(){
       const onlyFinished = onlyFinishedEl.checked;
-      const arr = onlyFinished ? ALL.filter(hasScore) : ALL;
+      const q = (searchNameEl.value || "").trim().toLowerCase();
+
+      let arr = ALL;
+      if(onlyFinished) arr = arr.filter(hasScore);
+
+      if(q){
+        arr = arr.filter(m => (MATCH_SEARCH_TEXT.get(String(m.id)) || "").includes(q));
+      }
 
       countHintEl.textContent = `Totale: ${arr.length}`;
 
@@ -255,7 +291,6 @@
         const called = namesFromIds(m.called_up);
         const teamA  = namesFromIds(m.team_a);
         const teamB  = namesFromIds(m.team_b);
-
         const hasTeams = teamA.length || teamB.length;
 
         return `
@@ -304,7 +339,7 @@
         .select("id,match_date,match_time,venue,keeper_a,keeper_b,called_up,score_a,score_b,is_finished,team_a,team_b")
         .order("match_date",{ascending:false})
         .order("match_time",{ascending:false})
-        .limit(200);
+        .limit(300);
 
       if(error){
         listEl.innerHTML = `<b style="color:#ff4d4d">Errore: ${error.message}</b>`;
@@ -313,7 +348,6 @@
 
       ALL = matches || [];
 
-      // prendo TUTTI gli id: convocati + team_a + team_b
       const allIds = [...new Set(
         ALL.flatMap(m => []
           .concat(Array.isArray(m.called_up) ? m.called_up : [])
@@ -323,7 +357,6 @@
       )];
 
       ID_TO_NAME = new Map();
-
       if(allIds.length){
         const { data: players, error: e2 } = await client
           .from("players")
@@ -335,6 +368,7 @@
         }
       }
 
+      buildSearchIndex();
       render();
     }
 
@@ -343,6 +377,17 @@
     onlyFinishedEl.addEventListener("change", ()=>{
       localStorage.setItem("qdp_only_finished", onlyFinishedEl.checked ? "1" : "0");
       render();
+    });
+
+    // remember search
+    searchNameEl.value = localStorage.getItem("qdp_search_name") || "";
+    let t = null;
+    searchNameEl.addEventListener("input", ()=>{
+      clearTimeout(t);
+      t = setTimeout(()=>{
+        localStorage.setItem("qdp_search_name", searchNameEl.value);
+        render();
+      }, 120);
     });
 
     load();
