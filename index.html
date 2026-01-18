@@ -63,7 +63,7 @@
     async function load(){
       const { data: match, error } = await client
         .from("matches")
-        .select("id,match_date,match_time,venue,called_up,voting_open,team_a_keeper_id,team_b_keeper_id")
+        .select("id,match_date,match_time,venue,called_up,voting_open,goalkeeper_a,goalkeeper_b")
         .order("match_date",{ascending:false})
         .order("match_time",{ascending:false})
         .limit(1)
@@ -72,28 +72,12 @@
       if(error){ err("Errore matches: "+error.message); return; }
       if(!match){ statusEl.textContent="Nessuna partita creata."; return; }
 
-      // prendo i nomi dei portieri
-      const keeperIds = [match.team_a_keeper_id, match.team_b_keeper_id].filter(Boolean);
-      let keepersMap = new Map();
-
-      if (keeperIds.length) {
-        const { data: keepers, error: ke } = await client
-          .from("players")
-          .select("id,name")
-          .in("id", keeperIds);
-
-        if (!ke && keepers) keepersMap = new Map(keepers.map(k => [k.id, k.name]));
-      }
-
-      const keeperAName = keepersMap.get(match.team_a_keeper_id) || "-";
-      const keeperBName = keepersMap.get(match.team_b_keeper_id) || "-";
-
       statusEl.textContent = "Partita trovata ✅";
       infoEl.innerHTML = `
         <div><b>Data:</b> ${match.match_date} ${String(match.match_time||"").slice(0,5)}</div>
         <div><b>Campo:</b> ${match.venue || "Campo a 6 - Aradeo"}</div>
-        <div><b>Squadra A:</b> ${keeperAName}</div>
-        <div><b>Squadra B:</b> ${keeperBName}</div>
+        <div><b>Squadra A:</b> ${match.goalkeeper_a || "-"}</div>
+        <div><b>Squadra B:</b> ${match.goalkeeper_b || "-"}</div>
         <div style="margin-top:8px"><b>Voto MVP:</b> ${match.voting_open ? "APERTO 🟢" : "CHIUSO 🔴"}</div>
       `;
 
@@ -101,16 +85,14 @@
       if(ids.length===0){ calledEl.textContent="Nessun convocato"; return; }
 
       const { data: players, error: e2 } = await client
-        .from("players").select("id,name,is_goalkeeper").in("id", ids);
+        .from("players").select("id,name").in("id", ids);
 
       if(e2){ err("Errore players: "+e2.message); return; }
 
       const map = new Map((players||[]).map(p=>[p.id,p]));
       const ordered = ids.map(id=>map.get(id)).filter(Boolean);
 
-      calledEl.innerHTML = ordered.map(p =>
-        `<span class="pill">${p.name}${p.is_goalkeeper ? " (P)" : ""}</span>`
-      ).join("");
+      calledEl.innerHTML = ordered.map(p => `<span class="pill">${p.name}</span>`).join("");
     }
 
     load();
