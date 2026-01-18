@@ -17,6 +17,33 @@
     .wrap{max-width:760px;margin:0 auto;padding:16px}
 
     /* HEADER */
+    .header{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .logo{
+      width:84px;
+      height:84px;
+      border-radius:999px;
+      background:linear-gradient(135deg, #111, #333);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 10px 22px rgba(0,0,0,.18);
+      border:3px solid rgba(255,255,255,.9);
+    }
+    .logo span{
+      font-family:'Bebas Neue', sans-serif;
+      color:#fff;
+      font-size:34px;
+      letter-spacing:2px;
+      line-height:1;
+    }
+
     .title{
       font-family:'Bebas Neue', sans-serif;
       font-size:48px;
@@ -81,9 +108,17 @@
 <body>
   <div class="wrap">
 
-    <!-- TITOLO -->
-    <h1 class="title">Quelli della pensione</h1>
-    <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
+    <!-- HEADER con logo rotondo -->
+    <div class="header">
+      <div class="logo" aria-label="Logo Quelli della pensione">
+        <span>QDP</span>
+      </div>
+
+      <div>
+        <h1 class="title">Quelli della pensione</h1>
+        <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
+      </div>
+    </div>
 
     <!-- HERO -->
     <div class="card hero">
@@ -103,6 +138,7 @@
       <a id="mapOpen" class="mapLink"
          href="https://maps.app.goo.gl/gLHp6hEHMW8jmwKK7?g_st=ac"
          target="_blank"
+         rel="noopener"
          style="display:none">
         Apri in Google Maps
       </a>
@@ -169,13 +205,15 @@
       const ids = match.called_up || [];
       if(!ids.length){ calledEl.textContent="Nessun convocato"; return; }
 
-      const { data: players } = await client
+      const { data: players, error: e2 } = await client
         .from("players")
         .select("id,name")
         .in("id", ids);
 
+      if(e2){ showErr(e2.message); return; }
+
       const map = new Map(players.map(p=>[p.id,p.name]));
-      calledEl.innerHTML = ids.map(id=>`<span class="pill">${map.get(id)}</span>`).join("");
+      calledEl.innerHTML = ids.map(id=>`<span class="pill">${map.get(id) || ""}</span>`).join("");
     }
 
     load();
