@@ -19,9 +19,17 @@
       --pill:#eeeeee;
       --logo1:#111;
       --logo2:#333;
+
       --btn:#111;
       --btn2:#444;
       --danger:#b00020;
+
+      --okBg:#dcfce7;
+      --okText:#166534;
+      --errBg:#ffe4e6;
+      --errText:#9f1239;
+
+      --chipBg:rgba(0,0,0,.04);
     }
     body.dark{
       --bg:#0f1115;
@@ -34,11 +42,20 @@
       --pill:#222631;
       --logo1:#0b0e14;
       --logo2:#2a3242;
+
       --btn:#0b0e14;
       --btn2:#2a3242;
       --danger:#ff4d4d;
+
+      --okBg:rgba(34,197,94,.15);
+      --okText:#86efac;
+      --errBg:rgba(244,63,94,.16);
+      --errText:#fda4af;
+
+      --chipBg:rgba(255,255,255,.04);
     }
 
+    *{box-sizing:border-box}
     body{
       font-family:Inter,system-ui;
       margin:0;
@@ -48,112 +65,147 @@
     }
     a{color:var(--link);text-decoration:none}
 
-    .wrap{max-width:980px;margin:24px auto;padding:16px}
+    .wrap{max-width:1020px;margin:22px auto;padding:16px}
 
+    /* Top bar */
     .top{
       display:flex;
       justify-content:space-between;
       align-items:center;
       gap:10px;
-      margin-bottom:12px
+      margin-bottom:12px;
     }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
+    .brand{display:flex;align-items:center;gap:10px}
     .logo{
       width:52px;height:52px;border-radius:999px;
       background:linear-gradient(135deg, var(--logo1), var(--logo2));
       display:flex;align-items:center;justify-content:center;
       box-shadow:0 10px 22px rgba(0,0,0,.18);
       border:2px solid rgba(255,255,255,.85);
+      flex:0 0 auto;
     }
-    body.dark .logo{ border:2px solid rgba(255,255,255,.12); }
+    body.dark .logo{border:2px solid rgba(255,255,255,.12)}
     .logo span{
       font-family:'Bebas Neue', sans-serif;
       color:#fff;font-size:22px;letter-spacing:2px;line-height:1;
     }
-
     h1{margin:0;font-size:20px}
     .muted{color:var(--muted);font-size:12px}
+    .topRight{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 
+    /* Layout */
     .grid{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:900px){.grid{grid-template-columns:420px 1fr}}
+    @media(min-width:980px){.grid{grid-template-columns:440px 1fr}}
 
     .card{
       background:var(--card);
-      border-radius:14px;
+      border-radius:16px;
       padding:16px;
       box-shadow:var(--shadow);
       border:1px solid var(--border);
       transition:background .2s ease, box-shadow .2s ease;
     }
-
     h2{margin:0 0 10px;font-size:16px}
 
+    /* Inputs */
     label{display:block;font-size:12px;margin:10px 0 6px;color:var(--muted)}
     input,select{
       width:100%;
-      padding:10px;
+      padding:12px 12px;
       border:1px solid var(--border);
-      border-radius:10px;
+      border-radius:12px;
       font-size:14px;
       background:transparent;
-      color:var(--text)
+      color:var(--text);
+      outline:none;
     }
+    input:focus,select:focus{border-color:rgba(11,95,255,.45)}
 
-    .row{display:flex;gap:8px;flex-wrap:wrap}
-
-    button{
-      padding:10px 12px;
+    /* App-like buttons */
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:12px 14px;
+      border-radius:14px;
       border:1px solid transparent;
-      border-radius:10px;
       background:var(--btn);
       color:#fff;
-      font-weight:800;
-      cursor:pointer
+      font-weight:900;
+      cursor:pointer;
+      user-select:none;
     }
-    button.secondary{
-      background:var(--btn2);
+    .btn:active{transform:scale(.99)}
+    .btn.secondary{background:var(--btn2)}
+    .btn.danger{background:var(--danger)}
+    .btn.ghost{
+      background:transparent;
+      border:1px solid var(--border);
+      color:var(--text);
     }
-    button.danger{
-      background:var(--danger);
-      border-color:transparent;
+    .btn.small{padding:10px 12px;border-radius:12px;font-weight:800}
+
+    /* Sticky action bar inside left card */
+    .actionBar{
+      position:sticky;
+      bottom:12px;
+      margin-top:12px;
+      padding:10px;
+      border-radius:16px;
+      background:var(--card);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
     }
 
+    /* Message (toast-like) */
     .msg{
       margin-top:10px;
-      padding:10px;
-      border-radius:10px;
-      background:rgba(0,0,0,.04);
-      color:var(--text);
+      padding:12px;
+      border-radius:14px;
+      background:var(--chipBg);
+      border:1px solid var(--border);
       font-size:13px;
       white-space:pre-wrap;
-      border:1px solid var(--border);
     }
-    body.dark .msg{ background:rgba(255,255,255,.04); }
-    .ok{border-color:rgba(34,197,94,.35)}
-    .err{border-color:rgba(255,77,77,.35); color:#ff4d4d; font-weight:800}
+    .msg.ok{background:var(--okBg); color:var(--okText); border-color:rgba(34,197,94,.35)}
+    .msg.err{background:var(--errBg); color:var(--errText); border-color:rgba(244,63,94,.35)}
 
+    /* Players list */
     .playersBox{
       max-height:420px;
       overflow:auto;
       border:1px solid var(--border);
-      border-radius:12px;
+      border-radius:14px;
       padding:10px
     }
-    .pRow{display:flex;align-items:center;gap:8px;padding:6px 4px;border-radius:10px}
-    .pRow:hover{background:rgba(0,0,0,.04)}
-    body.dark .pRow:hover{background:rgba(255,255,255,.04)}
-
+    .pRow{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 8px;
+      border-radius:12px;
+    }
+    .pRow:hover{background:var(--chipBg)}
+    .pRow input{width:auto; transform:scale(1.15)}
+    .countChip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      font-weight:900;
+      font-size:12px;
+      margin-top:10px;
+    }
     .pill{
       display:inline-block;
       background:var(--pill);
       border-radius:999px;
-      padding:6px 10px;
-      margin:4px 6px 0 0;
-      font-weight:800;
+      padding:8px 10px;
+      margin:6px 8px 0 0;
+      font-weight:900;
       border:1px solid var(--border);
     }
 
@@ -162,8 +214,7 @@
       position:fixed;
       right:16px;
       bottom:16px;
-      width:54px;
-      height:54px;
+      width:54px;height:54px;
       border-radius:999px;
       border:1px solid var(--border);
       background:var(--card);
@@ -172,13 +223,27 @@
       font-weight:900;
       cursor:pointer;
       box-shadow:var(--shadow);
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      display:flex;align-items:center;justify-content:center;
       z-index:9999;
       user-select:none;
     }
     .fab:active{transform:scale(.98)}
+
+    /* Tiny helper text */
+    .hint{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:10px;
+      line-height:1.35;
+    }
+
+    /* Preview */
+    .previewBox{
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      border-radius:16px;
+      padding:12px;
+    }
   </style>
 </head>
 
@@ -193,15 +258,16 @@
         </div>
       </div>
 
-      <div class="row">
-        <a href="index.html">Torna al sito</a>
-        <button id="btnLogout" class="secondary">Esci</button>
+      <div class="topRight">
+        <a href="index.html">⬅️ Torna al sito</a>
+        <button id="btnLogout" class="btn secondary small">🚪 Esci</button>
       </div>
     </div>
 
     <div class="grid">
+      <!-- LEFT: editor -->
       <div class="card">
-        <h2>Crea / aggiorna partita</h2>
+        <h2>Gestione partita</h2>
         <div id="msg" class="msg">Caricamento…</div>
 
         <label>Seleziona partita</label>
@@ -210,8 +276,8 @@
         </select>
 
         <div class="row" style="margin-top:10px">
-          <button id="btnNew">Nuova partita</button>
-          <button id="btnRefresh" class="secondary">Aggiorna lista</button>
+          <button id="btnNew" class="btn ghost small">➕ Nuova</button>
+          <button id="btnRefresh" class="btn ghost small">🔄 Aggiorna</button>
         </div>
 
         <label>Data</label>
@@ -231,25 +297,37 @@
 
         <label>Convocati (max 12)</label>
         <div class="playersBox" id="playersBox"></div>
-        <div class="muted" id="countInfo">Convocati: 0/12</div>
+        <div class="countChip" id="countInfo">👥 Convocati: 0/12</div>
 
-        <div class="row" style="margin-top:12px">
-          <button id="btnSave">Salva</button>
-          <button id="btnDelete" class="danger">Elimina partita</button>
+        <!-- Sticky action bar -->
+        <div class="actionBar">
+          <div class="row" style="justify-content:space-between;width:100%">
+            <button id="btnSave" class="btn" style="flex:1">💾 Salva</button>
+            <button id="btnDelete" class="btn danger" style="flex:1">🗑 Elimina</button>
+          </div>
+          <div class="hint">
+            Tip: se devi annullare una partita, premi <b>Elimina</b>. Se hai sbagliato data/ora, cambia e premi <b>Salva</b>.
+          </div>
         </div>
       </div>
 
+      <!-- RIGHT: preview -->
       <div class="card">
-        <h2>Anteprima</h2>
-        <div id="preview" class="muted">Nessuna partita selezionata.</div>
+        <h2>Anteprima (come la vedono i giocatori)</h2>
+        <div class="previewBox" id="preview" class="muted">Nessuna partita selezionata.</div>
 
-        <div style="margin-top:14px">
-          <button id="btnAddPlayer" class="secondary">Aggiungi nuovo giocatore</button>
+        <div style="margin-top:14px" class="row">
+          <button id="btnAddPlayer" class="btn secondary">➕ Aggiungi giocatore</button>
+        </div>
+
+        <div class="hint">
+          I nuovi giocatori vengono aggiunti alla lista e poi li puoi convocare spuntandoli.
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Floating theme toggle -->
   <button id="themeToggle" class="fab" title="Tema chiaro/scuro">🌙</button>
 
   <script>
@@ -283,10 +361,11 @@
       msgEl.textContent = t;
     }
 
-    if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+    if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
       setMsg("Config mancante: controlla config.js","err");
       throw new Error("Missing config");
     }
+
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let PLAYERS = [];
@@ -347,7 +426,9 @@
           const ids = getCalledUp();
           if(ids.length > 12){
             cb.checked = false;
-            setMsg("Max 12 convocati.","err");
+            setMsg("⚠️ Massimo 12 convocati.","err");
+          } else {
+            setMsg("✅ Convocati aggiornati (ricorda di salvare).","ok");
           }
           updateCount();
           renderPreview();
@@ -371,7 +452,7 @@
     }
 
     function updateCount(){
-      countInfoEl.textContent = `Convocati: ${getCalledUp().length}/12`;
+      countInfoEl.textContent = `👥 Convocati: ${getCalledUp().length}/12`;
     }
 
     function fillForm(m){
@@ -383,6 +464,7 @@
       $("keeperB").value = m.keeper_b || "";
       renderPlayersBox(m.called_up || []);
       renderPreview();
+      setMsg("📌 Partita caricata. Modifica e salva quando vuoi.","ok");
     }
 
     function clearForm(){
@@ -394,7 +476,7 @@
       $("keeperA").value = "";
       $("keeperB").value = "";
       renderPlayersBox([]);
-      previewEl.textContent = "Nessuna partita selezionata.";
+      previewEl.innerHTML = `<span class="muted">Nessuna partita selezionata.</span>`;
     }
 
     function renderPreview(){
@@ -426,38 +508,41 @@
       const keeper_b = $("keeperB").value.trim();
       const called_up = getCalledUp();
 
-      if(!match_date) return setMsg("Inserisci la data.","err");
-      if(!keeper_a || !keeper_b) return setMsg("Inserisci i 2 portieri.","err");
-      if(keeper_a.toLowerCase() === keeper_b.toLowerCase()) return setMsg("I portieri devono essere diversi.","err");
-      if(called_up.length > 12) return setMsg("Max 12 convocati.","err");
+      if(!match_date) return setMsg("📅 Inserisci la data.","err");
+      if(!keeper_a || !keeper_b) return setMsg("🥅 Inserisci i 2 portieri.","err");
+      if(keeper_a.toLowerCase() === keeper_b.toLowerCase()) return setMsg("🥅 I portieri devono essere diversi.","err");
+      if(called_up.length > 12) return setMsg("👥 Max 12 convocati.","err");
 
       const payload = { match_date, match_time, venue, called_up, keeper_a, keeper_b };
 
       try{
         if(CURRENT && CURRENT.id){
+          setMsg("💾 Salvataggio…");
           const { error } = await client.from("matches").update(payload).eq("id", CURRENT.id);
           if(error) throw error;
-          setMsg("Partita aggiornata ✅","ok");
+          setMsg("✅ Partita aggiornata.","ok");
         }else{
+          setMsg("💾 Creazione…");
           const { data, error } = await client.from("matches").insert([payload]).select("*").single();
           if(error) throw error;
-          setMsg("Partita creata ✅","ok");
           CURRENT = data;
           $("matchSelect").value = data.id;
+          setMsg("✅ Partita creata.","ok");
         }
         await loadMatches();
       }catch(e){
         console.error(e);
-        setMsg("Errore salvataggio: " + (e.message||e),"err");
+        setMsg("❌ Errore salvataggio: " + (e.message||e),"err");
       }
     }
 
     async function del(){
-      if(!CURRENT) return setMsg("Seleziona una partita.","err");
+      if(!CURRENT) return setMsg("ℹ️ Seleziona una partita.","err");
       if(!confirm("Sicuro di eliminare questa partita?")) return;
+      setMsg("🗑 Eliminazione…");
       const { error } = await client.from("matches").delete().eq("id", CURRENT.id);
-      if(error) return setMsg("Errore eliminazione: "+error.message,"err");
-      setMsg("Partita eliminata ✅","ok");
+      if(error) return setMsg("❌ Errore eliminazione: "+error.message,"err");
+      setMsg("✅ Partita eliminata.","ok");
       clearForm();
       await loadMatches();
     }
@@ -469,21 +554,21 @@
       if(!clean) return;
 
       const { data: existing, error: e1 } = await client.from("players").select("id").ilike("name", clean).limit(1);
-      if(e1) return setMsg("Errore: "+e1.message,"err");
-      if(existing && existing.length) return setMsg("Giocatore già presente.","err");
+      if(e1) return setMsg("❌ Errore: "+e1.message,"err");
+      if(existing && existing.length) return setMsg("ℹ️ Giocatore già presente.","err");
 
       const { error } = await client.from("players").insert([{ name: clean }]);
-      if(error) return setMsg("Errore insert: "+error.message,"err");
+      if(error) return setMsg("❌ Errore insert: "+error.message,"err");
 
-      setMsg("Giocatore aggiunto ✅","ok");
+      setMsg("✅ Giocatore aggiunto.","ok");
       await loadPlayers();
       renderPreview();
     }
 
     async function logout(){
-      setMsg("Logout…");
+      setMsg("🚪 Logout…");
       const { error } = await client.auth.signOut();
-      if(error) return setMsg("Errore logout: "+error.message,"err");
+      if(error) return setMsg("❌ Errore logout: "+error.message,"err");
       location.href="admin.html";
     }
 
@@ -494,8 +579,8 @@
       if(m) fillForm(m);
     });
 
-    $("btnNew").addEventListener("click", ()=>{ clearForm(); setMsg("Nuova partita: compila e salva.","ok"); });
-    $("btnRefresh").addEventListener("click", async ()=>{ setMsg("Aggiorno…"); await loadMatches(); setMsg("Lista aggiornata ✅","ok"); });
+    $("btnNew").addEventListener("click", ()=>{ clearForm(); setMsg("➕ Nuova partita: compila e salva.","ok"); });
+    $("btnRefresh").addEventListener("click", async ()=>{ setMsg("🔄 Aggiorno…"); await loadMatches(); setMsg("✅ Lista aggiornata.","ok"); });
     $("btnSave").addEventListener("click", save);
     $("btnDelete").addEventListener("click", del);
     $("btnAddPlayer").addEventListener("click", addPlayer);
@@ -510,14 +595,14 @@
       const ok = await requireSession();
       if(!ok) return;
       try{
-        setMsg("Caricamento…");
+        setMsg("⏳ Caricamento…");
         await loadPlayers();
         await loadMatches();
         clearForm();
-        setMsg("Pronto ✅","ok");
+        setMsg("✅ Pronto.","ok");
       }catch(e){
         console.error(e);
-        setMsg("Errore init: " + (e.message||e),"err");
+        setMsg("❌ Errore init: " + (e.message||e),"err");
       }
     })();
   </script>
