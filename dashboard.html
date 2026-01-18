@@ -9,187 +9,73 @@
 
   <style>
     :root{
-      --bg:#f4f6f8;
-      --card:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --shadow:0 6px 20px rgba(0,0,0,.08);
-      --border:#e5e7eb;
-      --link:#0b5fff;
-      --pill:#eeeeee;
-      --logo1:#111;
-      --logo2:#333;
-
-      --btn:#111;
-      --btn2:#444;
-      --danger:#b00020;
-
-      --okBg:#dcfce7;
-      --okText:#166534;
-      --errBg:#ffe4e6;
-      --errText:#9f1239;
-
+      --bg:#f4f6f8; --card:#ffffff; --text:#111827; --muted:#6b7280;
+      --shadow:0 6px 20px rgba(0,0,0,.08); --border:#e5e7eb; --link:#0b5fff;
+      --pill:#eeeeee; --logo1:#111; --logo2:#333; --btn:#111; --btn2:#444; --danger:#b00020;
+      --okBg:#dcfce7; --okText:#166534; --errBg:#ffe4e6; --errText:#9f1239;
       --chipBg:rgba(0,0,0,.04);
     }
     body.dark{
-      --bg:#0f1115;
-      --card:#171a21;
-      --text:#e5e7eb;
-      --muted:#a1a1aa;
-      --shadow:0 10px 28px rgba(0,0,0,.45);
-      --border:#2a2f3a;
-      --link:#7aa7ff;
-      --pill:#222631;
-      --logo1:#0b0e14;
-      --logo2:#2a3242;
-
-      --btn:#0b0e14;
-      --btn2:#2a3242;
-      --danger:#ff4d4d;
-
-      --okBg:rgba(34,197,94,.15);
-      --okText:#86efac;
-      --errBg:rgba(244,63,94,.16);
-      --errText:#fda4af;
-
+      --bg:#0f1115; --card:#171a21; --text:#e5e7eb; --muted:#a1a1aa;
+      --shadow:0 10px 28px rgba(0,0,0,.45); --border:#2a2f3a; --link:#7aa7ff;
+      --pill:#222631; --logo1:#0b0e14; --logo2:#2a3242; --btn:#0b0e14; --btn2:#2a3242; --danger:#ff4d4d;
+      --okBg:rgba(34,197,94,.15); --okText:#86efac; --errBg:rgba(244,63,94,.16); --errText:#fda4af;
       --chipBg:rgba(255,255,255,.04);
     }
-
     *{box-sizing:border-box}
-    body{
-      font-family:Inter,system-ui;
-      margin:0;
-      background:var(--bg);
-      color:var(--text);
-      transition:background .2s ease, color .2s ease;
-    }
+    body{font-family:Inter,system-ui;margin:0;background:var(--bg);color:var(--text);transition:.2s}
     a{color:var(--link);text-decoration:none}
-
     .wrap{max-width:1020px;margin:22px auto;padding:16px}
-
-    .top{
-      display:flex;justify-content:space-between;align-items:center;
-      gap:10px;margin-bottom:12px;
-    }
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
     .brand{display:flex;align-items:center;gap:10px}
-    .logo{
-      width:52px;height:52px;border-radius:999px;
-      background:linear-gradient(135deg, var(--logo1), var(--logo2));
-      display:flex;align-items:center;justify-content:center;
-      box-shadow:0 10px 22px rgba(0,0,0,.18);
-      border:2px solid rgba(255,255,255,.85);
-      flex:0 0 auto;
-    }
+    .logo{width:52px;height:52px;border-radius:999px;background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px rgba(0,0,0,.18);
+      border:2px solid rgba(255,255,255,.85)}
     body.dark .logo{border:2px solid rgba(255,255,255,.12)}
-    .logo span{font-family:'Bebas Neue', sans-serif;color:#fff;font-size:22px;letter-spacing:2px;line-height:1}
+    .logo span{font-family:'Bebas Neue',sans-serif;color:#fff;font-size:22px;letter-spacing:2px}
     h1{margin:0;font-size:20px}
     .muted{color:var(--muted);font-size:12px}
     .topRight{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-
     .grid{display:grid;grid-template-columns:1fr;gap:12px}
     @media(min-width:980px){.grid{grid-template-columns:440px 1fr}}
-
-    .card{
-      background:var(--card);
-      border-radius:16px;
-      padding:16px;
-      box-shadow:var(--shadow);
-      border:1px solid var(--border);
-      transition:background .2s ease, box-shadow .2s ease;
-    }
+    .card{background:var(--card);border-radius:16px;padding:16px;box-shadow:var(--shadow);border:1px solid var(--border)}
     h2{margin:0 0 10px;font-size:16px}
-
     label{display:block;font-size:12px;margin:10px 0 6px;color:var(--muted)}
-    input,select{
-      width:100%;
-      padding:12px 12px;
-      border:1px solid var(--border);
-      border-radius:12px;
-      font-size:14px;
-      background:transparent;
-      color:var(--text);
-      outline:none;
-    }
+    input,select{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;font-size:14px;background:transparent;color:var(--text);outline:none}
     input:focus,select:focus{border-color:rgba(11,95,255,.45)}
-
     .row{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      padding:12px 14px;border-radius:14px;
-      border:1px solid transparent;background:var(--btn);color:#fff;
-      font-weight:900;cursor:pointer;user-select:none;
-    }
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;border-radius:14px;border:1px solid transparent;
+      background:var(--btn);color:#fff;font-weight:900;cursor:pointer;user-select:none}
     .btn:active{transform:scale(.99)}
     .btn.secondary{background:var(--btn2)}
     .btn.danger{background:var(--danger)}
     .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
     .btn.small{padding:10px 12px;border-radius:12px;font-weight:800}
     .btn.full{width:100%}
-
-    .actionBar{
-      position:sticky;bottom:12px;margin-top:12px;
-      padding:10px;border-radius:16px;background:var(--card);
-      border:1px solid var(--border);box-shadow:var(--shadow);
-    }
-
-    .msg{
-      margin-top:10px;padding:12px;border-radius:14px;
-      background:var(--chipBg);border:1px solid var(--border);
-      font-size:13px;white-space:pre-wrap;
-    }
-    .msg.ok{background:var(--okBg); color:var(--okText); border-color:rgba(34,197,94,.35)}
-    .msg.err{background:var(--errBg); color:var(--errText); border-color:rgba(244,63,94,.35); font-weight:800}
-
-    .playersBox{
-      max-height:420px;overflow:auto;border:1px solid var(--border);
-      border-radius:14px;padding:10px
-    }
+    .actionBar{position:sticky;bottom:12px;margin-top:12px;padding:10px;border-radius:16px;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow)}
+    .msg{margin-top:10px;padding:12px;border-radius:14px;background:var(--chipBg);border:1px solid var(--border);font-size:13px;white-space:pre-wrap}
+    .msg.ok{background:var(--okBg);color:var(--okText);border-color:rgba(34,197,94,.35)}
+    .msg.err{background:var(--errBg);color:var(--errText);border-color:rgba(244,63,94,.35);font-weight:800}
+    .playersBox{max-height:320px;overflow:auto;border:1px solid var(--border);border-radius:14px;padding:10px}
     .pRow{display:flex;align-items:center;gap:10px;padding:10px 8px;border-radius:12px}
     .pRow:hover{background:var(--chipBg)}
-    .pRow input{width:auto; transform:scale(1.15)}
-    .countChip{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 10px;border-radius:999px;border:1px solid var(--border);
-      background:var(--chipBg);font-weight:900;font-size:12px;margin-top:10px;
-    }
-    .pill{
-      display:inline-block;background:var(--pill);border-radius:999px;
-      padding:8px 10px;margin:6px 8px 0 0;font-weight:900;border:1px solid var(--border);
-    }
-
+    .pRow input{width:auto;transform:scale(1.15)}
+    .countChip{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;border:1px solid var(--border);
+      background:var(--chipBg);font-weight:900;font-size:12px;margin-top:10px}
+    .pill{display:inline-block;background:var(--pill);border-radius:999px;padding:8px 10px;margin:6px 8px 0 0;font-weight:900;border:1px solid var(--border)}
     .hint{color:var(--muted);font-size:12px;margin-top:10px;line-height:1.35}
-
-    .previewBox{
-      border:1px solid var(--border);
-      background:var(--chipBg);
-      border-radius:16px;
-      padding:12px;
-    }
-
-    .banner{
-      border:1px solid var(--border);
-      background:linear-gradient(135deg, rgba(11,95,255,.10), rgba(34,197,94,.08));
-      border-radius:16px;
-      padding:12px;
-      margin-bottom:12px;
-    }
-    body.dark .banner{
-      background:linear-gradient(135deg, rgba(122,167,255,.12), rgba(34,197,94,.10));
-    }
+    .previewBox{border:1px solid var(--border);background:var(--chipBg);border-radius:16px;padding:12px}
+    .banner{border:1px solid var(--border);background:linear-gradient(135deg, rgba(11,95,255,.10), rgba(34,197,94,.08));
+      border-radius:16px;padding:12px;margin-bottom:12px}
+    body.dark .banner{background:linear-gradient(135deg, rgba(122,167,255,.12), rgba(34,197,94,.10))}
     .bannerTitle{font-weight:900}
     .bannerLine{margin-top:6px;color:var(--muted);font-size:13px}
-
-    .fab{
-      position:fixed;right:16px;bottom:16px;
-      width:54px;height:54px;border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--card);color:var(--text);
-      font-size:22px;font-weight:900;cursor:pointer;
-      box-shadow:var(--shadow);
-      display:flex;align-items:center;justify-content:center;
-      z-index:9999;user-select:none;
-    }
+    .fab{position:fixed;right:16px;bottom:16px;width:54px;height:54px;border-radius:999px;border:1px solid var(--border);
+      background:var(--card);color:var(--text);font-size:22px;font-weight:900;cursor:pointer;box-shadow:var(--shadow);
+      display:flex;align-items:center;justify-content:center;z-index:9999;user-select:none}
     .fab:active{transform:scale(.98)}
+    .twoCols{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:520px){.twoCols{grid-template-columns:1fr 1fr}}
   </style>
 </head>
 
@@ -206,6 +92,7 @@
 
       <div class="topRight">
         <a href="index.html">⬅️ Torna al sito</a>
+        <a href="storico.html">📚 Storico</a>
         <button id="btnLogout" class="btn secondary small">🚪 Esci</button>
       </div>
     </div>
@@ -251,7 +138,7 @@
             <button id="btnDelete" class="btn danger" style="flex:1">🗑 Elimina</button>
           </div>
           <div class="hint">
-            Tip: per annullare una partita usa <b>Elimina</b>. Se hai sbagliato data/ora cambia e premi <b>Salva</b>.
+            Risultato e formazioni si mettono a fine partita (a destra). Non sono obbligatori.
           </div>
         </div>
       </div>
@@ -267,19 +154,43 @@
             <button id="btnCopyCalled" class="btn ghost small" style="flex:1">📋 Copia convocati</button>
             <button id="btnWhatsApp" class="btn ghost small" style="flex:1">📤 WhatsApp</button>
           </div>
-
           <div id="shareMsg" class="hint"></div>
         </div>
 
-        <h2>Anteprima (come la vedono i giocatori)</h2>
+        <h2>Fine partita</h2>
+
+        <div class="twoCols">
+          <div>
+            <label>Gol Squadra A</label>
+            <input id="scoreA" type="number" min="0" step="1" placeholder="Es. 6">
+          </div>
+          <div>
+            <label>Gol Squadra B</label>
+            <input id="scoreB" type="number" min="0" step="1" placeholder="Es. 4">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <button id="btnSaveResult" class="btn full">🏁 Salva risultato (e formazioni)</button>
+        </div>
+
+        <div class="hint">
+          Le formazioni qui sotto sono <b>facoltative</b>. Se non le inserisci, puoi comunque salvare il risultato.
+        </div>
+
+        <h2 style="margin-top:14px">Formazioni (facoltative)</h2>
+
+        <label>Formazione Squadra A</label>
+        <div class="playersBox" id="teamABox"></div>
+
+        <label>Formazione Squadra B</label>
+        <div class="playersBox" id="teamBBox"></div>
+
+        <h2 style="margin-top:14px">Anteprima</h2>
         <div class="previewBox" id="preview"><span class="muted">Nessuna partita selezionata.</span></div>
 
         <div style="margin-top:14px" class="row">
           <button id="btnAddPlayer" class="btn secondary full">➕ Aggiungi giocatore</button>
-        </div>
-
-        <div class="hint">
-          I nuovi giocatori vengono aggiunti alla lista e poi li puoi convocare spuntandoli.
         </div>
       </div>
     </div>
@@ -288,7 +199,6 @@
   <button id="themeToggle" class="fab" title="Tema chiaro/scuro">🌙</button>
 
   <script>
-    // THEME TOGGLE (saved)
     const btnTheme = document.getElementById("themeToggle");
     function setTheme(mode){
       document.body.classList.toggle("dark", mode === "dark");
@@ -297,9 +207,7 @@
     }
     const savedTheme = localStorage.getItem("qdp_theme");
     setTheme(savedTheme === "dark" ? "dark" : "light");
-    btnTheme.addEventListener("click", () => {
-      setTheme(document.body.classList.contains("dark") ? "light" : "dark");
-    });
+    btnTheme.addEventListener("click", () => setTheme(document.body.classList.contains("dark") ? "light" : "dark"));
   </script>
 
   <script src="config.js"></script>
@@ -328,7 +236,6 @@
       setMsg("Config mancante: controlla config.js","err");
       throw new Error("Missing config");
     }
-
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let PLAYERS = [];
@@ -347,15 +254,16 @@
       if(error) throw error;
       PLAYERS = data || [];
       renderPlayersBox();
+      renderTeamBoxes(); // vuoti finché non selezioni partita
     }
 
     async function loadMatches(){
       const { data, error } = await client
         .from("matches")
-        .select("id,match_date,match_time,venue,called_up,keeper_a,keeper_b")
+        .select("id,match_date,match_time,venue,called_up,keeper_a,keeper_b,score_a,score_b,team_a,team_b,is_finished")
         .order("match_date",{ascending:false})
         .order("match_time",{ascending:false})
-        .limit(50);
+        .limit(100);
       if(error) throw error;
       MATCHES = data || [];
       renderMatchesSelect();
@@ -365,9 +273,11 @@
       const sel = $("matchSelect");
       sel.innerHTML = `<option value="">-- nuova partita --</option>`;
       MATCHES.forEach(m=>{
+        const time = String(m.match_time||"").slice(0,5);
+        const res = (m.score_a!=null && m.score_b!=null) ? ` • ${m.score_a}-${m.score_b}` : "";
         const opt = document.createElement("option");
         opt.value = m.id;
-        opt.textContent = `${m.match_date} ${String(m.match_time||"").slice(0,5)} – ${m.venue||""}`.trim();
+        opt.textContent = `${m.match_date} ${time} – ${m.venue||""}${res}`.trim();
         sel.appendChild(opt);
       });
     }
@@ -380,7 +290,6 @@
       PLAYERS.forEach(p=>{
         const row = document.createElement("label");
         row.className = "pRow";
-
         const cb = document.createElement("input");
         cb.type = "checkbox";
         cb.value = p.id;
@@ -396,13 +305,11 @@
           updateCount();
           renderPreview();
           renderBannerFromForm();
+          renderTeamBoxes(); // le formazioni seguono i convocati
         };
-
         const name = document.createElement("span");
         name.textContent = p.name;
-
-        row.appendChild(cb);
-        row.appendChild(name);
+        row.appendChild(cb); row.appendChild(name);
         box.appendChild(row);
       });
 
@@ -419,17 +326,88 @@
       countInfoEl.textContent = `👥 Convocati: ${getCalledUp().length}/12`;
     }
 
+    // --- TEAM BOXES (solo convocati) ---
+    function renderTeamBoxes(teamAIds=[], teamBIds=[]){
+      const called = new Set(getCalledUp().map(String));
+      const aSet = new Set((teamAIds||[]).map(String));
+      const bSet = new Set((teamBIds||[]).map(String));
+
+      const teamABox = $("teamABox");
+      const teamBBox = $("teamBBox");
+      teamABox.innerHTML = "";
+      teamBBox.innerHTML = "";
+
+      // mostra solo convocati
+      const calledPlayers = PLAYERS.filter(p => called.has(String(p.id)));
+
+      calledPlayers.forEach(p=>{
+        // A
+        const rowA = document.createElement("label");
+        rowA.className = "pRow";
+        const cbA = document.createElement("input");
+        cbA.type = "checkbox";
+        cbA.value = p.id;
+        cbA.checked = aSet.has(String(p.id));
+        cbA.onchange = () => {
+          // evita che uno stia in entrambe
+          if(cbA.checked){
+            const cbB = teamBBox.querySelector(`input[value="${p.id}"]`);
+            if(cbB) cbB.checked = false;
+          }
+          renderPreview();
+        };
+        const nameA = document.createElement("span");
+        nameA.textContent = p.name;
+        rowA.appendChild(cbA); rowA.appendChild(nameA);
+        teamABox.appendChild(rowA);
+
+        // B
+        const rowB = document.createElement("label");
+        rowB.className = "pRow";
+        const cbB = document.createElement("input");
+        cbB.type = "checkbox";
+        cbB.value = p.id;
+        cbB.checked = bSet.has(String(p.id));
+        cbB.onchange = () => {
+          if(cbB.checked){
+            const cbA2 = teamABox.querySelector(`input[value="${p.id}"]`);
+            if(cbA2) cbA2.checked = false;
+          }
+          renderPreview();
+        };
+        const nameB = document.createElement("span");
+        nameB.textContent = p.name;
+        rowB.appendChild(cbB); rowB.appendChild(nameB);
+        teamBBox.appendChild(rowB);
+      });
+    }
+
+    function getTeamIds(boxId){
+      return [...document.getElementById(boxId).querySelectorAll('input[type="checkbox"]')]
+        .filter(x=>x.checked)
+        .map(x=>x.value);
+    }
+
     function fillForm(m){
       CURRENT = m;
+
       $("matchDate").value = m.match_date || "";
       $("matchTime").value = String(m.match_time||"21:00:00").slice(0,5);
       $("venue").value = m.venue || "Campo a 6 - Aradeo";
       $("keeperA").value = m.keeper_a || "";
       $("keeperB").value = m.keeper_b || "";
+
       renderPlayersBox(m.called_up || []);
+
+      $("scoreA").value = (m.score_a==null ? "" : m.score_a);
+      $("scoreB").value = (m.score_b==null ? "" : m.score_b);
+
+      // dopo convocati, render team boxes con i valori salvati
+      renderTeamBoxes(m.team_a || [], m.team_b || []);
+
       renderPreview();
       renderBannerFromForm();
-      setMsg("📌 Partita caricata. Modifica e salva quando vuoi.","ok");
+      setMsg("📌 Partita caricata. Puoi anche inserire risultato e formazioni.","ok");
     }
 
     function clearForm(){
@@ -440,7 +418,10 @@
       $("venue").value = "Campo a 6 - Aradeo";
       $("keeperA").value = "";
       $("keeperB").value = "";
+      $("scoreA").value = "";
+      $("scoreB").value = "";
       renderPlayersBox([]);
+      renderTeamBoxes([],[]);
       previewEl.innerHTML = `<span class="muted">Nessuna partita selezionata.</span>`;
       setBanner("Nessuna partita caricata.");
       setShareMsg("");
@@ -454,23 +435,28 @@
       const b = $("keeperB").value || "-";
       const ids = getCalledUp();
 
+      const scoreA = $("scoreA").value;
+      const scoreB = $("scoreB").value;
+      const hasScore = (scoreA !== "" && scoreB !== "");
+
       const map = new Map(PLAYERS.map(p=>[String(p.id), p.name]));
       const names = ids.map(id=>map.get(String(id))).filter(Boolean);
+
+      const teamA = getTeamIds("teamABox").map(id=>map.get(String(id))).filter(Boolean);
+      const teamB = getTeamIds("teamBBox").map(id=>map.get(String(id))).filter(Boolean);
 
       previewEl.innerHTML = `
         <div><b>Data:</b> ${d} ${t}</div>
         <div><b>Campo:</b> ${v}</div>
         <div style="margin-top:8px"><b>Squadra A:</b> ${a}</div>
         <div><b>Squadra B:</b> ${b}</div>
+        ${hasScore ? `<div style="margin-top:8px"><b>Risultato:</b> ${scoreA}-${scoreB}</div>` : `<div class="muted" style="margin-top:8px">Risultato: (non inserito)</div>`}
         <div style="margin-top:12px"><b>Convocati (${names.length}/12)</b></div>
         <div>${names.length ? names.map(n=>`<span class="pill">${n}</span>`).join("") : "<span class='muted'>Nessun convocato</span>"}</div>
+        <div style="margin-top:12px"><b>Formazioni (facoltative)</b></div>
+        <div class="muted">A: ${teamA.length ? teamA.join(", ") : "—"}</div>
+        <div class="muted">B: ${teamB.length ? teamB.join(", ") : "—"}</div>
       `;
-    }
-
-    function getCalledUpNames(){
-      const ids = getCalledUp();
-      const map = new Map(PLAYERS.map(p=>[String(p.id), p.name]));
-      return ids.map(id => map.get(String(id))).filter(Boolean);
     }
 
     function renderBannerFromForm(){
@@ -479,21 +465,17 @@
       const a = $("keeperA").value.trim() || "-";
       const b = $("keeperB").value.trim() || "-";
       const n = getCalledUp().length;
-      setBanner(`${d} ore ${t} • ${a} vs ${b} • convocati: ${n}/12`);
+      const sA = $("scoreA").value, sB = $("scoreB").value;
+      const res = (sA!=="" && sB!=="") ? ` • risultato: ${sA}-${sB}` : "";
+      setBanner(`${d} ore ${t} • ${a} vs ${b} • convocati: ${n}/12${res}`);
       setShareMsg(`Link: ${SITE_LINK}`);
     }
 
     async function copyText(text, okMsg){
-      try{
-        await navigator.clipboard.writeText(text);
-        setMsg(okMsg, "ok");
-      }catch(e){
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        document.body.removeChild(ta);
+      try{ await navigator.clipboard.writeText(text); setMsg(okMsg, "ok"); }
+      catch(e){
+        const ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta);
+        ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
         setMsg(okMsg, "ok");
       }
     }
@@ -503,12 +485,15 @@
       setShareMsg("✅ Link copiato! Incollalo su WhatsApp.");
     }
 
+    function getCalledUpNames(){
+      const ids = getCalledUp();
+      const map = new Map(PLAYERS.map(p=>[String(p.id), p.name]));
+      return ids.map(id => map.get(String(id))).filter(Boolean);
+    }
+
     async function copyCalled(){
       const names = getCalledUpNames();
-      if(!names.length){
-        setMsg("ℹ️ Nessun convocato da copiare.","err");
-        return;
-      }
+      if(!names.length){ setMsg("ℹ️ Nessun convocato da copiare.","err"); return; }
 
       const d = $("matchDate").value || "";
       const t = $("matchTime").value || "21:00";
@@ -536,12 +521,15 @@
       const a = $("keeperA").value.trim() || "-";
       const b = $("keeperB").value.trim() || "-";
       const names = getCalledUpNames();
+      const sA = $("scoreA").value, sB = $("scoreB").value;
+      const res = (sA!=="" && sB!=="") ? `🏁 Risultato: ${sA}-${sB}\n` : "";
 
       const msg =
         `⚽ Quelli della pensione\n` +
         `📅 ${d} ore ${t}\n` +
         `📍 ${v}\n` +
-        `🥅 ${a} vs ${b}\n\n` +
+        `🥅 ${a} vs ${b}\n` +
+        res + `\n` +
         (names.length ? `👥 Convocati (${names.length}/12):\n${names.map((n,i)=>`${i+1}. ${n}`).join("\n")}\n\n` : "") +
         `🔗 ${SITE_LINK}`;
 
@@ -579,10 +567,47 @@
         }
         await loadMatches();
         renderBannerFromForm();
+        renderTeamBoxes(CURRENT?.team_a||[], CURRENT?.team_b||[]);
       }catch(e){
         console.error(e);
         setMsg("❌ Errore salvataggio: " + (e.message||e),"err");
       }
+    }
+
+    async function saveResultAndTeams(){
+      if(!CURRENT) return setMsg("ℹ️ Seleziona una partita prima.","err");
+
+      const scoreA = $("scoreA").value;
+      const scoreB = $("scoreB").value;
+
+      // risultato facoltativo: se uno dei due è vuoto, li salviamo null
+      const score_a = (scoreA === "" ? null : parseInt(scoreA,10));
+      const score_b = (scoreB === "" ? null : parseInt(scoreB,10));
+      if(score_a != null && Number.isNaN(score_a)) return setMsg("Gol A non valido.","err");
+      if(score_b != null && Number.isNaN(score_b)) return setMsg("Gol B non valido.","err");
+
+      const team_a = getTeamIds("teamABox");
+      const team_b = getTeamIds("teamBBox");
+
+      // non obbligatorio, ma evitiamo duplicati a/b
+      const dup = team_a.filter(id => team_b.includes(id));
+      if(dup.length) return setMsg("Un giocatore non può stare in entrambe le formazioni.","err");
+
+      const is_finished = (score_a != null && score_b != null);
+
+      setMsg("🏁 Salvataggio risultato…");
+      const { error } = await client.from("matches")
+        .update({ score_a, score_b, team_a, team_b, is_finished })
+        .eq("id", CURRENT.id);
+
+      if(error) return setMsg("❌ Errore: " + error.message, "err");
+
+      setMsg(is_finished ? "✅ Risultato salvato. Partita chiusa." : "✅ Salvato (senza risultato).", "ok");
+
+      // ricarica la partita aggiornata
+      await loadMatches();
+      const fresh = MATCHES.find(m => String(m.id)===String(CURRENT.id));
+      if(fresh) fillForm(fresh);
     }
 
     async function del(){
@@ -640,7 +665,9 @@
     $("btnCopyCalled").addEventListener("click", copyCalled);
     $("btnWhatsApp").addEventListener("click", openWhatsApp);
 
-    ["matchDate","matchTime","venue","keeperA","keeperB"].forEach(id=>{
+    $("btnSaveResult").addEventListener("click", saveResultAndTeams);
+
+    ["matchDate","matchTime","venue","keeperA","keeperB","scoreA","scoreB"].forEach(id=>{
       $(id).addEventListener("input", ()=>{ renderPreview(); renderBannerFromForm(); });
       $(id).addEventListener("change", ()=>{ renderPreview(); renderBannerFromForm(); });
     });
