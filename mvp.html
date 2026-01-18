@@ -1,81 +1,178 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Vota MVP • Quelli della pensione</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#f4f6f8; --card:#ffffff; --text:#111827; --muted:#6b7280;
-      --border:#e5e7eb; --shadow:0 6px 20px rgba(0,0,0,.08);
-      --btn:#111; --pill:#eeeeee; --okBg:#dcfce7; --okText:#166534;
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --btn:#111;
+      --chipBg:rgba(0,0,0,.04);
+      --okBg:#dcfce7; --okText:#166534;
       --errBg:#ffe4e6; --errText:#9f1239;
+      --logo1:#111; --logo2:#333;
     }
     body.dark{
-      --bg:#0f1115; --card:#171a21; --text:#e5e7eb; --muted:#a1a1aa;
-      --border:#2a2f3a; --shadow:0 10px 28px rgba(0,0,0,.45);
-      --btn:#0b0e14; --pill:#222631; --okBg:rgba(34,197,94,.15); --okText:#86efac;
+      --bg:#0f1115;
+      --card:#171a21;
+      --text:#e5e7eb;
+      --muted:#a1a1aa;
+      --border:#2a2f3a;
+      --shadow:0 10px 28px rgba(0,0,0,.45);
+      --btn:#0b0e14;
+      --chipBg:rgba(255,255,255,.04);
+      --okBg:rgba(34,197,94,.15); --okText:#86efac;
       --errBg:rgba(244,63,94,.16); --errText:#fda4af;
+      --logo1:#0b0e14; --logo2:#2a3242;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
-    .wrap{max-width:720px;margin:0 auto;padding:16px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:var(--shadow);margin:12px 0}
-    h1{font-family:'Bebas Neue';letter-spacing:2px;margin:0;font-size:40px;text-transform:uppercase}
-    .muted{color:var(--muted)}
-    label{display:block;font-size:12px;color:var(--muted);font-weight:800;margin:12px 0 6px}
-    select,input{width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--text);outline:none}
-    .btn{width:100%;margin-top:12px;padding:12px 14px;border:0;border-radius:14px;background:var(--btn);color:#fff;font-weight:900;cursor:pointer}
-    .btn:disabled{opacity:.6;cursor:not-allowed}
-    .msg{margin-top:12px;padding:12px;border-radius:12px;border:1px solid var(--border);background:rgba(0,0,0,.04);white-space:pre-wrap;font-size:13px}
-    body.dark .msg{background:rgba(255,255,255,.04)}
+    body{
+      margin:0;
+      font-family:Inter,system-ui;
+      background:var(--bg);
+      color:var(--text);
+      transition:.2s;
+    }
+    .wrap{max-width:560px;margin:18px auto;padding:16px}
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px;
+      box-shadow:var(--shadow);
+      margin:12px 0;
+    }
+    .header{text-align:center}
+    .logo{
+      width:70px;height:70px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      margin:0 auto 10px;
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:30px;letter-spacing:2px;
+    }
+    h1{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:44px;
+      margin:0;
+      text-transform:uppercase;
+    }
+    .subtitle{color:var(--muted);margin-top:6px}
+
+    label{display:block;margin-top:12px;font-size:12px;color:var(--muted);font-weight:800}
+    select,input{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:transparent;
+      color:var(--text);
+      outline:none;
+      font-family:Inter;
+    }
+
+    .btn{
+      width:100%;
+      margin-top:14px;
+      padding:13px 14px;
+      border-radius:14px;
+      border:0;
+      background:var(--btn);
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      user-select:none;
+    }
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+
+    .msg{
+      margin-top:12px;
+      padding:12px;
+      border-radius:12px;
+      font-size:13px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      white-space:pre-wrap;
+    }
     .msg.ok{background:var(--okBg);color:var(--okText);border-color:rgba(34,197,94,.35)}
     .msg.err{background:var(--errBg);color:var(--errText);border-color:rgba(244,63,94,.35);font-weight:900}
-    .nav{display:flex;gap:10px;flex-wrap:wrap;font-size:14px}
-    .nav a{color:inherit;text-decoration:none;font-weight:800}
-    .fab{
-      position:fixed;right:16px;bottom:16px;width:54px;height:54px;border-radius:999px;
-      border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);cursor:pointer;font-size:22px
+
+    .infoLine{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+      color:var(--muted);font-size:13px;margin-top:8px
     }
-    .pill{display:inline-block;background:var(--pill);border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-weight:900}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      font-weight:900;font-size:12px;
+      color:var(--text);
+    }
+
+    .nav{
+      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+      font-size:14px;
+    }
+    .nav a{color:var(--text);text-decoration:none;font-weight:800}
+    .nav a:hover{text-decoration:underline}
+
+    .fab{
+      position:fixed;right:16px;bottom:16px;
+      width:54px;height:54px;border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      font-size:22px;
+    }
   </style>
 </head>
 
 <body>
 <div class="wrap">
 
-  <div class="card" style="text-align:center">
-    <div class="pill">QDP</div>
+  <div class="card header">
+    <div class="logo">QDP</div>
     <h1>Vota MVP</h1>
-    <div class="muted">Senza registrazione • 1 voto per dispositivo</div>
+    <div class="subtitle">Senza registrazione • 1 voto per dispositivo</div>
   </div>
 
   <div class="card">
-    <div id="matchInfo" class="muted">Caricamento partita…</div>
-
-    <div id="voteBox" style="display:none">
-      <label>Scegli il migliore</label>
-      <select id="playerSelect"></select>
-
-      <label>Codice (fisso)</label>
-      <input id="code" type="text" value="QDP" />
-
-      <button id="btnVote" class="btn">🗳 Vota</button>
-      <div id="msg" class="msg">—</div>
+    <div id="matchInfo" class="infoLine">
+      <span class="pill">⏳ Caricamento partita…</span>
     </div>
 
-    <div id="closedBox" style="display:none" class="msg err">
-      Votazione chiusa per questa partita.
-    </div>
+    <label>Scegli il migliore</label>
+    <select id="playerSelect" disabled>
+      <option value="">Caricamento…</option>
+    </select>
+
+    <label>Codice (fisso)</label>
+    <input id="codeInput" type="text" value="QDP" />
+
+    <button id="btnVote" class="btn" disabled>🗳️ Vota</button>
+
+    <div id="msg" class="msg" style="display:none"></div>
   </div>
 
   <div class="card nav muted">
     <a href="index.html">🏠 Home</a>
     <a href="storico.html">📚 Storico</a>
-    <a href="admin.html">🔐 Admin</a>
+    <a href="marcatori.html">⚽ Marcatori</a>
   </div>
 
 </div>
@@ -84,8 +181,9 @@
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
 <script>
-/* THEME */
+/* ===== THEME ===== */
 const themeBtn = document.getElementById("themeToggle");
 function setTheme(mode){
   document.body.classList.toggle("dark", mode === "dark");
@@ -95,37 +193,53 @@ function setTheme(mode){
 setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
 themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 
-/* SUPABASE */
+/* ===== SUPABASE ===== */
+if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+  alert("config.js non caricato o non valido");
+  throw new Error("Missing config");
+}
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const matchInfo = document.getElementById("matchInfo");
-const voteBox = document.getElementById("voteBox");
-const closedBox = document.getElementById("closedBox");
+/* ===== DOM ===== */
+const matchInfoEl = document.getElementById("matchInfo");
 const playerSelect = document.getElementById("playerSelect");
+const codeInput = document.getElementById("codeInput");
 const btnVote = document.getElementById("btnVote");
 const msgEl = document.getElementById("msg");
 
-function setMsg(t, kind=""){
+/* ===== HELPERS ===== */
+function setMsg(text, kind){
+  msgEl.style.display = "block";
   msgEl.className = "msg" + (kind ? " " + kind : "");
-  msgEl.textContent = t;
+  msgEl.textContent = text;
 }
 
 function formatDateFull(iso){
-  return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  try{
+    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  }catch(e){ return iso; }
 }
 
-function getVoterId(){
-  let id = localStorage.getItem("qdp_voter_id");
-  if(!id){
-    id = (crypto?.randomUUID ? crypto.randomUUID() : (Date.now()+"-"+Math.random().toString(16).slice(2)));
-    localStorage.setItem("qdp_voter_id", id);
+function getOrCreateVoterId(){
+  const key = "qdp_voter_id";
+  let v = localStorage.getItem(key);
+  if(!v){
+    // uuid-like semplice
+    v = (crypto?.randomUUID ? crypto.randomUUID() :
+      "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{
+        const r=Math.random()*16|0, v=c==="x"?r:(r&0x3|0x8); return v.toString(16);
+      })
+    );
+    localStorage.setItem(key, v);
   }
-  return id;
+  return v;
 }
 
-let MATCH = null;
+let CURRENT_MATCH = null;
+let CALLED_PLAYERS = [];
 
-async function load(){
+/* ===== LOAD MATCH + PLAYERS ===== */
+async function loadMatchAndPlayers(){
   // ultima partita
   const { data: matches, error } = await client
     .from("matches")
@@ -135,31 +249,41 @@ async function load(){
     .limit(1);
 
   if(error){
-    matchInfo.textContent = "Errore caricamento partita: " + error.message;
+    matchInfoEl.innerHTML = `<span class="pill">❌ Errore: ${error.message}</span>`;
     return;
   }
   if(!matches || !matches.length){
-    matchInfo.textContent = "Nessuna partita creata.";
+    matchInfoEl.innerHTML = `<span class="pill">ℹ️ Nessuna partita trovata</span>`;
     return;
   }
 
-  MATCH = matches[0];
-  const time = String(MATCH.match_time||"").slice(0,5);
-  matchInfo.innerHTML = `<b>📅 ${formatDateFull(MATCH.match_date)}</b><br><span class="muted">⏰ ${time} • ${MATCH.venue||""}</span>`;
+  CURRENT_MATCH = matches[0];
 
-  const open = !!(MATCH.vote_open || MATCH.voting_open);
-  if(!open){
-    voteBox.style.display="none";
-    closedBox.style.display="block";
+  const time = String(CURRENT_MATCH.match_time || "").slice(0,5);
+  const openFlag =
+    (CURRENT_MATCH.vote_open === true) ||
+    (CURRENT_MATCH.voting_open === true);
+
+  matchInfoEl.innerHTML = `
+    <span class="pill">📅 ${formatDateFull(CURRENT_MATCH.match_date)}</span>
+    <span class="pill">⏰ ${time || "—"}</span>
+    <span class="pill">📍 ${CURRENT_MATCH.venue || "—"}</span>
+    <span class="pill">${openFlag ? "🟢 Votazione aperta" : "🔴 Votazione chiusa"}</span>
+  `;
+
+  if(!openFlag){
+    playerSelect.disabled = true;
+    btnVote.disabled = true;
+    setMsg("Votazione chiusa per questa partita.", "err");
     return;
   }
 
-  // carica convocati
-  const ids = Array.isArray(MATCH.called_up) ? MATCH.called_up : [];
+  // convocati
+  const ids = Array.isArray(CURRENT_MATCH.called_up) ? CURRENT_MATCH.called_up : [];
   if(!ids.length){
-    voteBox.style.display="none";
-    closedBox.style.display="block";
-    closedBox.textContent = "Convocati non presenti: non posso aprire il voto.";
+    playerSelect.disabled = true;
+    btnVote.disabled = true;
+    setMsg("Nessun convocato nella partita: impossibile votare.", "err");
     return;
   }
 
@@ -169,65 +293,90 @@ async function load(){
     .in("id", ids);
 
   if(e2){
-    matchInfo.textContent += "\nErrore convocati: " + e2.message;
+    setMsg("Errore caricamento giocatori: " + e2.message, "err");
     return;
   }
 
-  players.sort((a,b)=> String(a.name).localeCompare(String(b.name),"it"));
+  // ordina come nomi
+  CALLED_PLAYERS = (players || []).sort((a,b)=>String(a.name).localeCompare(String(b.name)));
 
-  playerSelect.innerHTML = players.map(p => `<option value="${p.id}">${p.name}</option>`).join("");
+  playerSelect.innerHTML = `<option value="">— scegli —</option>` +
+    CALLED_PLAYERS.map(p => `<option value="${p.id}">${p.name}</option>`).join("");
 
-  voteBox.style.display="block";
-  closedBox.style.display="none";
-  setMsg("Seleziona un giocatore e vota.", "");
+  playerSelect.disabled = false;
+  btnVote.disabled = false;
+
+  // controllo se questo dispositivo ha già votato
+  const voterId = getOrCreateVoterId();
+  const { data: already, error: e3 } = await client
+    .from("mvp_votes")
+    .select("id,voted_player,created_at")
+    .eq("match_id", CURRENT_MATCH.id)
+    .eq("voter_id", voterId)
+    .limit(1);
+
+  if(e3){
+    // non blocchiamo: proviamo a far votare lo stesso, ma avvisiamo
+    console.warn(e3);
+  } else if(already && already.length){
+    playerSelect.disabled = true;
+    btnVote.disabled = true;
+    const vp = already[0].voted_player;
+    const name = CALLED_PLAYERS.find(p=>String(p.id)===String(vp))?.name || "già votato";
+    setMsg(`Hai già votato per questa partita ✅\nVoto: ${name}`, "ok");
+  } else {
+    msgEl.style.display = "none";
+  }
 }
 
-btnVote.onclick = async () => {
-  if(!MATCH) return;
+/* ===== VOTE ===== */
+btnVote.addEventListener("click", async ()=>{
+  if(!CURRENT_MATCH) return;
 
-  const code = (document.getElementById("code").value || "").trim().toUpperCase();
-  if(code !== "QDP"){
-    setMsg("Codice errato. Scrivi QDP.", "err");
-    return;
-  }
+  const voted_player = playerSelect.value;
+  const code = (codeInput.value || "").trim();
 
-  const player_id = playerSelect.value;
-  if(!player_id){
+  if(!voted_player){
     setMsg("Seleziona un giocatore.", "err");
     return;
   }
-
-  btnVote.disabled = true;
-  setMsg("Invio voto…");
-
-  const voter_id = getVoterId();
-
-  const { error } = await client.from("mvp_votes").insert([{
-    match_id: MATCH.id,
-    player_id,
-    voter_id
-  }]);
-
-  if(error){
-    btnVote.disabled = false;
-
-    // Se hai una UNIQUE (match_id, voter_id) questo è normale: 1 voto solo.
-    if(String(error.message||"").toLowerCase().includes("duplicate")
-       || String(error.message||"").toLowerCase().includes("unique")){
-      setMsg("Hai già votato per questa partita ✅", "ok");
-      btnVote.disabled = true;
-      return;
-    }
-
-    setMsg("Errore voto: " + error.message, "err");
+  if(code.toUpperCase() !== "QDP"){
+    setMsg("Codice errato. Inserisci: QDP", "err");
     return;
   }
 
-  setMsg("Voto registrato ✅ Grazie!", "ok");
   btnVote.disabled = true;
-};
 
-load();
+  const voter_id = getOrCreateVoterId();
+
+  const { error } = await client.from("mvp_votes").insert([{
+    match_id: CURRENT_MATCH.id,
+    voter_id: voter_id,
+    voted_player: voted_player,
+    code: code
+  }]);
+
+  if(error){
+    // caso tipico: unique (già votato)
+    const msg = String(error.message || "");
+    if(msg.toLowerCase().includes("duplicate") || msg.toLowerCase().includes("unique")){
+      setMsg("Hai già votato per questa partita ✅", "ok");
+    } else {
+      setMsg("Errore voto: " + msg, "err");
+    }
+    btnVote.disabled = true;
+    return;
+  }
+
+  const name = CALLED_PLAYERS.find(p=>String(p.id)===String(voted_player))?.name || "";
+  setMsg("Voto registrato ✅\nHai votato: " + name, "ok");
+
+  playerSelect.disabled = true;
+  btnVote.disabled = true;
+});
+
+/* ===== INIT ===== */
+loadMatchAndPlayers();
 </script>
 </body>
 </html>
