@@ -37,13 +37,7 @@
       --pill:#222631;
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,system-ui;
-      background:var(--bg);
-      color:var(--text);
-      transition:.2s;
-    }
+    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
     .wrap{max-width:560px;margin:18px auto;padding:16px}
     .card{
       background:var(--card);
@@ -61,13 +55,7 @@
       display:flex;align-items:center;justify-content:center;
       color:#fff;font-family:'Bebas Neue';font-size:30px;letter-spacing:2px;
     }
-    h1{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:44px;
-      margin:0;
-      text-transform:uppercase;
-    }
+    h1{font-family:'Bebas Neue';letter-spacing:2px;font-size:44px;margin:0;text-transform:uppercase}
     .subtitle{color:var(--muted);margin-top:6px}
 
     label{display:block;margin-top:12px;font-size:12px;color:var(--muted);font-weight:800}
@@ -81,7 +69,6 @@
       outline:none;
       font-family:Inter;
     }
-
     .btn{
       width:100%;
       margin-top:14px;
@@ -125,10 +112,7 @@
       color:var(--text);
     }
 
-    .nav{
-      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
-      font-size:14px;
-    }
+    .nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}
     .nav a{color:var(--text);text-decoration:none;font-weight:800}
     .nav a:hover{text-decoration:underline}
 
@@ -142,13 +126,9 @@
       font-size:22px;
     }
 
+    /* Classifica */
     .rankTitle{
-      margin:0;
-      font-size:16px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+      margin:0;font-size:16px;display:flex;align-items:center;justify-content:space-between;gap:10px;
     }
     .smallBtn{
       border:1px solid var(--border);
@@ -162,23 +142,15 @@
     }
     .rankList{margin-top:10px}
     .rankRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:10px 12px;
-      border:1px solid var(--border);
-      border-radius:14px;
-      background:var(--chipBg);
-      margin-top:8px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:10px 12px;border:1px solid var(--border);border-radius:14px;
+      background:var(--chipBg);margin-top:8px;
     }
     .rankLeft{display:flex;align-items:center;gap:10px}
     .medal{
       width:28px;height:28px;border-radius:999px;
       display:flex;align-items:center;justify-content:center;
-      font-weight:900;
-      border:1px solid var(--border);
-      background:var(--card);
+      font-weight:900;border:1px solid var(--border);background:var(--card);
     }
     .rankName{font-weight:900}
     .rankVotes{font-weight:900}
@@ -237,16 +209,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
-/* ===== SAFE BOOT ===== */
-window.addEventListener("error", (e)=>{
-  const el = document.getElementById("msg");
-  if(el){
-    el.style.display="block";
-    el.className="msg err";
-    el.textContent = "Errore JS: " + (e?.message || "sconosciuto");
-  }
-});
-
 /* ===== THEME ===== */
 const themeBtn = document.getElementById("themeToggle");
 function setTheme(mode){
@@ -304,14 +266,12 @@ function getOrCreateVoterId(){
   }
   return v;
 }
-
 function medal(i){
   if(i===0) return "🥇";
   if(i===1) return "🥈";
   if(i===2) return "🥉";
   return String(i+1);
 }
-
 function escapeHtml(s){
   return String(s ?? "")
     .replaceAll("&","&amp;")
@@ -323,16 +283,10 @@ function escapeHtml(s){
 
 /* ===== STATE ===== */
 let CURRENT_MATCH = null;
-let CALLED_PLAYERS = [];
+let CALLED_PLAYERS = []; // [{id,name}]
 let OPEN_FLAG = false;
-let SELECTED_PLAYER_ID = "";
 
-/* Keep selection (Android) */
-playerSelect.addEventListener("change", ()=>{
-  SELECTED_PLAYER_ID = String(playerSelect.value || "").trim();
-});
-
-/* ===== FETCH ===== */
+/* ===== FETCH LATEST MATCH ===== */
 async function fetchLatestMatch(){
   const { data: matches, error } = await client
     .from("matches")
@@ -346,6 +300,10 @@ async function fetchLatestMatch(){
   return matches[0];
 }
 
+function computeOpenFlag(m){
+  return !!(m && (m.vote_open === true || m.voting_open === true));
+}
+
 function applyMatchUI(){
   if(!CURRENT_MATCH){
     matchInfoEl.innerHTML = `<span class="pill">ℹ️ Nessuna partita trovata</span>`;
@@ -355,8 +313,8 @@ function applyMatchUI(){
     rankFooterEl.textContent = "";
     return;
   }
-  const time = String(CURRENT_MATCH.match_time || "").slice(0,5);
 
+  const time = String(CURRENT_MATCH.match_time || "").slice(0,5);
   matchInfoEl.innerHTML = `
     <span class="pill">📅 ${escapeHtml(formatDateFull(CURRENT_MATCH.match_date))}</span>
     <span class="pill">⏰ ${escapeHtml(time || "—")}</span>
@@ -370,9 +328,9 @@ function applyMatchUI(){
     : "*Risultato finale (votazione chiusa).";
 }
 
+/* ===== LOAD CALLED PLAYERS ===== */
 async function loadCalledPlayers(){
   CALLED_PLAYERS = [];
-  SELECTED_PLAYER_ID = "";
   playerSelect.innerHTML = `<option value="">— scegli —</option>`;
 
   const ids = Array.isArray(CURRENT_MATCH?.called_up) ? CURRENT_MATCH.called_up : [];
@@ -391,10 +349,12 @@ async function loadCalledPlayers(){
 
   CALLED_PLAYERS = (players || []).sort((a,b)=>String(a.name).localeCompare(String(b.name),"it"));
 
-  playerSelect.innerHTML = `<option value="">— scegli —</option>` +
-    CALLED_PLAYERS.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join("");
+  playerSelect.innerHTML =
+    `<option value="">— scegli —</option>` +
+    CALLED_PLAYERS.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`).join("");
 }
 
+/* ===== CHECK ALREADY VOTED ===== */
 async function enforceAlreadyVoted(){
   if(!CURRENT_MATCH) return;
 
@@ -421,6 +381,7 @@ async function enforceAlreadyVoted(){
   }
 }
 
+/* ===== RANKING ===== */
 async function loadRankingOnly(){
   if(!CURRENT_MATCH){
     rankTopEl.textContent = "";
@@ -462,11 +423,9 @@ async function loadRankingOnly(){
   const topVotes = rows[0].votes;
   const topNames = rows.filter(r=>r.votes===topVotes).map(r=>r.name);
 
-  if(topNames.length === 1){
-    rankTopEl.textContent = `MVP ${OPEN_FLAG ? "provvisorio" : "finale"}: ${topNames[0]} (${topVotes} voto/i)`;
-  }else{
-    rankTopEl.textContent = `Parità ${OPEN_FLAG ? "provvisoria" : "finale"}: ${topNames.join(", ")} (${topVotes} voto/i)`;
-  }
+  rankTopEl.textContent = (topNames.length === 1)
+    ? `MVP ${OPEN_FLAG ? "provvisorio" : "finale"}: ${topNames[0]} (${topVotes} voto/i)`
+    : `Parità ${OPEN_FLAG ? "provvisoria" : "finale"}: ${topNames.join(", ")} (${topVotes} voto/i)`;
 
   rankListEl.innerHTML = rows.map((r,i)=>`
     <div class="rankRow">
@@ -482,41 +441,38 @@ async function loadRankingOnly(){
   `).join("");
 }
 
-async function refreshMatchStatusOnly(){
+/* ===== FULL REFRESH ===== */
+async function fullRefresh(keepSelectedId){
+  const prevSelected = keepSelectedId ?? playerSelect.value;
+
   const m = await fetchLatestMatch();
   CURRENT_MATCH = m;
-  OPEN_FLAG = !!(CURRENT_MATCH && (CURRENT_MATCH.vote_open === true || CURRENT_MATCH.voting_open === true));
+  OPEN_FLAG = computeOpenFlag(CURRENT_MATCH);
+
   applyMatchUI();
-}
 
-async function fullRefresh(){
-  try{
-    await refreshMatchStatusOnly();
-    await loadCalledPlayers();
-    await enforceAlreadyVoted();
-    await loadRankingOnly();
-  }catch(err){
-    console.error(err);
-    matchInfoEl.innerHTML = `<span class="pill">❌ Errore: ${escapeHtml(err.message || String(err))}</span>`;
-    rankListEl.innerHTML = `<span class="muted">—</span>`;
+  await loadCalledPlayers();
+
+  // ripristina selezione se esiste ancora
+  if(prevSelected && CALLED_PLAYERS.some(p=>String(p.id)===String(prevSelected))){
+    playerSelect.value = String(prevSelected);
   }
+
+  await enforceAlreadyVoted();
+  await loadRankingOnly();
 }
 
-btnRefreshRank.addEventListener("click", fullRefresh);
+btnRefreshRank.addEventListener("click", ()=>fullRefresh());
 
+/* ===== VOTE (FIX: non fare fullRefresh prima di leggere la scelta) ===== */
 btnVote.addEventListener("click", async ()=>{
   if(!CURRENT_MATCH) return;
 
-  // prendi valore PRIMA di qualunque refresh
-  let voted_player = String(SELECTED_PLAYER_ID || "").trim();
-  if(!voted_player) voted_player = String(playerSelect.value || "").trim();
-  if(!voted_player && playerSelect.selectedIndex >= 0){
-    voted_player = String(playerSelect.options[playerSelect.selectedIndex]?.value || "").trim();
-  }
-
+  // 1) leggi SUBITO la scelta (così non si perde su Android)
+  const chosen = String(playerSelect.value || "");
   const code = (codeInput.value || "").trim();
 
-  if(!voted_player){
+  if(!chosen){
     setMsg("Seleziona un giocatore.", "err");
     return;
   }
@@ -525,28 +481,46 @@ btnVote.addEventListener("click", async ()=>{
     return;
   }
 
-  // controlla solo lo stato, senza ricreare select
+  // 2) controlla SOLO lo stato partita (senza ricostruire la select prima del voto)
   try{
-    await refreshMatchStatusOnly();
+    const latest = await fetchLatestMatch();
+    if(!latest){
+      setMsg("Nessuna partita trovata.", "err");
+      return;
+    }
+    CURRENT_MATCH = latest;
+    OPEN_FLAG = computeOpenFlag(CURRENT_MATCH);
+    applyMatchUI();
+
+    if(!OPEN_FLAG){
+      setMsg("Votazione chiusa.", "err");
+      await fullRefresh(chosen);
+      return;
+    }
+
+    // se per caso i convocati della partita sono cambiati e quello scelto non è più valido
+    const ids = Array.isArray(CURRENT_MATCH.called_up) ? CURRENT_MATCH.called_up.map(String) : [];
+    if(ids.length && !ids.includes(String(chosen))){
+      setMsg("La lista convocati è cambiata. Riseleziona il giocatore.", "err");
+      await fullRefresh();
+      return;
+    }
+
   }catch(e){
     console.error(e);
-    setMsg("Errore controllo partita.", "err");
-    return;
-  }
-
-  if(!OPEN_FLAG){
-    setMsg("Votazione chiusa.", "err");
+    setMsg("Errore controllo partita: " + (e.message||e), "err");
     return;
   }
 
   btnVote.disabled = true;
 
   const voter_id = getOrCreateVoterId();
+
   const { error } = await client.from("mvp_votes").insert([{
     match_id: CURRENT_MATCH.id,
-    voter_id: voter_id,
-    voted_player: voted_player,
-    code: code
+    voter_id,
+    voted_player: chosen,
+    code
   }]);
 
   if(error){
@@ -558,20 +532,29 @@ btnVote.addEventListener("click", async ()=>{
     }
     playerSelect.disabled = true;
     btnVote.disabled = true;
-    await fullRefresh();
+    await fullRefresh(chosen);
     return;
   }
 
-  const name = CALLED_PLAYERS.find(p=>String(p.id)===String(voted_player))?.name || "";
+  const name = CALLED_PLAYERS.find(p=>String(p.id)===String(chosen))?.name || "";
   setMsg("Voto registrato ✅\nHai votato: " + name, "ok");
 
   playerSelect.disabled = true;
   btnVote.disabled = true;
 
-  await loadRankingOnly(); // aggiorna solo classifica
+  await fullRefresh(chosen);
 });
 
-fullRefresh();
+/* ===== INIT ===== */
+(async()=>{
+  try{
+    await fullRefresh();
+  }catch(err){
+    console.error(err);
+    matchInfoEl.innerHTML = `<span class="pill">❌ Errore: ${escapeHtml(err.message || String(err))}</span>`;
+    rankListEl.innerHTML = `<span class="muted">—</span>`;
+  }
+})();
 </script>
 </body>
 </html>
