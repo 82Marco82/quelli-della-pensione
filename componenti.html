@@ -15,11 +15,11 @@
       --muted:#6b7280;
       --border:#e5e7eb;
       --shadow:0 6px 20px rgba(0,0,0,.08);
-      --logo1:#111;
-      --logo2:#333;
       --chipBg:rgba(0,0,0,.04);
-      --btnBg:#111;
+      --btn:#111;
       --btnText:#fff;
+      --pill:#eeeeee;
+      --logo1:#111; --logo2:#333;
     }
     body.dark{
       --bg:#0f1115;
@@ -28,25 +28,24 @@
       --muted:#a1a1aa;
       --border:#2a2f3a;
       --shadow:0 10px 28px rgba(0,0,0,.45);
-      --logo1:#0b0e14;
-      --logo2:#2a3242;
       --chipBg:rgba(255,255,255,.04);
-      --btnBg:#0b0e14;
+      --btn:#0b0e14;
       --btnText:#fff;
+      --pill:#222631;
+      --logo1:#0b0e14; --logo2:#2a3242;
     }
 
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
-    .wrap{max-width:900px;margin:auto;padding:16px}
+    .wrap{max-width:860px;margin:auto;padding:16px}
 
     .card{
       background:var(--card);
       border:1px solid var(--border);
-      border-radius:16px;
+      border-radius:18px;
       padding:14px;
       box-shadow:var(--shadow);
       margin:12px 0;
-      overflow:hidden;
     }
 
     .header{text-align:center}
@@ -55,8 +54,7 @@
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
       margin:auto;
       display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:30px;
-      letter-spacing:2px;
+      color:#fff;font-family:'Bebas Neue';font-size:30px;letter-spacing:2px;
     }
     h1{
       font-family:'Bebas Neue';
@@ -65,76 +63,134 @@
       margin:10px 0 0;
       text-transform:uppercase;
     }
-    .subtitle{color:var(--muted);font-size:14px}
+    .subtitle{color:var(--muted);font-size:14px;margin-top:6px}
 
-    .row{
-      display:flex;justify-content:space-between;align-items:center;
-      gap:10px;flex-wrap:wrap;
-    }
-
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .muted{color:var(--muted)}
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 10px;border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--chipBg);
-      font-weight:900;font-size:12px;
-      white-space:nowrap;
-    }
+    .space{height:10px}
 
-    .toolbar{
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
-    }
     .btn{
       border:1px solid var(--border);
-      background:var(--btnBg);
+      background:var(--btn);
       color:var(--btnText);
-      padding:10px 12px;
-      border-radius:12px;
+      padding:12px 14px;
+      border-radius:14px;
       cursor:pointer;
       font-weight:900;
       display:inline-flex;
       align-items:center;
-      gap:8px;
+      gap:10px;
       user-select:none;
     }
     .btn.ghost{
       background:transparent;
       color:var(--text);
     }
+    .btn:disabled{opacity:.6;cursor:not-allowed}
 
-    .list{margin-top:8px}
-    .playerCard{
-      text-decoration:none;
-      color:inherit;
-      display:block;
-    }
-    .playerTop{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-    }
-    .leftBlock{min-width:0}
-    .name{
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
       font-weight:900;
-      font-size:16px;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      font-size:13px;
       white-space:nowrap;
-      max-width:520px;
     }
-    .mini{font-size:12px;color:var(--muted);margin-top:6px}
 
-    .rankBadge{
-      width:30px;height:30px;border-radius:999px;
-      display:flex;align-items:center;justify-content:center;
-      font-weight:900;
+    .controls{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .controlsLeft{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+    /* LISTA */
+    .list{margin-top:10px}
+
+    .playerCard{
+      padding:16px;
+      border-radius:22px;
       border:1px solid var(--border);
       background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      user-select:none;
+    }
+
+    .playerTop{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+    }
+
+    /* IMPORTANTISSIMO: evita troncamento su mobile */
+    .playerLeft{
+      flex:1;
+      min-width:0;
+    }
+
+    .badgeMedal{
+      width:34px;height:34px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      font-weight:900;
       flex:0 0 auto;
     }
-    .rightPills{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+
+    .playerName{
+      font-weight:900;
+      font-size:22px;
+      line-height:1.1;
+
+      /* FIX: niente ... */
+      white-space:normal !important;
+      overflow:visible !important;
+      text-overflow:clip !important;
+      word-break:break-word;
+      overflow-wrap:anywhere;
+    }
+
+    .playerSub{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .chips{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-start;
+      margin-top:14px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      font-weight:900;
+      font-size:13px;
+      white-space:nowrap;
+    }
 
     .nav{
-      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
       font-size:14px;
     }
     .nav a{color:var(--text);text-decoration:none;font-weight:800}
@@ -150,244 +206,304 @@
       box-shadow:var(--shadow);
       cursor:pointer;
       font-size:22px;
+      display:flex;align-items:center;justify-content:center;
+      z-index:9999;
+    }
+
+    .infoBox{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-start;
+      margin-top:10px;
+    }
+
+    .msg{
+      margin-top:10px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      color:var(--muted);
+      white-space:pre-wrap;
+      font-size:13px;
     }
   </style>
 </head>
 
 <body>
-<div class="wrap">
+  <div class="wrap">
 
-  <div class="header">
-    <div class="logo">QDP</div>
-    <h1>Componenti</h1>
-    <div class="subtitle">Quelli della pensione</div>
-  </div>
+    <div class="header">
+      <div class="logo">QDP</div>
+      <h1>Componenti</h1>
+      <div class="subtitle">Quelli della pensione</div>
+    </div>
 
-  <div class="card">
-    <div class="toolbar">
-      <div>
-        <div id="status" class="muted">Caricamento…</div>
-        <div id="substatus" class="muted" style="margin-top:6px"></div>
+    <div class="card">
+      <div class="infoBox">
+        <span class="pill">👥 Totale componenti: <span id="totPlayers">—</span></span>
+        <span class="pill">📚 Partite in archivio: <span id="totMatches">—</span></span>
       </div>
 
-      <div class="row" style="margin:0">
-        <button id="btnSortPresence" class="btn">🥇 Classifica presenze</button>
-        <button id="btnSortAZ" class="btn ghost">A–Z</button>
+      <div class="controls">
+        <div class="controlsLeft">
+          <button id="btnSortPresence" class="btn">🏅 Classifica presenze</button>
+          <button id="btnSortAZ" class="btn ghost">A–Z</button>
+        </div>
         <button id="btnRefresh" class="btn ghost">🔄 Aggiorna</button>
       </div>
+
+      <div id="status" class="msg">Caricamento…</div>
     </div>
+
+    <div id="list" class="list"></div>
+
+    <div class="card nav muted">
+      <a href="index.html">🏠 Home</a>
+      <a href="storico.html">📚 Storico</a>
+      <a href="marcatori.html">⚽ Marcatori</a>
+      <a href="admin.html">🔐 Admin</a>
+    </div>
+
   </div>
 
-  <div id="list" class="list"></div>
+  <button id="themeToggle" class="fab">🌙</button>
 
-  <div class="card nav muted">
-    <a href="index.html">🏠 Home</a>
-    <a href="mvp.html">🏆 MVP</a>
-    <a href="storico.html">📚 Storico</a>
-  </div>
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
-</div>
-
-<button id="themeToggle" class="fab">🌙</button>
-
-<script src="config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-
-<script>
-/* ===== THEME ===== */
-function setTheme(mode){
-  document.body.classList.toggle("dark", mode === "dark");
-  document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
-  localStorage.setItem("qdp_theme", mode);
-}
-setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
-document.getElementById("themeToggle").onclick = () => {
-  setTheme(document.body.classList.contains("dark") ? "light" : "dark");
-};
-
-/* ===== SUPABASE ===== */
-if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
-  alert("config.js non caricato o non valido");
-  throw new Error("Missing config");
-}
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-/* ===== DOM ===== */
-const statusEl = document.getElementById("status");
-const substatusEl = document.getElementById("substatus");
-const listEl = document.getElementById("list");
-const btnSortPresence = document.getElementById("btnSortPresence");
-const btnSortAZ = document.getElementById("btnSortAZ");
-const btnRefresh = document.getElementById("btnRefresh");
-
-/* ===== HELPERS ===== */
-function escapeHtml(s){
-  return String(s ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-function medal(i){
-  if(i===0) return "🥇";
-  if(i===1) return "🥈";
-  if(i===2) return "🥉";
-  return String(i+1);
-}
-function isVoteClosed(m){
-  // chiusa se entrambe false / null / non true
-  const a = (m?.vote_open === true);
-  const b = (m?.voting_open === true);
-  return !(a || b);
-}
-
-/* ===== STATE ===== */
-let PLAYERS = []; // {id,name}
-let MATCHES = []; // {id, called_up, vote_open, voting_open}
-let PRESENCE = new Map(); // player_id -> presenze
-let MVP_WINS = new Map(); // player_id -> wins (partite chiuse)
-let TOTAL_MATCHES = 0;
-
-let SORT_MODE = "presence"; // "presence" | "az"
-
-/* ===== DATA LOAD ===== */
-async function loadAll(){
-  statusEl.textContent = "Caricamento…";
-  substatusEl.textContent = "";
-  listEl.innerHTML = "";
-
-  // players
-  const { data: players, error: eP } = await client
-    .from("players")
-    .select("id,name")
-    .order("name",{ascending:true});
-  if(eP) throw eP;
-  PLAYERS = players || [];
-
-  // matches (servono convocati + stato voto)
-  const { data: matches, error: eM } = await client
-    .from("matches")
-    .select("id,called_up,vote_open,voting_open");
-  if(eM) throw eM;
-  MATCHES = matches || [];
-  TOTAL_MATCHES = MATCHES.length;
-
-  // presenze
-  PRESENCE = new Map();
-  MATCHES.forEach(m=>{
-    (Array.isArray(m.called_up) ? m.called_up : []).forEach(id=>{
-      const k = String(id);
-      PRESENCE.set(k, (PRESENCE.get(k) || 0) + 1);
-    });
-  });
-
-  // MVP wins: calcolo solo su partite con votazione CHIUSA
-  MVP_WINS = new Map();
-  const closedMatchIds = MATCHES.filter(isVoteClosed).map(m=>m.id);
-
-  if(closedMatchIds.length){
-    const { data: votes, error: eV } = await client
-      .from("mvp_votes")
-      .select("match_id,voted_player")
-      .in("match_id", closedMatchIds);
-    if(eV) throw eV;
-
-    // raggruppo voti per match
-    const byMatch = new Map();
-    (votes || []).forEach(v=>{
-      const mid = String(v.match_id);
-      if(!byMatch.has(mid)) byMatch.set(mid, []);
-      byMatch.get(mid).push(String(v.voted_player || ""));
-    });
-
-    // per ogni match: trova top (gestisce parità => tutti vincono)
-    for(const [mid, arr] of byMatch.entries()){
-      const counts = new Map();
-      arr.forEach(pid=>{
-        if(!pid) return;
-        counts.set(pid, (counts.get(pid) || 0) + 1);
-      });
-      if(!counts.size) continue;
-
-      const entries = [...counts.entries()].sort((a,b)=>b[1]-a[1]);
-      const top = entries[0][1];
-      const winners = entries.filter(e=>e[1]===top).map(e=>e[0]);
-
-      winners.forEach(pid=>{
-        MVP_WINS.set(pid, (MVP_WINS.get(pid) || 0) + 1);
-      });
+  <script>
+    /* ===== THEME ===== */
+    function setTheme(mode){
+      document.body.classList.toggle("dark", mode === "dark");
+      document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
+      localStorage.setItem("qdp_theme", mode);
     }
-  }
+    setTheme(localStorage.getItem("qdp_theme")==="dark" ? "dark" : "light");
+    document.getElementById("themeToggle").onclick = () => {
+      setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+    };
 
-  render();
-}
+    /* ===== SUPABASE ===== */
+    if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+      alert("Errore: config.js non caricato");
+      throw new Error("Missing config");
+    }
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ===== RENDER ===== */
-function render(){
-  const totalPlayers = PLAYERS.length;
-  const played = TOTAL_MATCHES;
+    const totPlayersEl = document.getElementById("totPlayers");
+    const totMatchesEl = document.getElementById("totMatches");
+    const statusEl = document.getElementById("status");
+    const listEl = document.getElementById("list");
 
-  statusEl.textContent = `Totale componenti: ${totalPlayers}`;
-  substatusEl.textContent = `Partite in archivio: ${played}`;
+    const btnSortPresence = document.getElementById("btnSortPresence");
+    const btnSortAZ = document.getElementById("btnSortAZ");
+    const btnRefresh = document.getElementById("btnRefresh");
 
-  const rows = PLAYERS.map(p=>{
-    const id = String(p.id);
-    const pres = PRESENCE.get(id) || 0;
-    const pct = played > 0 ? Math.round((pres / played) * 100) : 0;
-    const wins = MVP_WINS.get(id) || 0;
+    function escapeHtml(s){
+      return String(s ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
 
-    return { id, name: p.name, pres, pct, wins };
-  });
+    function medal(i){
+      if(i===0) return "🥇";
+      if(i===1) return "🥈";
+      if(i===2) return "🥉";
+      return String(i+1);
+    }
 
-  if(SORT_MODE === "presence"){
-    rows.sort((a,b)=> b.pres - a.pres || b.wins - a.wins || String(a.name).localeCompare(String(b.name),"it"));
-  }else{
-    rows.sort((a,b)=> String(a.name).localeCompare(String(b.name),"it"));
-  }
+    function isVoteOpen(m){
+      return (m?.vote_open === true) || (m?.voting_open === true);
+    }
 
-  listEl.innerHTML = rows.map((r, idx)=>{
-    const rank = (SORT_MODE === "presence") ? medal(idx) : "👤";
-    const rankTitle = (SORT_MODE === "presence") ? "Posizione in classifica presenze" : "Giocatore";
+    let SORT_MODE = "presence"; // "presence" | "az"
 
-    return `
-      <a class="playerCard" href="giocatore.html?id=${encodeURIComponent(r.id)}">
-        <div class="card">
-          <div class="playerTop">
-            <div class="row" style="margin:0;flex:1;min-width:0">
-              <div class="row" style="margin:0;align-items:center;flex:1;min-width:0;gap:10px">
-                <div class="rankBadge" title="${escapeHtml(rankTitle)}">${escapeHtml(rank)}</div>
-                <div class="leftBlock">
-                  <div class="name" title="${escapeHtml(r.name)}">${escapeHtml(r.name)}</div>
-                  <div class="mini">Tocca per aprire la scheda</div>
+    btnSortPresence.onclick = () => { SORT_MODE = "presence"; render(); };
+    btnSortAZ.onclick = () => { SORT_MODE = "az"; render(); };
+    btnRefresh.onclick = () => loadAll();
+
+    let PLAYERS = []; // [{id,name}]
+    let MATCHES = []; // [{id,called_up,vote_open,voting_open}]
+    let MVP_VOTES = []; // [{match_id,voted_player}]
+
+    let PRESENCE_MAP = new Map(); // playerId -> presenze
+    let MVP_WIN_MAP = new Map();  // playerId -> mvp wins (per match closed)
+    let TOTAL_MATCHES = 0;
+
+    function setStatus(text){
+      statusEl.textContent = text;
+      statusEl.style.display = text ? "block" : "none";
+    }
+
+    async function loadAll(){
+      try{
+        setStatus("Caricamento…");
+        listEl.innerHTML = "";
+
+        // players
+        const { data: players, error: eP } = await client
+          .from("players")
+          .select("id,name")
+          .order("name",{ascending:true});
+        if(eP) throw eP;
+        PLAYERS = players || [];
+
+        // matches (archivio)
+        const { data: matches, error: eM } = await client
+          .from("matches")
+          .select("id,called_up,vote_open,voting_open,match_date,match_time")
+          .order("match_date",{ascending:false})
+          .order("match_time",{ascending:false})
+          .limit(1000);
+        if(eM) throw eM;
+        MATCHES = matches || [];
+        TOTAL_MATCHES = MATCHES.length;
+
+        // votes
+        const matchIds = MATCHES.map(m=>m.id);
+        if(matchIds.length){
+          const { data: votes, error: eV } = await client
+            .from("mvp_votes")
+            .select("match_id,voted_player")
+            .in("match_id", matchIds);
+          if(eV) throw eV;
+          MVP_VOTES = votes || [];
+        }else{
+          MVP_VOTES = [];
+        }
+
+        computeStats();
+        render();
+        setStatus("");
+
+      }catch(err){
+        console.error(err);
+        setStatus("❌ Errore caricamento: " + (err?.message || String(err)));
+      }
+    }
+
+    function computeStats(){
+      PRESENCE_MAP = new Map();
+      MVP_WIN_MAP = new Map();
+
+      // presenze: quante volte compare in called_up
+      for(const m of MATCHES){
+        const cu = Array.isArray(m.called_up) ? m.called_up : [];
+        for(const pid of cu){
+          const k = String(pid);
+          PRESENCE_MAP.set(k, (PRESENCE_MAP.get(k) || 0) + 1);
+        }
+      }
+
+      // MVP wins per match chiusa:
+      // 1) raggruppo voti per match
+      const votesByMatch = new Map();
+      for(const v of MVP_VOTES){
+        const mk = String(v.match_id);
+        if(!votesByMatch.has(mk)) votesByMatch.set(mk, []);
+        votesByMatch.get(mk).push(v);
+      }
+
+      // 2) per ogni match chiusa: conto voti e assegno 1 win ai leader (anche in parità)
+      for(const m of MATCHES){
+        if(isVoteOpen(m)) continue; // solo chiuse
+        const mk = String(m.id);
+        const vv = votesByMatch.get(mk) || [];
+        if(!vv.length) continue;
+
+        const counts = new Map();
+        for(const x of vv){
+          const pid = String(x.voted_player || "");
+          if(!pid) continue;
+          counts.set(pid, (counts.get(pid) || 0) + 1);
+        }
+        if(!counts.size) continue;
+
+        let top = 0;
+        for(const c of counts.values()) top = Math.max(top, c);
+        const leaders = [...counts.entries()].filter(([_,c])=>c===top).map(([pid])=>pid);
+
+        for(const pid of leaders){
+          MVP_WIN_MAP.set(pid, (MVP_WIN_MAP.get(pid) || 0) + 1);
+        }
+      }
+    }
+
+    function render(){
+      // header counters
+      totPlayersEl.textContent = String(PLAYERS.length);
+      totMatchesEl.textContent = String(TOTAL_MATCHES);
+
+      // buttons style
+      if(SORT_MODE === "presence"){
+        btnSortPresence.className = "btn";
+        btnSortAZ.className = "btn ghost";
+      }else{
+        btnSortPresence.className = "btn ghost";
+        btnSortAZ.className = "btn";
+      }
+
+      // rows
+      const rows = PLAYERS.map(p=>{
+        const id = String(p.id);
+        const presenze = PRESENCE_MAP.get(id) || 0;
+        const mvp = MVP_WIN_MAP.get(id) || 0;
+        const perc = TOTAL_MATCHES > 0 ? Math.round((presenze / TOTAL_MATCHES) * 100) : 0;
+        return { id, name: p.name || id, presenze, perc, mvp };
+      });
+
+      if(SORT_MODE === "presence"){
+        rows.sort((a,b)=> b.presenze - a.presenze || a.name.localeCompare(b.name,"it"));
+      }else{
+        rows.sort((a,b)=> a.name.localeCompare(b.name,"it"));
+      }
+
+      if(!rows.length){
+        listEl.innerHTML = `<div class="card"><div class="muted">Nessun componente trovato.</div></div>`;
+        return;
+      }
+
+      listEl.innerHTML = rows.map((r, idx)=>{
+        const showMedal = (SORT_MODE === "presence");
+        const medalHtml = showMedal ? `<div class="badgeMedal">${escapeHtml(medal(idx))}</div>` : `<div class="badgeMedal">👤</div>`;
+
+        return `
+          <div class="playerCard" data-id="${escapeHtml(r.id)}" style="margin-top:12px">
+            <div class="playerTop">
+              ${medalHtml}
+
+              <div class="playerLeft">
+                <div class="playerName">${escapeHtml(r.name)}</div>
+                <div class="playerSub">Tocca per aprire la scheda</div>
+
+                <div class="chips">
+                  <div class="chip">👥 Presenze: ${escapeHtml(r.presenze)}</div>
+                  <div class="chip">📊 ${escapeHtml(r.perc)}%</div>
+                  <div class="chip">🏆 MVP: ${escapeHtml(r.mvp)}</div>
                 </div>
-              </div>
-
-              <div class="rightPills">
-                <span class="pill">👥 Presenze: ${r.pres}</span>
-                <span class="pill">📊 ${r.pct}%</span>
-                <span class="pill">🏆 MVP: ${r.wins}</span>
               </div>
             </div>
           </div>
-        </div>
-      </a>
-    `;
-  }).join("");
-}
+        `;
+      }).join("");
 
-/* ===== EVENTS ===== */
-btnSortPresence.onclick = ()=>{ SORT_MODE = "presence"; render(); };
-btnSortAZ.onclick = ()=>{ SORT_MODE = "az"; render(); };
-btnRefresh.onclick = loadAll;
+      // click -> giocatore.html?id=
+      [...document.querySelectorAll(".playerCard")].forEach(card=>{
+        card.addEventListener("click", ()=>{
+          const id = card.getAttribute("data-id");
+          if(!id) return;
+          location.href = `giocatore.html?id=${encodeURIComponent(id)}`;
+        });
+      });
+    }
 
-/* ===== INIT ===== */
-loadAll().catch(err=>{
-  console.error(err);
-  statusEl.textContent = "Errore caricamento componenti";
-  substatusEl.textContent = err?.message ? String(err.message) : "";
-  listEl.innerHTML = `<div class="card"><div class="muted">${escapeHtml(err?.message || String(err))}</div></div>`;
-});
-</script>
+    loadAll();
+  </script>
 </body>
 </html>
