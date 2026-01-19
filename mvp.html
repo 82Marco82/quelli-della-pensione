@@ -222,7 +222,7 @@
     </div>
     <div id="rankTop" class="rankNote"></div>
     <div id="rankList" class="rankList"><span class="muted">Caricamento…</span></div>
-    <div id="rankNote" class="rankNote"></div>
+    <div id="rankFooter" class="rankNote">*Provvisoria finché la votazione è aperta.</div>
   </div>
 
   <div class="card nav muted">
@@ -266,8 +266,8 @@ const msgEl = document.getElementById("msg");
 const rankModeEl = document.getElementById("rankMode");
 const rankTopEl = document.getElementById("rankTop");
 const rankListEl = document.getElementById("rankList");
-const rankNoteEl = document.getElementById("rankNote");
 const btnRefreshRank = document.getElementById("btnRefreshRank");
+const rankFooterEl = document.getElementById("rankFooter");
 
 /* ===== HELPERS ===== */
 function setMsg(text, kind){
@@ -318,52 +318,8 @@ let CURRENT_MATCH = null;
 let CALLED_PLAYERS = []; // [{id,name}]
 let OPEN_FLAG = false;
 
-/* ===== READ OPEN FLAG (sempre dal DB) ===== */
-async function refreshOpenFlag(){
-  if(!CURRENT_MATCH) return false;
-  const { data, error } = await client
-    .from("matches")
-    .select("id,vote_open,voting_open")
-    .eq("id", CURRENT_MATCH.id)
-    .single();
-
-  if(error) return OPEN_FLAG; // se fallisce, non rompiamo tutto
-  OPEN_FLAG = (data?.vote_open === true) || (data?.voting_open === true);
-  return OPEN_FLAG;
-}
-
-/* ===== APPLY UI BASED ON OPEN FLAG ===== */
-function applyVoteUIState(){
-  // badge match info aggiorna dopo refreshOpenFlag() via renderMatchInfo()
-  rankModeEl.textContent = OPEN_FLAG ? "(provvisoria)" : "(finale)";
-  rankNoteEl.textContent = OPEN_FLAG
-    ? "*Provvisoria finché la votazione è aperta."
-    : "*Finale: votazione chiusa.";
-
-  // se chiusa: blocca voto
-  if(!OPEN_FLAG){
-    playerSelect.disabled = true;
-    btnVote.disabled = true;
-  }
-}
-
-/* ===== RENDER MATCH INFO ===== */
-function renderMatchInfo(){
-  if(!CURRENT_MATCH){
-    matchInfoEl.innerHTML = `<span class="pill">ℹ️ Nessuna partita trovata</span>`;
-    return;
-  }
-  const time = String(CURRENT_MATCH.match_time || "").slice(0,5);
-  matchInfoEl.innerHTML = `
-    <span class="pill">📅 ${escapeHtml(formatDateFull(CURRENT_MATCH.match_date))}</span>
-    <span class="pill">⏰ ${escapeHtml(time || "—")}</span>
-    <span class="pill">📍 ${escapeHtml(CURRENT_MATCH.venue || "—")}</span>
-    <span class="pill">${OPEN_FLAG ? "🟢 Votazione aperta" : "🔴 Votazione chiusa"}</span>
-  `;
-}
-
-/* ===== LOAD MATCH + PLAYERS ===== */
-async function loadMatchAndPlayers(){
+/* ===== READ MATCH STATUS (always fresh) ===== */
+async function fetchLatestMatch(){
   const { data: matches, error } = await client
     .from("matches")
     .select("id,match_date,match_time,venue,called_up,vote_open,voting_open")
@@ -371,87 +327,94 @@ async function loadMatchAndPlayers(){
     .order("match_time",{ascending:false})
     .limit(1);
 
-  if(error){
-    matchInfoEl.innerHTML = `<span class="pill">❌ Errore: ${escapeHtml(error.message)}</span>`;
-    return;
-  }
-  if(!matches || !matches.length){
+  if(error) throw error;
+  if(!matches || !matches.length) return null;
+  return matches[0];
+}
+
+function applyMatchUI(){
+  if(!CURRENT_MATCH){
     matchInfoEl.innerHTML = `<span class="pill">ℹ️ Nessuna partita trovata</span>`;
-    return;
-  }
-
-  CURRENT_MATCH = matches[0];
-  OPEN_FLAG = (CURRENT_MATCH.vote_open === true) || (CURRENT_MATCH.voting_open === true);
-  renderMatchInfo();
-  applyVoteUIState();
-
-  // convocati
-  const ids = Array.isArray(CURRENT_MATCH.called_up) ? CURRENT_MATCH.called_up : [];
-  if(!ids.length){
     playerSelect.disabled = true;
     btnVote.disabled = true;
-    setMsg("Nessun convocato nella partita: impossibile votare.", "err");
-    await loadRanking(true);
+    rankModeEl.textContent = "";
+    rankFooterEl.textContent = "";
     return;
   }
 
-  const { data: players, error: e2 } = await client
+  const time = String(CURRENT_MATCH.match_time || "").slice(0,5);
+  matchInfoEl.innerHTML = `
+    <span class="pill">📅 ${escapeHtml(formatDateFull(CURRENT_MATCH.match_date))}</span>
+    <span class="pill">⏰ ${escapeHtml(time || "—")}</span>
+    <span class="pill">📍 ${escapeHtml(CURRENT_MATCH.venue || "—")}</span>
+    <span class="pill">${OPEN_FLAG ? "🟢 Votazione aperta" : "🔴 Votazione chiusa"}</span>
+  `;
+
+  rankModeEl.textContent = OPEN_FLAG ? "(provvisoria)" : "(finale)";
+  rankFooterEl.textContent = OPEN_FLAG
+    ? "*Provvisoria finché la votazione è aperta."
+    : "*Risultato finale (votazione chiusa).";
+}
+
+/* ===== LOAD PLAYERS (called-up) ===== */
+async function loadCalledPlayers(){
+  CALLED_PLAYERS = [];
+  playerSelect.innerHTML = `<option value="">— scegli —</option>`;
+
+  const ids = Array.isArray(CURRENT_MATCH?.called_up) ? CURRENT_MATCH.called_up : [];
+  if(!CURRENT_MATCH || !ids.length){
+    playerSelect.disabled = true;
+    btnVote.disabled = true;
+    return;
+  }
+
+  const { data: players, error } = await client
     .from("players")
     .select("id,name")
     .in("id", ids);
 
-  if(e2){
-    setMsg("Errore caricamento giocatori: " + e2.message, "err");
-    await loadRanking(true);
-    return;
-  }
+  if(error) throw error;
 
   CALLED_PLAYERS = (players || []).sort((a,b)=>String(a.name).localeCompare(String(b.name),"it"));
 
   playerSelect.innerHTML = `<option value="">— scegli —</option>` +
     CALLED_PLAYERS.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join("");
+}
 
-  // voto abilitato solo se aperta (poi sotto gestiamo anche “già votato”)
-  playerSelect.disabled = !OPEN_FLAG;
-  btnVote.disabled = !OPEN_FLAG;
+/* ===== CHECK ALREADY VOTED ===== */
+async function enforceAlreadyVoted(){
+  if(!CURRENT_MATCH) return;
 
-  // se ha già votato: blocca comunque
   const voterId = getOrCreateVoterId();
-  const { data: already, error: e3 } = await client
+  const { data: already, error } = await client
     .from("mvp_votes")
     .select("id,voted_player,created_at")
     .eq("match_id", CURRENT_MATCH.id)
     .eq("voter_id", voterId)
     .limit(1);
 
-  if(!e3 && already && already.length){
+  if(error) return;
+
+  if(already && already.length){
     playerSelect.disabled = true;
     btnVote.disabled = true;
     const vp = already[0].voted_player;
     const name = CALLED_PLAYERS.find(p=>String(p.id)===String(vp))?.name || "già votato";
     setMsg(`Hai già votato per questa partita ✅\nVoto: ${name}`, "ok");
-  } else {
+  }else{
+    // se non ha votato, abilita solo se open
     hideMsg();
+    playerSelect.disabled = !OPEN_FLAG;
+    btnVote.disabled = !OPEN_FLAG;
   }
-
-  await loadRanking(true);
 }
 
 /* ===== CLASSIFICA MVP ===== */
-async function loadRanking(refreshMatchStateFirst=false){
+async function loadRankingOnly(){
   if(!CURRENT_MATCH){
     rankTopEl.textContent = "";
     rankListEl.innerHTML = `<span class="muted">Nessuna partita.</span>`;
-    rankNoteEl.textContent = "";
     return;
-  }
-
-  // IMPORTANTISSIMO: quando premi “Aggiorna” o dopo il voto,
-  // rileggiamo lo stato vote_open dal DB così “provvisorio” sparisce davvero.
-  if(refreshMatchStateFirst){
-    await refreshOpenFlag();
-    renderMatchInfo();
-    applyVoteUIState();
   }
 
   rankListEl.innerHTML = `<span class="muted">Caricamento…</span>`;
@@ -467,7 +430,7 @@ async function loadRanking(refreshMatchStateFirst=false){
     return;
   }
 
-  const counts = new Map(); // voted_player -> count
+  const counts = new Map();
   (votes || []).forEach(v=>{
     const id = String(v.voted_player || "");
     if(!id) return;
@@ -475,7 +438,6 @@ async function loadRanking(refreshMatchStateFirst=false){
   });
 
   const idToName = new Map(CALLED_PLAYERS.map(p=>[String(p.id), p.name]));
-
   const rows = [...counts.entries()]
     .map(([id,c])=>({ id, name: idToName.get(id) || id, votes: c }))
     .sort((a,b)=> b.votes - a.votes || String(a.name).localeCompare(String(b.name),"it"));
@@ -509,15 +471,34 @@ async function loadRanking(refreshMatchStateFirst=false){
   `).join("");
 }
 
-btnRefreshRank.addEventListener("click", ()=>loadRanking(true));
+/* ===== FULL REFRESH (match status + players + voted + ranking) ===== */
+async function fullRefresh(){
+  try{
+    const m = await fetchLatestMatch();
+    CURRENT_MATCH = m;
+
+    OPEN_FLAG = !!(CURRENT_MATCH && (CURRENT_MATCH.vote_open === true || CURRENT_MATCH.voting_open === true));
+
+    applyMatchUI();
+
+    await loadCalledPlayers();
+    await enforceAlreadyVoted();
+    await loadRankingOnly();
+  }catch(err){
+    console.error(err);
+    matchInfoEl.innerHTML = `<span class="pill">❌ Errore: ${escapeHtml(err.message || String(err))}</span>`;
+    rankListEl.innerHTML = `<span class="muted">—</span>`;
+  }
+}
+
+btnRefreshRank.addEventListener("click", fullRefresh);
 
 /* ===== VOTE ===== */
 btnVote.addEventListener("click", async ()=>{
   if(!CURRENT_MATCH) return;
 
-  await refreshOpenFlag();
-  renderMatchInfo();
-  applyVoteUIState();
+  // controllo live: prima di votare rilegge stato (evita che voti mentre admin ha chiuso)
+  await fullRefresh();
 
   if(!OPEN_FLAG){
     setMsg("Votazione chiusa.", "err");
@@ -542,9 +523,9 @@ btnVote.addEventListener("click", async ()=>{
 
   const { error } = await client.from("mvp_votes").insert([{
     match_id: CURRENT_MATCH.id,
-    voter_id,
-    voted_player,
-    code
+    voter_id: voter_id,
+    voted_player: voted_player,
+    code: code
   }]);
 
   if(error){
@@ -556,7 +537,7 @@ btnVote.addEventListener("click", async ()=>{
     }
     playerSelect.disabled = true;
     btnVote.disabled = true;
-    await loadRanking(true);
+    await fullRefresh();
     return;
   }
 
@@ -566,11 +547,11 @@ btnVote.addEventListener("click", async ()=>{
   playerSelect.disabled = true;
   btnVote.disabled = true;
 
-  await loadRanking(true);
+  await fullRefresh();
 });
 
 /* ===== INIT ===== */
-loadMatchAndPlayers();
+fullRefresh();
 </script>
 </body>
 </html>
