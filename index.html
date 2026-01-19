@@ -18,6 +18,7 @@
       --pill:#eeeeee;
       --logo1:#111;
       --logo2:#333;
+      --btn:#111;
     }
     body.dark{
       --bg:#0f1115;
@@ -29,6 +30,7 @@
       --pill:#222631;
       --logo1:#0b0e14;
       --logo2:#2a3242;
+      --btn:#0b0e14;
     }
 
     *{box-sizing:border-box}
@@ -116,6 +118,33 @@
       border:1px solid var(--border)
     }
     iframe{width:100%;height:260px;border:0}
+
+    .mapActions{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      margin-top:10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      border:0;
+      background:var(--btn);
+      color:#fff;
+      padding:12px 14px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+    }
+    .btn.ghost{
+      background:transparent;
+      color:var(--text);
+      border:1px solid var(--border);
+    }
 
     .nav{
       display:flex;
@@ -216,8 +245,13 @@
       <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
     </div>
 
+    <!-- MAPPA -->
     <div id="mapBox" class="mapWrap" style="display:none">
-      <iframe src="https://www.google.com/maps?q=Campo%20a%206%20Aradeo&output=embed"></iframe>
+      <iframe id="mapFrame" src="https://www.google.com/maps?q=Campo%20a%206%20Aradeo&output=embed"></iframe>
+    </div>
+
+    <div id="mapActions" class="mapActions" style="display:none">
+      <a id="mapLink" class="btn" href="#" target="_blank" rel="noopener">📍 Apri indicazioni</a>
     </div>
 
     <!-- MARCATORI -->
@@ -275,7 +309,14 @@ const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
 const calledEl = document.getElementById("called");
+
 const mapBox = document.getElementById("mapBox");
+const mapFrame = document.getElementById("mapFrame");
+const mapActions = document.getElementById("mapActions");
+const mapLink = document.getElementById("mapLink");
+
+/* FIX: link ESATTO del vostro campo (quello che mi hai mandato) */
+const FIXED_MAP_URL = "https://maps.app.goo.gl/VEHpEuoCHznDiFJY9?g_st=ac";
 
 const scorersBox = document.getElementById("scorersBox");
 const scorersText = document.getElementById("scorersText");
@@ -436,7 +477,15 @@ async function load(){
     scorersBox.style.display="none";
   }
 
+  /* ✅ FIX MAPPA: mostro iframe + link ESATTO al campo */
   mapBox.style.display="block";
+  mapActions.style.display="flex";
+  mapLink.href = FIXED_MAP_URL;
+
+  // Se vuoi, puoi lasciare l’iframe generico (visual)
+  // oppure provare a farlo puntare alla venue testuale:
+  const venueText = (m.venue || "Campo a 6 - Aradeo").trim();
+  mapFrame.src = "https://www.google.com/maps?q=" + encodeURIComponent(venueText) + "&output=embed";
 
   // players map per convocati / squadre / MVP
   let playersForCalled = [];
@@ -455,7 +504,7 @@ async function load(){
     calledEl.textContent = "—";
   }
 
-  // MVP (usa i convocati se disponibili, altrimenti mostra ID)
+  // MVP
   await loadMVP(m.id, playersForCalled);
 
   // Formazioni
