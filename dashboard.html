@@ -79,6 +79,7 @@
     .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
     .btn.full{width:100%}
     .btn.small{padding:10px 12px;border-radius:12px;font-weight:800}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
 
     .msg{
       margin-top:12px;padding:12px;border-radius:12px;
@@ -143,7 +144,6 @@
     .twoCols{display:grid;grid-template-columns:1fr;gap:10px}
     @media(min-width:560px){ .twoCols{grid-template-columns:1fr 1fr} }
 
-    /* MVP toggle pill */
     .togglePill{
       display:inline-flex;align-items:center;gap:8px;
       padding:8px 10px;border-radius:999px;
@@ -181,7 +181,6 @@
   </div>
 
   <div class="grid">
-    <!-- LEFT: partita -->
     <div class="card">
       <div class="sectionTitle">
         <h2>Gestione partita</h2>
@@ -224,7 +223,6 @@
       </div>
     </div>
 
-    <!-- RIGHT: fine partita -->
     <div class="card">
       <div class="sectionTitle">
         <h2>Fine partita</h2>
@@ -257,7 +255,6 @@
 
       <div class="hr"></div>
 
-      <!-- FORMAZIONI (FACOLTATIVE) -->
       <div class="twoCols">
         <div>
           <div class="teamTitle" id="formATitle"></div>
@@ -274,7 +271,6 @@
 
       <div class="hr"></div>
 
-      <!-- MARCATORI -->
       <div class="twoCols">
         <div>
           <div class="teamTitle" id="teamATitle"></div>
@@ -379,6 +375,7 @@ function escapeHtml(s){
 function updateVoteUI(){
   const stateEl = $("voteState");
   const btn = $("btnToggleVote");
+
   if(!CURRENT){
     stateEl.textContent = "—";
     btn.textContent = "Seleziona partita";
@@ -386,10 +383,11 @@ function updateVoteUI(){
     btn.disabled = true;
     return;
   }
-  const open = !!CURRENT.vote_open; // usiamo SOLO vote_open
+
+  const open = !!CURRENT.vote_open; // SOLO vote_open
   stateEl.textContent = open ? "APERTA ✅" : "CHIUSA ❌";
   btn.textContent = open ? "Chiudi" : "Apri";
-  btn.className = open ? "off" : ""; // rosso quando l'azione è "Chiudi"
+  btn.className = open ? "off" : "";
   btn.disabled = false;
 }
 
@@ -408,7 +406,6 @@ function getCalledUp(){
     .filter(x=>x.checked)
     .map(x=>x.value);
 }
-
 function updateCount(){
   $("countInfo").textContent = `👥 Convocati: ${getCalledUp().length}/12`;
 }
@@ -419,6 +416,18 @@ async function requireSession(){
   if(error){ setMsg("Errore sessione: " + error.message, "err"); return false; }
   if(!session){ location.href="admin.html"; return false; }
   return true;
+}
+
+/* ===== DB: refetch current match ===== */
+async function refetchCurrent(){
+  if(!CURRENT?.id) return null;
+  const { data, error } = await client
+    .from("matches")
+    .select("id,match_date,match_time,venue,keeper_a,keeper_b,called_up,score_a,score_b,team_a,team_b,scorers,scorers_text,vote_open")
+    .eq("id", CURRENT.id)
+    .single();
+  if(error) throw error;
+  return data;
 }
 
 /* ===== Load players & matches ===== */
@@ -456,6 +465,7 @@ async function loadMatches(){
       $("matchSelect").value = "";
     }
   }
+
   updateVoteUI();
 }
 
@@ -718,18 +728,18 @@ async function saveMatch(){
   if(keeper_a.toLowerCase() === keeper_b.toLowerCase()) return setMsg("🥅 I portieri devono essere diversi.", "err");
   if(called_up.length > 12) return setMsg("👥 Max 12 convocati.", "err");
 
-  // NUOVA PARTITA: apriamo la votazione di default
-  const payload = { match_date, match_time, venue, keeper_a, keeper_b, called_up, vote_open: true };
+  const btn = $("btnSave");
+  btn.disabled = true;
 
   try{
     if(CURRENT && CURRENT.id){
-      // se stai aggiornando, NON forziamo vote_open (lo lasciamo com'è)
       const upd = { match_date, match_time, venue, keeper_a, keeper_b, called_up };
       setMsg("💾 Salvataggio partita…");
       const { error } = await client.from("matches").update(upd).eq("id", CURRENT.id);
       if(error) throw error;
       setMsg("✅ Partita aggiornata.", "ok");
     }else{
+      const payload = { match_date, match_time, venue, keeper_a, keeper_b, called_up, vote_open: true };
       setMsg("💾 Creazione partita…");
       const { data, error } = await client.from("matches").insert([payload]).select("*").single();
       if(error) throw error;
@@ -738,12 +748,14 @@ async function saveMatch(){
     }
 
     await loadMatches();
-    const fresh = CURRENT ? MATCHES.find(x=>String(x.id)===String(CURRENT.id)) : null;
+    const fresh = await refetchCurrent();
     if(fresh) fillForm(fresh);
 
   }catch(e){
     console.error(e);
     setMsg("❌ Errore salvataggio: " + (e.message||e), "err");
+  }finally{
+    btn.disabled = false;
   }
 }
 
@@ -751,12 +763,13 @@ async function deleteMatch(){
   if(!CURRENT) return setMsg("ℹ️ Seleziona una partita.", "err");
   if(!confirm("Sicuro di eliminare questa partita? (eliminerà anche i voti MVP)")) return;
 
+  const btn = $("btnDelete");
+  btn.disabled = true;
+
   try{
     setMsg("🗑 Eliminazione… (prima voto MVP)");
     const delVotes = await client.from("mvp_votes").delete().eq("match_id", CURRENT.id);
-    if(delVotes.error){
-      console.warn("Delete mvp_votes:", delVotes.error);
-    }
+    if(delVotes.error) console.warn("Delete mvp_votes:", delVotes.error);
 
     setMsg("🗑 Eliminazione… (partita)");
     const { error } = await client.from("matches").delete().eq("id", CURRENT.id);
@@ -769,69 +782,93 @@ async function deleteMatch(){
   }catch(e){
     console.error(e);
     setMsg("❌ Errore eliminazione: " + (e.message||e), "err");
+  }finally{
+    btn.disabled = false;
   }
 }
 
 async function toggleVote(){
   if(!CURRENT) return;
-  const next = !CURRENT.vote_open;
 
-  setMsg("🗳 Aggiorno stato votazione…");
-  const { error } = await client.from("matches")
-    .update({ vote_open: next })
-    .eq("id", CURRENT.id);
+  const btn = $("btnToggleVote");
+  btn.disabled = true;
 
-  if(error) return setMsg("❌ Errore votazione: " + error.message, "err");
+  try{
+    const next = !CURRENT.vote_open;
 
-  // aggiorniamo in memoria e UI
-  CURRENT.vote_open = next;
-  setMsg(next ? "✅ Votazione MVP APERTA." : "✅ Votazione MVP CHIUSA.", "ok");
-  updateVoteUI();
+    setMsg("🗳 Aggiorno stato votazione…");
+    const { error } = await client.from("matches")
+      .update({ vote_open: next })
+      .eq("id", CURRENT.id);
 
-  // aggiorna anche lista matches
-  await loadMatches();
+    if(error) throw error;
+
+    // RILEGGE DAL DB (così è davvero aggiornato)
+    await loadMatches();
+    const fresh = await refetchCurrent();
+    if(fresh) fillForm(fresh);
+
+    setMsg(next ? "✅ Votazione MVP APERTA." : "✅ Votazione MVP CHIUSA.", "ok");
+
+  }catch(e){
+    console.error(e);
+    setMsg("❌ Errore votazione: " + (e.message||e), "err");
+  }finally{
+    btn.disabled = false;
+  }
 }
 
 async function saveResultTeamsAndScorers(){
   if(!CURRENT) return setMsg("ℹ️ Seleziona una partita prima.", "err");
 
-  const sAraw = $("scoreA").value;
-  const sBraw = $("scoreB").value;
+  const btn = $("btnSaveResult");
+  btn.disabled = true;
 
-  const score_a = (sAraw === "" ? null : parseInt(sAraw, 10));
-  const score_b = (sBraw === "" ? null : parseInt(sBraw, 10));
-  if(score_a != null && Number.isNaN(score_a)) return setMsg("Goal A non valido.", "err");
-  if(score_b != null && Number.isNaN(score_b)) return setMsg("Goal B non valido.", "err");
+  try{
+    const sAraw = $("scoreA").value;
+    const sBraw = $("scoreB").value;
 
-  const team_a = getTeamIds("teamABox");
-  const team_b = getTeamIds("teamBBox");
-  const dup = team_a.filter(id => team_b.includes(id));
-  if(dup.length) return setMsg("Un giocatore non può stare in entrambe le formazioni.", "err");
+    const score_a = (sAraw === "" ? null : parseInt(sAraw, 10));
+    const score_b = (sBraw === "" ? null : parseInt(sBraw, 10));
+    if(score_a != null && Number.isNaN(score_a)) return setMsg("Goal A non valido.", "err");
+    if(score_b != null && Number.isNaN(score_b)) return setMsg("Goal B non valido.", "err");
 
-  const scorA = readScorersFromUI("tbodyA");
-  const scorB = readScorersFromUI("tbodyB");
-  const scorers = (scorA.length || scorB.length) ? { team_a: scorA, team_b: scorB } : null;
-  const scorers_text = buildScorersText(scorA, scorB);
+    const team_a = getTeamIds("teamABox");
+    const team_b = getTeamIds("teamBBox");
+    const dup = team_a.filter(id => team_b.includes(id));
+    if(dup.length) return setMsg("Un giocatore non può stare in entrambe le formazioni.", "err");
 
-  setMsg("🏁 Salvataggio fine partita…");
+    const scorA = readScorersFromUI("tbodyA");
+    const scorB = readScorersFromUI("tbodyB");
+    const scorers = (scorA.length || scorB.length) ? { team_a: scorA, team_b: scorB } : null;
+    const scorers_text = buildScorersText(scorA, scorB);
 
-  const payload1 = { score_a, score_b, team_a, team_b, scorers, scorers_text };
+    setMsg("🏁 Salvataggio fine partita…");
 
-  let { error } = await client.from("matches").update(payload1).eq("id", CURRENT.id);
+    const payload1 = { score_a, score_b, team_a, team_b, scorers, scorers_text };
 
-  if(error && String(error.message||"").toLowerCase().includes("scorers_text")){
-    const payload2 = { score_a, score_b, team_a, team_b, scorers };
-    const r2 = await client.from("matches").update(payload2).eq("id", CURRENT.id);
-    error = r2.error;
+    let { error } = await client.from("matches").update(payload1).eq("id", CURRENT.id);
+
+    if(error && String(error.message||"").toLowerCase().includes("scorers_text")){
+      const payload2 = { score_a, score_b, team_a, team_b, scorers };
+      const r2 = await client.from("matches").update(payload2).eq("id", CURRENT.id);
+      error = r2.error;
+    }
+
+    if(error) throw error;
+
+    setMsg("✅ Salvato! (risultato + formazioni + marcatori)", "ok");
+
+    await loadMatches();
+    const fresh = await refetchCurrent();
+    if(fresh) fillForm(fresh);
+
+  }catch(e){
+    console.error(e);
+    setMsg("❌ Errore: " + (e.message||e), "err");
+  }finally{
+    btn.disabled = false;
   }
-
-  if(error) return setMsg("❌ Errore: " + error.message, "err");
-
-  setMsg("✅ Salvato! (risultato + formazioni + marcatori)", "ok");
-
-  await loadMatches();
-  const fresh = MATCHES.find(x=>String(x.id)===String(CURRENT.id));
-  if(fresh) fillForm(fresh);
 }
 
 /* ===== Events ===== */
@@ -846,11 +883,21 @@ $("btnRefresh").onclick = async () => { setMsg("🔄 Aggiorno…"); await loadMa
 $("addRowA").onclick = () => addScorerRow("tbodyA");
 $("addRowB").onclick = () => addScorerRow("tbodyB");
 
-$("matchSelect").onchange = () => {
+$("matchSelect").onchange = async () => {
   const id = $("matchSelect").value;
   if(!id){ clearForm(); return; }
   const m = MATCHES.find(x => String(x.id) === String(id));
-  if(m) fillForm(m);
+  if(m){
+    CURRENT = { id: m.id };
+    try{
+      const fresh = await refetchCurrent();
+      if(fresh) fillForm(fresh);
+      else fillForm(m);
+    }catch(e){
+      console.error(e);
+      fillForm(m);
+    }
+  }
 };
 
 $("btnLogout").onclick = async () => {
