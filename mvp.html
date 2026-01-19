@@ -1,4 +1,252 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vota MVP • Quelli della pensione</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --btn:#111;
+      --chipBg:rgba(0,0,0,.04);
+      --okBg:#dcfce7; --okText:#166534;
+      --errBg:#ffe4e6; --errText:#9f1239;
+      --logo1:#111; --logo2:#333;
+      --pill:#eeeeee;
+    }
+    body.dark{
+      --bg:#0f1115;
+      --card:#171a21;
+      --text:#e5e7eb;
+      --muted:#a1a1aa;
+      --border:#2a2f3a;
+      --shadow:0 10px 28px rgba(0,0,0,.45);
+      --btn:#0b0e14;
+      --chipBg:rgba(255,255,255,.04);
+      --okBg:rgba(34,197,94,.15); --okText:#86efac;
+      --errBg:rgba(244,63,94,.16); --errText:#fda4af;
+      --logo1:#0b0e14; --logo2:#2a3242;
+      --pill:#222631;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui;
+      background:var(--bg);
+      color:var(--text);
+      transition:.2s;
+    }
+    .wrap{max-width:560px;margin:18px auto;padding:16px}
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px;
+      box-shadow:var(--shadow);
+      margin:12px 0;
+    }
+    .header{text-align:center}
+    .logo{
+      width:70px;height:70px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      margin:0 auto 10px;
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:30px;letter-spacing:2px;
+    }
+    h1{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:44px;
+      margin:0;
+      text-transform:uppercase;
+    }
+    .subtitle{color:var(--muted);margin-top:6px}
+
+    label{display:block;margin-top:12px;font-size:12px;color:var(--muted);font-weight:800}
+    select,input{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:transparent;
+      color:var(--text);
+      outline:none;
+      font-family:Inter;
+    }
+
+    .btn{
+      width:100%;
+      margin-top:14px;
+      padding:13px 14px;
+      border-radius:14px;
+      border:0;
+      background:var(--btn);
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      user-select:none;
+    }
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+
+    .msg{
+      margin-top:12px;
+      padding:12px;
+      border-radius:12px;
+      font-size:13px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      white-space:pre-wrap;
+    }
+    .msg.ok{background:var(--okBg);color:var(--okText);border-color:rgba(34,197,94,.35)}
+    .msg.err{background:var(--errBg);color:var(--errText);border-color:rgba(244,63,94,.35);font-weight:900}
+
+    .infoLine{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+      color:var(--muted);font-size:13px;margin-top:8px
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      font-weight:900;font-size:12px;
+      color:var(--text);
+    }
+
+    .nav{
+      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+      font-size:14px;
+    }
+    .nav a{color:var(--text);text-decoration:none;font-weight:800}
+    .nav a:hover{text-decoration:underline}
+
+    .fab{
+      position:fixed;right:16px;bottom:16px;
+      width:54px;height:54px;border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      font-size:22px;
+    }
+
+    .rankTitle{
+      margin:0;
+      font-size:16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .smallBtn{
+      border:1px solid var(--border);
+      background:transparent;
+      color:var(--text);
+      padding:8px 10px;
+      border-radius:12px;
+      font-weight:900;
+      cursor:pointer;
+      user-select:none;
+    }
+    .rankList{margin-top:10px}
+    .rankRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:var(--chipBg);
+      margin-top:8px;
+    }
+    .rankLeft{display:flex;align-items:center;gap:10px}
+    .medal{
+      width:28px;height:28px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;
+      border:1px solid var(--border);
+      background:var(--card);
+    }
+    .rankName{font-weight:900}
+    .rankVotes{font-weight:900}
+    .rankNote{color:var(--muted);font-size:12px;margin-top:8px}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="card header">
+    <div class="logo">QDP</div>
+    <h1>Vota MVP</h1>
+    <div class="subtitle">Senza registrazione • 1 voto per dispositivo</div>
+  </div>
+
+  <div class="card">
+    <div id="matchInfo" class="infoLine">
+      <span class="pill">⏳ Caricamento partita…</span>
+    </div>
+
+    <label>Scegli il migliore</label>
+    <select id="playerSelect" disabled>
+      <option value="">Caricamento…</option>
+    </select>
+
+    <label>Codice (fisso)</label>
+    <input id="codeInput" type="text" value="QDP" />
+
+    <button id="btnVote" class="btn" disabled>🗳️ Vota</button>
+
+    <div id="msg" class="msg" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <div class="rankTitle">
+      <div><b>🏆 Classifica MVP</b> <span id="rankMode" class="muted" style="font-size:12px"></span></div>
+      <button id="btnRefreshRank" class="smallBtn">🔄 Aggiorna</button>
+    </div>
+    <div id="rankTop" class="rankNote"></div>
+    <div id="rankList" class="rankList"><span class="muted">Caricamento…</span></div>
+    <div id="rankFooter" class="rankNote">*Provvisoria finché la votazione è aperta.</div>
+  </div>
+
+  <div class="card nav muted">
+    <a href="index.html">🏠 Home</a>
+    <a href="storico.html">📚 Storico</a>
+    <a href="marcatori.html">⚽ Marcatori</a>
+  </div>
+
+</div>
+
+<button id="themeToggle" class="fab">🌙</button>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
 <script>
+/* ===== SAFE BOOT ===== */
+window.addEventListener("error", (e)=>{
+  const el = document.getElementById("msg");
+  if(el){
+    el.style.display="block";
+    el.className="msg err";
+    el.textContent = "Errore JS: " + (e?.message || "sconosciuto");
+  }
+});
+
 /* ===== THEME ===== */
 const themeBtn = document.getElementById("themeToggle");
 function setTheme(mode){
@@ -75,16 +323,16 @@ function escapeHtml(s){
 
 /* ===== STATE ===== */
 let CURRENT_MATCH = null;
-let CALLED_PLAYERS = []; // [{id,name}]
+let CALLED_PLAYERS = [];
 let OPEN_FLAG = false;
-
-// Android-safe: teniamo l'ID selezionato in una variabile
 let SELECTED_PLAYER_ID = "";
+
+/* Keep selection (Android) */
 playerSelect.addEventListener("change", ()=>{
   SELECTED_PLAYER_ID = String(playerSelect.value || "").trim();
 });
 
-/* ===== READ MATCH STATUS (fresh) ===== */
+/* ===== FETCH ===== */
 async function fetchLatestMatch(){
   const { data: matches, error } = await client
     .from("matches")
@@ -98,14 +346,6 @@ async function fetchLatestMatch(){
   return matches[0];
 }
 
-// refresh SOLO stato (non tocca select)
-async function refreshMatchStatusOnly(){
-  const m = await fetchLatestMatch();
-  CURRENT_MATCH = m;
-  OPEN_FLAG = !!(CURRENT_MATCH && (CURRENT_MATCH.vote_open === true || CURRENT_MATCH.voting_open === true));
-  applyMatchUI();
-}
-
 function applyMatchUI(){
   if(!CURRENT_MATCH){
     matchInfoEl.innerHTML = `<span class="pill">ℹ️ Nessuna partita trovata</span>`;
@@ -115,8 +355,8 @@ function applyMatchUI(){
     rankFooterEl.textContent = "";
     return;
   }
-
   const time = String(CURRENT_MATCH.match_time || "").slice(0,5);
+
   matchInfoEl.innerHTML = `
     <span class="pill">📅 ${escapeHtml(formatDateFull(CURRENT_MATCH.match_date))}</span>
     <span class="pill">⏰ ${escapeHtml(time || "—")}</span>
@@ -130,11 +370,10 @@ function applyMatchUI(){
     : "*Risultato finale (votazione chiusa).";
 }
 
-/* ===== LOAD PLAYERS (called-up) ===== */
 async function loadCalledPlayers(){
   CALLED_PLAYERS = [];
+  SELECTED_PLAYER_ID = "";
   playerSelect.innerHTML = `<option value="">— scegli —</option>`;
-  SELECTED_PLAYER_ID = ""; // reset selection cache
 
   const ids = Array.isArray(CURRENT_MATCH?.called_up) ? CURRENT_MATCH.called_up : [];
   if(!CURRENT_MATCH || !ids.length){
@@ -156,7 +395,6 @@ async function loadCalledPlayers(){
     CALLED_PLAYERS.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join("");
 }
 
-/* ===== CHECK ALREADY VOTED ===== */
 async function enforceAlreadyVoted(){
   if(!CURRENT_MATCH) return;
 
@@ -183,7 +421,6 @@ async function enforceAlreadyVoted(){
   }
 }
 
-/* ===== CLASSIFICA MVP ===== */
 async function loadRankingOnly(){
   if(!CURRENT_MATCH){
     rankTopEl.textContent = "";
@@ -245,13 +482,19 @@ async function loadRankingOnly(){
   `).join("");
 }
 
-/* ===== FULL REFRESH (safe) ===== */
+async function refreshMatchStatusOnly(){
+  const m = await fetchLatestMatch();
+  CURRENT_MATCH = m;
+  OPEN_FLAG = !!(CURRENT_MATCH && (CURRENT_MATCH.vote_open === true || CURRENT_MATCH.voting_open === true));
+  applyMatchUI();
+}
+
 async function fullRefresh(){
   try{
-    await refreshMatchStatusOnly();     // stato
-    await loadCalledPlayers();          // costruisce select UNA VOLTA
-    await enforceAlreadyVoted();        // abilita/disabilita
-    await loadRankingOnly();            // classifica
+    await refreshMatchStatusOnly();
+    await loadCalledPlayers();
+    await enforceAlreadyVoted();
+    await loadRankingOnly();
   }catch(err){
     console.error(err);
     matchInfoEl.innerHTML = `<span class="pill">❌ Errore: ${escapeHtml(err.message || String(err))}</span>`;
@@ -259,14 +502,12 @@ async function fullRefresh(){
   }
 }
 
-// Bottone aggiorna: refresh totale va bene
 btnRefreshRank.addEventListener("click", fullRefresh);
 
-/* ===== VOTE ===== */
 btnVote.addEventListener("click", async ()=>{
   if(!CURRENT_MATCH) return;
 
-  // 1) PRENDO SUBITO il valore scelto (prima di qualsiasi refresh)
+  // prendi valore PRIMA di qualunque refresh
   let voted_player = String(SELECTED_PLAYER_ID || "").trim();
   if(!voted_player) voted_player = String(playerSelect.value || "").trim();
   if(!voted_player && playerSelect.selectedIndex >= 0){
@@ -284,7 +525,7 @@ btnVote.addEventListener("click", async ()=>{
     return;
   }
 
-  // 2) ORA controllo lo stato live (senza toccare la select)
+  // controlla solo lo stato, senza ricreare select
   try{
     await refreshMatchStatusOnly();
   }catch(e){
@@ -327,9 +568,10 @@ btnVote.addEventListener("click", async ()=>{
   playerSelect.disabled = true;
   btnVote.disabled = true;
 
-  await loadRankingOnly(); // aggiorno solo classifica, non resetto select
+  await loadRankingOnly(); // aggiorna solo classifica
 });
 
-/* ===== INIT ===== */
 fullRefresh();
 </script>
+</body>
+</html>
