@@ -372,6 +372,12 @@ function escapeHtml(s){
     .replaceAll("'","&#039;");
 }
 
+/* ===== MVP: usiamo entrambe le colonne e le teniamo allineate ===== */
+function isVoteOpen(m){
+  if(!m) return false;
+  return (m.vote_open === true) || (m.voting_open === true);
+}
+
 function updateVoteUI(){
   const stateEl = $("voteState");
   const btn = $("btnToggleVote");
@@ -384,7 +390,7 @@ function updateVoteUI(){
     return;
   }
 
-  const open = !!CURRENT.vote_open; // SOLO vote_open
+  const open = isVoteOpen(CURRENT);
   stateEl.textContent = open ? "APERTA ✅" : "CHIUSA ❌";
   btn.textContent = open ? "Chiudi" : "Apri";
   btn.className = open ? "off" : "";
@@ -423,7 +429,7 @@ async function refetchCurrent(){
   if(!CURRENT?.id) return null;
   const { data, error } = await client
     .from("matches")
-    .select("id,match_date,match_time,venue,keeper_a,keeper_b,called_up,score_a,score_b,team_a,team_b,scorers,scorers_text,vote_open")
+    .select("id,match_date,match_time,venue,keeper_a,keeper_b,called_up,score_a,score_b,team_a,team_b,scorers,scorers_text,vote_open,voting_open")
     .eq("id", CURRENT.id)
     .single();
   if(error) throw error;
@@ -439,7 +445,7 @@ async function loadPlayers(){
 
 async function loadMatches(){
   const { data, error } = await client.from("matches")
-    .select("id,match_date,match_time,venue,keeper_a,keeper_b,called_up,score_a,score_b,team_a,team_b,scorers,scorers_text,vote_open")
+    .select("id,match_date,match_time,venue,keeper_a,keeper_b,called_up,score_a,score_b,team_a,team_b,scorers,scorers_text,vote_open,voting_open")
     .order("match_date",{ascending:false})
     .order("match_time",{ascending:false})
     .limit(200);
@@ -674,7 +680,6 @@ function clearForm(){
 
 function fillForm(m){
   CURRENT = m;
-
   $("matchSelect").value = m.id;
   $("matchDate").value = m.match_date || "";
   $("matchTime").value = String(m.match_time || "21:00:00").slice(0,5);
@@ -739,7 +744,8 @@ async function saveMatch(){
       if(error) throw error;
       setMsg("✅ Partita aggiornata.", "ok");
     }else{
-      const payload = { match_date, match_time, venue, keeper_a, keeper_b, called_up, vote_open: true };
+      // nuova partita: apriamo entrambe (allineate)
+      const payload = { match_date, match_time, venue, keeper_a, keeper_b, called_up, vote_open: true, voting_open: true };
       setMsg("💾 Creazione partita…");
       const { data, error } = await client.from("matches").insert([payload]).select("*").single();
       if(error) throw error;
@@ -794,16 +800,16 @@ async function toggleVote(){
   btn.disabled = true;
 
   try{
-    const next = !CURRENT.vote_open;
+    const openNow = isVoteOpen(CURRENT);
+    const next = !openNow;
 
     setMsg("🗳 Aggiorno stato votazione…");
     const { error } = await client.from("matches")
-      .update({ vote_open: next })
+      .update({ vote_open: next, voting_open: next })
       .eq("id", CURRENT.id);
 
     if(error) throw error;
 
-    // RILEGGE DAL DB (così è davvero aggiornato)
     await loadMatches();
     const fresh = await refetchCurrent();
     if(fresh) fillForm(fresh);
@@ -925,4 +931,4 @@ $("btnLogout").onclick = async () => {
 })();
 </script>
 </body>
-</html>
+  </html>
