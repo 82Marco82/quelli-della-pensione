@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Giocatore • Quelli della pensione</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --logo1:#111;
+      --logo2:#333;
+      --chipBg:rgba(0,0,0,.04);
+      --btn:#111;
+    }
+    body.dark{
+      --bg:#0f1115;
+      --card:#171a21;
+      --text:#e5e7eb;
+      --muted:#a1a1aa;
+      --border:#2a2f3a;
+      --shadow:0 10px 28px rgba(0,0,0,.45);
+      --logo1:#0b0e14;
+      --logo2:#2a3242;
+      --chipBg:rgba(255,255,255,.04);
+      --btn:#0b0e14;
+    }
+
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
+    .wrap{max-width:860px;margin:auto;padding:16px}
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      margin:12px 0;
+    }
+
+    .header{text-align:center}
+    .logo{
+      width:72px;height:72px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      margin:auto;
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:30px;letter-spacing:2px;
+    }
+    h1{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:42px;
+      margin:10px 0 0;
+      text-transform:uppercase;
+    }
+    .subtitle{color:var(--muted);font-size:14px}
+
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      font-weight:900;font-size:12px;
+    }
+    .muted{color:var(--muted);font-size:13px}
+
+    .btn{
+      border:1px solid var(--border);
+      background:var(--btn);
+      color:#fff;
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:900;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .btn.ghost{
+      background:transparent;
+      color:var(--text);
+    }
+
+    .matchRow{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:var(--chipBg);
+      margin-top:8px;
+    }
+    .matchTitle{font-weight:900}
+    .matchSub{font-size:12px;color:var(--muted);margin-top:4px}
+
+    .fab{
+      position:fixed;
+      right:16px;bottom:16px;
+      width:54px;height:54px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      font-size:22px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="logo">QDP</div>
+    <h1>Giocatore</h1>
+    <div class="subtitle">Scheda componente</div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <a href="componenti.html" class="btn ghost">⬅️ Componenti</a>
+      <a href="index.html" class="btn ghost">🏠 Home</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div id="status" class="muted">Caricamento…</div>
+  </div>
+
+  <div id="profile"></div>
+  <div id="matches"></div>
+
+</div>
+
+<button id="themeToggle" class="fab">🌙</button>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<script>
+/* ===== THEME ===== */
+function setTheme(mode){
+  document.body.classList.toggle("dark", mode==="dark");
+  document.getElementById("themeToggle").textContent = mode==="dark" ? "☀️" : "🌙";
+  localStorage.setItem("qdp_theme", mode);
+}
+setTheme(localStorage.getItem("qdp_theme")==="dark" ? "dark" : "light");
+document.getElementById("themeToggle").onclick = () => {
+  setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+};
+
+/* ===== SUPABASE ===== */
+if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+  alert("config.js non caricato");
+  throw new Error("Missing config");
+}
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const statusEl = document.getElementById("status");
+const profileEl = document.getElementById("profile");
+const matchesEl = document.getElementById("matches");
+
+/* ===== HELPERS ===== */
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function formatDate(iso){
+  try{
+    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  }catch{ return iso || ""; }
+}
+function isVoteClosed(m){
+  return !(m.vote_open === true || m.voting_open === true);
+}
+function getPlayerId(){
+  const u = new URL(location.href);
+  return u.searchParams.get("id");
+}
+
+/* ===== LOAD ===== */
+async function load(){
+  const pid = getPlayerId();
+  if(!pid){
+    statusEl.textContent = "ID giocatore mancante";
+    return;
+  }
+
+  try{
+    /* PLAYER */
+    const { data: player, error: eP } = await client
+      .from("players")
+      .select("id,name")
+      .eq("id", pid)
+      .single();
+    if(eP) throw eP;
+
+    /* MATCHES */
+    const { data: matches, error: eM } = await client
+      .from("matches")
+      .select("id,match_date,match_time,venue,called_up,vote_open,voting_open")
+      .order("match_date",{ascending:false})
+      .order("match_time",{ascending:false});
+    if(eM) throw eM;
+
+    const totalMatches = matches.length;
+    const played = matches.filter(m =>
+      Array.isArray(m.called_up) &&
+      m.called_up.map(String).includes(String(pid))
+    );
+
+    const presenze = played.length;
+    const percent = totalMatches ? Math.round((presenze/totalMatches)*100) : 0;
+
+    /* MVP WINS (solo partite chiuse) */
+    let mvpWins = 0;
+    const closedIds = matches.filter(isVoteClosed).map(m=>m.id);
+
+    if(closedIds.length){
+      const { data: votes } = await client
+        .from("mvp_votes")
+        .select("match_id,voted_player")
+        .in("match_id", closedIds);
+
+      const byMatch = new Map();
+      (votes||[]).forEach(v=>{
+        const k = String(v.match_id);
+        if(!byMatch.has(k)) byMatch.set(k, []);
+        byMatch.get(k).push(String(v.voted_player||""));
+      });
+
+      for(const arr of byMatch.values()){
+        const counts = new Map();
+        arr.forEach(id=>{
+          if(!id) return;
+          counts.set(id,(counts.get(id)||0)+1);
+        });
+        if(!counts.size) continue;
+        const top = Math.max(...counts.values());
+        const winners = [...counts.entries()].filter(e=>e[1]===top).map(e=>e[0]);
+        if(winners.includes(String(pid))) mvpWins++;
+      }
+    }
+
+    statusEl.textContent = "✅ Dati caricati";
+
+    profileEl.innerHTML = `
+      <div class="card">
+        <div class="row">
+          <div>
+            <div style="font-weight:900;font-size:18px">${escapeHtml(player.name)}</div>
+            <div class="muted" style="margin-top:4px">ID: ${String(player.id).slice(0,8)}…</div>
+          </div>
+          <div class="row" style="margin:0">
+            <span class="pill">👥 Presenze: ${presenze}</span>
+            <span class="pill">📊 ${percent}%</span>
+            <span class="pill">🏆 MVP: ${mvpWins}</span>
+          </div>
+        </div>
+      </div>
+    `;
+
+    matchesEl.innerHTML = `
+      <div class="card">
+        <div style="font-weight:900">📚 Partite convocate (${presenze})</div>
+        ${presenze ? played.map(m=>{
+          const t = String(m.match_time||"").slice(0,5);
+          return `
+            <div class="matchRow">
+              <div>
+                <div class="matchTitle">📅 ${escapeHtml(formatDate(m.match_date))} • ⏰ ${escapeHtml(t||"—")}</div>
+                <div class="matchSub">📍 ${escapeHtml(m.venue||"—")} • MVP: ${isVoteClosed(m)?"chiusa":"aperta"}</div>
+              </div>
+              <a class="btn ghost" href="storico.html">Storico</a>
+            </div>
+          `;
+        }).join("") : `<div class="muted" style="margin-top:10px">Nessuna convocazione.</div>`}
+      </div>
+    `;
+
+  }catch(err){
+    console.error(err);
+    statusEl.textContent = "Errore caricamento giocatore";
+    profileEl.innerHTML = `<div class="card"><div class="muted">${escapeHtml(err.message||err)}</div></div>`;
+  }
+}
+
+load();
+</script>
+</body>
+</html>
