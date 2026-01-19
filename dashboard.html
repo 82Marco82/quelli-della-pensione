@@ -159,6 +159,27 @@
       color:#fff;
     }
     .togglePill button.off{ background:var(--danger); }
+
+    /* Modal nuovo giocatore */
+    .modalOverlay{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:10000;
+    }
+    .modal{
+      width:min(520px,100%);
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .modalTitle{margin:0;font-size:16px}
+    .modalActions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px}
   </style>
 </head>
 
@@ -214,7 +235,11 @@
       <label>Portiere Squadra B</label>
       <input id="keeperB" type="text" placeholder="Es. Andrea o Tonino">
 
-      <label>Convocati (max 12)</label>
+      <div class="row" style="align-items:center">
+        <label style="margin:0">Convocati (max 12)</label>
+        <button id="btnAddPlayer" class="btn ghost small" type="button">➕ Nuovo giocatore</button>
+      </div>
+
       <div id="playersBox" class="playersBox"></div>
 
       <div class="row">
@@ -316,6 +341,28 @@
 </div>
 
 <button id="themeToggle" class="fab">🌙</button>
+
+<!-- MODAL NUOVO GIOCATORE -->
+<div id="modalOverlay" class="modalOverlay" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="row" style="justify-content:space-between;align-items:center;margin-top:0">
+      <h3 class="modalTitle">➕ Aggiungi giocatore</h3>
+      <button id="btnCloseModal" class="btn ghost small" type="button">✖</button>
+    </div>
+
+    <label>Nome giocatore</label>
+    <input id="newPlayerName" type="text" placeholder="Es. Marco">
+
+    <div class="mini" style="margin-top:10px">
+      Verrà aggiunto alla lista “players” e potrai convocarlo subito.
+    </div>
+
+    <div class="modalActions">
+      <button id="btnCreatePlayer" class="btn" type="button">✅ Crea</button>
+      <button id="btnCancelModal" class="btn ghost" type="button">Annulla</button>
+    </div>
+  </div>
+</div>
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -680,6 +727,7 @@ function clearForm(){
 
 function fillForm(m){
   CURRENT = m;
+
   $("matchSelect").value = m.id;
   $("matchDate").value = m.match_date || "";
   $("matchTime").value = String(m.match_time || "21:00:00").slice(0,5);
@@ -719,6 +767,86 @@ function fillForm(m){
   setMsg("Partita caricata. Puoi salvare o inserire dati fine partita.", "ok");
 }
 
+/* ===== Nuovo giocatore (modal + insert) ===== */
+const modalOverlay = $("modalOverlay");
+const btnAddPlayer = $("btnAddPlayer");
+const btnCloseModal = $("btnCloseModal");
+const btnCancelModal = $("btnCancelModal");
+const btnCreatePlayer = $("btnCreatePlayer");
+const newPlayerName = $("newPlayerName");
+
+function openModal(){
+  modalOverlay.style.display = "flex";
+  newPlayerName.value = "";
+  setTimeout(()=>newPlayerName.focus(), 10);
+}
+function closeModal(){
+  modalOverlay.style.display = "none";
+}
+btnAddPlayer.onclick = openModal;
+btnCloseModal.onclick = closeModal;
+btnCancelModal.onclick = closeModal;
+modalOverlay.addEventListener("click", (e)=>{
+  if(e.target === modalOverlay) closeModal();
+});
+newPlayerName.addEventListener("keydown", (e)=>{
+  if(e.key === "Escape") closeModal();
+  if(e.key === "Enter") btnCreatePlayer.click();
+});
+
+async function createPlayer(){
+  const name = (newPlayerName.value || "").trim();
+  if(!name) return setMsg("Inserisci un nome valido.", "err");
+
+  // check duplicato soft (case-insensitive)
+  const lower = name.toLowerCase();
+  const exists = PLAYERS.find(p => String(p.name||"").trim().toLowerCase() === lower);
+  if(exists){
+    setMsg(`⚠️ Esiste già: "${exists.name}". Selezionalo dalla lista.`, "err");
+    closeModal();
+    return;
+  }
+
+  btnCreatePlayer.disabled = true;
+
+  try{
+    setMsg("➕ Creo giocatore…");
+
+    const { data, error } = await client
+      .from("players")
+      .insert([{ name }])
+      .select("id,name")
+      .single();
+
+    if(error) throw error;
+
+    // aggiorna cache e UI
+    PLAYERS = [...PLAYERS, data].sort((a,b)=>String(a.name).localeCompare(String(b.name),"it"));
+    const prevChecked = getCalledUp(); // mantieni check attuali
+    renderPlayersBox(prevChecked);
+
+    // auto-spunta il nuovo se c'è spazio
+    const now = getCalledUp();
+    if(now.length < 12){
+      const cb = $("playersBox").querySelector(`input[value="${data.id}"]`);
+      if(cb){ cb.checked = true; }
+      updateCount();
+      refreshScorersSelectOptions();
+      refreshTeamsUI();
+    }
+
+    closeModal();
+    setMsg(`✅ Giocatore aggiunto: ${data.name}`, "ok");
+
+  }catch(e){
+    console.error(e);
+    setMsg("❌ Errore creazione giocatore: " + (e.message||e), "err");
+  }finally{
+    btnCreatePlayer.disabled = false;
+  }
+}
+btnCreatePlayer.onclick = createPlayer;
+
 /* ===== Actions ===== */
 async function saveMatch(){
   const match_date = $("matchDate").value;
@@ -744,7 +872,6 @@ async function saveMatch(){
       if(error) throw error;
       setMsg("✅ Partita aggiornata.", "ok");
     }else{
-      // nuova partita: apriamo entrambe (allineate)
       const payload = { match_date, match_time, venue, keeper_a, keeper_b, called_up, vote_open: true, voting_open: true };
       setMsg("💾 Creazione partita…");
       const { data, error } = await client.from("matches").insert([payload]).select("*").single();
@@ -931,4 +1058,4 @@ $("btnLogout").onclick = async () => {
 })();
 </script>
 </body>
-  </html>
+</html>
