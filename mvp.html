@@ -222,7 +222,7 @@
     </div>
     <div id="rankTop" class="rankNote"></div>
     <div id="rankList" class="rankList"><span class="muted">Caricamento…</span></div>
-    <div class="rankNote">*Provvisoria finché la votazione è aperta.</div>
+    <div id="rankNote" class="rankNote"></div>
   </div>
 
   <div class="card nav muted">
@@ -266,6 +266,7 @@ const msgEl = document.getElementById("msg");
 const rankModeEl = document.getElementById("rankMode");
 const rankTopEl = document.getElementById("rankTop");
 const rankListEl = document.getElementById("rankList");
+const rankNoteEl = document.getElementById("rankNote");
 const btnRefreshRank = document.getElementById("btnRefreshRank");
 
 /* ===== HELPERS ===== */
@@ -274,6 +275,7 @@ function setMsg(text, kind){
   msgEl.className = "msg" + (kind ? " " + kind : "");
   msgEl.textContent = text;
 }
+function hideMsg(){ msgEl.style.display = "none"; }
 
 function formatDateFull(iso){
   try{
@@ -316,6 +318,50 @@ let CURRENT_MATCH = null;
 let CALLED_PLAYERS = []; // [{id,name}]
 let OPEN_FLAG = false;
 
+/* ===== READ OPEN FLAG (sempre dal DB) ===== */
+async function refreshOpenFlag(){
+  if(!CURRENT_MATCH) return false;
+  const { data, error } = await client
+    .from("matches")
+    .select("id,vote_open,voting_open")
+    .eq("id", CURRENT_MATCH.id)
+    .single();
+
+  if(error) return OPEN_FLAG; // se fallisce, non rompiamo tutto
+  OPEN_FLAG = (data?.vote_open === true) || (data?.voting_open === true);
+  return OPEN_FLAG;
+}
+
+/* ===== APPLY UI BASED ON OPEN FLAG ===== */
+function applyVoteUIState(){
+  // badge match info aggiorna dopo refreshOpenFlag() via renderMatchInfo()
+  rankModeEl.textContent = OPEN_FLAG ? "(provvisoria)" : "(finale)";
+  rankNoteEl.textContent = OPEN_FLAG
+    ? "*Provvisoria finché la votazione è aperta."
+    : "*Finale: votazione chiusa.";
+
+  // se chiusa: blocca voto
+  if(!OPEN_FLAG){
+    playerSelect.disabled = true;
+    btnVote.disabled = true;
+  }
+}
+
+/* ===== RENDER MATCH INFO ===== */
+function renderMatchInfo(){
+  if(!CURRENT_MATCH){
+    matchInfoEl.innerHTML = `<span class="pill">ℹ️ Nessuna partita trovata</span>`;
+    return;
+  }
+  const time = String(CURRENT_MATCH.match_time || "").slice(0,5);
+  matchInfoEl.innerHTML = `
+    <span class="pill">📅 ${escapeHtml(formatDateFull(CURRENT_MATCH.match_date))}</span>
+    <span class="pill">⏰ ${escapeHtml(time || "—")}</span>
+    <span class="pill">📍 ${escapeHtml(CURRENT_MATCH.venue || "—")}</span>
+    <span class="pill">${OPEN_FLAG ? "🟢 Votazione aperta" : "🔴 Votazione chiusa"}</span>
+  `;
+}
+
 /* ===== LOAD MATCH + PLAYERS ===== */
 async function loadMatchAndPlayers(){
   const { data: matches, error } = await client
@@ -335,17 +381,9 @@ async function loadMatchAndPlayers(){
   }
 
   CURRENT_MATCH = matches[0];
-  const time = String(CURRENT_MATCH.match_time || "").slice(0,5);
   OPEN_FLAG = (CURRENT_MATCH.vote_open === true) || (CURRENT_MATCH.voting_open === true);
-
-  matchInfoEl.innerHTML = `
-    <span class="pill">📅 ${escapeHtml(formatDateFull(CURRENT_MATCH.match_date))}</span>
-    <span class="pill">⏰ ${escapeHtml(time || "—")}</span>
-    <span class="pill">📍 ${escapeHtml(CURRENT_MATCH.venue || "—")}</span>
-    <span class="pill">${OPEN_FLAG ? "🟢 Votazione aperta" : "🔴 Votazione chiusa"}</span>
-  `;
-
-  rankModeEl.textContent = OPEN_FLAG ? "(provvisoria)" : "(finale)";
+  renderMatchInfo();
+  applyVoteUIState();
 
   // convocati
   const ids = Array.isArray(CURRENT_MATCH.called_up) ? CURRENT_MATCH.called_up : [];
@@ -353,7 +391,7 @@ async function loadMatchAndPlayers(){
     playerSelect.disabled = true;
     btnVote.disabled = true;
     setMsg("Nessun convocato nella partita: impossibile votare.", "err");
-    await loadRanking(); // classifica comunque (sarà vuota)
+    await loadRanking(true);
     return;
   }
 
@@ -364,7 +402,7 @@ async function loadMatchAndPlayers(){
 
   if(e2){
     setMsg("Errore caricamento giocatori: " + e2.message, "err");
-    await loadRanking();
+    await loadRanking(true);
     return;
   }
 
@@ -373,11 +411,11 @@ async function loadMatchAndPlayers(){
   playerSelect.innerHTML = `<option value="">— scegli —</option>` +
     CALLED_PLAYERS.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join("");
 
-  // voto abilitato solo se aperta
+  // voto abilitato solo se aperta (poi sotto gestiamo anche “già votato”)
   playerSelect.disabled = !OPEN_FLAG;
   btnVote.disabled = !OPEN_FLAG;
 
-  // se ha già votato, blocca comunque (anche se aperta)
+  // se ha già votato: blocca comunque
   const voterId = getOrCreateVoterId();
   const { data: already, error: e3 } = await client
     .from("mvp_votes")
@@ -393,18 +431,27 @@ async function loadMatchAndPlayers(){
     const name = CALLED_PLAYERS.find(p=>String(p.id)===String(vp))?.name || "già votato";
     setMsg(`Hai già votato per questa partita ✅\nVoto: ${name}`, "ok");
   } else {
-    msgEl.style.display = "none";
+    hideMsg();
   }
 
-  await loadRanking();
+  await loadRanking(true);
 }
 
 /* ===== CLASSIFICA MVP ===== */
-async function loadRanking(){
+async function loadRanking(refreshMatchStateFirst=false){
   if(!CURRENT_MATCH){
     rankTopEl.textContent = "";
     rankListEl.innerHTML = `<span class="muted">Nessuna partita.</span>`;
+    rankNoteEl.textContent = "";
     return;
+  }
+
+  // IMPORTANTISSIMO: quando premi “Aggiorna” o dopo il voto,
+  // rileggiamo lo stato vote_open dal DB così “provvisorio” sparisce davvero.
+  if(refreshMatchStateFirst){
+    await refreshOpenFlag();
+    renderMatchInfo();
+    applyVoteUIState();
   }
 
   rankListEl.innerHTML = `<span class="muted">Caricamento…</span>`;
@@ -427,30 +474,27 @@ async function loadRanking(){
     counts.set(id, (counts.get(id) || 0) + 1);
   });
 
-  // mappa id->name (solo convocati; se manca, mostra id)
   const idToName = new Map(CALLED_PLAYERS.map(p=>[String(p.id), p.name]));
 
   const rows = [...counts.entries()]
     .map(([id,c])=>({ id, name: idToName.get(id) || id, votes: c }))
     .sort((a,b)=> b.votes - a.votes || String(a.name).localeCompare(String(b.name),"it"));
 
-  // Se nessun voto
   if(!rows.length){
     rankTopEl.textContent = "Nessun voto ancora.";
     rankListEl.innerHTML = `<span class="muted">—</span>`;
     return;
   }
 
-  // MVP provvisorio / finale (gestione parità)
   const topVotes = rows[0].votes;
   const topNames = rows.filter(r=>r.votes===topVotes).map(r=>r.name);
+
   if(topNames.length === 1){
     rankTopEl.textContent = `MVP ${OPEN_FLAG ? "provvisorio" : "finale"}: ${topNames[0]} (${topVotes} voto/i)`;
   }else{
     rankTopEl.textContent = `Parità ${OPEN_FLAG ? "provvisoria" : "finale"}: ${topNames.join(", ")} (${topVotes} voto/i)`;
   }
 
-  // Render lista
   rankListEl.innerHTML = rows.map((r,i)=>`
     <div class="rankRow">
       <div class="rankLeft">
@@ -465,11 +509,15 @@ async function loadRanking(){
   `).join("");
 }
 
-btnRefreshRank.addEventListener("click", loadRanking);
+btnRefreshRank.addEventListener("click", ()=>loadRanking(true));
 
 /* ===== VOTE ===== */
 btnVote.addEventListener("click", async ()=>{
   if(!CURRENT_MATCH) return;
+
+  await refreshOpenFlag();
+  renderMatchInfo();
+  applyVoteUIState();
 
   if(!OPEN_FLAG){
     setMsg("Votazione chiusa.", "err");
@@ -494,9 +542,9 @@ btnVote.addEventListener("click", async ()=>{
 
   const { error } = await client.from("mvp_votes").insert([{
     match_id: CURRENT_MATCH.id,
-    voter_id: voter_id,
-    voted_player: voted_player,
-    code: code
+    voter_id,
+    voted_player,
+    code
   }]);
 
   if(error){
@@ -506,8 +554,9 @@ btnVote.addEventListener("click", async ()=>{
     } else {
       setMsg("Errore voto: " + msg, "err");
     }
+    playerSelect.disabled = true;
     btnVote.disabled = true;
-    await loadRanking();
+    await loadRanking(true);
     return;
   }
 
@@ -517,7 +566,7 @@ btnVote.addEventListener("click", async ()=>{
   playerSelect.disabled = true;
   btnVote.disabled = true;
 
-  await loadRanking();
+  await loadRanking(true);
 });
 
 /* ===== INIT ===== */
