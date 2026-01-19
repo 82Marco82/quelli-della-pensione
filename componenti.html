@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Componenti • Quelli della pensione</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --logo1:#111;
+      --logo2:#333;
+      --chipBg:rgba(0,0,0,.04);
+    }
+    body.dark{
+      --bg:#0f1115;
+      --card:#171a21;
+      --text:#e5e7eb;
+      --muted:#a1a1aa;
+      --border:#2a2f3a;
+      --shadow:0 10px 28px rgba(0,0,0,.45);
+      --logo1:#0b0e14;
+      --logo2:#2a3242;
+      --chipBg:rgba(255,255,255,.04);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui;
+      background:var(--bg);
+      color:var(--text);
+      transition:.2s;
+    }
+    .wrap{max-width:860px;margin:auto;padding:16px}
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      margin:12px 0;
+    }
+
+    .header{text-align:center}
+    .logo{
+      width:74px;height:74px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      margin:auto;
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:30px;
+      letter-spacing:2px;
+    }
+    h1{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:44px;
+      margin:10px 0 0;
+      text-transform:uppercase;
+    }
+    .subtitle{color:var(--muted);font-size:14px}
+
+    .row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .pill{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      font-weight:900;
+      font-size:12px;
+    }
+
+    .name{
+      font-weight:900;
+      font-size:15px;
+    }
+
+    .muted{color:var(--muted)}
+
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size:14px;
+    }
+    .nav a{
+      color:var(--text);
+      text-decoration:none;
+      font-weight:800;
+    }
+    .nav a:hover{text-decoration:underline}
+
+    .fab{
+      position:fixed;
+      right:16px;bottom:16px;
+      width:54px;height:54px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      font-size:22px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">QDP</div>
+    <h1>Componenti</h1>
+    <div class="subtitle">Quelli della pensione</div>
+  </div>
+
+  <!-- STATUS -->
+  <div class="card">
+    <div id="status" class="muted">Caricamento…</div>
+  </div>
+
+  <!-- LISTA -->
+  <div id="list"></div>
+
+  <!-- NAV -->
+  <div class="card nav muted">
+    <a href="index.html">🏠 Home</a>
+    <a href="mvp.html">🏆 MVP</a>
+    <a href="storico.html">📚 Storico</a>
+  </div>
+
+</div>
+
+<button id="themeToggle" class="fab">🌙</button>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<script>
+/* ===== THEME ===== */
+function setTheme(mode){
+  document.body.classList.toggle("dark", mode === "dark");
+  document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
+  localStorage.setItem("qdp_theme", mode);
+}
+setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
+document.getElementById("themeToggle").onclick = () => {
+  setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+};
+
+/* ===== SUPABASE ===== */
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const statusEl = document.getElementById("status");
+const listEl = document.getElementById("list");
+
+/* ===== LOAD ===== */
+async function load(){
+  try{
+    const { data: players, error: eP } = await client
+      .from("players")
+      .select("id,name")
+      .order("name",{ascending:true});
+    if(eP) throw eP;
+
+    const { data: matches, error: eM } = await client
+      .from("matches")
+      .select("id,called_up");
+    if(eM) throw eM;
+
+    const presence = new Map();
+    (matches||[]).forEach(m=>{
+      (m.called_up||[]).forEach(id=>{
+        const k = String(id);
+        presence.set(k,(presence.get(k)||0)+1);
+      });
+    });
+
+    statusEl.textContent = `Totale componenti: ${players.length}`;
+
+    listEl.innerHTML = players.map(p=>{
+      const pres = presence.get(String(p.id)) || 0;
+      return `
+        <div class="card">
+          <div class="row">
+            <div class="name">${p.name}</div>
+            <div class="pill">👥 Presenze: ${pres}</div>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+  }catch(err){
+    console.error(err);
+    statusEl.textContent = "Errore caricamento componenti";
+  }
+}
+
+load();
+</script>
+</body>
+</html>
