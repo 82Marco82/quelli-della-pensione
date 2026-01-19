@@ -161,7 +161,7 @@
       background:rgba(0,0,0,.02);
     }
     body.dark .mvpBox{background:rgba(255,255,255,.03)}
-    .mvpTitle{font-weight:900}
+    .mvpTitle{font-weight:900; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
     .mvpTop3{margin-top:8px}
     .mvpRow{
       display:flex;align-items:center;justify-content:space-between;
@@ -208,7 +208,10 @@
 
     <!-- MVP -->
     <div id="mvpBox" class="mvpBox" style="display:none">
-      <div class="mvpTitle" id="mvpTitle">🏆 MVP</div>
+      <div class="mvpTitle">
+        <div id="mvpTitle">🏆 MVP</div>
+        <div id="mvpStatePill" class="pill" style="margin:0"></div>
+      </div>
       <div id="mvpMain" class="muted" style="margin-top:6px">Caricamento…</div>
       <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
     </div>
@@ -263,6 +266,10 @@ setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
 themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 
 /* SUPABASE */
+if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+  alert("config.js non caricato o non valido");
+  throw new Error("Missing config");
+}
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const statusEl = document.getElementById("status");
@@ -282,12 +289,13 @@ const tBIcon = document.getElementById("tBIcon");
 /* MVP DOM */
 const mvpBox = document.getElementById("mvpBox");
 const mvpTitle = document.getElementById("mvpTitle");
+const mvpStatePill = document.getElementById("mvpStatePill");
 const mvpMain = document.getElementById("mvpMain");
 const mvpTop3 = document.getElementById("mvpTop3");
 
 function kitSVG(main, stripe){
   return `
-  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <path d="M18 12 L26 6 H38 L46 12 L58 20 L52 33 L46 29 V58 H18 V29 L12 33 L6 20 Z"
       fill="${main}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
     <path d="M30 10 H34 V58 H30 Z" fill="${stripe}" opacity="0.85"/>
@@ -295,7 +303,11 @@ function kitSVG(main, stripe){
 }
 
 function formatDateFull(iso){
-  return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  try{
+    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  }catch(e){
+    return String(iso||"");
+  }
 }
 
 function medal(i){
@@ -314,8 +326,13 @@ function escapeHtml(s){
     .replaceAll("'","&#039;");
 }
 
+/* Stato votazione: APERTA se almeno una colonna è true */
+function isVoteOpen(match){
+  return (match?.vote_open === true) || (match?.voting_open === true);
+}
+
+/* MVP */
 async function loadMVP(matchId, calledPlayers){
-  // calledPlayers: [{id,name}] (solo convocati)
   try{
     const { data: votes, error } = await client
       .from("mvp_votes")
@@ -351,7 +368,6 @@ async function loadMVP(matchId, calledPlayers){
       mvpMain.textContent = `Parità: ${tops.join(", ")} (${topVotes} voto/i)`;
     }
 
-    // Top 3 carina
     const top3 = rows.slice(0,3);
     mvpTop3.innerHTML = top3.map((r,i)=>`
       <div class="mvpRow">
@@ -372,11 +388,18 @@ async function loadMVP(matchId, calledPlayers){
 }
 
 async function load(){
-  const { data } = await client
+  const { data, error } = await client
     .from("matches")
-    .select("*")
+    .select("id,match_date,match_time,venue,keeper_a,keeper_b,score_a,score_b,called_up,team_a,team_b,scorers_text,vote_open,voting_open")
     .order("match_date",{ascending:false})
+    .order("match_time",{ascending:false})
     .limit(1);
+
+  if(error){
+    statusEl.textContent = "Errore caricamento partita";
+    infoEl.innerHTML = `<div class="muted">${escapeHtml(error.message)}</div>`;
+    return;
+  }
 
   if(!data || !data.length){
     statusEl.textContent = "Nessuna partita creata";
@@ -389,15 +412,18 @@ async function load(){
   const time = String(m.match_time||"").slice(0,5);
   const result = (m.score_a!=null && m.score_b!=null) ? `${m.score_a}-${m.score_b}` : "da giocare";
 
-  const voteOpen = (m.vote_open === true) || (m.voting_open === true);
+  const voteOpen = isVoteOpen(m);
+
+  // MVP UI
   mvpBox.style.display = "block";
   mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
+  mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
   mvpMain.textContent = "Caricamento…";
   mvpTop3.style.display = "none";
 
   infoEl.innerHTML = `
-    <div class="line"><b>📅 ${formatDateFull(m.match_date)}</b></div>
-    <div class="line"><b>⏰ ${time}</b></div>
+    <div class="line"><b>📅 ${escapeHtml(formatDateFull(m.match_date))}</b></div>
+    <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
     <div class="line kit">${kitSVG("#facc15","#111")} <b>Squadra A:</b> ${escapeHtml(m.keeper_a || "")}</div>
     <div class="line kit">${kitSVG("#ef4444","#fff")} <b>Squadra B:</b> ${escapeHtml(m.keeper_b || "")}</div>
     <div class="line"><span class="badge">🏁 ${escapeHtml(result)}</span></div>
@@ -414,12 +440,17 @@ async function load(){
 
   // players map per convocati / squadre / MVP
   let playersForCalled = [];
-
-  if(m.called_up?.length){
-    const { data:p } = await client.from("players").select("id,name").in("id", m.called_up);
-    const map=new Map((p||[]).map(x=>[x.id,x.name]));
-    playersForCalled = (p||[]);
-    calledEl.innerHTML=m.called_up.map(id=>`<span class="pill">${escapeHtml(map.get(id) || "")}</span>`).join("");
+  if(Array.isArray(m.called_up) && m.called_up.length){
+    const { data:p, error:pe } = await client.from("players").select("id,name").in("id", m.called_up);
+    if(!pe){
+      const map = new Map((p||[]).map(x=>[String(x.id), x.name]));
+      playersForCalled = (p||[]);
+      calledEl.innerHTML = m.called_up
+        .map(id=>`<span class="pill">${escapeHtml(map.get(String(id)) || "")}</span>`)
+        .join("");
+    }else{
+      calledEl.textContent = "—";
+    }
   } else {
     calledEl.textContent = "—";
   }
@@ -427,18 +458,19 @@ async function load(){
   // MVP (usa i convocati se disponibili, altrimenti mostra ID)
   await loadMVP(m.id, playersForCalled);
 
-  if(m.team_a?.length || m.team_b?.length){
+  // Formazioni
+  if((Array.isArray(m.team_a) && m.team_a.length) || (Array.isArray(m.team_b) && m.team_b.length)){
     teamsBox.style.display="block";
     tAIcon.innerHTML = kitSVG("#facc15","#111");
     tBIcon.innerHTML = kitSVG("#ef4444","#fff");
 
-    const ids=[...(m.team_a||[]),...(m.team_b||[])];
-    const { data:p2 }=await client.from("players").select("id,name").in("id",ids);
-    const map2=new Map((p2||[]).map(x=>[x.id,x.name]));
+    const ids=[...new Set([...(m.team_a||[]),...(m.team_b||[])].map(String))];
+    const { data:p2 }=await client.from("players").select("id,name").in("id", ids);
+    const map2=new Map((p2||[]).map(x=>[String(x.id),x.name]));
 
-    teamAEl.innerHTML=(m.team_a||[]).map(id=>`<span class="pill">${escapeHtml(map2.get(id) || "")}</span>`).join("")||"—";
-    teamBEl.innerHTML=(m.team_b||[]).map(id=>`<span class="pill">${escapeHtml(map2.get(id) || "")}</span>`).join("")||"—";
-  } else {
+    teamAEl.innerHTML=(m.team_a||[]).map(id=>`<span class="pill">${escapeHtml(map2.get(String(id)) || "")}</span>`).join("") || "—";
+    teamBEl.innerHTML=(m.team_b||[]).map(id=>`<span class="pill">${escapeHtml(map2.get(String(id)) || "")}</span>`).join("") || "—";
+  }else{
     teamsBox.style.display="none";
   }
 }
