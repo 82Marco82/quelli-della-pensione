@@ -50,6 +50,7 @@
       padding:14px;
       box-shadow:var(--shadow);
       margin:12px 0;
+      overflow:hidden; /* FIX overflow (MVP, testi lunghi) */
     }
 
     .header{text-align:center}
@@ -97,6 +98,22 @@
       white-space:nowrap;
     }
 
+    /* FIX: MVP e testi lunghi devono andare a capo e NON uscire dal card */
+    .mvpLine{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
+      max-width:100%;
+    }
+    .mvpLine .pill{
+      max-width:100%;
+      white-space:normal;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+    }
+
     .btn{
       border:1px solid var(--border);
       background:var(--btnBg);
@@ -142,6 +159,7 @@
       border:1px solid var(--border);
       border-radius:14px;
       padding:12px;
+      overflow:hidden; /* sicurezza */
     }
 
     .nav{
@@ -165,30 +183,6 @@
       cursor:pointer;
       font-size:22px;
     }
-
-    /* MVP */
-    .mvpLine{
-      display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-      margin-top:10px;
-    }
-    .mvpTop3{margin-top:10px}
-    .mvpRow{
-      display:flex;align-items:center;justify-content:space-between;
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:8px 10px;
-      margin-top:8px;
-      font-weight:800;
-      background:transparent;
-    }
-    .mvpLeft{display:flex;align-items:center;gap:8px}
-    .medal{
-      width:28px;height:28px;border-radius:999px;
-      display:flex;align-items:center;justify-content:center;
-      border:1px solid var(--border);
-      background:var(--card);
-      font-weight:900;
-    }
   </style>
 </head>
 
@@ -210,7 +204,6 @@
   <div class="card nav muted">
     <a href="index.html">🏠 Home</a>
     <a href="marcatori.html">⚽ Marcatori</a>
-    <a href="mvp.html">🏆 Vota MVP</a>
     <a href="componenti.html">👥 Componenti</a>
     <a href="admin.html">🔐 Admin</a>
   </div>
@@ -262,11 +255,29 @@ function resultBadge(m){
   if(m.score_a != null && m.score_b != null) return `🏁 ${m.score_a}-${m.score_b}`;
   return `🏁 da giocare`;
 }
-function medal(i){
-  if(i===0) return "🥇";
-  if(i===1) return "🥈";
-  if(i===2) return "🥉";
-  return String(i+1);
+
+/* MVP helpers (provvisorio) */
+function computeMvpLine(votes, idToName){
+  // votes: array of { voted_player, ... }
+  if(!votes || !votes.length) return null;
+
+  const counts = new Map();
+  for(const v of votes){
+    const id = String(v.voted_player || "");
+    if(!id) continue;
+    counts.set(id, (counts.get(id) || 0) + 1);
+  }
+  const entries = [...counts.entries()].sort((a,b)=>b[1]-a[1]);
+  if(!entries.length) return null;
+
+  const top = entries[0][1];
+  const leaders = entries.filter(e=>e[1]===top).map(e=>e[0]);
+  const leaderNames = leaders.map(id => idToName.get(String(id)) || id);
+
+  if(leaders.length === 1){
+    return `🏆 MVP (provvisorio): ${leaderNames[0]} • voti: ${top}`;
+  }
+  return `🏆 MVP (provvisorio): Parità: ${leaderNames.join(", ")} • voti: ${top}`;
 }
 
 /* SUPABASE */
@@ -279,65 +290,6 @@ const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const statusEl = document.getElementById("status");
 const listEl = document.getElementById("list");
 
-/* MVP - calcolo per N match in una sola query */
-async function loadMvpForMatches(matchIds){
-  if(!matchIds.length) return new Map();
-
-  // scarico solo voted_player e match_id
-  const { data, error } = await client
-    .from("mvp_votes")
-    .select("match_id,voted_player")
-    .in("match_id", matchIds);
-
-  if(error) throw error;
-
-  // map: match_id -> Map(player_id -> count)
-  const perMatch = new Map();
-  (data||[]).forEach(v=>{
-    const mid = String(v.match_id);
-    const pid = String(v.voted_player || "");
-    if(!mid || !pid) return;
-    if(!perMatch.has(mid)) perMatch.set(mid, new Map());
-    const m = perMatch.get(mid);
-    m.set(pid, (m.get(pid)||0)+1);
-  });
-
-  return perMatch;
-}
-
-function buildMvpSummary(midCounts, idToName){
-  // ritorna { text, top3Html, hasVotes }
-  if(!midCounts || midCounts.size===0){
-    return { text: "Nessun voto.", top3Html: "", hasVotes:false };
-  }
-  const rows = [...midCounts.entries()]
-    .map(([pid,c])=>({ pid, name: idToName.get(String(pid)) || String(pid), votes:c }))
-    .sort((a,b)=>b.votes-a.votes || String(a.name).localeCompare(String(b.name),"it"));
-
-  const topVotes = rows[0].votes;
-  const tops = rows.filter(r=>r.votes===topVotes).map(r=>r.name);
-
-  const text = (tops.length===1)
-    ? `${tops[0]} (${topVotes} voto/i)`
-    : `Parità: ${tops.join(", ")} (${topVotes} voto/i)`;
-
-  const top3 = rows.slice(0,3);
-  const top3Html = `
-    <div class="mvpTop3">
-      ${top3.map((r,i)=>`
-        <div class="mvpRow">
-          <div class="mvpLeft">
-            <div class="medal">${escapeHtml(medal(i))}</div>
-            <div>${escapeHtml(r.name)}</div>
-          </div>
-          <div>${r.votes}</div>
-        </div>
-      `).join("")}
-    </div>
-  `;
-  return { text, top3Html, hasVotes:true };
-}
-
 async function load(){
   try{
     const { data: players, error: eP } = await client.from("players").select("id,name");
@@ -346,7 +298,7 @@ async function load(){
 
     const { data: matches, error: eM } = await client
       .from("matches")
-      .select("id,match_date,match_time,venue,keeper_a,keeper_b,score_a,score_b,called_up,team_a,team_b,scorers,vote_open,voting_open")
+      .select("id,match_date,match_time,venue,keeper_a,keeper_b,score_a,score_b,called_up,team_a,team_b,scorers")
       .order("match_date",{ascending:false})
       .order("match_time",{ascending:false})
       .limit(200);
@@ -359,11 +311,23 @@ async function load(){
       return;
     }
 
-    statusEl.textContent = `Partite: ${matches.length}`;
+    // carico tutti i voti MVP per queste partite (1 query)
+    const matchIds = matches.map(m => m.id);
+    const { data: votes, error: eV } = await client
+      .from("mvp_votes")
+      .select("match_id,voted_player")
+      .in("match_id", matchIds);
 
-    // MVP votes (una query sola)
-    const matchIds = matches.map(m=>m.id);
-    const votesByMatch = await loadMvpForMatches(matchIds);
+    if(eV) throw eV;
+
+    const votesByMatch = new Map();
+    (votes||[]).forEach(v=>{
+      const k = String(v.match_id);
+      if(!votesByMatch.has(k)) votesByMatch.set(k, []);
+      votesByMatch.get(k).push(v);
+    });
+
+    statusEl.textContent = `Partite: ${matches.length}`;
 
     listEl.innerHTML = matches.map(m => {
       const dateFull = formatDateFull(m.match_date);
@@ -409,30 +373,25 @@ async function load(){
 
       const detailsId = `det_${m.id}`;
 
-      // MVP
-      const mid = String(m.id);
-      const voteOpen = (m.vote_open === true) || (m.voting_open === true);
-      const mvpLabel = voteOpen ? "MVP (provvisorio)" : "MVP (finale)";
-      const summary = buildMvpSummary(votesByMatch.get(mid), idToName);
+      const mvpLine = computeMvpLine(votesByMatch.get(String(m.id)) || [], idToName);
+      const mvpHtml = mvpLine
+        ? `<div class="mvpLine"><span class="pill">${escapeHtml(mvpLine)}</span></div>`
+        : ``;
 
       return `
         <div class="card">
           <div class="row" style="justify-content:space-between">
-            <div>
+            <div style="min-width:0">
               <div><b>📅 ${escapeHtml(dateFull)} • ⏰ ${escapeHtml(time)}</b></div>
               <div class="muted" style="margin-top:6px">📍 ${venue}</div>
-
               <div class="row" style="margin-top:10px">
                 <span class="badge">${escapeHtml(resultBadge(m))}</span>
                 <span class="pill">🟨 ${keepA}</span>
                 <span class="pill">🟥 ${keepB}</span>
               </div>
 
-              <div class="mvpLine">
-                <span class="pill">🏆 <b>${escapeHtml(mvpLabel)}:</b> ${escapeHtml(summary.text)}</span>
-              </div>
+              ${mvpHtml}
             </div>
-
             <div>
               <button class="btn ghost" data-target="${detailsId}">Dettagli ▾</button>
             </div>
@@ -444,14 +403,6 @@ async function load(){
               <div class="muted" style="margin-top:8px">
                 ${ calledNames.length ? calledNames.map(n=>`<span class="pill">${escapeHtml(n)}</span>`).join("") : "—" }
               </div>
-            </div>
-
-            <div class="space"></div>
-
-            <div class="chipBox">
-              <div style="font-weight:900">🏆 ${escapeHtml(mvpLabel)}</div>
-              <div class="muted" style="margin-top:8px">${escapeHtml(summary.text)}</div>
-              ${summary.hasVotes ? summary.top3Html : `<div class="muted" style="margin-top:8px">Nessun voto.</div>`}
             </div>
 
             <div class="space"></div>
@@ -484,7 +435,7 @@ async function load(){
       `;
     }).join("");
 
-    // ACCORDION: apri uno, chiudi gli altri
+    // ACCORDION
     const buttons = [...document.querySelectorAll("button[data-target]")];
     buttons.forEach(btn=>{
       btn.addEventListener("click", ()=>{
