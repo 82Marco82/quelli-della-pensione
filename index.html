@@ -245,13 +245,19 @@
       <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
     </div>
 
-    <!-- MAPPA -->
+    <!-- MAPPA (fix: coordinate) -->
     <div id="mapBox" class="mapWrap" style="display:none">
-      <iframe id="mapFrame" src="https://www.google.com/maps?q=Campo%20a%206%20Aradeo&output=embed"></iframe>
+      <iframe
+        id="mapFrame"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=40.1239395,18.1203671&z=18&output=embed">
+      </iframe>
     </div>
 
     <div id="mapActions" class="mapActions" style="display:none">
-      <a id="mapLink" class="btn" href="#" target="_blank" rel="noopener">📍 Apri indicazioni</a>
+      <a id="mapLink" class="btn" href="#" target="_blank" rel="noopener">📍 Portami al campo</a>
+      <a id="mapOpen" class="btn ghost" href="#" target="_blank" rel="noopener">🗺 Apri su Maps</a>
     </div>
 
     <!-- MARCATORI -->
@@ -314,9 +320,14 @@ const mapBox = document.getElementById("mapBox");
 const mapFrame = document.getElementById("mapFrame");
 const mapActions = document.getElementById("mapActions");
 const mapLink = document.getElementById("mapLink");
+const mapOpen = document.getElementById("mapOpen");
 
-/* FIX: link ESATTO del vostro campo (quello che mi hai mandato) */
-const FIXED_MAP_URL = "https://maps.app.goo.gl/VEHpEuoCHznDiFJY9?g_st=ac";
+/* ✅ IL TUO LINK PRECISO (quello che vuoi aprire) */
+const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
+
+/* ✅ coordinate del campo (per iframe e fallback) */
+const FIELD_LAT = 40.1239395;
+const FIELD_LNG = 18.1203671;
 
 const scorersBox = document.getElementById("scorersBox");
 const scorersText = document.getElementById("scorersText");
@@ -403,11 +414,9 @@ async function loadMVP(matchId, calledPlayers){
     const topVotes = rows[0].votes;
     const tops = rows.filter(r=>r.votes===topVotes).map(r=>r.name);
 
-    if(tops.length === 1){
-      mvpMain.textContent = `${tops[0]} (${topVotes} voto/i)`;
-    }else{
-      mvpMain.textContent = `Parità: ${tops.join(", ")} (${topVotes} voto/i)`;
-    }
+    mvpMain.textContent = (tops.length === 1)
+      ? `${tops[0]} (${topVotes} voto/i)`
+      : `Parità: ${tops.join(", ")} (${topVotes} voto/i)`;
 
     const top3 = rows.slice(0,3);
     mvpTop3.innerHTML = top3.map((r,i)=>`
@@ -426,6 +435,14 @@ async function loadMVP(matchId, calledPlayers){
     mvpMain.textContent = "Errore MVP";
     mvpTop3.style.display = "none";
   }
+}
+
+function setupMapLinks(){
+  // bottone “portami al campo” (usa il tuo link condiviso)
+  mapLink.href = FIXED_MAP_APP_URL;
+
+  // link fallback su web maps (sempre valido anche senza app)
+  mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
 }
 
 async function load(){
@@ -452,7 +469,6 @@ async function load(){
 
   const time = String(m.match_time||"").slice(0,5);
   const result = (m.score_a!=null && m.score_b!=null) ? `${m.score_a}-${m.score_b}` : "da giocare";
-
   const voteOpen = isVoteOpen(m);
 
   // MVP UI
@@ -477,15 +493,11 @@ async function load(){
     scorersBox.style.display="none";
   }
 
-  /* ✅ FIX MAPPA: mostro iframe + link ESATTO al campo */
-  mapBox.style.display="block";
-  mapActions.style.display="flex";
-  mapLink.href = FIXED_MAP_URL;
-
-  // Se vuoi, puoi lasciare l’iframe generico (visual)
-  // oppure provare a farlo puntare alla venue testuale:
-  const venueText = (m.venue || "Campo a 6 - Aradeo").trim();
-  mapFrame.src = "https://www.google.com/maps?q=" + encodeURIComponent(venueText) + "&output=embed";
+  // ✅ MAPPA: sempre mostrata e corretta
+  mapBox.style.display = "block";
+  mapActions.style.display = "flex";
+  mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
+  setupMapLinks();
 
   // players map per convocati / squadre / MVP
   let playersForCalled = [];
