@@ -1,138 +1,827 @@
 <!doctype html>
 <html lang="it">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quelli della pensione</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quelli della pensione</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
-<style>
-:root{
-  --bg:#f4f6f8;--card:#fff;--text:#111827;--muted:#6b7280;
-  --border:#e5e7eb;--shadow:0 6px 20px rgba(0,0,0,.08);
-  --ok:#16a34a;--warn:#f59e0b;--bad:#dc2626;
-}
-body{margin:0;font-family:Inter;background:var(--bg);color:var(--text)}
-.wrap{max-width:760px;margin:auto;padding:16px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:var(--shadow);margin:12px 0}
-.header{text-align:center}
-.logo{width:80px;height:80px;border-radius:999px;background:#111;margin:auto;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Bebas Neue';font-size:34px}
-h1{font-family:'Bebas Neue';font-size:48px;margin:10px 0 0}
-.subtitle{color:var(--muted);font-size:14px}
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --pill:#eeeeee;
+      --logo1:#111;
+      --logo2:#333;
+      --btn:#111;
 
-.mapWrap{margin-top:12px;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
-iframe{width:100%;height:260px;border:0}
-.mapActions{display:flex;justify-content:flex-end;gap:10px;margin-top:10px}
-.btn{background:#111;color:#fff;padding:12px 14px;border-radius:14px;font-weight:900;text-decoration:none}
+      --chipBg:rgba(0,0,0,.03);
 
-.weatherBox{
-  margin-top:14px;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
-}
-.weatherHead{
-  display:flex;align-items:center;gap:12px;
-  font-weight:900;font-size:18px
-}
-.weatherIcon{
-  width:44px;height:44px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:26px;background:#f3f4f6
-}
-.weatherAlert{
-  margin-top:10px;padding:8px 12px;border-radius:999px;
-  font-weight:900;display:inline-block
-}
-.ok{background:#dcfce7;color:var(--ok)}
-.warn{background:#fef3c7;color:var(--warn)}
-.bad{background:#fee2e2;color:var(--bad)}
-.weatherRow{display:flex;justify-content:space-between;margin-top:10px;font-weight:600}
-.weatherNote{margin-top:10px;color:var(--muted)}
-</style>
+      /* Meteo alert */
+      --okBg:#dcfce7; --okText:#166534; --okBorder:rgba(34,197,94,.35);
+      --warnBg:#fffbeb; --warnText:#92400e; --warnBorder:rgba(245,158,11,.35);
+      --riskBg:#fee2e2; --riskText:#991b1b; --riskBorder:rgba(239,68,68,.35);
+    }
+    body.dark{
+      --bg:#0f1115;
+      --card:#171a21;
+      --text:#e5e7eb;
+      --muted:#a1a1aa;
+      --border:#2a2f3a;
+      --shadow:0 10px 28px rgba(0,0,0,.45);
+      --pill:#222631;
+      --logo1:#0b0e14;
+      --logo2:#2a3242;
+      --btn:#0b0e14;
+
+      --chipBg:rgba(255,255,255,.04);
+
+      --okBg:rgba(34,197,94,.16); --okText:#86efac; --okBorder:rgba(34,197,94,.25);
+      --warnBg:rgba(245,158,11,.16); --warnText:#fbbf24; --warnBorder:rgba(245,158,11,.25);
+      --riskBg:rgba(239,68,68,.16); --riskText:#fca5a5; --riskBorder:rgba(239,68,68,.25);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui;
+      background:var(--bg);
+      color:var(--text);
+      transition:.2s;
+    }
+    .wrap{max-width:760px;margin:auto;padding:16px}
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      margin:12px 0;
+    }
+
+    .header{text-align:center}
+    .logo{
+      width:80px;height:80px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      margin:auto;
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:34px;
+      letter-spacing:2px;
+    }
+    h1{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:48px;
+      margin:10px 0 0;
+      text-transform:uppercase;
+    }
+    .subtitle{color:var(--muted);font-size:14px}
+
+    .heroImgWrap{border-radius:16px;overflow:hidden}
+    .heroImgWrap img{
+      width:100%;
+      display:block;
+      max-height:360px;
+      object-fit:cover;
+    }
+    @media(max-width:600px){
+      .heroImgWrap img{max-height:240px}
+    }
+    .heroCaption{
+      margin-top:10px;
+      text-align:center;
+      font-family:'Bebas Neue';
+      letter-spacing:3px;
+      font-size:26px;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+
+    .line{margin-top:8px}
+    .pill{
+      display:inline-block;
+      background:var(--pill);
+      border-radius:999px;
+      padding:6px 10px;
+      margin:4px 6px 0 0;
+      font-weight:900;
+      border:1px solid var(--border);
+      white-space:nowrap;
+    }
+    .badge{
+      display:inline-block;
+      background:#111;
+      color:#fff;
+      padding:6px 12px;
+      border-radius:999px;
+      font-weight:900;
+    }
+    body.dark .badge{background:#0b0e14}
+    .muted{color:var(--muted)}
+
+    .mapWrap{
+      margin-top:12px;
+      border-radius:12px;
+      overflow:hidden;
+      border:1px solid var(--border)
+    }
+    iframe{width:100%;height:260px;border:0}
+
+    .mapActions{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      margin-top:10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      border:0;
+      background:var(--btn);
+      color:#fff;
+      padding:12px 14px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+    }
+    .btn.ghost{
+      background:transparent;
+      color:var(--text);
+      border:1px solid var(--border);
+    }
+
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size:14px;
+    }
+    .nav a{
+      color:var(--text);
+      text-decoration:none;
+      font-weight:800;
+    }
+
+    .fab{
+      position:fixed;
+      right:16px;bottom:16px;
+      width:54px;height:54px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      font-size:22px;
+    }
+
+    .kit{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .kit svg{
+      width:18px;height:18px;
+      filter:drop-shadow(0 2px 2px rgba(0,0,0,.25));
+    }
+
+    /* MVP box */
+    .mvpBox{
+      margin-top:12px;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(0,0,0,.02);
+    }
+    body.dark .mvpBox{background:rgba(255,255,255,.03)}
+    .mvpTitle{font-weight:900; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+    .mvpTop3{margin-top:8px}
+    .mvpRow{
+      display:flex;align-items:center;justify-content:space-between;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:8px 10px;
+      background:transparent;
+      margin-top:8px;
+      font-weight:800;
+    }
+    .mvpLeft{display:flex;align-items:center;gap:8px}
+    .medal{
+      width:28px;height:28px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      border:1px solid var(--border);
+      background:var(--card);
+      font-weight:900;
+    }
+
+    /* ===== METEO ===== */
+    .weatherBox{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+      background:var(--chipBg);
+      display:none; /* appare solo se c’è partita */
+      overflow:hidden;
+    }
+    .weatherTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .weatherTitle{
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .weatherBig{
+      font-size:44px;
+      line-height:1;
+      margin-top:10px;
+    }
+    .weatherGrid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+    @media(min-width:520px){
+      .weatherGrid{grid-template-columns:1fr 1fr 1fr}
+    }
+    .wChip{
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px;
+      background:transparent;
+    }
+    .wLabel{font-size:12px;color:var(--muted);font-weight:800}
+    .wValue{margin-top:4px;font-weight:900}
+
+    .alert{
+      margin-top:10px;
+      border-radius:12px;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      font-weight:900;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .alert .aIcon{font-size:18px;line-height:1.1}
+    .alert .aText{font-weight:800}
+    .alert.ok{background:var(--okBg); color:var(--okText); border-color:var(--okBorder)}
+    .alert.warn{background:var(--warnBg); color:var(--warnText); border-color:var(--warnBorder)}
+    .alert.risk{background:var(--riskBg); color:var(--riskText); border-color:var(--riskBorder)}
+    .weatherNote{margin-top:8px;color:var(--muted);font-size:12px}
+  </style>
 </head>
 
 <body>
 <div class="wrap">
 
-<div class="header">
-  <div class="logo">QDP</div>
-  <h1>Quelli della pensione</h1>
-  <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
-</div>
-
-<div class="card">
-  <div class="mapWrap">
-    <iframe src="https://www.google.com/maps?q=40.1239395,18.1203671&z=18&output=embed"></iframe>
-  </div>
-  <div class="mapActions">
-    <a class="btn" href="https://maps.app.goo.gl/SfZ5e8wr9qXLVn826" target="_blank">📍 Portami al campo</a>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">QDP</div>
+    <h1>Quelli della pensione</h1>
+    <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
   </div>
 
-  <!-- METEO -->
-  <div id="weatherBox" class="weatherBox">
-    <div class="weatherHead">
-      <div id="weatherIcon" class="weatherIcon">⛅</div>
-      <div>
-        Meteo partita<br>
-        <span id="weatherDate" class="muted"></span>
+  <!-- HERO -->
+  <div class="card">
+    <div class="heroImgWrap">
+      <img src="foto.jpg" alt="Quelli della pensione">
+    </div>
+    <div class="heroCaption">OGNI MALEDETTO GIOVEDÌ</div>
+  </div>
+
+  <!-- PARTITA -->
+  <div class="card">
+    <div id="status" class="muted">Caricamento…</div>
+    <div id="info"></div>
+
+    <!-- MVP -->
+    <div id="mvpBox" class="mvpBox" style="display:none">
+      <div class="mvpTitle">
+        <div id="mvpTitle">🏆 MVP</div>
+        <div id="mvpStatePill" class="pill" style="margin:0"></div>
       </div>
+      <div id="mvpMain" class="muted" style="margin-top:6px">Caricamento…</div>
+      <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
     </div>
 
-    <div id="weatherAlert" class="weatherAlert ok">🟢 METEO OK</div>
+    <!-- MAPPA (fix: coordinate) -->
+    <div id="mapBox" class="mapWrap" style="display:none">
+      <iframe
+        id="mapFrame"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=40.1239395,18.1203671&z=18&output=embed">
+      </iframe>
+    </div>
 
-    <div class="weatherRow"><span>🌡 Temperatura</span><span id="wTemp">–</span></div>
-    <div class="weatherRow"><span>🌧 Pioggia</span><span id="wRain">–</span></div>
-    <div class="weatherRow"><span>💨 Vento</span><span id="wWind">–</span></div>
-    <div class="weatherRow"><span>🧭 Stato</span><span id="wState">–</span></div>
+    <div id="mapActions" class="mapActions" style="display:none">
+      <a id="mapLink" class="btn" href="#" target="_blank" rel="noopener">📍 Portami al campo</a>
+      <a id="mapOpen" class="btn ghost" href="#" target="_blank" rel="noopener">🗺 Apri su Maps</a>
+    </div>
 
-    <div id="weatherNote" class="weatherNote">Condizioni buone per giocare</div>
+    <!-- METEO (sotto mappa) -->
+    <div id="weatherBox" class="weatherBox">
+      <div class="weatherTop">
+        <div class="weatherTitle">🌤️ Meteo partita</div>
+        <div id="weatherWhen" class="pill" style="margin:0"></div>
+      </div>
+
+      <div id="weatherBig" class="weatherBig">⏳</div>
+      <div id="weatherDesc" class="muted" style="margin-top:6px">Caricamento meteo…</div>
+
+      <div class="weatherGrid">
+        <div class="wChip">
+          <div class="wLabel">Temperatura</div>
+          <div id="wTemp" class="wValue">—</div>
+        </div>
+        <div class="wChip">
+          <div class="wLabel">Pioggia / Probabilità</div>
+          <div id="wRain" class="wValue">—</div>
+        </div>
+        <div class="wChip">
+          <div class="wLabel">Vento</div>
+          <div id="wWind" class="wValue">—</div>
+        </div>
+      </div>
+
+      <div id="weatherAlert" class="alert ok" style="display:none">
+        <div class="aIcon" id="aIcon">✅</div>
+        <div class="aText" id="aText">—</div>
+      </div>
+
+      <div class="weatherNote">Dati meteo automatici (stima). Controlla anche Maps prima di uscire.</div>
+    </div>
+
+    <!-- MARCATORI -->
+    <div id="scorersBox" style="display:none;margin-top:12px">
+      <div class="line"><b>⚽ Marcatori</b></div>
+      <div id="scorersText" class="muted"></div>
+    </div>
+
+    <div class="line"><b>Convocati</b></div>
+    <div id="called" class="muted">—</div>
+
+    <div id="teamsBox" style="display:none;margin-top:12px">
+      <div class="line kit"><span id="tAIcon"></span><b>Squadra A</b></div>
+      <div id="teamA" class="muted"></div>
+
+      <div class="line kit" style="margin-top:8px"><span id="tBIcon"></span><b>Squadra B</b></div>
+      <div id="teamB" class="muted"></div>
+    </div>
   </div>
-</div>
+
+  <!-- NAV -->
+  <div class="card nav muted">
+    <a href="storico.html">📚 Storico</a>
+    <a href="marcatori.html">⚽ Marcatori</a>
+    <a href="mvp.html">🏆 Vota MVP</a>
+    <a href="componenti.html">👥 Componenti</a>
+    <a href="admin.html">🔐 Admin</a>
+  </div>
 
 </div>
+
+<button id="themeToggle" class="fab">🌙</button>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
-// --- DATI METEO DI ESEMPIO (come quelli che già stai mostrando)
-const meteo = {
-  temp: 10,
-  rain: 0,
-  rainProb: 0,
-  wind: 2,
-  state: "Nebbia",
-  date: "giovedì 22 gennaio 2026 • 21:00"
-};
-
-document.getElementById("weatherDate").textContent = meteo.date;
-document.getElementById("wTemp").textContent = meteo.temp + "°C";
-document.getElementById("wRain").textContent = meteo.rainProb + "% • " + meteo.rain + "mm";
-document.getElementById("wWind").textContent = meteo.wind + " km/h";
-document.getElementById("wState").textContent = meteo.state;
-
-// LOGICA ALERT
-const alertEl = document.getElementById("weatherAlert");
-const noteEl = document.getElementById("weatherNote");
-const iconEl = document.getElementById("weatherIcon");
-
-if(meteo.rain >= 3 || meteo.wind >= 35){
-  alertEl.className="weatherAlert bad";
-  alertEl.textContent="🔴 RISCHIO PARTITA";
-  noteEl.textContent="Condizioni meteo critiche";
-  iconEl.textContent="⛈️";
+/* THEME */
+const themeBtn = document.getElementById("themeToggle");
+function setTheme(mode){
+  document.body.classList.toggle("dark", mode === "dark");
+  themeBtn.textContent = (mode === "dark") ? "☀️" : "🌙";
+  localStorage.setItem("qdp_theme", mode);
 }
-else if(meteo.rain >= 1 || meteo.wind >= 20){
-  alertEl.className="weatherAlert warn";
-  alertEl.textContent="🟡 ATTENZIONE";
-  noteEl.textContent="Possibili difficoltà di gioco";
-  iconEl.textContent="🌦️";
+setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
+themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+
+/* SUPABASE */
+if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+  alert("config.js non caricato o non valido");
+  throw new Error("Missing config");
 }
-else{
-  alertEl.className="weatherAlert ok";
-  alertEl.textContent="🟢 METEO OK";
-  noteEl.textContent="Condizioni buone per giocare";
-  iconEl.textContent = (meteo.state.toLowerCase().includes("nebb")) ? "🌫️" : "⛅";
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const statusEl = document.getElementById("status");
+const infoEl = document.getElementById("info");
+const calledEl = document.getElementById("called");
+
+const mapBox = document.getElementById("mapBox");
+const mapFrame = document.getElementById("mapFrame");
+const mapActions = document.getElementById("mapActions");
+const mapLink = document.getElementById("mapLink");
+const mapOpen = document.getElementById("mapOpen");
+
+/* ✅ IL TUO LINK PRECISO (quello che vuoi aprire) */
+const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
+
+/* ✅ coordinate del campo (per iframe e fallback) */
+const FIELD_LAT = 40.1239395;
+const FIELD_LNG = 18.1203671;
+
+const scorersBox = document.getElementById("scorersBox");
+const scorersText = document.getElementById("scorersText");
+
+const teamsBox = document.getElementById("teamsBox");
+const teamAEl = document.getElementById("teamA");
+const teamBEl = document.getElementById("teamB");
+const tAIcon = document.getElementById("tAIcon");
+const tBIcon = document.getElementById("tBIcon");
+
+/* MVP DOM */
+const mvpBox = document.getElementById("mvpBox");
+const mvpTitle = document.getElementById("mvpTitle");
+const mvpStatePill = document.getElementById("mvpStatePill");
+const mvpMain = document.getElementById("mvpMain");
+const mvpTop3 = document.getElementById("mvpTop3");
+
+/* METEO DOM */
+const weatherBox = document.getElementById("weatherBox");
+const weatherWhen = document.getElementById("weatherWhen");
+const weatherBig = document.getElementById("weatherBig");
+const weatherDesc = document.getElementById("weatherDesc");
+const wTemp = document.getElementById("wTemp");
+const wRain = document.getElementById("wRain");
+const wWind = document.getElementById("wWind");
+const weatherAlert = document.getElementById("weatherAlert");
+const aIcon = document.getElementById("aIcon");
+const aText = document.getElementById("aText");
+
+function kitSVG(main, stripe){
+  return `
+  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M18 12 L26 6 H38 L46 12 L58 20 L52 33 L46 29 V58 H18 V29 L12 33 L6 20 Z"
+      fill="${main}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
+    <path d="M30 10 H34 V58 H30 Z" fill="${stripe}" opacity="0.85"/>
+  </svg>`;
 }
+
+function formatDateFull(iso){
+  try{
+    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  }catch(e){
+    return String(iso||"");
+  }
+}
+
+function medal(i){
+  if(i===0) return "🥇";
+  if(i===1) return "🥈";
+  if(i===2) return "🥉";
+  return String(i+1);
+}
+
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* Stato votazione: APERTA se almeno una colonna è true */
+function isVoteOpen(match){
+  return (match?.vote_open === true) || (match?.voting_open === true);
+}
+
+/* ===== MVP ===== */
+async function loadMVP(matchId, calledPlayers){
+  try{
+    const { data: votes, error } = await client
+      .from("mvp_votes")
+      .select("voted_player")
+      .eq("match_id", matchId);
+
+    if(error) throw error;
+
+    const counts = new Map();
+    (votes||[]).forEach(v=>{
+      const id = String(v.voted_player || "");
+      if(!id) return;
+      counts.set(id, (counts.get(id)||0) + 1);
+    });
+
+    if(counts.size === 0){
+      mvpMain.textContent = "Nessun voto ancora.";
+      mvpTop3.style.display = "none";
+      return;
+    }
+
+    const idToName = new Map((calledPlayers||[]).map(p=>[String(p.id), p.name]));
+    const rows = [...counts.entries()]
+      .map(([id,c])=>({ id, name: idToName.get(String(id)) || id, votes: c }))
+      .sort((a,b)=> b.votes - a.votes || String(a.name).localeCompare(String(b.name),"it"));
+
+    const topVotes = rows[0].votes;
+    const tops = rows.filter(r=>r.votes===topVotes).map(r=>r.name);
+
+    mvpMain.textContent = (tops.length === 1)
+      ? `${tops[0]} (${topVotes} voto/i)`
+      : `Parità: ${tops.join(", ")} (${topVotes} voto/i)`;
+
+    const top3 = rows.slice(0,3);
+    mvpTop3.innerHTML = top3.map((r,i)=>`
+      <div class="mvpRow">
+        <div class="mvpLeft">
+          <div class="medal">${escapeHtml(medal(i))}</div>
+          <div>${escapeHtml(r.name)}</div>
+        </div>
+        <div>${r.votes}</div>
+      </div>
+    `).join("");
+    mvpTop3.style.display = "block";
+
+  }catch(e){
+    console.error(e);
+    mvpMain.textContent = "Errore MVP";
+    mvpTop3.style.display = "none";
+  }
+}
+
+/* ===== MAPPA ===== */
+function setupMapLinks(){
+  mapLink.href = FIXED_MAP_APP_URL;
+  mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
+}
+
+/* ===== METEO (Open-Meteo) ===== */
+function hhmm(t){
+  return String(t||"").slice(0,5);
+}
+function pad2(n){ return String(n).padStart(2,"0"); }
+
+function toMatchLocalISOString(match_date, match_time){
+  // match_date: "YYYY-MM-DD"
+  // match_time: "HH:MM:SS" oppure "HH:MM"
+  const d = String(match_date||"").trim();
+  const t = String(match_time||"21:00:00").trim();
+  const h = pad2(parseInt(t.slice(0,2) || "21", 10));
+  const m = pad2(parseInt(t.slice(3,5) || "00", 10));
+  // ISO "YYYY-MM-DDTHH:MM"
+  return `${d}T${h}:${m}`;
+}
+
+function weatherCodeToTextEmoji(code){
+  const c = Number(code);
+  // WMO codes (Open-Meteo)
+  if(c === 0) return { emoji:"☀️", text:"Sereno" };
+  if(c === 1) return { emoji:"🌤️", text:"Prevalentemente sereno" };
+  if(c === 2) return { emoji:"⛅", text:"Parzialmente nuvoloso" };
+  if(c === 3) return { emoji:"☁️", text:"Nuvoloso" };
+  if(c === 45 || c === 48) return { emoji:"🌫️", text:"Nebbia" };
+  if([51,53,55].includes(c)) return { emoji:"🌦️", text:"Pioviggine" };
+  if([56,57].includes(c)) return { emoji:"🌧️", text:"Pioviggine (gelata)" };
+  if([61,63,65].includes(c)) return { emoji:"🌧️", text:"Pioggia" };
+  if([66,67].includes(c)) return { emoji:"🌧️", text:"Pioggia gelata" };
+  if([71,73,75,77].includes(c)) return { emoji:"🌨️", text:"Neve" };
+  if([80,81,82].includes(c)) return { emoji:"🌧️", text:"Rovesci" };
+  if([85,86].includes(c)) return { emoji:"🌨️", text:"Rovesci di neve" };
+  if([95,96,99].includes(c)) return { emoji:"⛈️", text:"Temporale" };
+  return { emoji:"🌤️", text:"Variabile" };
+}
+
+function setAlert(level, icon, text){
+  weatherAlert.style.display = "flex";
+  weatherAlert.className = "alert " + level;
+  aIcon.textContent = icon;
+  aText.textContent = text;
+}
+
+function computeWeatherAlert({code, precipMm, precipProb, windKmh}){
+  // Regole semplici (puoi cambiarle quando vuoi)
+  // Rischio: temporali o pioggia importante o probabilità alta o vento forte
+  const c = Number(code);
+  const prob = Number(precipProb ?? 0);
+  const rain = Number(precipMm ?? 0);
+  const wind = Number(windKmh ?? 0);
+
+  const isStorm = [95,96,99].includes(c);
+  const isSnow = [71,73,75,77,85,86].includes(c);
+
+  if(isStorm || isSnow || rain >= 2 || prob >= 70 || wind >= 40){
+    return { level:"risk", icon:"⛔", text:"Rischio partita: meteo brutto. Valutate bene prima di giocare." };
+  }
+
+  // Attenzione: pioggia leggera / probabilità media / vento medio / nebbia
+  const isFog = (c === 45 || c === 48);
+  if(isFog || rain > 0 || prob >= 35 || wind >= 25){
+    // Nebbia: per te è “ok”, quindi la metto come ATTENZIONE leggera (non rischio)
+    const msg = isFog
+      ? "Attenzione: possibile nebbia. Si può giocare, ma fate attenzione."
+      : "Attenzione: meteo così così. Portate una giacca e controllate prima di uscire.";
+    return { level:"warn", icon:"⚠️", text: msg };
+  }
+
+  // OK
+  return { level:"ok", icon:"✅", text:"Meteo OK: condizioni buone per giocare." };
+}
+
+async function loadWeather(match){
+  // Mostro meteo solo se ho partita
+  weatherBox.style.display = "block";
+  weatherAlert.style.display = "none";
+
+  const whenStr = `${formatDateFull(match.match_date)} • ${hhmm(match.match_time)}`;
+  weatherWhen.textContent = whenStr;
+
+  weatherBig.textContent = "⏳";
+  weatherDesc.textContent = "Caricamento meteo…";
+  wTemp.textContent = "—";
+  wRain.textContent = "—";
+  wWind.textContent = "—";
+
+  const targetLocalISO = toMatchLocalISOString(match.match_date, match.match_time);
+
+  try{
+    const url =
+      `https://api.open-meteo.com/v1/forecast` +
+      `?latitude=${encodeURIComponent(FIELD_LAT)}` +
+      `&longitude=${encodeURIComponent(FIELD_LNG)}` +
+      `&hourly=temperature_2m,precipitation,precipitation_probability,weathercode,windspeed_10m` +
+      `&timezone=Europe%2FRome`;
+
+    const res = await fetch(url, { cache:"no-store" });
+    if(!res.ok) throw new Error("Meteo non disponibile");
+    const js = await res.json();
+
+    const times = js?.hourly?.time || [];
+    const temp = js?.hourly?.temperature_2m || [];
+    const prcp = js?.hourly?.precipitation || [];
+    const prob = js?.hourly?.precipitation_probability || [];
+    const code = js?.hourly?.weathercode || [];
+    const wind = js?.hourly?.windspeed_10m || [];
+
+    if(!times.length) throw new Error("Dati meteo incompleti");
+
+    // cerco indice ora più vicina
+    let bestIdx = 0;
+    let bestDiff = Infinity;
+    const targetMs = new Date(targetLocalISO).getTime();
+    for(let i=0;i<times.length;i++){
+      const ms = new Date(times[i]).getTime();
+      const diff = Math.abs(ms - targetMs);
+      if(diff < bestDiff){
+        bestDiff = diff;
+        bestIdx = i;
+      }
+    }
+
+    const tVal = temp[bestIdx];
+    const pMm = prcp[bestIdx];
+    const pPr = prob[bestIdx];
+    const wK = wind[bestIdx];
+    const wC = code[bestIdx];
+
+    const wx = weatherCodeToTextEmoji(wC);
+
+    weatherBig.textContent = wx.emoji;
+    weatherDesc.textContent = `${wx.text}`;
+
+    if(tVal != null && tVal !== ""){
+      wTemp.textContent = `${Math.round(Number(tVal))}°C`;
+    }else{
+      wTemp.textContent = "—";
+    }
+
+    const rainTxt = `${(pMm != null ? Number(pMm).toFixed(1) : "—")} mm • ${pPr != null ? Math.round(Number(pPr)) + "%" : "—"}`;
+    wRain.textContent = rainTxt;
+
+    if(wK != null && wK !== ""){
+      wWind.textContent = `${Math.round(Number(wK))} km/h`;
+    }else{
+      wWind.textContent = "—";
+    }
+
+    const alert = computeWeatherAlert({ code:wC, precipMm:pMm, precipProb:pPr, windKmh:wK });
+    setAlert(alert.level, alert.icon, alert.text);
+
+  }catch(e){
+    console.error(e);
+    weatherBig.textContent = "🌤️";
+    weatherDesc.textContent = "Meteo non disponibile al momento.";
+    setAlert("warn", "⚠️", "Attenzione: meteo non disponibile. Controlla manualmente prima di uscire.");
+  }
+}
+
+/* ===== LOAD PAGE ===== */
+async function load(){
+  const { data, error } = await client
+    .from("matches")
+    .select("id,match_date,match_time,venue,keeper_a,keeper_b,score_a,score_b,called_up,team_a,team_b,scorers_text,vote_open,voting_open")
+    .order("match_date",{ascending:false})
+    .order("match_time",{ascending:false})
+    .limit(1);
+
+  if(error){
+    statusEl.textContent = "Errore caricamento partita";
+    infoEl.innerHTML = `<div class="muted">${escapeHtml(error.message)}</div>`;
+    return;
+  }
+
+  if(!data || !data.length){
+    statusEl.textContent = "Nessuna partita creata";
+    // meteo NON si vede se non c’è partita
+    weatherBox.style.display = "none";
+    return;
+  }
+
+  const m = data[0];
+  statusEl.textContent = "Partita trovata ✅";
+
+  const time = String(m.match_time||"").slice(0,5);
+  const result = (m.score_a!=null && m.score_b!=null) ? `${m.score_a}-${m.score_b}` : "da giocare";
+  const voteOpen = isVoteOpen(m);
+
+  // MVP UI
+  mvpBox.style.display = "block";
+  mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
+  mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
+  mvpMain.textContent = "Caricamento…";
+  mvpTop3.style.display = "none";
+
+  infoEl.innerHTML = `
+    <div class="line"><b>📅 ${escapeHtml(formatDateFull(m.match_date))}</b></div>
+    <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
+    <div class="line kit">${kitSVG("#facc15","#111")} <b>Squadra A:</b> ${escapeHtml(m.keeper_a || "")}</div>
+    <div class="line kit">${kitSVG("#ef4444","#fff")} <b>Squadra B:</b> ${escapeHtml(m.keeper_b || "")}</div>
+    <div class="line"><span class="badge">🏁 ${escapeHtml(result)}</span></div>
+  `;
+
+  if(m.scorers_text && String(m.scorers_text).trim() !== ""){
+    scorersBox.style.display="block";
+    scorersText.innerHTML = escapeHtml(m.scorers_text).replaceAll("\n","<br>");
+  }else{
+    scorersBox.style.display="none";
+  }
+
+  // MAPPA
+  mapBox.style.display = "block";
+  mapActions.style.display = "flex";
+  mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
+  setupMapLinks();
+
+  // METEO (solo se partita esiste)
+  await loadWeather(m);
+
+  // players map per convocati / squadre / MVP
+  let playersForCalled = [];
+  if(Array.isArray(m.called_up) && m.called_up.length){
+    const { data:p, error:pe } = await client.from("players").select("id,name").in("id", m.called_up);
+    if(!pe){
+      const map = new Map((p||[]).map(x=>[String(x.id), x.name]));
+      playersForCalled = (p||[]);
+      calledEl.innerHTML = m.called_up
+        .map(id=>`<span class="pill">${escapeHtml(map.get(String(id)) || "")}</span>`)
+        .join("");
+    }else{
+      calledEl.textContent = "—";
+    }
+  } else {
+    calledEl.textContent = "—";
+  }
+
+  // MVP
+  await loadMVP(m.id, playersForCalled);
+
+  // Formazioni
+  if((Array.isArray(m.team_a) && m.team_a.length) || (Array.isArray(m.team_b) && m.team_b.length)){
+    teamsBox.style.display="block";
+    tAIcon.innerHTML = kitSVG("#facc15","#111");
+    tBIcon.innerHTML = kitSVG("#ef4444","#fff");
+
+    const ids=[...new Set([...(m.team_a||[]),...(m.team_b||[])].map(String))];
+    const { data:p2 }=await client.from("players").select("id,name").in("id", ids);
+    const map2=new Map((p2||[]).map(x=>[String(x.id),x.name]));
+
+    teamAEl.innerHTML=(m.team_a||[]).map(id=>`<span class="pill">${escapeHtml(map2.get(String(id)) || "")}</span>`).join("") || "—";
+    teamBEl.innerHTML=(m.team_b||[]).map(id=>`<span class="pill">${escapeHtml(map2.get(String(id)) || "")}</span>`).join("") || "—";
+  }else{
+    teamsBox.style.display="none";
+  }
+}
+
+load();
 </script>
 </body>
 </html>
