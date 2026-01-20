@@ -11,23 +11,18 @@
     :root{
       --bg:#f4f6f8; --card:#ffffff; --text:#111827; --muted:#6b7280;
       --border:#e5e7eb; --shadow:0 6px 20px rgba(0,0,0,.08);
-      --btn:#111; --btn2:#444; --danger:#b00020;
-      --okBg:#dcfce7; --okText:#166534;
-      --errBg:#ffe4e6; --errText:#9f1239;
-      --pill:#eeeeee;
+      --btn:#111; --btn2:#444; --danger:#b00020; --pill:#eeeeee;
+      --okBg:#dcfce7; --okText:#166534; --errBg:#ffe4e6; --errText:#9f1239;
     }
     body.dark{
       --bg:#0f1115; --card:#171a21; --text:#e5e7eb; --muted:#a1a1aa;
       --border:#2a2f3a; --shadow:0 10px 28px rgba(0,0,0,.45);
-      --btn:#0b0e14; --btn2:#2a3242; --danger:#ff4d4d;
-      --okBg:rgba(34,197,94,.15); --okText:#86efac;
-      --errBg:rgba(244,63,94,.16); --errText:#fda4af;
-      --pill:#222631;
+      --btn:#0b0e14; --btn2:#2a3242; --danger:#ff4d4d; --pill:#222631;
+      --okBg:rgba(34,197,94,.15); --okText:#86efac; --errBg:rgba(244,63,94,.16); --errText:#fda4af;
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
-    a{color:inherit;text-decoration:none}
-
+    a{color:inherit}
     .wrap{max-width:980px;margin:20px auto;padding:16px}
     .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
     .brand{display:flex;align-items:center;gap:10px}
@@ -49,6 +44,7 @@
       border-radius:16px;
       padding:16px;
       box-shadow:var(--shadow);
+      margin-top:12px;
     }
 
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -56,26 +52,20 @@
       padding:12px 14px;border-radius:14px;border:0;
       background:var(--btn);color:#fff;font-weight:900;cursor:pointer;
       display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      user-select:none;
+      user-select:none;text-decoration:none;
     }
     .btn.secondary{background:var(--btn2)}
     .btn.danger{background:var(--danger)}
     .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+    .btn.small{padding:10px 12px;border-radius:12px;font-weight:800}
     .btn:disabled{opacity:.6;cursor:not-allowed}
-
-    .pill{
-      display:inline-block;background:var(--pill);
-      border:1px solid var(--border);
-      border-radius:999px;padding:6px 10px;font-weight:900;
-      font-size:12px;
-    }
 
     .msg{
       margin-top:12px;padding:12px;border-radius:12px;
       font-size:13px;border:1px solid var(--border);
       background:rgba(0,0,0,.03);white-space:pre-wrap;
     }
-    body.dark .msg{background:rgba(255,255,255,.03)}
+    body.dark .msg{background:rgba(255,255,255,.04)}
     .msg.ok{background:var(--okBg);color:var(--okText);border-color:rgba(34,197,94,.35)}
     .msg.err{background:var(--errBg);color:var(--errText);border-color:rgba(244,63,94,.35);font-weight:900}
 
@@ -90,43 +80,60 @@
       font-family:Inter;
     }
 
-    .grid{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:10px;
-    }
-    @media(min-width:720px){
-      .grid{grid-template-columns:repeat(3,1fr)}
-    }
-    @media(min-width:980px){
-      .grid{grid-template-columns:repeat(4,1fr)}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--pill);
+      font-weight:900;font-size:12px;
     }
 
-    .tile{
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+    @media(min-width:820px){ .grid{grid-template-columns:repeat(3,1fr);} }
+
+    .photoCard{
       border:1px solid var(--border);
       border-radius:16px;
       overflow:hidden;
-      background:rgba(0,0,0,.02);
+      background:transparent;
       position:relative;
+      box-shadow:var(--shadow);
     }
-    body.dark .tile{background:rgba(255,255,255,.03)}
-    .tile img{
+    .photoCard img{
       width:100%;
       height:220px;
       object-fit:cover;
       display:block;
-      background:#00000010;
+      background:#000;
     }
-    .tileBar{
-      padding:10px;
+    .meta{
+      padding:10px 12px;
       display:flex;
-      align-items:center;
       justify-content:space-between;
+      align-items:center;
       gap:10px;
+      font-size:12px;
+      color:var(--muted);
     }
-    .tileTime{font-size:12px;color:var(--muted);font-weight:800}
-
+    .delBtn{
+      position:absolute;
+      right:10px; top:10px;
+      z-index:50;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.75);
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+      user-select:none;
+    }
+    body.dark .delBtn{background:rgba(0,0,0,.55)}
     .fab{
       position:fixed;right:16px;bottom:16px;
       width:54px;height:54px;border-radius:999px;
@@ -141,33 +148,43 @@
 
 <body>
 <div class="wrap">
+
   <div class="top">
     <div class="brand">
       <div class="logo">QDP</div>
       <div>
         <h1>Foto</h1>
-        <div class="muted">Carica una foto e premi aggiorna per vederla in pagina</div>
+        <div class="muted">Carica una foto • aggiorna per vedere le nuove</div>
       </div>
     </div>
     <div class="row">
-      <a class="btn ghost" href="index.html">⬅️ Home</a>
-      <span id="adminPill" class="pill" style="display:none">🔐 Admin attivo</span>
-      <button id="btnRefresh" class="btn ghost">🔄 Aggiorna</button>
+      <a class="btn ghost small" href="index.html">⬅️ Home</a>
+      <button id="btnAdmin" class="btn secondary small">🔐 Admin: OFF</button>
     </div>
   </div>
 
   <div class="card">
-    <div class="row">
-      <div style="flex:1; min-width:240px">
+    <div class="row" style="justify-content:space-between;align-items:flex-start">
+      <div style="flex:1;min-width:240px">
+        <div class="muted" style="margin-bottom:8px">Scegli una foto e premi “Carica”.</div>
         <input id="fileInput" type="file" accept="image/*">
       </div>
-      <button id="btnUpload" class="btn">⬆️ Carica</button>
+      <div class="row" style="margin-top:0">
+        <button id="btnUpload" class="btn">⬆️ Carica</button>
+        <button id="btnRefresh" class="btn ghost">🔄 Aggiorna</button>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px;justify-content:space-between">
+      <span id="adminPill" class="pill">👤 Admin non attivo</span>
+      <span id="countPill" class="pill">📸 0 foto</span>
     </div>
 
     <div id="msg" class="msg">Pronto.</div>
 
     <div id="grid" class="grid"></div>
   </div>
+
 </div>
 
 <button id="themeToggle" class="fab">🌙</button>
@@ -183,7 +200,7 @@ function setTheme(mode){
   themeBtn.textContent = (mode === "dark") ? "☀️" : "🌙";
   localStorage.setItem("qdp_theme", mode);
 }
-setTheme(localStorage.getItem("qdp_theme")==="dark" ? "dark" : "light");
+setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
 themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 
 /* ===== SUPABASE ===== */
@@ -193,18 +210,26 @@ if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
 }
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ===== ADMIN MODE via ?admin=1 ===== */
-const params = new URLSearchParams(location.search);
-const IS_ADMIN = params.get("admin") === "1";
-const adminPill = document.getElementById("adminPill");
-if(IS_ADMIN) adminPill.style.display = "inline-block";
+/* ===== SETTINGS ===== */
+const TABLE = "photos";
+const BUCKET = "photos";
+const ADMIN_CODE = "QDP"; // cambia se vuoi
 
-/* ===== UI ===== */
-const msgEl = document.getElementById("msg");
-function setMsg(t, kind=""){
-  msgEl.className = "msg" + (kind ? " " + kind : "");
-  msgEl.textContent = t;
+/* ===== DOM ===== */
+const grid = document.getElementById("grid");
+const msg = document.getElementById("msg");
+const fileInput = document.getElementById("fileInput");
+const btnUpload = document.getElementById("btnUpload");
+const btnRefresh = document.getElementById("btnRefresh");
+const btnAdmin = document.getElementById("btnAdmin");
+const adminPill = document.getElementById("adminPill");
+const countPill = document.getElementById("countPill");
+
+function setMsg(text, kind=""){
+  msg.className = "msg" + (kind ? " " + kind : "");
+  msg.textContent = text;
 }
+
 function escapeHtml(s){
   return String(s ?? "")
     .replaceAll("&","&amp;")
@@ -213,87 +238,124 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-function formatTime(ts){
+
+function fmtDate(ts){
   try{
     const d = new Date(ts);
-    return d.toLocaleString("it-IT",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
-  }catch(e){ return ""; }
+    return d.toLocaleString("it-IT", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" });
+  }catch(e){
+    return String(ts||"");
+  }
 }
 
-/* ===== CONFIG BUCKET/TABELLA =====
-   Bucket: photos
-   Table : photos  (columns: id, file_path, created_at)
-*/
-const BUCKET = "photos";
+/* ===== Admin mode (solo UI, senza login) ===== */
+function isAdmin(){
+  return localStorage.getItem("qdp_admin_photos") === "1";
+}
+function setAdmin(on){
+  localStorage.setItem("qdp_admin_photos", on ? "1" : "0");
+  renderAdminUI();
+  loadPhotos();
+}
+function renderAdminUI(){
+  const on = isAdmin();
+  btnAdmin.textContent = on ? "🔐 Admin: ON" : "🔐 Admin: OFF";
+  adminPill.textContent = on ? "✅ Admin attivo (puoi eliminare)" : "👤 Admin non attivo";
+}
 
-/* ===== LIST + RENDER ===== */
+/* ===== helpers: url + path ===== */
+function pickFilePath(row){
+  return row?.file_path || row?.path || row?.storage_path || row?.file || null;
+}
+function pickImageUrl(row){
+  return row?.public_url || row?.url || row?.image_url || row?.image || row?.link || null;
+}
+function buildPublicUrlFromPath(filePath){
+  if(!filePath) return null;
+  const r = client.storage.from(BUCKET).getPublicUrl(filePath);
+  return r?.data?.publicUrl || null;
+}
+
+/* ===== LOAD LIST ===== */
+let PHOTOS = [];
+
 async function loadPhotos(){
-  setMsg("🔄 Caricamento foto…");
-  const { data, error } = await client
-    .from("photos")
-    .select("id,file_path,created_at")
-    .order("created_at",{ascending:false})
-    .limit(200);
+  try{
+    setMsg("⏳ Caricamento foto…");
+    grid.innerHTML = "";
 
-  if(error){
-    console.error(error);
-    setMsg("❌ Errore caricamento: " + error.message, "err");
-    return;
+    const { data, error } = await client
+      .from(TABLE)
+      .select("*")
+      .order("created_at", { ascending:false })
+      .limit(200);
+
+    if(error) throw error;
+
+    PHOTOS = data || [];
+    countPill.textContent = `📸 ${PHOTOS.length} foto`;
+
+    if(!PHOTOS.length){
+      grid.innerHTML = `<div class="muted">Nessuna foto caricata.</div>`;
+      setMsg("✅ Nessuna foto per ora.", "ok");
+      return;
+    }
+
+    renderGrid();
+    setMsg("✅ Foto aggiornate.", "ok");
+  }catch(e){
+    console.error(e);
+    setMsg("❌ Errore caricamento: " + (e?.message || e), "err");
   }
+}
 
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
+function renderGrid(){
+  const admin = isAdmin();
+  grid.innerHTML = PHOTOS.map(row => {
+    const filePath = pickFilePath(row);
+    const url = pickImageUrl(row) || buildPublicUrlFromPath(filePath) || "";
+    const created = row?.created_at || row?.createdAt || row?.created || "";
+    const id = row?.id;
 
-  if(!data || !data.length){
-    grid.innerHTML = `<div class="muted">Nessuna foto caricata.</div>`;
-    setMsg("Nessuna foto caricata.");
-    return;
-  }
-
-  for(const row of data){
-    const { data: pub } = client.storage.from(BUCKET).getPublicUrl(row.file_path);
-    const url = pub?.publicUrl || "";
-
-    const tile = document.createElement("div");
-    tile.className = "tile";
-
-    tile.innerHTML = `
-      <img src="${escapeHtml(url)}" alt="foto">
-      <div class="tileBar">
-        <div class="tileTime">${escapeHtml(formatTime(row.created_at))}</div>
-        ${IS_ADMIN ? `<button class="btn danger" data-del="${escapeHtml(row.id)}" style="padding:10px 12px;border-radius:12px">🗑️ Elimina</button>` : ``}
+    return `
+      <div class="photoCard" data-card="1">
+        ${admin ? `<button class="delBtn" type="button" data-action="delete" data-id="${escapeHtml(id)}" data-path="${escapeHtml(filePath||"")}">🗑 Elimina</button>` : ""}
+        ${url
+          ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener"><img src="${escapeHtml(url)}" alt="foto"></a>`
+          : `<div style="height:220px;display:flex;align-items:center;justify-content:center" class="muted">URL non disponibile</div>`
+        }
+        <div class="meta">
+          <div>🕒 ${escapeHtml(fmtDate(created))}</div>
+          <div class="muted">ID: ${escapeHtml(String(id||""))}</div>
+        </div>
       </div>
     `;
-    grid.appendChild(tile);
-  }
-
-  // bind delete (solo admin)
-  if(IS_ADMIN){
-    grid.querySelectorAll("button[data-del]").forEach(btn=>{
-      btn.addEventListener("click", async ()=>{
-        const id = btn.getAttribute("data-del");
-        await deletePhotoById(id);
-      });
-    });
-  }
-
-  setMsg("✅ Foto caricate.", "ok");
+  }).join("");
 }
 
 /* ===== UPLOAD ===== */
+function safeUUID(){
+  try{
+    if(crypto?.randomUUID) return crypto.randomUUID();
+  }catch(e){}
+  return String(Date.now()) + "-" + Math.random().toString(16).slice(2);
+}
+
 async function uploadPhoto(){
-  const input = document.getElementById("fileInput");
-  const file = input.files?.[0];
+  const file = fileInput.files?.[0];
   if(!file) return setMsg("Seleziona una foto prima di caricare.", "err");
 
-  // nome file unico
-  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-  const safeExt = ext.replace(/[^a-z0-9]/g,"") || "jpg";
-  const filePath = `${Date.now()}_${Math.random().toString(16).slice(2)}.${safeExt}`;
+  btnUpload.disabled = true;
+  btnRefresh.disabled = true;
 
   try{
     setMsg("⬆️ Caricamento in corso…");
 
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+    const filename = `${safeUUID()}.${ext}`;
+    const filePath = `uploads/${filename}`;
+
+    // 1) upload storage
     const up = await client.storage.from(BUCKET).upload(filePath, file, {
       cacheControl: "3600",
       upsert: false,
@@ -301,58 +363,103 @@ async function uploadPhoto(){
     });
     if(up.error) throw up.error;
 
-    const ins = await client.from("photos").insert([{ file_path: filePath }]);
+    // 2) url pubblico
+    const publicUrl = buildPublicUrlFromPath(filePath);
+
+    // 3) insert db (robusto: prova file_path, se colonna non esiste ripiega su url)
+    let ins = await client.from(TABLE).insert([{ file_path: filePath }]).select("*").single();
+
+    if(ins.error && String(ins.error.message||"").toLowerCase().includes("file_path")){
+      // ripiego: tabella senza file_path
+      ins = await client.from(TABLE).insert([{ url: publicUrl }]).select("*").single();
+    }
+
+    if(ins.error && String(ins.error.message||"").toLowerCase().includes("url")){
+      // ripiego ulteriore: prova public_url
+      ins = await client.from(TABLE).insert([{ public_url: publicUrl }]).select("*").single();
+    }
+
     if(ins.error) throw ins.error;
 
-    input.value = "";
-    setMsg("✅ Foto caricata! Premi 🔄 Aggiorna per rivedere la lista (o aspetta il refresh).", "ok");
+    setMsg("✅ Foto caricata!", "ok");
+    fileInput.value = "";
     await loadPhotos();
 
   }catch(e){
     console.error(e);
-    setMsg("❌ Errore upload: " + (e.message || e), "err");
+    setMsg("❌ Errore upload: " + (e?.message || e), "err");
+  }finally{
+    btnUpload.disabled = false;
+    btnRefresh.disabled = false;
   }
 }
 
-/* ===== DELETE (admin) ===== */
-async function deletePhotoById(id){
-  if(!IS_ADMIN) return setMsg("Non sei in modalità admin.", "err");
+/* ===== DELETE (delegation, Android-safe) ===== */
+grid.addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-action='delete']");
+  if(!btn) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  if(!isAdmin()) return;
+
+  const id = btn.dataset.id;
+  const path = btn.dataset.path;
+
+  if(!id) return setMsg("ID mancante: impossibile eliminare.", "err");
   if(!confirm("Eliminare questa foto?")) return;
 
+  await deletePhoto(id, path);
+});
+
+async function deletePhoto(id, filePath){
   try{
-    setMsg("🗑️ Elimino…");
+    setMsg("🗑 Eliminazione…");
 
-    // 1) recupero path
-    const { data: row, error: e1 } = await client
-      .from("photos")
-      .select("id,file_path")
-      .eq("id", id)
-      .single();
-    if(e1) throw e1;
+    // 1) cancella riga DB
+    const r1 = await client.from(TABLE).delete().eq("id", id);
+    if(r1.error) throw r1.error;
 
-    // 2) delete file storage
-    const delFile = await client.storage.from(BUCKET).remove([row.file_path]);
-    if(delFile.error) throw delFile.error;
-
-    // 3) delete row tabella
-    const delRow = await client.from("photos").delete().eq("id", id);
-    if(delRow.error) throw delRow.error;
+    // 2) cancella file storage (se abbiamo il path)
+    if(filePath){
+      const r2 = await client.storage.from(BUCKET).remove([filePath]);
+      if(r2.error) console.warn("Storage remove:", r2.error);
+    }
 
     setMsg("✅ Foto eliminata.", "ok");
     await loadPhotos();
-
   }catch(e){
     console.error(e);
-    setMsg("❌ Errore eliminazione: " + (e.message || e), "err");
+    setMsg("❌ Errore eliminazione: " + (e?.message || e), "err");
   }
 }
 
 /* ===== EVENTS ===== */
-document.getElementById("btnRefresh").onclick = loadPhotos;
-document.getElementById("btnUpload").onclick = uploadPhoto;
+btnUpload.onclick = uploadPhoto;
+btnRefresh.onclick = loadPhotos;
+
+btnAdmin.onclick = () => {
+  const on = isAdmin();
+  if(on){
+    setAdmin(false);
+    setMsg("Admin disattivato.", "ok");
+    return;
+  }
+  const code = prompt("Inserisci codice admin:");
+  if(!code) return;
+  if(code.trim().toUpperCase() === ADMIN_CODE){
+    setAdmin(true);
+    setMsg("✅ Admin attivo.", "ok");
+  }else{
+    setMsg("❌ Codice errato.", "err");
+  }
+};
 
 /* ===== INIT ===== */
+renderAdminUI();
 loadPhotos();
 </script>
 </body>
 </html>
+```0
