@@ -19,6 +19,10 @@
       --logo1:#111;
       --logo2:#333;
       --btn:#111;
+
+      --okBg:#dcfce7; --okText:#166534; --okBd:rgba(34,197,94,.35);
+      --warnBg:#fff7ed; --warnText:#9a3412; --warnBd:rgba(249,115,22,.35);
+      --riskBg:#ffe4e6; --riskText:#9f1239; --riskBd:rgba(244,63,94,.35);
     }
     body.dark{
       --bg:#0f1115;
@@ -31,6 +35,10 @@
       --logo1:#0b0e14;
       --logo2:#2a3242;
       --btn:#0b0e14;
+
+      --okBg:rgba(34,197,94,.15); --okText:#86efac; --okBd:rgba(34,197,94,.35);
+      --warnBg:rgba(249,115,22,.14); --warnText:#fdba74; --warnBd:rgba(249,115,22,.35);
+      --riskBg:rgba(244,63,94,.16); --riskText:#fda4af; --riskBd:rgba(244,63,94,.35);
     }
 
     *{box-sizing:border-box}
@@ -53,6 +61,8 @@
     }
 
     .header{text-align:center}
+
+    /* ✅ LOGO "MONETA" */
     .logo{
       width:80px;height:80px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
@@ -60,7 +70,19 @@
       display:flex;align-items:center;justify-content:center;
       color:#fff;font-family:'Bebas Neue';font-size:34px;
       letter-spacing:2px;
+      cursor:pointer;
+      transform-style:preserve-3d;
+      will-change:transform;
     }
+    .logo.spin{
+      animation: coinSpin 900ms ease-in-out;
+    }
+    @keyframes coinSpin{
+      0%   { transform: rotateY(0deg); }
+      50%  { transform: rotateY(180deg); }
+      100% { transform: rotateY(360deg); }
+    }
+
     h1{
       font-family:'Bebas Neue';
       letter-spacing:2px;
@@ -209,6 +231,53 @@
       background:var(--card);
       font-weight:900;
     }
+
+    /* ✅ METEO */
+    .weatherBox{
+      margin-top:12px;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(0,0,0,.02);
+    }
+    body.dark .weatherBox{background:rgba(255,255,255,.03)}
+    .weatherHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      font-weight:900;
+    }
+    .weatherBig{
+      font-size:46px;
+      line-height:1;
+      margin-top:8px;
+      text-align:center;
+    }
+    .weatherLine{
+      margin-top:8px;
+      font-weight:900;
+      text-align:center;
+    }
+    .weatherMini{
+      margin-top:6px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:700;
+    }
+    .alertPill{
+      display:inline-block;
+      border-radius:999px;
+      padding:7px 10px;
+      font-weight:900;
+      border:1px solid var(--border);
+      margin:0;
+    }
+    .alert-ok{ background:var(--okBg); color:var(--okText); border-color:var(--okBd); }
+    .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
+    .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
   </style>
 </head>
 
@@ -217,7 +286,7 @@
 
   <!-- HEADER -->
   <div class="header">
-    <div class="logo">QDP</div>
+    <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
     <h1>Quelli della pensione</h1>
     <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
   </div>
@@ -258,6 +327,17 @@
     <div id="mapActions" class="mapActions" style="display:none">
       <a id="mapLink" class="btn" href="#" target="_blank" rel="noopener">📍 Portami al campo</a>
       <a id="mapOpen" class="btn ghost" href="#" target="_blank" rel="noopener">🗺 Apri su Maps</a>
+    </div>
+
+    <!-- ✅ METEO (compare solo se c'è una partita) -->
+    <div id="weatherBox" class="weatherBox" style="display:none">
+      <div class="weatherHead">
+        <div>🌤 Meteo partita</div>
+        <span id="weatherAlert" class="alertPill">—</span>
+      </div>
+      <div id="weatherBig" class="weatherBig">⏳</div>
+      <div id="weatherLine" class="weatherLine">Caricamento meteo…</div>
+      <div id="weatherMini" class="weatherMini"></div>
     </div>
 
     <!-- MARCATORI -->
@@ -305,6 +385,16 @@ function setTheme(mode){
 setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
 themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 
+/* LOGO MONETA */
+const logoCoin = document.getElementById("logoCoin");
+function spinLogo(){
+  logoCoin.classList.remove("spin");
+  void logoCoin.offsetWidth;
+  logoCoin.classList.add("spin");
+}
+logoCoin.addEventListener("click", spinLogo);
+logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
+
 /* SUPABASE */
 if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
   alert("config.js non caricato o non valido");
@@ -322,10 +412,10 @@ const mapActions = document.getElementById("mapActions");
 const mapLink = document.getElementById("mapLink");
 const mapOpen = document.getElementById("mapOpen");
 
-/* ✅ IL TUO LINK PRECISO (quello che vuoi aprire) */
+/* ✅ IL TUO LINK PRECISO */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
 
-/* ✅ coordinate del campo (per iframe e fallback) */
+/* ✅ coordinate del campo */
 const FIELD_LAT = 40.1239395;
 const FIELD_LNG = 18.1203671;
 
@@ -344,6 +434,13 @@ const mvpTitle = document.getElementById("mvpTitle");
 const mvpStatePill = document.getElementById("mvpStatePill");
 const mvpMain = document.getElementById("mvpMain");
 const mvpTop3 = document.getElementById("mvpTop3");
+
+/* METEO DOM */
+const weatherBox = document.getElementById("weatherBox");
+const weatherBig = document.getElementById("weatherBig");
+const weatherLine = document.getElementById("weatherLine");
+const weatherMini = document.getElementById("weatherMini");
+const weatherAlert = document.getElementById("weatherAlert");
 
 function kitSVG(main, stripe){
   return `
@@ -438,11 +535,141 @@ async function loadMVP(matchId, calledPlayers){
 }
 
 function setupMapLinks(){
-  // bottone “portami al campo” (usa il tuo link condiviso)
   mapLink.href = FIXED_MAP_APP_URL;
-
-  // link fallback su web maps (sempre valido anche senza app)
   mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
+}
+
+/* ✅ METEO (Open-Meteo, gratis e senza API key) */
+function wxEmojiFromCode(code){
+  const c = Number(code);
+  if(c === 0) return "☀️";
+  if([1].includes(c)) return "🌤️";
+  if([2].includes(c)) return "⛅";
+  if([3].includes(c)) return "☁️";
+  if([45,48].includes(c)) return "🌫️";           // nebbia OK
+  if([51,53,55].includes(c)) return "🌦️";
+  if([56,57].includes(c)) return "🌧️";
+  if([61,63,65].includes(c)) return "🌧️";
+  if([66,67].includes(c)) return "🌧️";
+  if([71,73,75,77].includes(c)) return "❄️";
+  if([80,81,82].includes(c)) return "🌧️";
+  if([95,96,99].includes(c)) return "⛈️";
+  return "🌥️";
+}
+
+function wxTextFromCode(code){
+  const c = Number(code);
+  if(c === 0) return "Sereno";
+  if(c === 1) return "Quasi sereno";
+  if(c === 2) return "Parzialmente nuvoloso";
+  if(c === 3) return "Nuvoloso";
+  if([45,48].includes(c)) return "Nebbia";
+  if([51,53,55].includes(c)) return "Pioviggine";
+  if([56,57].includes(c)) return "Pioggia gelata";
+  if([61,63,65].includes(c)) return "Pioggia";
+  if([66,67].includes(c)) return "Pioggia gelata";
+  if([71,73,75,77].includes(c)) return "Neve";
+  if([80,81,82].includes(c)) return "Rovesci";
+  if([95,96,99].includes(c)) return "Temporale";
+  return "Variabile";
+}
+
+function riskLevel({code, precipProb, wind, temp}){
+  const c = Number(code);
+  const pp = Number(precipProb ?? 0);
+  const w = Number(wind ?? 0);
+  const t = Number(temp ?? 0);
+
+  const isThunder = [95,96,99].includes(c);
+  const isSnow = [71,73,75,77].includes(c);
+  const isHeavyRain = [65,67,82].includes(c);
+
+  // Rischio partita
+  if(isThunder || isSnow || isHeavyRain || pp >= 70 || w >= 55) return "risk";
+  // Attenzione
+  if(pp >= 35 || w >= 35 || t <= 4 || t >= 33) return "warn";
+  // OK
+  return "ok";
+}
+
+function setWeatherAlert(level, text){
+  weatherAlert.className = "alertPill " + (level==="ok" ? "alert-ok" : level==="warn" ? "alert-warn" : "alert-risk");
+  weatherAlert.textContent = text;
+}
+
+async function loadWeather(matchDateISO, matchTimeStr){
+  // mostra box meteo solo se c'è la partita
+  weatherBox.style.display = "block";
+  weatherBig.textContent = "⏳";
+  weatherLine.textContent = "Caricamento meteo…";
+  weatherMini.textContent = "";
+  setWeatherAlert("warn","ATTENDI…");
+
+  try{
+    // matchTimeStr può essere "21:00:00" o "21:00"
+    const hhmm = String(matchTimeStr||"21:00").slice(0,5);
+    const target = `${matchDateISO}T${hhmm}`;
+
+    const url =
+      "https://api.open-meteo.com/v1/forecast" +
+      `?latitude=${encodeURIComponent(FIELD_LAT)}` +
+      `&longitude=${encodeURIComponent(FIELD_LNG)}` +
+      "&hourly=temperature_2m,precipitation_probability,windspeed_10m,weathercode" +
+      "&timezone=Europe%2FRome";
+
+    const res = await fetch(url, {cache:"no-store"});
+    if(!res.ok) throw new Error("Meteo non disponibile");
+    const j = await res.json();
+
+    const times = j?.hourly?.time || [];
+    if(!times.length) throw new Error("Dati meteo vuoti");
+
+    // trova ora più vicina al target
+    let bestIdx = 0;
+    let bestDiff = Infinity;
+    const targetMs = new Date(target).getTime();
+
+    for(let i=0;i<times.length;i++){
+      const ms = new Date(times[i]).getTime();
+      const diff = Math.abs(ms - targetMs);
+      if(diff < bestDiff){
+        bestDiff = diff;
+        bestIdx = i;
+      }
+    }
+
+    const temp = j.hourly.temperature_2m?.[bestIdx];
+    const pp = j.hourly.precipitation_probability?.[bestIdx];
+    const wind = j.hourly.windspeed_10m?.[bestIdx];
+    const code = j.hourly.weathercode?.[bestIdx];
+
+    const emoji = wxEmojiFromCode(code);
+    const desc = wxTextFromCode(code);
+
+    const lvl = riskLevel({code, precipProb: pp, wind, temp});
+
+    if(lvl === "ok"){
+      setWeatherAlert("ok","✅ OK");
+      weatherLine.textContent = `Condizioni buone per giocare. ${emoji} ${desc}`;
+    }else if(lvl === "warn"){
+      setWeatherAlert("warn","⚠️ ATTENZIONE");
+      weatherLine.textContent = `${emoji} ${desc} • Occhio alle condizioni`;
+    }else{
+      setWeatherAlert("risk","⛔ RISCHIO PARTITA");
+      weatherLine.textContent = `${emoji} ${desc} • Possibile partita a rischio`;
+    }
+
+    weatherBig.textContent = emoji;
+    weatherMini.textContent = `🌡 ${Math.round(temp)}°C  •  💧 ${pp}%  •  💨 ${Math.round(wind)} km/h  •  ⏰ ${hhmm}`;
+
+  }catch(e){
+    console.error(e);
+    weatherBox.style.display = "block";
+    weatherBig.textContent = "🌦️";
+    setWeatherAlert("warn","⚠️ METEO");
+    weatherLine.textContent = "Meteo non disponibile al momento.";
+    weatherMini.textContent = "";
+  }
 }
 
 async function load(){
@@ -461,6 +688,8 @@ async function load(){
 
   if(!data || !data.length){
     statusEl.textContent = "Nessuna partita creata";
+    // niente meteo se non c'è partita
+    weatherBox.style.display = "none";
     return;
   }
 
@@ -493,11 +722,14 @@ async function load(){
     scorersBox.style.display="none";
   }
 
-  // ✅ MAPPA: sempre mostrata e corretta
+  // MAPPA
   mapBox.style.display = "block";
   mapActions.style.display = "flex";
   mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
   setupMapLinks();
+
+  // ✅ METEO (solo se esiste partita)
+  await loadWeather(m.match_date, m.match_time);
 
   // players map per convocati / squadre / MVP
   let playersForCalled = [];
