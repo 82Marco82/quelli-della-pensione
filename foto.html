@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Foto • Quelli della pensione</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#f4f6f8; --card:#fff; --text:#111827; --muted:#6b7280; --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08); --btn:#111; --chip:rgba(0,0,0,.04);
+      --okBg:#dcfce7; --okText:#166534; --errBg:#ffe4e6; --errText:#9f1239;
+      --logo1:#111; --logo2:#333;
+    }
+    body.dark{
+      --bg:#0f1115; --card:#171a21; --text:#e5e7eb; --muted:#a1a1aa; --border:#2a2f3a;
+      --shadow:0 10px 28px rgba(0,0,0,.45); --btn:#0b0e14; --chip:rgba(255,255,255,.04);
+      --okBg:rgba(34,197,94,.15); --okText:#86efac; --errBg:rgba(244,63,94,.16); --errText:#fda4af;
+      --logo1:#0b0e14; --logo2:#2a3242;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
+    .wrap{max-width:860px;margin:18px auto;padding:16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--shadow);margin:12px 0}
+    .header{text-align:center}
+    .logo{
+      width:72px;height:72px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      margin:0 auto 10px;display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:30px;letter-spacing:2px;
+    }
+    h1{font-family:'Bebas Neue';letter-spacing:2px;font-size:44px;margin:0;text-transform:uppercase}
+    .subtitle{color:var(--muted);margin-top:6px}
+
+    label{display:block;margin-top:12px;font-size:12px;color:var(--muted);font-weight:800}
+    input[type="file"],input[type="text"]{
+      width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);
+      background:transparent;color:var(--text);outline:none;font-family:Inter;
+    }
+
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .btn{
+      border:0;background:var(--btn);color:#fff;padding:12px 14px;border-radius:14px;
+      font-weight:900;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;user-select:none
+    }
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+    .msg{
+      margin-top:12px;padding:12px;border-radius:12px;font-size:13px;border:1px solid var(--border);
+      background:var(--chip);white-space:pre-wrap
+    }
+    .msg.ok{background:var(--okBg);color:var(--okText);border-color:rgba(34,197,94,.35);font-weight:900}
+    .msg.err{background:var(--errBg);color:var(--errText);border-color:rgba(244,63,94,.35);font-weight:900}
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+    @media(min-width:720px){
+      .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+
+    .photoCard{
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      background:var(--chip);
+    }
+    .photoCard img{width:100%;display:block;aspect-ratio:4/3;object-fit:cover;background:#000}
+    .photoMeta{padding:10px}
+    .photoCap{font-weight:900}
+    .photoTime{color:var(--muted);font-size:12px;margin-top:4px}
+
+    .nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}
+    .nav a{color:var(--text);text-decoration:none;font-weight:800}
+    .nav a:hover{text-decoration:underline}
+
+    .fab{
+      position:fixed;right:16px;bottom:16px;width:54px;height:54px;border-radius:999px;
+      border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);cursor:pointer;font-size:22px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="card header">
+    <div class="logo">QDP</div>
+    <h1>Foto</h1>
+    <div class="subtitle">Carica una foto e comparirà qui • senza registrazione</div>
+  </div>
+
+  <div class="card">
+    <label>Seleziona foto</label>
+    <input id="fileInput" type="file" accept="image/*" />
+
+    <label>Didascalia (opzionale)</label>
+    <input id="captionInput" type="text" placeholder="Es. Terzo tempo 🍻" maxlength="80" />
+
+    <div class="row">
+      <button id="btnUpload" class="btn">⬆️ Carica</button>
+      <button id="btnRefresh" class="btn ghost">🔄 Aggiorna</button>
+    </div>
+
+    <div id="msg" class="msg" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="align-items:center;justify-content:space-between;margin-top:0">
+      <div style="font-weight:900">📸 Gallery</div>
+      <div id="count" class="subtitle"></div>
+    </div>
+    <div id="grid" class="grid" style="margin-top:12px">
+      <div class="subtitle">Caricamento…</div>
+    </div>
+  </div>
+
+  <div class="card nav muted">
+    <a href="index.html">🏠 Home</a>
+    <a href="storico.html">📚 Storico</a>
+    <a href="mvp.html">🏆 Vota MVP</a>
+    <a href="componenti.html">👥 Componenti</a>
+  </div>
+
+</div>
+
+<button id="themeToggle" class="fab">🌙</button>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<script>
+/* ===== THEME ===== */
+const themeBtn = document.getElementById("themeToggle");
+function setTheme(mode){
+  document.body.classList.toggle("dark", mode === "dark");
+  themeBtn.textContent = (mode === "dark") ? "☀️" : "🌙";
+  localStorage.setItem("qdp_theme", mode);
+}
+setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
+themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+
+/* ===== SUPABASE ===== */
+if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+  alert("config.js non caricato o non valido");
+  throw new Error("Missing config");
+}
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ===== CONFIG ===== */
+const BUCKET = "photos";     // ✅ bucket storage
+const TABLE  = "photos";     // ✅ tabella
+const LIMIT  = 60;
+
+/* ===== DOM ===== */
+const fileInput = document.getElementById("fileInput");
+const captionInput = document.getElementById("captionInput");
+const btnUpload = document.getElementById("btnUpload");
+const btnRefresh = document.getElementById("btnRefresh");
+const msgEl = document.getElementById("msg");
+const gridEl = document.getElementById("grid");
+const countEl = document.getElementById("count");
+
+function setMsg(text, kind){
+  msgEl.style.display = "block";
+  msgEl.className = "msg" + (kind ? " " + kind : "");
+  msgEl.textContent = text;
+}
+function hideMsg(){ msgEl.style.display = "none"; }
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+function fmtTime(iso){
+  try{
+    return new Date(iso).toLocaleString("it-IT",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  }catch(e){ return iso; }
+}
+function extFromMime(mime){
+  if(!mime) return "jpg";
+  if(mime.includes("png")) return "png";
+  if(mime.includes("webp")) return "webp";
+  return "jpg";
+}
+
+/* ===== LOAD GALLERY ===== */
+async function loadGallery(){
+  gridEl.innerHTML = `<div class="subtitle">Caricamento…</div>`;
+  countEl.textContent = "";
+
+  const { data, error } = await client
+    .from(TABLE)
+    .select("id, path, caption, created_at")
+    .order("created_at", { ascending:false })
+    .limit(LIMIT);
+
+  if(error){
+    gridEl.innerHTML = `<div class="msg err">Errore gallery: ${escapeHtml(error.message)}</div>`;
+    return;
+  }
+
+  const rows = data || [];
+  countEl.textContent = rows.length ? `${rows.length} foto` : "0 foto";
+
+  if(!rows.length){
+    gridEl.innerHTML = `<div class="subtitle">Nessuna foto ancora. Carica la prima! 📸</div>`;
+    return;
+  }
+
+  // Costruisce URL pubblici dalle path
+  const cards = rows.map(r=>{
+    const { data: pub } = client.storage.from(BUCKET).getPublicUrl(r.path);
+    const url = pub?.publicUrl || "";
+    const cap = (r.caption || "").trim();
+    return `
+      <div class="photoCard">
+        <a href="${escapeHtml(url)}" target="_blank" rel="noopener">
+          <img src="${escapeHtml(url)}" alt="foto" loading="lazy">
+        </a>
+        <div class="photoMeta">
+          <div class="photoCap">${cap ? escapeHtml(cap) : "📷 Foto"}</div>
+          <div class="photoTime">${escapeHtml(fmtTime(r.created_at))}</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  gridEl.innerHTML = cards;
+}
+
+/* ===== UPLOAD ===== */
+btnUpload.addEventListener("click", async ()=>{
+  hideMsg();
+
+  const file = fileInput.files?.[0];
+  if(!file){
+    setMsg("Seleziona una foto prima di caricare.", "err");
+    return;
+  }
+
+  // Limite dimensione (evita foto enormi)
+  const maxMB = 8;
+  if(file.size > maxMB * 1024 * 1024){
+    setMsg(`Foto troppo grande. Max ${maxMB} MB.`, "err");
+    return;
+  }
+
+  btnUpload.disabled = true;
+  btnRefresh.disabled = true;
+
+  try{
+    const now = new Date();
+    const y = String(now.getFullYear());
+    const m = String(now.getMonth()+1).padStart(2,"0");
+
+    const ext = extFromMime(file.type);
+    const safeName = (file.name || "foto")
+      .toLowerCase()
+      .replace(/\s+/g,"-")
+      .replace(/[^a-z0-9\-_.]/g,"")
+      .slice(0,40);
+
+    const path = `${y}/${m}/${Date.now()}-${Math.random().toString(16).slice(2)}-${safeName}.${ext}`;
+
+    // 1) upload su storage
+    const { error: upErr } = await client
+      .storage
+      .from(BUCKET)
+      .upload(path, file, { cacheControl:"3600", upsert:false });
+
+    if(upErr) throw upErr;
+
+    // 2) inserisci record in tabella
+    const caption = (captionInput.value || "").trim().slice(0,80);
+    const { error: insErr } = await client
+      .from(TABLE)
+      .insert([{ path, caption }]);
+
+    if(insErr) throw insErr;
+
+    setMsg("Caricamento completato ✅\nLa foto è stata aggiunta alla gallery.", "ok");
+    fileInput.value = "";
+    captionInput.value = "";
+
+    await loadGallery();
+
+  }catch(e){
+    console.error(e);
+    setMsg("Errore upload: " + (e?.message || String(e)), "err");
+  }finally{
+    btnUpload.disabled = false;
+    btnRefresh.disabled = false;
+  }
+});
+
+btnRefresh.addEventListener("click", loadGallery);
+
+/* ===== INIT ===== */
+loadGallery();
+</script>
+</body>
+</html>
