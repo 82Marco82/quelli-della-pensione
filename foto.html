@@ -133,7 +133,9 @@
       cursor:pointer;
       user-select:none;
     }
+    .delBtn[disabled]{opacity:.6;cursor:not-allowed}
     body.dark .delBtn{background:rgba(0,0,0,.55)}
+
     .fab{
       position:fixed;right:16px;bottom:16px;
       width:54px;height:54px;border-radius:999px;
@@ -248,7 +250,7 @@ function fmtDate(ts){
   }
 }
 
-/* ===== Admin mode (solo UI, senza login) ===== */
+/* ===== Admin mode ===== */
 function isAdmin(){
   return localStorage.getItem("qdp_admin_photos") === "1";
 }
@@ -318,7 +320,7 @@ function renderGrid(){
     const id = row?.id;
 
     return `
-      <div class="photoCard" data-card="1">
+      <div class="photoCard">
         ${admin ? `<button class="delBtn" type="button" data-action="delete" data-id="${escapeHtml(id)}" data-path="${escapeHtml(filePath||"")}">🗑 Elimina</button>` : ""}
         ${url
           ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener"><img src="${escapeHtml(url)}" alt="foto"></a>`
@@ -335,9 +337,7 @@ function renderGrid(){
 
 /* ===== UPLOAD ===== */
 function safeUUID(){
-  try{
-    if(crypto?.randomUUID) return crypto.randomUUID();
-  }catch(e){}
+  try{ if(crypto?.randomUUID) return crypto.randomUUID(); }catch(e){}
   return String(Date.now()) + "-" + Math.random().toString(16).slice(2);
 }
 
@@ -366,16 +366,16 @@ async function uploadPhoto(){
     // 2) url pubblico
     const publicUrl = buildPublicUrlFromPath(filePath);
 
-    // 3) insert db (robusto: prova file_path, se colonna non esiste ripiega su url)
+    // 3) insert db (robusto: prova file_path, se colonna non esiste ripiega)
     let ins = await client.from(TABLE).insert([{ file_path: filePath }]).select("*").single();
 
     if(ins.error && String(ins.error.message||"").toLowerCase().includes("file_path")){
-      // ripiego: tabella senza file_path
+      ins = await client.from(TABLE).insert([{ path: filePath }]).select("*").single();
+    }
+    if(ins.error && String(ins.error.message||"").toLowerCase().includes("path")){
       ins = await client.from(TABLE).insert([{ url: publicUrl }]).select("*").single();
     }
-
     if(ins.error && String(ins.error.message||"").toLowerCase().includes("url")){
-      // ripiego ulteriore: prova public_url
       ins = await client.from(TABLE).insert([{ public_url: publicUrl }]).select("*").single();
     }
 
@@ -394,7 +394,7 @@ async function uploadPhoto(){
   }
 }
 
-/* ===== DELETE (delegation, Android-safe) ===== */
+/* ===== DELETE (FIX: verifica righe cancellate) ===== */
 grid.addEventListener("click", async (e) => {
   const btn = e.target.closest("[data-action='delete']");
   if(!btn) return;
@@ -405,21 +405,41 @@ grid.addEventListener("click", async (e) => {
   if(!isAdmin()) return;
 
   const id = btn.dataset.id;
-  const path = btn.dataset.path;
+  const path = btn.dataset.path || "";
 
   if(!id) return setMsg("ID mancante: impossibile eliminare.", "err");
   if(!confirm("Eliminare questa foto?")) return;
 
+  btn.setAttribute("disabled", "disabled");
   await deletePhoto(id, path);
+  btn.removeAttribute("disabled");
 });
 
 async function deletePhoto(id, filePath){
   try{
     setMsg("🗑 Eliminazione…");
 
-    // 1) cancella riga DB
-    const r1 = await client.from(TABLE).delete().eq("id", id);
+    // 1) cancella riga DB e verifica quante righe elimina
+    const r1 = await client
+      .from(TABLE)
+      .delete()
+      .eq("id", id)
+      .select("id"); // <-- IMPORTANTISSIMO: così vediamo se ha eliminato davvero
+
     if(r1.error) throw r1.error;
+
+    const deletedCount = (r1.data || []).length;
+
+    if(deletedCount === 0){
+      // Qui la delete è stata bloccata (tipico RLS/policy)
+      setMsg(
+        "❌ Non posso eliminare (0 righe eliminate).\n" +
+        "Quasi sicuramente hai ancora RLS ON oppure una policy che blocca DELETE.\n" +
+        "Vai su Supabase → Table Editor → photos → RLS → OFF (soluzione più semplice).",
+        "err"
+      );
+      return;
+    }
 
     // 2) cancella file storage (se abbiamo il path)
     if(filePath){
@@ -429,6 +449,7 @@ async function deletePhoto(id, filePath){
 
     setMsg("✅ Foto eliminata.", "ok");
     await loadPhotos();
+
   }catch(e){
     console.error(e);
     setMsg("❌ Errore eliminazione: " + (e?.message || e), "err");
@@ -462,4 +483,3 @@ loadPhotos();
 </script>
 </body>
 </html>
-```0
