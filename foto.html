@@ -94,7 +94,6 @@
       white-space:nowrap;
       max-width:100%;
     }
-
     .adminHint{
       width:100%;
       white-space:normal !important;
@@ -350,7 +349,7 @@
       <div id="countPill" class="pill">📸 0 foto</div>
     </div>
 
-    <!-- ✅ FIX: hidden invece di display -->
+    <!-- ✅ QUI: niente "display:none" inline. Solo hidden gestito via JS -->
     <div id="adminHint" class="pill adminHint" hidden style="margin-top:10px">
       ✅ Admin attivo (puoi eliminare e modificare didascalie + commenti)
     </div>
@@ -483,7 +482,7 @@ const BUCKET = "photos";
 const TABLE_PHOTOS = "photos";
 const TABLE_COMMENTS = "photo_comments";
 
-/* ADMIN UI (FIX DEFINITIVO) */
+/* ✅ FIX DEFINITIVO: adminHint sparisce SEMPRE appena disconnetti */
 let adminOn = false;
 
 async function refreshAdminUI(){
@@ -496,29 +495,38 @@ async function refreshAdminUI(){
   adminBtn.classList.toggle("warn", !adminOn);
   adminBtn.classList.toggle("ok", adminOn);
 
-  // ✅ hidden è più forte di display: non resta mai appeso
+  // 🔥 la riga che ti serve: se OFF => hidden=true SEMPRE
   adminHint.hidden = !adminOn;
 
   return adminOn;
 }
 
-// ✅ ascolta sempre login/logout/scadenza
+// ascolta login/logout/scadenza sessione
 client.auth.onAuthStateChange(async () => {
   await refreshAdminUI();
   await loadAll();
 });
 
 adminBtn.onclick = async () => {
+  // forzo refresh UI immediato per evitare "stato appeso"
+  await refreshAdminUI();
+
   const { data } = await client.auth.getSession();
   const session = data?.session || null;
 
   if(session && session.user){
     await client.auth.signOut();
+
+    // ✅ IMPORTANTISSIMO: nascondo SUBITO, prima di qualsiasi reload
+    adminOn = false;
+    adminHint.hidden = true;
+
     showToast("Admin disattivato.", "warn");
     await refreshAdminUI();
     await loadAll();
     return;
   }
+
   const email = prompt("Email admin:");
   if(!email) return;
   const password = prompt("Password admin:");
@@ -528,8 +536,10 @@ adminBtn.onclick = async () => {
   if(error){
     console.error(error);
     showToast("Login fallito.", "bad");
+    await refreshAdminUI();
     return;
   }
+
   showToast("Admin attivo ✅");
   await refreshAdminUI();
   await loadAll();
@@ -822,10 +832,10 @@ async function loadGallery(){
 
   const all = data || [];
 
-  // ✅ contatore = totale foto in tabella (non solo galleria)
+  // contatore = TOTALE foto in tabella
   countPill.textContent = `📸 ${all.length} foto`;
 
-  // ✅ non duplicare quelle del TOP dentro la galleria
+  // galleria = escludi top
   cachedPhotos = all.filter(p => !topIds.has(String(p.id)));
 
   grid.innerHTML = cachedPhotos.map(p => renderPhotoCard(p, false)).join("");
@@ -903,11 +913,9 @@ async function wireCardEvents(containerEl, photos){
     const photo = photos.find(p => String(p.id) === String(id));
     if(!photo) continue;
 
-    // ✅ zoom (ingrandisci)
     const zoomEl = card.querySelector(".js-zoom");
     if(zoomEl){
       zoomEl.onclick = (e) => {
-        // se clicchi su bottone elimina, non aprire zoom
         if(e.target && (e.target.closest(".js-del"))) return;
         openLightbox(photo.path || "", photo.caption || "");
       };
@@ -974,7 +982,9 @@ async function loadAll(){
   await loadGallery();
 }
 
-loadAll();
+// ✅ all’avvio forzo OFF visivamente, poi refresh da sessione
+adminHint.hidden = true;
+refreshAdminUI().then(loadAll);
 </script>
 </body>
 </html>
