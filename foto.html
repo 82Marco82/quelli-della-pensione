@@ -91,6 +91,15 @@
       font-weight:900;
       border:1px solid var(--border);
       white-space:nowrap;
+      max-width:100%;
+    }
+
+    /* ✅ FIX: questa pill deve andare a capo e restare dentro il box */
+    .adminHint{
+      width:100%;
+      white-space:normal !important;
+      display:flex !important;
+      line-height:1.25;
     }
 
     .btn{
@@ -252,6 +261,7 @@
 
   <div class="card">
     <div class="muted" style="font-weight:800">Scegli una foto e premi “Carica”.</div>
+    <div class="muted" style="margin-top:6px;font-weight:900">⚠️ Foto o commenti volgari o ingiuriosi verranno eliminati!!!</div>
 
     <div class="row" style="margin-top:10px">
       <input id="fileInput" class="input" type="file" accept="image/*">
@@ -277,7 +287,10 @@
       <div id="countPill" class="pill">📸 0 foto</div>
     </div>
 
-    <div id="adminHint" class="pill" style="display:none; margin-top:10px">✅ Admin attivo (puoi eliminare e modificare didascalie + commenti)</div>
+    <div id="adminHint" class="pill adminHint" style="display:none; margin-top:10px">
+      ✅ Admin attivo (puoi eliminare e modificare didascalie + commenti)
+    </div>
+
     <div id="toast" class="toast"></div>
   </div>
 
@@ -426,12 +439,16 @@ function antiSpamOk(){
   return { ok:true, ms:0 };
 }
 
-/* ✅ ANTI DOPPIO UPLOAD */
+/* ✅ Anti doppio tap upload */
 let uploading = false;
+
+/* ✅ Top IDs per non duplicare in galleria */
+let topIds = new Set();
 
 /* UPLOAD */
 uploadBtn.onclick = async () => {
-  if(uploading) return; // blocca doppio tap
+  if(uploading) return;
+
   try{
     const file = fileInput.files?.[0];
     if(!file){
@@ -620,7 +637,6 @@ async function addComment(photoId, author, body){
   }
 }
 
-/* ✅ DELETE COMMENT (ADMIN) */
 async function deleteComment(commentId){
   try{
     const ok = confirm("Vuoi eliminare questo commento?");
@@ -630,7 +646,6 @@ async function deleteComment(commentId){
       .from(TABLE_COMMENTS)
       .delete()
       .eq("id", commentId);
-
     if(error) throw error;
 
     showToast("Commento eliminato 🗑️");
@@ -646,6 +661,8 @@ let cachedPhotos = [];
 
 async function loadTop30(){
   try{
+    topIds = new Set();
+
     const since = new Date(Date.now() - 30*24*3600*1000).toISOString();
 
     const { data, error } = await client
@@ -659,6 +676,8 @@ async function loadTop30(){
     if(error) throw error;
 
     const rows = data || [];
+    rows.forEach(p => topIds.add(String(p.id)));
+
     if(rows.length === 0){
       topBox.style.display = "none";
       return;
@@ -670,6 +689,7 @@ async function loadTop30(){
     await wireCardEvents(topGrid, rows);
   }catch(e){
     console.warn("top30 error", e);
+    topIds = new Set();
     topBox.style.display = "none";
   }
 }
@@ -691,7 +711,11 @@ async function loadGallery(){
     return;
   }
 
-  cachedPhotos = data || [];
+  const all = data || [];
+
+  /* ✅ FIX: non mostrare in Galleria quelle già presenti nel Top */
+  cachedPhotos = all.filter(p => !topIds.has(String(p.id)));
+
   countPill.textContent = `📸 ${cachedPhotos.length} foto`;
 
   grid.innerHTML = cachedPhotos.map(p => renderPhotoCard(p, false)).join("");
@@ -804,7 +828,6 @@ async function wireCardEvents(containerEl, photos){
             </div>
           `).join("");
 
-      // wire delete comment buttons
       if(adminOn){
         const delCs = [...commentsBox.querySelectorAll(".js-delc")];
         delCs.forEach(btn=>{
