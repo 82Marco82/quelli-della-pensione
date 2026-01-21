@@ -113,6 +113,7 @@
     }
 
     .line{margin-top:8px}
+
     .pill{
       display:inline-block;
       background:var(--pill);
@@ -122,6 +123,7 @@
       font-weight:900;
       border:1px solid var(--border);
     }
+
     .badge{
       display:inline-block;
       background:#111;
@@ -278,6 +280,37 @@
     .alert-ok{ background:var(--okBg); color:var(--okText); border-color:var(--okBd); }
     .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
     .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
+
+    /* ✅ AVATAR convocati */
+    .calledWrap{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:8px;
+    }
+    .calledItem{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:var(--pill);
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:6px 10px 6px 6px;
+      font-weight:900;
+      max-width:100%;
+    }
+    .calledAvatar{
+      width:34px;height:34px;border-radius:999px;
+      border:2px solid rgba(255,255,255,.65);
+      background:rgba(0,0,0,.06);
+      object-fit:cover;
+      display:block;
+      flex:0 0 auto;
+    }
+    body.dark .calledAvatar{
+      border-color:rgba(255,255,255,.20);
+      background:rgba(255,255,255,.06);
+    }
   </style>
 </head>
 
@@ -314,7 +347,7 @@
       <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
     </div>
 
-    <!-- MAPPA (fix: coordinate) -->
+    <!-- MAPPA -->
     <div id="mapBox" class="mapWrap" style="display:none">
       <iframe
         id="mapFrame"
@@ -329,7 +362,7 @@
       <a id="mapOpen" class="btn ghost" href="#" target="_blank" rel="noopener">🗺 Apri su Maps</a>
     </div>
 
-    <!-- ✅ METEO (compare solo se c'è una partita) -->
+    <!-- METEO -->
     <div id="weatherBox" class="weatherBox" style="display:none">
       <div class="weatherHead">
         <div>🌤 Meteo partita</div>
@@ -363,10 +396,7 @@
     <a href="storico.html">📚 Storico</a>
     <a href="marcatori.html">⚽ Marcatori</a>
     <a href="mvp.html">🏆 Vota MVP</a>
-
-    <!-- ✅ AGGIUNTO LINK FOTO -->
     <a href="foto.html">📸 Foto</a>
-
     <a href="componenti.html">👥 Componenti</a>
     <a href="admin.html">🔐 Admin</a>
   </div>
@@ -406,6 +436,7 @@ if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
 }
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+/* DOM */
 const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
 const calledEl = document.getElementById("called");
@@ -415,13 +446,6 @@ const mapFrame = document.getElementById("mapFrame");
 const mapActions = document.getElementById("mapActions");
 const mapLink = document.getElementById("mapLink");
 const mapOpen = document.getElementById("mapOpen");
-
-/* ✅ IL TUO LINK PRECISO */
-const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
-
-/* ✅ coordinate del campo */
-const FIELD_LAT = 40.1239395;
-const FIELD_LNG = 18.1203671;
 
 const scorersBox = document.getElementById("scorersBox");
 const scorersText = document.getElementById("scorersText");
@@ -446,6 +470,21 @@ const weatherLine = document.getElementById("weatherLine");
 const weatherMini = document.getElementById("weatherMini");
 const weatherAlert = document.getElementById("weatherAlert");
 
+/* MAP */
+const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
+const FIELD_LAT = 40.1239395;
+const FIELD_LNG = 18.1203671;
+
+/* ✅ AVATAR settings */
+const AVATAR_DIR = "avatars";          // cartella nel repo
+const DEFAULT_AVATAR = "default.png";  // fallback
+function avatarUrl(file){
+  const clean = String(file || "").trim();
+  const name = clean ? clean : DEFAULT_AVATAR;
+  return `${AVATAR_DIR}/${name}`;
+}
+
+/* HELPERS */
 function kitSVG(main, stripe){
   return `
   <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -458,9 +497,7 @@ function kitSVG(main, stripe){
 function formatDateFull(iso){
   try{
     return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-  }catch(e){
-    return String(iso||"");
-  }
+  }catch(e){ return String(iso||""); }
 }
 
 function medal(i){
@@ -543,7 +580,7 @@ function setupMapLinks(){
   mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
 }
 
-/* ✅ METEO (Open-Meteo, gratis e senza API key) */
+/* METEO (Open-Meteo) */
 function wxEmojiFromCode(code){
   const c = Number(code);
   if(c === 0) return "☀️";
@@ -560,7 +597,6 @@ function wxEmojiFromCode(code){
   if([95,96,99].includes(c)) return "⛈️";
   return "🌥️";
 }
-
 function wxTextFromCode(code){
   const c = Number(code);
   if(c === 0) return "Sereno";
@@ -577,7 +613,6 @@ function wxTextFromCode(code){
   if([95,96,99].includes(c)) return "Temporale";
   return "Variabile";
 }
-
 function riskLevel({code, precipProb, wind, temp}){
   const c = Number(code);
   const pp = Number(precipProb ?? 0);
@@ -592,12 +627,10 @@ function riskLevel({code, precipProb, wind, temp}){
   if(pp >= 35 || w >= 35 || t <= 4 || t >= 33) return "warn";
   return "ok";
 }
-
 function setWeatherAlert(level, text){
   weatherAlert.className = "alertPill " + (level==="ok" ? "alert-ok" : level==="warn" ? "alert-warn" : "alert-risk");
   weatherAlert.textContent = text;
 }
-
 async function loadWeather(matchDateISO, matchTimeStr){
   weatherBox.style.display = "block";
   weatherBig.textContent = "⏳";
@@ -670,6 +703,29 @@ async function loadWeather(matchDateISO, matchTimeStr){
   }
 }
 
+/* ✅ Render convocati con avatar */
+function renderCalledWithAvatars(orderedIds, idToPlayer){
+  // wrapper a pill con avatar
+  const html = `
+    <div class="calledWrap">
+      ${orderedIds.map(pid=>{
+        const p = idToPlayer.get(String(pid));
+        const name = p?.name || "";
+        const av = p?.avatar || DEFAULT_AVATAR;
+        const src = avatarUrl(av);
+        return `
+          <div class="calledItem">
+            <img class="calledAvatar" src="${escapeHtml(src)}" alt="avatar"
+                 onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}';">
+            <span>${escapeHtml(name)}</span>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+  calledEl.innerHTML = html;
+}
+
 async function load(){
   const { data, error } = await client
     .from("matches")
@@ -725,15 +781,16 @@ async function load(){
 
   await loadWeather(m.match_date, m.match_time);
 
+  // ✅ Convocati con avatar
   let playersForCalled = [];
   if(Array.isArray(m.called_up) && m.called_up.length){
-    const { data:p, error:pe } = await client.from("players").select("id,name").in("id", m.called_up);
+    // prendo anche avatar
+    const { data:p, error:pe } = await client.from("players").select("id,name,avatar").in("id", m.called_up);
     if(!pe){
-      const map = new Map((p||[]).map(x=>[String(x.id), x.name]));
       playersForCalled = (p||[]);
-      calledEl.innerHTML = m.called_up
-        .map(id=>`<span class="pill">${escapeHtml(map.get(String(id)) || "")}</span>`)
-        .join("");
+      const idToPlayer = new Map((p||[]).map(x=>[String(x.id), x]));
+      // mantieni l'ordine dei called_up
+      renderCalledWithAvatars(m.called_up, idToPlayer);
     }else{
       calledEl.textContent = "—";
     }
@@ -743,6 +800,7 @@ async function load(){
 
   await loadMVP(m.id, playersForCalled);
 
+  // Formazioni (restano pill normali)
   if((Array.isArray(m.team_a) && m.team_a.length) || (Array.isArray(m.team_b) && m.team_b.length)){
     teamsBox.style.display="block";
     tAIcon.innerHTML = kitSVG("#facc15","#111");
