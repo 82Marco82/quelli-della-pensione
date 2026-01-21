@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>QDP • Foto</title>
+  <title>Foto • Quelli della pensione</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
@@ -16,12 +16,10 @@
       --border:#e5e7eb;
       --shadow:0 6px 20px rgba(0,0,0,.08);
       --pill:#eeeeee;
-      --logo1:#111;
-      --logo2:#333;
       --btn:#111;
       --ok:#16a34a;
-      --warn:#f59e0b;
       --bad:#ef4444;
+      --warn:#f59e0b;
     }
     body.dark{
       --bg:#0f1115;
@@ -31,8 +29,6 @@
       --border:#2a2f3a;
       --shadow:0 10px 28px rgba(0,0,0,.45);
       --pill:#222631;
-      --logo1:#0b0e14;
-      --logo2:#2a3242;
       --btn:#0b0e14;
     }
     *{box-sizing:border-box}
@@ -44,64 +40,39 @@
       transition:.2s;
     }
     .wrap{max-width:980px;margin:auto;padding:16px}
-
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px; flex-wrap:wrap;
-      margin-bottom:10px;
-    }
-    .brand{display:flex; align-items:center; gap:12px;}
-    .logo{
-      width:56px;height:56px;border-radius:999px;
-      background:linear-gradient(135deg,var(--logo1),var(--logo2));
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:26px;
-      letter-spacing:2px;
-      box-shadow:var(--shadow);
-    }
-    .titleWrap{line-height:1.1}
-    .title{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:44px;
-      margin:0;
-      text-transform:uppercase;
-    }
-    .subtitle{color:var(--muted);font-size:14px;margin-top:2px}
-
     .card{
       background:var(--card);
       border:1px solid var(--border);
-      border-radius:16px;
+      border-radius:18px;
       padding:14px;
       box-shadow:var(--shadow);
       margin:12px 0;
     }
 
-    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
-    .spacer{flex:1}
-    .muted{color:var(--muted)}
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      background:var(--pill);
-      border-radius:999px;
-      padding:8px 12px;
-      font-weight:900;
-      border:1px solid var(--border);
-      white-space:nowrap;
-      max-width:100%;
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
     }
-
-    /* ✅ FIX: questa pill deve andare a capo e restare dentro il box */
-    .adminHint{
-      width:100%;
-      white-space:normal !important;
-      display:flex !important;
-      line-height:1.25;
+    .brand{
+      display:flex; align-items:center; gap:12px;
     }
+    .logo{
+      width:64px;height:64px;border-radius:999px;
+      background:linear-gradient(135deg,#111,#333);
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:28px;letter-spacing:2px;
+      box-shadow:0 10px 24px rgba(0,0,0,.18);
+      user-select:none;
+    }
+    .title h1{
+      font-family:'Bebas Neue';
+      letter-spacing:3px;
+      margin:0;
+      font-size:54px;
+      line-height:1;
+    }
+    .subtitle{color:var(--muted);font-size:14px;margin-top:4px}
 
+    .actions{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
     .btn{
       border:0;
       background:var(--btn);
@@ -116,48 +87,92 @@
       gap:8px;
       user-select:none;
     }
+    .btn:disabled{opacity:.6;cursor:not-allowed}
     .btn.ghost{
       background:transparent;
       color:var(--text);
       border:1px solid var(--border);
     }
-    .btn.small{padding:10px 12px; border-radius:12px; font-size:14px}
-    .btn.danger{background:var(--bad)}
     .btn.ok{background:var(--ok)}
-    .btn.warn{background:var(--warn); color:#111}
+    .btn.admin{
+      background:rgba(0,0,0,.75);
+      color:#fff;
+    }
+    body.dark .btn.admin{background:#0b0e14}
 
-    .input, select, textarea{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:var(--pill);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:900;
       border:1px solid var(--border);
+      color:var(--text);
+    }
+    .muted{color:var(--muted)}
+    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+    .grow{flex:1}
+
+    .formBox{
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:rgba(0,0,0,.02);
+    }
+    body.dark .formBox{background:rgba(255,255,255,.03)}
+    .formBox h3{margin:0 0 10px}
+    .warnText{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-weight:800;
+      font-size:14px;
+    }
+    .warnText b{color:var(--text)}
+    input[type="file"]{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+      background:transparent;
+      color:var(--text);
+    }
+    input[type="text"], textarea, select{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
       background:transparent;
       color:var(--text);
       font-family:inherit;
       outline:none;
     }
-    textarea{min-height:90px; resize:vertical}
+    textarea{min-height:80px;resize:vertical}
 
     .grid{
       display:grid;
-      grid-template-columns:repeat(3, 1fr);
+      grid-template-columns:repeat(2, minmax(0,1fr));
       gap:12px;
     }
-    @media(max-width:980px){ .grid{grid-template-columns:repeat(2, 1fr)} }
-    @media(max-width:620px){ .grid{grid-template-columns:1fr} }
+    @media (min-width:860px){
+      .grid{grid-template-columns:repeat(3, minmax(0,1fr))}
+    }
 
     .photoCard{
       border:1px solid var(--border);
-      border-radius:16px;
+      border-radius:18px;
       overflow:hidden;
       background:var(--card);
       box-shadow:var(--shadow);
+      position:relative;
     }
     .imgWrap{
-      position:relative;
-      background:#000;
-      aspect-ratio: 4/5;
+      width:100%;
+      aspect-ratio: 4 / 5;
+      background:#0b0e14;
       overflow:hidden;
+      cursor:zoom-in;
     }
     .imgWrap img{
       width:100%;
@@ -165,696 +180,800 @@
       object-fit:cover;
       display:block;
     }
-
-    .imgTopActions{
-      position:absolute;
-      top:10px; left:10px; right:10px;
-      display:flex; justify-content:space-between; gap:10px;
-      pointer-events:none;
+    .pcBody{padding:12px}
+    .pcTop{
+      display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
+      margin-bottom:8px;
     }
-    .chip{
-      pointer-events:auto;
-      display:inline-flex; align-items:center; gap:8px;
-      background:rgba(0,0,0,.55);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.18);
-      padding:8px 10px;
+    .tag{
+      display:inline-flex; align-items:center; gap:6px;
+      background:rgba(0,0,0,.06);
+      border:1px solid var(--border);
+      padding:6px 10px;
       border-radius:999px;
       font-weight:900;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      box-shadow:0 8px 18px rgba(0,0,0,.25);
+      color:var(--text);
     }
-    .chipBtn{pointer-events:auto; border:0; cursor:pointer;}
-
-    .pcBody{padding:12px}
-    .pcMeta{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px; flex-wrap:wrap;
-    }
+    body.dark .tag{background:rgba(255,255,255,.06)}
+    .mini{font-size:12px; color:var(--muted); font-weight:800}
     .cap{
       margin-top:8px;
       font-weight:800;
-      line-height:1.25;
+      color:var(--text);
       word-break:break-word;
     }
-    .cap.muted{font-weight:700}
+    .cap.muted{color:var(--muted);font-weight:700}
+    .pcBtns{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
 
-    .actions{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin-top:10px;
-    }
-    .divider{height:1px;background:var(--border); margin:12px 0}
-
-    .commentsTitle{
+    .likeBtn{
+      background:transparent;
+      border:1px solid var(--border);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
       font-weight:900;
-      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .likeBtn.on{
+      border-color: rgba(22,163,74,.4);
+      box-shadow:0 0 0 3px rgba(22,163,74,.12);
+    }
+
+    .danger{
+      background:transparent;
+      border:1px solid rgba(239,68,68,.45);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .commentBox{
+      margin-top:12px;
+      border-top:1px solid var(--border);
+      padding-top:12px;
     }
     .comment{
       border:1px solid var(--border);
       border-radius:14px;
-      padding:10px 12px;
+      padding:10px 10px;
       margin-top:8px;
+      background:transparent;
     }
-    .commentHead{
+    .commentTop{
       display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
       font-weight:900;
-      align-items:center;
     }
-    .commentBody{margin-top:6px; color:var(--text); word-break:break-word}
-    .mini{font-size:12px; color:var(--muted)}
+    .commentBody{margin-top:6px; color:var(--text); font-weight:700; white-space:pre-wrap}
+    .commentDel{
+      border:1px solid rgba(239,68,68,.45);
+      background:transparent;
+      border-radius:12px;
+      padding:6px 10px;
+      font-weight:900;
+      cursor:pointer;
+      color:var(--text);
+    }
+
+    .sectionTitle{
+      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    }
+    .sectionTitle h3{margin:0}
 
     .toast{
       display:none;
-      margin-top:10px;
-      padding:12px 12px;
-      border-radius:14px;
+      margin-top:12px;
       border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
       background:rgba(22,163,74,.10);
-      color:var(--text);
-      font-weight:800;
+      font-weight:900;
     }
-    .toast.show{display:block}
     .toast.bad{background:rgba(239,68,68,.10)}
-    .toast.warn{background:rgba(245,158,11,.12)}
+    .toast.warn{background:rgba(245,158,11,.10)}
+    .toast.show{display:block}
+
+    /* LIGHTBOX */
+    .lightbox{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.75);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:9999;
+    }
+    .lightbox.show{display:flex}
+    .lbInner{
+      width:min(980px, 100%);
+      max-height:90vh;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .lbImg{
+      background:#000;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 20px 60px rgba(0,0,0,.45);
+    }
+    .lbImg img{
+      width:100%;
+      height:auto;
+      max-height:82vh;
+      object-fit:contain;
+      display:block;
+      background:#000;
+    }
+    .lbBar{
+      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      color:#fff;
+      font-weight:900;
+    }
+    .lbClose{
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      color:#fff;
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .fab{
+      position:fixed;
+      right:16px;bottom:16px;
+      width:54px;height:54px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      font-size:22px;
+      display:flex;align-items:center;justify-content:center;
+    }
   </style>
 </head>
 
 <body>
-<div class="wrap">
+  <div class="wrap">
 
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo">QDP</div>
-      <div class="titleWrap">
-        <h1 class="title">FOTO</h1>
-        <div class="subtitle">Carica una foto • aggiorna per vedere le nuove</div>
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" title="QDP">QDP</div>
+        <div class="title">
+          <h1>FOTO</h1>
+          <div class="subtitle">Carica una foto • aggiorna per vedere le nuove</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="btn ghost" href="index.html">⬅️ Home</a>
+        <button id="adminBtn" class="btn admin" type="button">🔐 Admin: OFF</button>
       </div>
     </div>
 
-    <div class="row">
-      <a class="btn ghost" href="index.html">⬅️ Home</a>
-      <button id="adminBtn" class="btn small warn" type="button">🔐 Admin: OFF</button>
-      <button id="themeToggle" class="btn small ghost" type="button">🌙</button>
+    <div class="card">
+      <div class="formBox">
+        <h3>Scegli una foto e premi “Carica”.</h3>
+        <div class="warnText">⚠️ <b>Foto o commenti volgari o ingiuriosi verranno eliminati!!!</b></div>
+
+        <div class="row" style="margin-top:12px">
+          <div class="grow">
+            <input id="fileInput" type="file" accept="image/*">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px">
+          <div class="grow">
+            <input id="captionInput" type="text" maxlength="90" placeholder="Didascalia (facoltativa, max 90 caratteri)">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px">
+          <button id="uploadBtn" class="btn ok" type="button">⬆️ Carica</button>
+          <button id="refreshBtn" class="btn ghost" type="button">🔄 Aggiorna</button>
+
+          <span id="orderPill" class="pill" style="margin-left:auto">
+            🧭 Ordina:
+            <select id="orderSelect" style="width:auto; padding:8px 10px; border-radius:12px">
+              <option value="new">Più nuove</option>
+              <option value="likes">Più like</option>
+            </select>
+          </span>
+
+          <span id="countPill" class="pill">📸 0 foto</span>
+        </div>
+
+        <!-- ADMIN INFO (dentro al riquadro, non fuori) -->
+        <div id="adminInfo" class="pill" style="margin-top:12px; display:none;">
+          ✅ Admin attivo (puoi eliminare e modificare didascalie + commenti)
+        </div>
+
+        <div id="toast" class="toast"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sectionTitle">
+        <h3>🏆 Top foto più piaciute (ultimi 30 giorni)</h3>
+        <div class="mini" id="topInfo">Mostro 0 foto</div>
+      </div>
+      <div id="topGrid" class="grid" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card">
+      <div class="sectionTitle">
+        <h3>🖼 Galleria</h3>
+        <div class="mini" id="galInfo">—</div>
+      </div>
+      <div id="grid" class="grid" style="margin-top:12px"></div>
+    </div>
+
+  </div>
+
+  <button id="themeToggle" class="fab" title="Tema">🌙</button>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <div class="lbInner">
+      <div class="lbBar">
+        <div id="lbCaption">📷 Foto</div>
+        <button id="lbClose" class="lbClose" type="button">✖ Chiudi</button>
+      </div>
+      <div class="lbImg">
+        <img id="lbImg" src="" alt="Foto">
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="muted" style="font-weight:800">Scegli una foto e premi “Carica”.</div>
-    <div class="muted" style="margin-top:6px;font-weight:900">⚠️ Foto o commenti volgari o ingiuriosi verranno eliminati!!!</div>
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
-    <div class="row" style="margin-top:10px">
-      <input id="fileInput" class="input" type="file" accept="image/*">
-    </div>
+  <script>
+  /* =========================
+     IMPOSTAZIONI
+  ========================= */
+  // Cambia questo PIN come vuoi
+  const ADMIN_PIN = "1234";
 
-    <div class="row" style="margin-top:10px">
-      <input id="captionInput" class="input" type="text" maxlength="90" placeholder="Didascalia (facoltativa, max 90 caratteri)">
-    </div>
+  const BUCKET = "photos";
+  const MAX_FILE_MB = 8;
+  const MAX_COMMENTS_PER_10MIN = 5;
 
-    <div class="row" style="margin-top:10px">
-      <button id="uploadBtn" class="btn ok" type="button">⬆️ Carica</button>
-      <button id="refreshBtn" class="btn ghost" type="button">🔄 Aggiorna</button>
-      <div class="spacer"></div>
-
-      <label class="pill" style="gap:10px">
-        🔽 Ordina:
-        <select id="sortSelect" style="width:auto; padding:8px 10px; border-radius:12px">
-          <option value="new">Più nuove</option>
-          <option value="likes">Più like</option>
-        </select>
-      </label>
-
-      <div id="countPill" class="pill">📸 0 foto</div>
-    </div>
-
-    <div id="adminHint" class="pill adminHint" style="display:none; margin-top:10px">
-      ✅ Admin attivo (puoi eliminare e modificare didascalie + commenti)
-    </div>
-
-    <div id="toast" class="toast"></div>
-  </div>
-
-  <div class="card" id="topBox" style="display:none">
-    <div class="row">
-      <div style="font-weight:900">🏆 Top foto più piaciute (ultimi 30 giorni)</div>
-      <div class="spacer"></div>
-      <div class="mini" id="topMini"></div>
-    </div>
-    <div class="grid" id="topGrid" style="margin-top:12px"></div>
-  </div>
-
-  <div class="card">
-    <div class="row">
-      <div style="font-weight:900">🖼 Galleria</div>
-      <div class="spacer"></div>
-      <div class="mini">Suggerimento: fai “Aggiorna” se qualcuno ha caricato ora.</div>
-    </div>
-    <div class="grid" id="grid" style="margin-top:12px"></div>
-  </div>
-
-</div>
-
-<script src="config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-
-<script>
-/* THEME */
-const themeBtn = document.getElementById("themeToggle");
-function setTheme(mode){
-  document.body.classList.toggle("dark", mode === "dark");
-  themeBtn.textContent = (mode === "dark") ? "☀️" : "🌙";
-  localStorage.setItem("qdp_theme", mode);
-}
-setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
-themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
-
-/* SUPABASE */
-if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
-  alert("config.js non caricato o non valido");
-  throw new Error("Missing config");
-}
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-/* DOM */
-const adminBtn = document.getElementById("adminBtn");
-const adminHint = document.getElementById("adminHint");
-const toast = document.getElementById("toast");
-
-const fileInput = document.getElementById("fileInput");
-const captionInput = document.getElementById("captionInput");
-const uploadBtn = document.getElementById("uploadBtn");
-const refreshBtn = document.getElementById("refreshBtn");
-const sortSelect = document.getElementById("sortSelect");
-const grid = document.getElementById("grid");
-const countPill = document.getElementById("countPill");
-
-const topBox = document.getElementById("topBox");
-const topGrid = document.getElementById("topGrid");
-const topMini = document.getElementById("topMini");
-
-/* HELPERS */
-function showToast(msg, type="ok"){
-  toast.classList.remove("show","bad","warn");
-  if(type==="bad") toast.classList.add("bad");
-  if(type==="warn") toast.classList.add("warn");
-  toast.textContent = msg;
-  toast.classList.add("show");
-  setTimeout(()=>toast.classList.remove("show"), 2200);
-}
-
-function escapeHtml(s){
-  return String(s ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-function fmtDate(iso){
-  try{
-    return new Date(iso).toLocaleString("it-IT", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" });
-  }catch(e){ return String(iso||""); }
-}
-
-async function getSession(){
-  const { data } = await client.auth.getSession();
-  return data?.session || null;
-}
-function isAdminSession(session){ return !!(session && session.user); }
-
-/* ADMIN UI */
-let adminOn = false;
-async function refreshAdminUI(){
-  const session = await getSession();
-  adminOn = isAdminSession(session);
-  adminBtn.textContent = adminOn ? "🔐 Admin: ON" : "🔐 Admin: OFF";
-  adminBtn.classList.toggle("warn", !adminOn);
-  adminBtn.classList.toggle("ok", adminOn);
-  adminHint.style.display = adminOn ? "inline-flex" : "none";
-  return adminOn;
-}
-
-adminBtn.onclick = async () => {
-  const session = await getSession();
-  if(isAdminSession(session)){
-    await client.auth.signOut();
-    showToast("Admin disattivato.", "warn");
-    await refreshAdminUI();
-    await loadAll();
-    return;
+  /* =========================
+     THEME
+  ========================= */
+  const themeBtn = document.getElementById("themeToggle");
+  function setTheme(mode){
+    document.body.classList.toggle("dark", mode === "dark");
+    themeBtn.textContent = (mode === "dark") ? "☀️" : "🌙";
+    localStorage.setItem("qdp_theme", mode);
   }
-  const email = prompt("Email admin:");
-  if(!email) return;
-  const password = prompt("Password admin:");
-  if(!password) return;
+  setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
+  themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 
-  const { error } = await client.auth.signInWithPassword({ email, password });
-  if(error){
-    console.error(error);
-    showToast("Login fallito.", "bad");
-    return;
+  /* =========================
+     SUPABASE
+  ========================= */
+  if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+    alert("config.js non caricato o non valido");
+    throw new Error("Missing config");
   }
-  showToast("Admin attivo ✅");
-  await refreshAdminUI();
-  await loadAll();
-};
+  const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* CONFIG */
-const BUCKET = "photos";
-const TABLE_PHOTOS = "photos";
-const TABLE_COMMENTS = "photo_comments";
+  /* =========================
+     DOM
+  ========================= */
+  const fileInput = document.getElementById("fileInput");
+  const captionInput = document.getElementById("captionInput");
+  const uploadBtn = document.getElementById("uploadBtn");
+  const refreshBtn = document.getElementById("refreshBtn");
+  const orderSelect = document.getElementById("orderSelect");
+  const grid = document.getElementById("grid");
+  const topGrid = document.getElementById("topGrid");
+  const toast = document.getElementById("toast");
+  const countPill = document.getElementById("countPill");
+  const topInfo = document.getElementById("topInfo");
+  const galInfo = document.getElementById("galInfo");
 
-function getLikedKey(photoId){ return `qdp_liked_${photoId}`; }
-function hasLiked(photoId){ return localStorage.getItem(getLikedKey(photoId)) === "1"; }
-function markLiked(photoId){ localStorage.setItem(getLikedKey(photoId), "1"); }
+  const adminBtn = document.getElementById("adminBtn");
+  const adminInfo = document.getElementById("adminInfo");
 
-function antiSpamOk(){
-  const key = "qdp_last_comment_at";
-  const last = Number(localStorage.getItem(key) || "0");
-  const now = Date.now();
-  const waitMs = 20000;
-  if(now - last < waitMs) return { ok:false, ms: waitMs - (now-last) };
-  localStorage.setItem(key, String(now));
-  return { ok:true, ms:0 };
-}
+  const lightbox = document.getElementById("lightbox");
+  const lbImg = document.getElementById("lbImg");
+  const lbClose = document.getElementById("lbClose");
+  const lbCaption = document.getElementById("lbCaption");
 
-/* ✅ Anti doppio tap upload */
-let uploading = false;
+  /* =========================
+     STATO
+  ========================= */
+  let isAdmin = localStorage.getItem("qdp_admin") === "1";
+  let cachedPhotos = [];
+  let uploadInProgress = false;
 
-/* ✅ Top IDs per non duplicare in galleria */
-let topIds = new Set();
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
 
-/* UPLOAD */
-uploadBtn.onclick = async () => {
-  if(uploading) return;
+  function showToast(msg, type="ok"){
+    toast.className = "toast show" + (type==="bad" ? " bad" : type==="warn" ? " warn" : "");
+    toast.textContent = msg;
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=> toast.classList.remove("show"), 2600);
+  }
 
-  try{
+  function setAdminUI(){
+    adminBtn.textContent = isAdmin ? "🔓 Admin: ON" : "🔐 Admin: OFF";
+    adminBtn.classList.toggle("ok", isAdmin);
+    adminInfo.style.display = isAdmin ? "inline-flex" : "none";
+  }
+  setAdminUI();
+
+  adminBtn.onclick = () => {
+    if(isAdmin){
+      if(confirm("Vuoi uscire da Admin?")){
+        isAdmin = false;
+        localStorage.setItem("qdp_admin","0");
+        setAdminUI();
+        renderAll();
+      }
+      return;
+    }
+    const pin = prompt("Inserisci PIN Admin:");
+    if(pin === ADMIN_PIN){
+      isAdmin = true;
+      localStorage.setItem("qdp_admin","1");
+      setAdminUI();
+      renderAll();
+      showToast("✅ Admin attivo.", "ok");
+    }else{
+      showToast("❌ PIN errato.", "bad");
+    }
+  };
+
+  /* =========================
+     LIKE (anti doppio like)
+  ========================= */
+  function likedKey(photoId){ return `qdp_like_${photoId}`; }
+  function hasLiked(photoId){ return localStorage.getItem(likedKey(photoId)) === "1"; }
+  function setLiked(photoId, v){ localStorage.setItem(likedKey(photoId), v ? "1" : "0"); }
+
+  /* =========================
+     COMMENTI (mini anti-spam)
+  ========================= */
+  function canCommentNow(){
+    const key="qdp_comment_log";
+    const now=Date.now();
+    let arr=[];
+    try{ arr=JSON.parse(localStorage.getItem(key)||"[]"); }catch(e){ arr=[]; }
+    arr = arr.filter(t => now - t < 10*60*1000);
+    if(arr.length >= MAX_COMMENTS_PER_10MIN) return false;
+    arr.push(now);
+    localStorage.setItem(key, JSON.stringify(arr));
+    return true;
+  }
+
+  /* =========================
+     LIGHTBOX
+  ========================= */
+  function openLightbox(url, caption){
+    lbImg.src = url;
+    lbCaption.textContent = caption ? `📷 ${caption}` : "📷 Foto";
+    lightbox.classList.add("show");
+    lightbox.setAttribute("aria-hidden","false");
+  }
+  function closeLightbox(){
+    lightbox.classList.remove("show");
+    lightbox.setAttribute("aria-hidden","true");
+    lbImg.src = "";
+  }
+  lbClose.onclick = closeLightbox;
+  lightbox.addEventListener("click", (e)=>{
+    if(e.target === lightbox) closeLightbox();
+  });
+  window.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape") closeLightbox();
+  });
+
+  /* =========================
+     HELPERS SUPABASE
+  ========================= */
+  function publicUrl(path){
+    return client.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+  }
+
+  async function loadTopPhotos(all){
+    const cutoff = new Date(Date.now() - 30*24*60*60*1000).toISOString();
+    const top = (all||[])
+      .filter(p => (p.created_at || "") >= cutoff)
+      .slice()
+      .sort((a,b)=> (b.likes||0)-(a.likes||0) || String(b.created_at||"").localeCompare(String(a.created_at||"")))
+      .slice(0,6);
+
+    topInfo.textContent = `Mostro ${top.length} foto`;
+    topGrid.innerHTML = top.map(p => photoCardHtml(p, true)).join("");
+    wirePhotoCards(topGrid);
+    return top.map(p => String(p.id));
+  }
+
+  function formatIt(ts){
+    try{
+      return new Date(ts).toLocaleString("it-IT", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+    }catch(e){ return ""; }
+  }
+
+  function photoCardHtml(p, isTop=false){
+    const url = publicUrl(p.path);
+    const liked = hasLiked(p.id);
+    const likes = p.likes || 0;
+    const cap = (p.caption || "").trim();
+
+    const badgeTop = isTop ? `<span class="tag">🏆 TOP</span>` : ``;
+
+    const adminBtns = isAdmin ? `
+      <button class="danger" data-act="delPhoto" data-id="${escapeHtml(p.id)}" data-path="${escapeHtml(p.path)}">🗑 Elimina</button>
+      <button class="likeBtn" data-act="editCaption" data-id="${escapeHtml(p.id)}">✏️ Didascalia</button>
+    ` : ``;
+
+    return `
+      <div class="photoCard" data-photo="${escapeHtml(p.id)}">
+        <div class="imgWrap" data-act="open" data-url="${escapeHtml(url)}" data-cap="${escapeHtml(cap)}">
+          <img src="${escapeHtml(url)}" alt="Foto">
+        </div>
+        <div class="pcBody">
+          <div class="pcTop">
+            ${badgeTop}
+            <span class="tag">🕒 ${escapeHtml(formatIt(p.created_at))}</span>
+          </div>
+
+          <div class="cap ${cap? "" : "muted"}">${cap ? escapeHtml(cap) : "— Nessuna didascalia —"}</div>
+
+          <div class="pcBtns">
+            <button class="likeBtn ${liked ? "on":""}" data-act="like" data-id="${escapeHtml(p.id)}">
+              👍 Like <span class="tag" style="padding:4px 8px">${likes}</span>
+            </button>
+
+            <button class="likeBtn" data-act="share" data-url="${escapeHtml(url)}" data-cap="${escapeHtml(cap)}">📤 Condividi</button>
+
+            ${adminBtns}
+          </div>
+
+          <div class="commentBox">
+            <div class="mini" style="font-weight:900">💬 Commenti</div>
+
+            <div class="row" style="margin-top:8px">
+              <input class="cAuthor" type="text" maxlength="18" placeholder="Nome (facoltativo, max 18)">
+              <button class="btn ghost cSend" type="button" data-act="addComment" data-id="${escapeHtml(p.id)}">Invia</button>
+            </div>
+            <textarea class="cBody" maxlength="160" placeholder="Scrivi un commento (max 160)"></textarea>
+
+            <div class="commentsList" data-list="${escapeHtml(p.id)}" style="margin-top:10px">
+              <div class="mini muted">Caricamento commenti…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function wirePhotoCards(container){
+    container.querySelectorAll("[data-act]").forEach(el=>{
+      el.addEventListener("click", async (e)=>{
+        const act = el.dataset.act;
+
+        if(act === "open"){
+          openLightbox(el.dataset.url, el.dataset.cap || "");
+          return;
+        }
+
+        if(act === "like"){
+          const id = el.dataset.id;
+          if(hasLiked(id)){
+            showToast("Hai già messo like ✅", "warn");
+            return;
+          }
+          setLiked(id, true);
+
+          const { data:row, error } = await client.from("photos").select("likes").eq("id", id).single();
+          if(error){
+            setLiked(id, false);
+            showToast("❌ Errore like", "bad");
+            return;
+          }
+          const newLikes = (row?.likes || 0) + 1;
+          const { error:upErr } = await client.from("photos").update({ likes:newLikes }).eq("id", id);
+          if(upErr){
+            setLiked(id, false);
+            showToast("❌ Errore like", "bad");
+            return;
+          }
+          showToast("👍 Like aggiunto!", "ok");
+          await refreshData();
+          return;
+        }
+
+        if(act === "share"){
+          const url = el.dataset.url;
+          const cap = (el.dataset.cap || "").trim();
+          const text = cap ? `QDP • ${cap}` : `QDP • Foto`;
+          try{
+            if(navigator.share){
+              await navigator.share({ title:"QDP Foto", text, url });
+            }else{
+              const wa = `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`;
+              window.open(wa, "_blank");
+            }
+          }catch(err){
+            // annullato dall'utente = ok
+          }
+          return;
+        }
+
+        if(act === "delPhoto"){
+          if(!isAdmin) return;
+          const id = el.dataset.id;
+          const path = el.dataset.path;
+          if(!confirm("Eliminare questa foto?")) return;
+
+          // 1) cancella DB row
+          const { error:delErr, data:delData } = await client.from("photos").delete().eq("id", id).select();
+          if(delErr){
+            showToast("❌ Errore elimina foto (DB)", "bad");
+            return;
+          }
+
+          // 2) cancella storage file (se c'è)
+          const { error:storErr } = await client.storage.from(BUCKET).remove([path]);
+          // se fallisce lo storage non blocchiamo, ma avvisiamo
+          if(storErr){
+            showToast("⚠️ Foto rimossa dal DB, ma non dallo storage.", "warn");
+          }else{
+            showToast("🗑 Foto eliminata.", "ok");
+          }
+
+          // 3) cancella commenti collegati (best effort)
+          await client.from("photo_comments").delete().eq("photo_id", id);
+
+          await refreshData();
+          return;
+        }
+
+        if(act === "editCaption"){
+          if(!isAdmin) return;
+          const id = el.dataset.id;
+          const p = cachedPhotos.find(x => String(x.id) === String(id));
+          const oldCap = (p?.caption || "");
+          const newCap = prompt("Nuova didascalia (max 90):", oldCap);
+          if(newCap === null) return;
+          const cap = String(newCap).slice(0,90);
+          const { error:upErr } = await client.from("photos").update({ caption:cap }).eq("id", id);
+          if(upErr){
+            showToast("❌ Errore salvataggio didascalia", "bad");
+            return;
+          }
+          showToast("✅ Didascalia aggiornata.", "ok");
+          await refreshData();
+          return;
+        }
+
+        if(act === "addComment"){
+          const id = el.dataset.id;
+          const card = el.closest(".photoCard");
+          const author = (card.querySelector(".cAuthor")?.value || "").trim().slice(0,18);
+          const body = (card.querySelector(".cBody")?.value || "").trim().slice(0,160);
+
+          if(!body){
+            showToast("Scrivi un commento 🙂", "warn");
+            return;
+          }
+          if(!canCommentNow()){
+            showToast("Troppi commenti in poco tempo. Riprova tra 10 minuti.", "warn");
+            return;
+          }
+
+          const payload = { photo_id:id, author: author || "Anonimo", body };
+          const { error:insErr } = await client.from("photo_comments").insert(payload);
+          if(insErr){
+            showToast("❌ Errore inserimento commento", "bad");
+            return;
+          }
+
+          card.querySelector(".cBody").value = "";
+          showToast("💬 Commento aggiunto!", "ok");
+          await loadCommentsFor(id, card.querySelector(`[data-list="${CSS.escape(id)}"]`));
+          return;
+        }
+
+        if(act === "delComment"){
+          if(!isAdmin) return;
+          const cid = el.dataset.cid;
+          if(!confirm("Eliminare questo commento?")) return;
+          const { error:delErr } = await client.from("photo_comments").delete().eq("id", cid);
+          if(delErr){
+            showToast("❌ Errore elimina commento", "bad");
+            return;
+          }
+          showToast("🗑 Commento eliminato.", "ok");
+          const pid = el.dataset.pid;
+          const card = container.querySelector(`.photoCard[data-photo="${CSS.escape(pid)}"]`);
+          if(card){
+            await loadCommentsFor(pid, card.querySelector(`[data-list="${CSS.escape(pid)}"]`));
+          }else{
+            await refreshData();
+          }
+          return;
+        }
+      }, { passive:true });
+    });
+  }
+
+  async function loadCommentsFor(photoId, listEl){
+    if(!listEl) return;
+    const { data, error } = await client
+      .from("photo_comments")
+      .select("id,photo_id,author,body,created_at")
+      .eq("photo_id", photoId)
+      .order("created_at", { ascending:true });
+
+    if(error){
+      listEl.innerHTML = `<div class="mini muted">Errore commenti</div>`;
+      return;
+    }
+
+    if(!data || data.length === 0){
+      listEl.innerHTML = `<div class="mini muted">Nessun commento.</div>`;
+      return;
+    }
+
+    listEl.innerHTML = data.map(c => `
+      <div class="comment">
+        <div class="commentTop">
+          <div>${escapeHtml(c.author || "Anonimo")} <span class="mini">• ${escapeHtml(formatIt(c.created_at))}</span></div>
+          ${isAdmin ? `<button class="commentDel" type="button" data-act="delComment" data-cid="${escapeHtml(c.id)}" data-pid="${escapeHtml(photoId)}">🗑</button>` : ``}
+        </div>
+        <div class="commentBody">${escapeHtml(c.body)}</div>
+      </div>
+    `).join("");
+
+    wirePhotoCards(listEl); // per i pulsanti delete comment
+  }
+
+  function renderAll(){
+    // render top + gallery già in cachedPhotos
+    // topPhotosIds = ids mostrati in top, così possiamo toglierli dalla galleria (come prima)
+    // MA il contatore deve essere il TOTALE, quindi useremo cachedPhotos.length totale.
+  }
+
+  async function refreshData(){
+    // 1) carica tutte le foto
+    const { data:all, error } = await client
+      .from("photos")
+      .select("id,created_at,path,caption,file_path,likes")
+      .order("created_at", { ascending:false });
+
+    if(error){
+      showToast("❌ Errore caricamento foto", "bad");
+      return;
+    }
+
+    cachedPhotos = all || [];
+
+    // ✅ CONTATORE = TOTALE FOTO (come richiesto)
+    countPill.textContent = `📸 ${cachedPhotos.length} foto`;
+
+    // 2) TOP
+    const topIds = await loadTopPhotos(cachedPhotos);
+
+    // 3) GALLERIA: escludi quelle del TOP
+    let gal = cachedPhotos.filter(p => !topIds.includes(String(p.id)));
+
+    // Ordina
+    if(orderSelect.value === "likes"){
+      gal = gal.slice().sort((a,b)=> (b.likes||0)-(a.likes||0) || String(b.created_at||"").localeCompare(String(a.created_at||"")));
+    }else{
+      gal = gal.slice().sort((a,b)=> String(b.created_at||"").localeCompare(String(a.created_at||"")));
+    }
+
+    galInfo.textContent = gal.length ? `Mostro ${gal.length} foto in galleria (Top escluso)` : `Nessuna foto in galleria (tutte nel Top)`;
+
+    grid.innerHTML = gal.map(p => photoCardHtml(p, false)).join("");
+    wirePhotoCards(grid);
+
+    // 4) carica commenti per ogni card (top + gallery)
+    // TOP
+    topGrid.querySelectorAll(".photoCard").forEach(card=>{
+      const pid = card.dataset.photo;
+      const listEl = card.querySelector(`[data-list="${CSS.escape(pid)}"]`);
+      loadCommentsFor(pid, listEl);
+    });
+    // GALLERY
+    grid.querySelectorAll(".photoCard").forEach(card=>{
+      const pid = card.dataset.photo;
+      const listEl = card.querySelector(`[data-list="${CSS.escape(pid)}"]`);
+      loadCommentsFor(pid, listEl);
+    });
+  }
+
+  /* =========================
+     UPLOAD (evita doppio caricamento)
+  ========================= */
+  uploadBtn.onclick = async () => {
+    if(uploadInProgress) return; // blocca doppio click
     const file = fileInput.files?.[0];
     if(!file){
-      showToast("Scegli un file.", "warn");
+      showToast("Scegli un file prima di caricare.", "warn");
       return;
     }
 
-    uploading = true;
+    const sizeMb = file.size / (1024*1024);
+    if(sizeMb > MAX_FILE_MB){
+      showToast(`File troppo grande (max ${MAX_FILE_MB}MB).`, "warn");
+      return;
+    }
+
+    uploadInProgress = true;
     uploadBtn.disabled = true;
-    uploadBtn.textContent = "⏳ Caricamento…";
-
-    const caption = (captionInput.value || "").trim().slice(0,90);
-
-    const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-    const safeExt = ext.replace(/[^a-z0-9]/g,"") || "jpg";
-    const filePath = `uploads/${Date.now()}_${Math.random().toString(16).slice(2)}.${safeExt}`;
-
-    const { error: upErr } = await client
-      .storage
-      .from(BUCKET)
-      .upload(filePath, file, { cacheControl:"3600", upsert:false, contentType:file.type || "image/jpeg" });
-    if(upErr) throw upErr;
-
-    const { data: pub } = client.storage.from(BUCKET).getPublicUrl(filePath);
-    const publicUrl = pub?.publicUrl || "";
-
-    const { error: insErr } = await client
-      .from(TABLE_PHOTOS)
-      .insert([{ file_path: filePath, path: publicUrl, caption, likes: 0 }]);
-    if(insErr) throw insErr;
-
-    fileInput.value = "";
-    captionInput.value = "";
-    showToast("Foto caricata ✅");
-    await loadAll();
-
-  }catch(e){
-    console.error(e);
-    showToast("Errore upload.", "bad");
-  }finally{
-    uploading = false;
-    uploadBtn.disabled = false;
-    uploadBtn.textContent = "⬆️ Carica";
-  }
-};
-
-refreshBtn.onclick = async () => {
-  showToast("Aggiorno…");
-  await loadAll();
-};
-sortSelect.onchange = () => loadGallery();
-
-/* LIKE */
-async function likePhoto(photo){
-  try{
-    if(hasLiked(photo.id)){
-      showToast("Like già dato ✅", "warn");
-      return;
-    }
-    const next = Number(photo.likes || 0) + 1;
-
-    const { error } = await client
-      .from(TABLE_PHOTOS)
-      .update({ likes: next })
-      .eq("id", photo.id);
-
-    if(error) throw error;
-
-    markLiked(photo.id);
-    showToast("Like 👍");
-    await loadAll();
-  }catch(e){
-    console.error(e);
-    showToast("Errore like.", "bad");
-  }
-}
-
-/* DELETE PHOTO (ADMIN) */
-async function deletePhoto(photo){
-  try{
-    const ok = confirm("Vuoi eliminare questa foto?");
-    if(!ok) return;
-
-    const { error: delErr } = await client
-      .from(TABLE_PHOTOS)
-      .delete()
-      .eq("id", photo.id);
-    if(delErr) throw delErr;
-
-    if(photo.file_path){
-      const { error: stErr } = await client.storage.from(BUCKET).remove([photo.file_path]);
-      if(stErr) console.warn("Storage remove error:", stErr);
-    }
-
-    showToast("Foto eliminata 🗑️");
-    await loadAll();
-  }catch(e){
-    console.error(e);
-    showToast("Errore eliminazione.", "bad");
-  }
-}
-
-/* EDIT CAPTION (ADMIN) */
-async function editCaption(photo){
-  try{
-    const next = prompt("Modifica didascalia (vuota = nessuna):", photo.caption || "");
-    if(next === null) return;
-
-    const clean = String(next || "").trim().slice(0,90);
-    const { error } = await client
-      .from(TABLE_PHOTOS)
-      .update({ caption: clean })
-      .eq("id", photo.id);
-    if(error) throw error;
-
-    showToast("Didascalia aggiornata ✅");
-    await loadAll();
-  }catch(e){
-    console.error(e);
-    showToast("Errore didascalia.", "bad");
-  }
-}
-
-/* SHARE */
-async function sharePhoto(photo){
-  try{
-    const url = photo.path || "";
-    if(!url) return showToast("Link non disponibile.", "bad");
-    const text = "Guarda questa foto QDP 📸";
-
-    if(navigator.share){
-      await navigator.share({ title:"QDP Foto", text, url });
-      return;
-    }
-    window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`, "_blank", "noopener");
-  }catch(e){
-    console.warn(e);
-  }
-}
-async function copyLink(photo){
-  try{
-    const url = photo.path || "";
-    if(!url) return showToast("Link non disponibile.", "bad");
-    await navigator.clipboard.writeText(url);
-    showToast("Link copiato ✅");
-  }catch(e){
-    console.warn(e);
-    showToast("Non riesco a copiare.", "bad");
-  }
-}
-
-/* COMMENTS */
-async function loadComments(photoId){
-  const { data, error } = await client
-    .from(TABLE_COMMENTS)
-    .select("id,photo_id,author,body,created_at")
-    .eq("photo_id", photoId)
-    .order("created_at", { ascending:true });
-
-  if(error){
-    console.warn("comments error", error);
-    return [];
-  }
-  return data || [];
-}
-
-async function addComment(photoId, author, body){
-  try{
-    const a = (author || "").trim().slice(0,24) || "Anonimo";
-    const b = (body || "").trim().slice(0,220);
-    if(!b) return showToast("Scrivi un commento.", "warn");
-
-    const spam = antiSpamOk();
-    if(!spam.ok) return showToast(`Aspetta ${Math.ceil(spam.ms/1000)}s prima di commentare.`, "warn");
-
-    const { error } = await client
-      .from(TABLE_COMMENTS)
-      .insert([{ photo_id: photoId, author: a, body: b }]);
-    if(error) throw error;
-
-    showToast("Commento inviato ✅");
-    await loadAll();
-  }catch(e){
-    console.error(e);
-    showToast("Errore commento.", "bad");
-  }
-}
-
-async function deleteComment(commentId){
-  try{
-    const ok = confirm("Vuoi eliminare questo commento?");
-    if(!ok) return;
-
-    const { error } = await client
-      .from(TABLE_COMMENTS)
-      .delete()
-      .eq("id", commentId);
-    if(error) throw error;
-
-    showToast("Commento eliminato 🗑️");
-    await loadAll();
-  }catch(e){
-    console.error(e);
-    showToast("Errore eliminazione commento.", "bad");
-  }
-}
-
-/* LOAD PHOTOS */
-let cachedPhotos = [];
-
-async function loadTop30(){
-  try{
-    topIds = new Set();
-
-    const since = new Date(Date.now() - 30*24*3600*1000).toISOString();
-
-    const { data, error } = await client
-      .from(TABLE_PHOTOS)
-      .select("id,created_at,path,file_path,caption,likes")
-      .gte("created_at", since)
-      .order("likes", { ascending:false })
-      .order("created_at", { ascending:false })
-      .limit(6);
-
-    if(error) throw error;
-
-    const rows = data || [];
-    rows.forEach(p => topIds.add(String(p.id)));
-
-    if(rows.length === 0){
-      topBox.style.display = "none";
-      return;
-    }
-    topBox.style.display = "block";
-    topMini.textContent = `Mostro ${rows.length} foto`;
-
-    topGrid.innerHTML = rows.map(p => renderPhotoCard(p, true)).join("");
-    await wireCardEvents(topGrid, rows);
-  }catch(e){
-    console.warn("top30 error", e);
-    topIds = new Set();
-    topBox.style.display = "none";
-  }
-}
-
-async function loadGallery(){
-  const sort = sortSelect.value;
-  const orderByLikes = (sort === "likes");
-
-  const { data, error } = await client
-    .from(TABLE_PHOTOS)
-    .select("id,created_at,path,file_path,caption,likes")
-    .order(orderByLikes ? "likes" : "created_at", { ascending:false })
-    .order("created_at", { ascending:false })
-    .limit(60);
-
-  if(error){
-    console.error(error);
-    grid.innerHTML = `<div class="muted">Errore caricamento foto.</div>`;
-    return;
-  }
-
-  const all = data || [];
-
-  /* ✅ FIX: non mostrare in Galleria quelle già presenti nel Top */
-  cachedPhotos = all.filter(p => !topIds.has(String(p.id)));
-
-  countPill.textContent = `📸 ${cachedPhotos.length} foto`;
-
-  grid.innerHTML = cachedPhotos.map(p => renderPhotoCard(p, false)).join("");
-  await wireCardEvents(grid, cachedPhotos);
-}
-
-function renderPhotoCard(photo, isTop){
-  const id = escapeHtml(photo.id);
-  const likes = Number(photo.likes || 0);
-  const liked = hasLiked(photo.id);
-  const cap = (photo.caption || "").trim();
-  const url = photo.path || "";
-
-  const capHtml = cap
-    ? `<div class="cap">${escapeHtml(cap)}</div>`
-    : `<div class="cap muted">Nessuna didascalia</div>`;
-
-  const badge = isTop ? `🏆 TOP` : `❤️ ${likes}`;
-  const likeLabel = liked ? "✅ Like" : "👍 Like";
-  const likeDisabled = liked ? "disabled" : "";
-
-  return `
-    <div class="photoCard" data-id="${id}">
-      <div class="imgWrap">
-        <img src="${escapeHtml(url)}" alt="foto">
-        <div class="imgTopActions">
-          <div class="chip">${badge}</div>
-          ${adminOn ? `<button class="chip chipBtn js-del" type="button">🗑️ Elimina</button>` : ``}
-        </div>
-      </div>
-
-      <div class="pcBody">
-        <div class="pcMeta">
-          <div class="mini">🕒 ${escapeHtml(fmtDate(photo.created_at))}</div>
-          <div class="mini">ID: ${id.slice(0,8)}…</div>
-        </div>
-
-        ${capHtml}
-
-        <div class="actions">
-          <button class="btn small ${liked ? "ghost" : "ok"} js-like" type="button" ${likeDisabled}>${likeLabel} • ${likes}</button>
-          <button class="btn small ghost js-share" type="button">📤 Condividi</button>
-          <button class="btn small ghost js-copy" type="button">🔗 Copia link</button>
-          ${adminOn ? `<button class="btn small warn js-editcap" type="button">✏️ Modifica didascalia</button>` : ``}
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="commentsTitle">
-          <div>💬 Commenti</div>
-          <div class="mini">max 220 caratteri • anti-spam 20s</div>
-        </div>
-
-        <div class="row" style="margin-top:10px">
-          <input class="input js-author" type="text" maxlength="24" placeholder="Nome (facoltativo)">
-        </div>
-        <div class="row" style="margin-top:10px">
-          <textarea class="input js-body" maxlength="220" placeholder="Scrivi un commento..."></textarea>
-        </div>
-        <div class="row" style="margin-top:10px">
-          <button class="btn small ghost js-send" type="button">📨 Invia</button>
-        </div>
-
-        <div class="js-comments"></div>
-      </div>
-    </div>
-  `;
-}
-
-async function wireCardEvents(containerEl, photos){
-  const cards = [...containerEl.querySelectorAll(".photoCard")];
-
-  for(const card of cards){
-    const id = card.getAttribute("data-id");
-    const photo = photos.find(p => String(p.id) === String(id));
-    if(!photo) continue;
-
-    const likeBtn = card.querySelector(".js-like");
-    if(likeBtn) likeBtn.onclick = () => likePhoto(photo);
-
-    const shareBtn = card.querySelector(".js-share");
-    if(shareBtn) shareBtn.onclick = () => sharePhoto(photo);
-
-    const copyBtn = card.querySelector(".js-copy");
-    if(copyBtn) copyBtn.onclick = () => copyLink(photo);
-
-    const delBtn = card.querySelector(".js-del");
-    if(delBtn) delBtn.onclick = () => deletePhoto(photo);
-
-    const editCapBtn = card.querySelector(".js-editcap");
-    if(editCapBtn) editCapBtn.onclick = () => editCaption(photo);
-
-    const commentsBox = card.querySelector(".js-comments");
-    if(commentsBox){
-      commentsBox.innerHTML = `<div class="mini muted" style="margin-top:10px">Carico commenti…</div>`;
-      const comments = await loadComments(photo.id);
-
-      commentsBox.innerHTML = (comments.length === 0)
-        ? `<div class="mini muted" style="margin-top:10px">Nessun commento.</div>`
-        : comments.map(c => `
-            <div class="comment">
-              <div class="commentHead">
-                <div>👤 ${escapeHtml(c.author || "Anonimo")}</div>
-                <div class="row" style="gap:8px">
-                  <div class="mini">🕒 ${escapeHtml(fmtDate(c.created_at))}</div>
-                  ${adminOn ? `<button class="btn small danger js-delc" type="button" data-cid="${escapeHtml(c.id)}">🗑</button>` : ``}
-                </div>
-              </div>
-              <div class="commentBody">${escapeHtml(c.body || "")}</div>
-            </div>
-          `).join("");
-
-      if(adminOn){
-        const delCs = [...commentsBox.querySelectorAll(".js-delc")];
-        delCs.forEach(btn=>{
-          btn.onclick = () => deleteComment(btn.getAttribute("data-cid"));
-        });
+    refreshBtn.disabled = true;
+
+    try{
+      // nome unico
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const safeExt = ext.replace(/[^a-z0-9]/g,"").slice(0,6) || "jpg";
+      const name = `qdp_${Date.now()}_${Math.random().toString(16).slice(2)}.${safeExt}`;
+      const path = `uploads/${name}`;
+
+      // upload storage
+      const { error:upErr } = await client.storage.from(BUCKET).upload(path, file, {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: file.type || "image/jpeg"
+      });
+      if(upErr){
+        showToast("❌ Errore upload storage", "bad");
+        return;
       }
+
+      // inserisci riga in DB
+      const cap = String(captionInput.value || "").trim().slice(0,90);
+      const payload = { path, file_path: path, caption: cap || null, likes: 0 };
+
+      const { error:insErr } = await client.from("photos").insert(payload);
+      if(insErr){
+        // rollback file nello storage
+        await client.storage.from(BUCKET).remove([path]);
+        showToast("❌ Errore salvataggio DB", "bad");
+        return;
+      }
+
+      // reset campi
+      fileInput.value = "";
+      captionInput.value = "";
+
+      showToast("✅ Foto caricata!", "ok");
+      await refreshData();
+
+    }finally{
+      uploadInProgress = false;
+      uploadBtn.disabled = false;
+      refreshBtn.disabled = false;
     }
+  };
 
-    const sendBtn = card.querySelector(".js-send");
-    const authorEl = card.querySelector(".js-author");
-    const bodyEl = card.querySelector(".js-body");
-    if(sendBtn && bodyEl){
-      sendBtn.onclick = async () => {
-        await addComment(photo.id, authorEl?.value || "", bodyEl.value || "");
-      };
-    }
-  }
-}
+  refreshBtn.onclick = () => refreshData();
+  orderSelect.onchange = () => refreshData();
 
-/* LOAD ALL */
-async function loadAll(){
-  await refreshAdminUI();
-  await loadTop30();
-  await loadGallery();
-}
-
-loadAll();
-</script>
+  // avvio
+  refreshData();
+  </script>
 </body>
 </html>
