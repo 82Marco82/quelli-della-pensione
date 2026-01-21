@@ -18,8 +18,7 @@
       --pill:#eeeeee;
       --btn:#111;
       --ok:#16a34a;
-      --bad:#ef4444;
-      --warn:#f59e0b;
+      --danger:#ef4444;
     }
     body.dark{
       --bg:#0f1115;
@@ -49,12 +48,8 @@
       margin:12px 0;
     }
 
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
-    }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-    }
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:12px}
     .logo{
       width:64px;height:64px;border-radius:999px;
       background:linear-gradient(135deg,#111,#333);
@@ -63,7 +58,7 @@
       box-shadow:0 10px 24px rgba(0,0,0,.18);
       user-select:none;
     }
-    .title h1{
+    h1{
       font-family:'Bebas Neue';
       letter-spacing:3px;
       margin:0;
@@ -72,7 +67,7 @@
     }
     .subtitle{color:var(--muted);font-size:14px;margin-top:4px}
 
-    .actions{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .btn{
       border:0;
       background:var(--btn);
@@ -94,51 +89,19 @@
       border:1px solid var(--border);
     }
     .btn.ok{background:var(--ok)}
-    .btn.admin{
-      background:rgba(0,0,0,.75);
-      color:#fff;
-    }
+    .btn.admin{background:rgba(0,0,0,.75)}
     body.dark .btn.admin{background:#0b0e14}
 
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
+      display:inline-flex;align-items:center;gap:8px;
       background:var(--pill);
       border-radius:999px;
       padding:8px 12px;
       font-weight:900;
       border:1px solid var(--border);
-      color:var(--text);
     }
     .muted{color:var(--muted)}
-    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
-    .grow{flex:1}
-
-    .formBox{
-      padding:14px;
-      border:1px solid var(--border);
-      border-radius:16px;
-      background:rgba(0,0,0,.02);
-    }
-    body.dark .formBox{background:rgba(255,255,255,.03)}
-    .formBox h3{margin:0 0 10px}
-    .warnText{
-      margin:8px 0 0;
-      color:var(--muted);
-      font-weight:800;
-      font-size:14px;
-    }
-    .warnText b{color:var(--text)}
-    input[type="file"]{
-      width:100%;
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:12px;
-      background:transparent;
-      color:var(--text);
-    }
-    input[type="text"], textarea, select{
+    input[type="file"], input[type="text"], textarea, select{
       width:100%;
       border:1px solid var(--border);
       border-radius:14px;
@@ -148,119 +111,10 @@
       font-family:inherit;
       outline:none;
     }
-    textarea{min-height:80px;resize:vertical}
+    textarea{min-height:70px;resize:vertical}
 
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:12px;
-    }
-    @media (min-width:860px){
-      .grid{grid-template-columns:repeat(3, minmax(0,1fr))}
-    }
-
-    .photoCard{
-      border:1px solid var(--border);
-      border-radius:18px;
-      overflow:hidden;
-      background:var(--card);
-      box-shadow:var(--shadow);
-      position:relative;
-    }
-    .imgWrap{
-      width:100%;
-      aspect-ratio: 4 / 5;
-      background:#0b0e14;
-      overflow:hidden;
-      cursor:zoom-in;
-    }
-    .imgWrap img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .pcBody{padding:12px}
-    .pcTop{
-      display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
-      margin-bottom:8px;
-    }
-    .tag{
-      display:inline-flex; align-items:center; gap:6px;
-      background:rgba(0,0,0,.06);
-      border:1px solid var(--border);
-      padding:6px 10px;
-      border-radius:999px;
-      font-weight:900;
-      color:var(--text);
-    }
-    body.dark .tag{background:rgba(255,255,255,.06)}
-    .mini{font-size:12px; color:var(--muted); font-weight:800}
-    .cap{
-      margin-top:8px;
-      font-weight:800;
-      color:var(--text);
-      word-break:break-word;
-    }
-    .cap.muted{color:var(--muted);font-weight:700}
-    .pcBtns{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
-
-    .likeBtn{
-      background:transparent;
-      border:1px solid var(--border);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      font-weight:900;
-      cursor:pointer;
-      display:inline-flex; align-items:center; gap:8px;
-    }
-    .likeBtn.on{
-      border-color: rgba(22,163,74,.4);
-      box-shadow:0 0 0 3px rgba(22,163,74,.12);
-    }
-
-    .danger{
-      background:transparent;
-      border:1px solid rgba(239,68,68,.45);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      font-weight:900;
-      cursor:pointer;
-    }
-
-    .commentBox{
-      margin-top:12px;
-      border-top:1px solid var(--border);
-      padding-top:12px;
-    }
-    .comment{
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:10px 10px;
-      margin-top:8px;
-      background:transparent;
-    }
-    .commentTop{
-      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
-      font-weight:900;
-    }
-    .commentBody{margin-top:6px; color:var(--text); font-weight:700; white-space:pre-wrap}
-    .commentDel{
-      border:1px solid rgba(239,68,68,.45);
-      background:transparent;
-      border-radius:12px;
-      padding:6px 10px;
-      font-weight:900;
-      cursor:pointer;
-      color:var(--text);
-    }
-
-    .sectionTitle{
-      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
-    }
-    .sectionTitle h3{margin:0}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .grow{flex:1}
 
     .toast{
       display:none;
@@ -275,11 +129,93 @@
     .toast.warn{background:rgba(245,158,11,.10)}
     .toast.show{display:block}
 
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    @media(min-width:860px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+    .photoCard{
+      border:1px solid var(--border);
+      border-radius:18px;
+      overflow:hidden;
+      background:var(--card);
+      box-shadow:var(--shadow);
+    }
+    .imgWrap{
+      width:100%;
+      aspect-ratio: 4 / 5;
+      background:#000;
+      overflow:hidden;
+      cursor:zoom-in;
+    }
+    .imgWrap img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .pcBody{padding:12px}
+    .tags{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      background:rgba(0,0,0,.06);
+      border:1px solid var(--border);
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:900;
+    }
+    body.dark .tag{background:rgba(255,255,255,.06)}
+    .cap{margin-top:8px;font-weight:800;word-break:break-word}
+    .cap.muted{color:var(--muted);font-weight:700}
+    .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .likeBtn,.dangerBtn{
+      background:transparent;
+      border:1px solid var(--border);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;
+    }
+    .likeBtn.on{
+      border-color: rgba(22,163,74,.4);
+      box-shadow:0 0 0 3px rgba(22,163,74,.12);
+    }
+    .dangerBtn{border-color:rgba(239,68,68,.45)}
+
+    .commentBox{margin-top:12px;border-top:1px solid var(--border);padding-top:12px}
+    .comment{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:10px;
+      margin-top:8px;
+    }
+    .commentTop{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:900}
+    .commentBody{margin-top:6px;font-weight:700;white-space:pre-wrap}
+    .commentDel{
+      border:1px solid rgba(239,68,68,.45);
+      background:transparent;
+      border-radius:12px;
+      padding:6px 10px;
+      font-weight:900;
+      cursor:pointer;
+      color:var(--text);
+    }
+
+    .fab{
+      position:fixed;right:16px;bottom:16px;
+      width:54px;height:54px;border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      font-size:22px;
+      display:flex;align-items:center;justify-content:center;
+    }
+
     /* LIGHTBOX */
     .lightbox{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.75);
+      position:fixed;inset:0;
+      background:rgba(0,0,0,.8);
       display:none;
       align-items:center;
       justify-content:center;
@@ -287,33 +223,8 @@
       z-index:9999;
     }
     .lightbox.show{display:flex}
-    .lbInner{
-      width:min(980px, 100%);
-      max-height:90vh;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .lbImg{
-      background:#000;
-      border-radius:18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:0 20px 60px rgba(0,0,0,.45);
-    }
-    .lbImg img{
-      width:100%;
-      height:auto;
-      max-height:82vh;
-      object-fit:contain;
-      display:block;
-      background:#000;
-    }
-    .lbBar{
-      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
-      color:#fff;
-      font-weight:900;
-    }
+    .lbInner{width:min(980px,100%);max-height:92vh;display:flex;flex-direction:column;gap:10px}
+    .lbBar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#fff;font-weight:900}
     .lbClose{
       background:rgba(255,255,255,.12);
       border:1px solid rgba(255,255,255,.22);
@@ -323,19 +234,14 @@
       font-weight:900;
       cursor:pointer;
     }
-
-    .fab{
-      position:fixed;
-      right:16px;bottom:16px;
-      width:54px;height:54px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--card);
-      box-shadow:var(--shadow);
-      cursor:pointer;
-      font-size:22px;
-      display:flex;align-items:center;justify-content:center;
+    .lbImg{
+      background:#000;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 20px 60px rgba(0,0,0,.45);
     }
+    .lbImg img{width:100%;max-height:82vh;object-fit:contain;display:block;background:#000}
   </style>
 </head>
 
@@ -344,13 +250,12 @@
 
     <div class="topbar">
       <div class="brand">
-        <div class="logo" title="QDP">QDP</div>
-        <div class="title">
+        <div class="logo">QDP</div>
+        <div>
           <h1>FOTO</h1>
           <div class="subtitle">Carica una foto • aggiorna per vedere le nuove</div>
         </div>
       </div>
-
       <div class="actions">
         <a class="btn ghost" href="index.html">⬅️ Home</a>
         <button id="adminBtn" class="btn admin" type="button">🔐 Admin: OFF</button>
@@ -358,58 +263,53 @@
     </div>
 
     <div class="card">
-      <div class="formBox">
-        <h3>Scegli una foto e premi “Carica”.</h3>
-        <div class="warnText">⚠️ <b>Foto o commenti volgari o ingiuriosi verranno eliminati!!!</b></div>
-
-        <div class="row" style="margin-top:12px">
-          <div class="grow">
-            <input id="fileInput" type="file" accept="image/*">
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:12px">
-          <div class="grow">
-            <input id="captionInput" type="text" maxlength="90" placeholder="Didascalia (facoltativa, max 90 caratteri)">
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:12px">
-          <button id="uploadBtn" class="btn ok" type="button">⬆️ Carica</button>
-          <button id="refreshBtn" class="btn ghost" type="button">🔄 Aggiorna</button>
-
-          <span id="orderPill" class="pill" style="margin-left:auto">
-            🧭 Ordina:
-            <select id="orderSelect" style="width:auto; padding:8px 10px; border-radius:12px">
-              <option value="new">Più nuove</option>
-              <option value="likes">Più like</option>
-            </select>
-          </span>
-
-          <span id="countPill" class="pill">📸 0 foto</span>
-        </div>
-
-        <!-- ADMIN INFO (dentro al riquadro, non fuori) -->
-        <div id="adminInfo" class="pill" style="margin-top:12px; display:none;">
-          ✅ Admin attivo (puoi eliminare e modificare didascalie + commenti)
-        </div>
-
-        <div id="toast" class="toast"></div>
+      <h3 style="margin:0 0 10px">Scegli una foto e premi “Carica”.</h3>
+      <div class="muted" style="font-weight:900;margin-bottom:12px">
+        ⚠️ Foto o commenti volgari o ingiuriosi verranno eliminati!!!
       </div>
+
+      <div class="row">
+        <div class="grow"><input id="fileInput" type="file" accept="image/*"></div>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <div class="grow"><input id="captionInput" type="text" maxlength="90" placeholder="Didascalia (facoltativa, max 90 caratteri)"></div>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <button id="uploadBtn" class="btn ok" type="button">⬆️ Carica</button>
+        <button id="refreshBtn" class="btn ghost" type="button">🔄 Aggiorna</button>
+
+        <span class="pill" style="margin-left:auto">
+          🧭 Ordina:
+          <select id="orderSelect" style="width:auto;padding:8px 10px;border-radius:12px">
+            <option value="new">Più nuove</option>
+            <option value="likes">Più like</option>
+          </select>
+        </span>
+
+        <span id="countPill" class="pill">📸 0 foto</span>
+      </div>
+
+      <div id="adminInfo" class="pill" style="margin-top:12px;display:none">
+        ✅ Admin attivo (puoi eliminare e modificare didascalie + commenti)
+      </div>
+
+      <div id="toast" class="toast"></div>
     </div>
 
     <div class="card">
-      <div class="sectionTitle">
-        <h3>🏆 Top foto più piaciute (ultimi 30 giorni)</h3>
-        <div class="mini" id="topInfo">Mostro 0 foto</div>
+      <div class="row" style="justify-content:space-between">
+        <h3 style="margin:0">🏆 Top foto più piaciute (ultimi 30 giorni)</h3>
+        <div class="muted" style="font-weight:900" id="topInfo">Mostro 0 foto</div>
       </div>
       <div id="topGrid" class="grid" style="margin-top:12px"></div>
     </div>
 
     <div class="card">
-      <div class="sectionTitle">
-        <h3>🖼 Galleria</h3>
-        <div class="mini" id="galInfo">—</div>
+      <div class="row" style="justify-content:space-between">
+        <h3 style="margin:0">🖼 Galleria</h3>
+        <div class="muted" style="font-weight:900" id="galInfo">—</div>
       </div>
       <div id="grid" class="grid" style="margin-top:12px"></div>
     </div>
@@ -425,9 +325,7 @@
         <div id="lbCaption">📷 Foto</div>
         <button id="lbClose" class="lbClose" type="button">✖ Chiudi</button>
       </div>
-      <div class="lbImg">
-        <img id="lbImg" src="" alt="Foto">
-      </div>
+      <div class="lbImg"><img id="lbImg" src="" alt="Foto"></div>
     </div>
   </div>
 
@@ -436,14 +334,11 @@
 
   <script>
   /* =========================
-     IMPOSTAZIONI
+     CONFIG
   ========================= */
-  // Cambia questo PIN come vuoi
   const ADMIN_PIN = "1234";
-
   const BUCKET = "photos";
   const MAX_FILE_MB = 8;
-  const MAX_COMMENTS_PER_10MIN = 5;
 
   /* =========================
      THEME
@@ -474,10 +369,12 @@
   const uploadBtn = document.getElementById("uploadBtn");
   const refreshBtn = document.getElementById("refreshBtn");
   const orderSelect = document.getElementById("orderSelect");
-  const grid = document.getElementById("grid");
-  const topGrid = document.getElementById("topGrid");
+
   const toast = document.getElementById("toast");
   const countPill = document.getElementById("countPill");
+
+  const topGrid = document.getElementById("topGrid");
+  const grid = document.getElementById("grid");
   const topInfo = document.getElementById("topInfo");
   const galInfo = document.getElementById("galInfo");
 
@@ -490,11 +387,11 @@
   const lbCaption = document.getElementById("lbCaption");
 
   /* =========================
-     STATO
+     STATE
   ========================= */
   let isAdmin = localStorage.getItem("qdp_admin") === "1";
-  let cachedPhotos = [];
-  let uploadInProgress = false;
+  let photosCache = [];
+  let uploading = false;
 
   function escapeHtml(s){
     return String(s ?? "")
@@ -504,14 +401,12 @@
       .replaceAll('"',"&quot;")
       .replaceAll("'","&#039;");
   }
-
   function showToast(msg, type="ok"){
     toast.className = "toast show" + (type==="bad" ? " bad" : type==="warn" ? " warn" : "");
     toast.textContent = msg;
     clearTimeout(showToast._t);
     showToast._t = setTimeout(()=> toast.classList.remove("show"), 2600);
   }
-
   function setAdminUI(){
     adminBtn.textContent = isAdmin ? "🔓 Admin: ON" : "🔐 Admin: OFF";
     adminBtn.classList.toggle("ok", isAdmin);
@@ -525,7 +420,7 @@
         isAdmin = false;
         localStorage.setItem("qdp_admin","0");
         setAdminUI();
-        renderAll();
+        render();
       }
       return;
     }
@@ -534,33 +429,24 @@
       isAdmin = true;
       localStorage.setItem("qdp_admin","1");
       setAdminUI();
-      renderAll();
+      render();
       showToast("✅ Admin attivo.", "ok");
     }else{
       showToast("❌ PIN errato.", "bad");
     }
   };
 
-  /* =========================
-     LIKE (anti doppio like)
-  ========================= */
-  function likedKey(photoId){ return `qdp_like_${photoId}`; }
-  function hasLiked(photoId){ return localStorage.getItem(likedKey(photoId)) === "1"; }
-  function setLiked(photoId, v){ localStorage.setItem(likedKey(photoId), v ? "1" : "0"); }
+  function likeKey(id){ return `qdp_like_${id}`; }
+  function hasLiked(id){ return localStorage.getItem(likeKey(id)) === "1"; }
+  function setLiked(id, v){ localStorage.setItem(likeKey(id), v ? "1" : "0"); }
 
-  /* =========================
-     COMMENTI (mini anti-spam)
-  ========================= */
-  function canCommentNow(){
-    const key="qdp_comment_log";
-    const now=Date.now();
-    let arr=[];
-    try{ arr=JSON.parse(localStorage.getItem(key)||"[]"); }catch(e){ arr=[]; }
-    arr = arr.filter(t => now - t < 10*60*1000);
-    if(arr.length >= MAX_COMMENTS_PER_10MIN) return false;
-    arr.push(now);
-    localStorage.setItem(key, JSON.stringify(arr));
-    return true;
+  function publicUrl(path){
+    return client.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+  }
+  function fmt(ts){
+    try{
+      return new Date(ts).toLocaleString("it-IT",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+    }catch(e){ return ""; }
   }
 
   /* =========================
@@ -570,60 +456,53 @@
     lbImg.src = url;
     lbCaption.textContent = caption ? `📷 ${caption}` : "📷 Foto";
     lightbox.classList.add("show");
-    lightbox.setAttribute("aria-hidden","false");
   }
   function closeLightbox(){
     lightbox.classList.remove("show");
-    lightbox.setAttribute("aria-hidden","true");
     lbImg.src = "";
   }
   lbClose.onclick = closeLightbox;
-  lightbox.addEventListener("click", (e)=>{
-    if(e.target === lightbox) closeLightbox();
-  });
-  window.addEventListener("keydown", (e)=>{
-    if(e.key === "Escape") closeLightbox();
-  });
+  lightbox.addEventListener("click",(e)=>{ if(e.target===lightbox) closeLightbox(); });
+  window.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeLightbox(); });
 
   /* =========================
-     HELPERS SUPABASE
+     COMMENTS
   ========================= */
-  function publicUrl(path){
-    return client.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+  async function loadComments(photoId, listEl){
+    const { data, error } = await client
+      .from("photo_comments")
+      .select("id,photo_id,author,body,created_at")
+      .eq("photo_id", photoId)
+      .order("created_at",{ascending:true});
+
+    if(error){
+      listEl.innerHTML = `<div class="muted" style="font-weight:900">Errore commenti</div>`;
+      return;
+    }
+    if(!data || data.length===0){
+      listEl.innerHTML = `<div class="muted" style="font-weight:900">Nessun commento.</div>`;
+      return;
+    }
+
+    listEl.innerHTML = data.map(c => `
+      <div class="comment">
+        <div class="commentTop">
+          <div>${escapeHtml(c.author||"Anonimo")} <span class="muted" style="font-weight:900">• ${escapeHtml(fmt(c.created_at))}</span></div>
+          ${isAdmin ? `<button class="commentDel" data-act="delComment" data-cid="${escapeHtml(c.id)}" data-pid="${escapeHtml(photoId)}">🗑</button>` : ``}
+        </div>
+        <div class="commentBody">${escapeHtml(c.body)}</div>
+      </div>
+    `).join("");
   }
 
-  async function loadTopPhotos(all){
-    const cutoff = new Date(Date.now() - 30*24*60*60*1000).toISOString();
-    const top = (all||[])
-      .filter(p => (p.created_at || "") >= cutoff)
-      .slice()
-      .sort((a,b)=> (b.likes||0)-(a.likes||0) || String(b.created_at||"").localeCompare(String(a.created_at||"")))
-      .slice(0,6);
-
-    topInfo.textContent = `Mostro ${top.length} foto`;
-    topGrid.innerHTML = top.map(p => photoCardHtml(p, true)).join("");
-    wirePhotoCards(topGrid);
-    return top.map(p => String(p.id));
-  }
-
-  function formatIt(ts){
-    try{
-      return new Date(ts).toLocaleString("it-IT", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
-    }catch(e){ return ""; }
-  }
-
-  function photoCardHtml(p, isTop=false){
+  /* =========================
+     RENDER
+  ========================= */
+  function photoCard(p, isTop){
     const url = publicUrl(p.path);
+    const cap = (p.caption||"").trim();
     const liked = hasLiked(p.id);
     const likes = p.likes || 0;
-    const cap = (p.caption || "").trim();
-
-    const badgeTop = isTop ? `<span class="tag">🏆 TOP</span>` : ``;
-
-    const adminBtns = isAdmin ? `
-      <button class="danger" data-act="delPhoto" data-id="${escapeHtml(p.id)}" data-path="${escapeHtml(p.path)}">🗑 Elimina</button>
-      <button class="likeBtn" data-act="editCaption" data-id="${escapeHtml(p.id)}">✏️ Didascalia</button>
-    ` : ``;
 
     return `
       <div class="photoCard" data-photo="${escapeHtml(p.id)}">
@@ -631,25 +510,28 @@
           <img src="${escapeHtml(url)}" alt="Foto">
         </div>
         <div class="pcBody">
-          <div class="pcTop">
-            ${badgeTop}
-            <span class="tag">🕒 ${escapeHtml(formatIt(p.created_at))}</span>
+          <div class="tags">
+            ${isTop ? `<span class="tag">🏆 TOP</span>` : `<span class="tag">📷 FOTO</span>`}
+            <span class="tag">🕒 ${escapeHtml(fmt(p.created_at))}</span>
           </div>
 
-          <div class="cap ${cap? "" : "muted"}">${cap ? escapeHtml(cap) : "— Nessuna didascalia —"}</div>
+          <div class="cap ${cap ? "" : "muted"}">${cap ? escapeHtml(cap) : "— Nessuna didascalia —"}</div>
 
-          <div class="pcBtns">
-            <button class="likeBtn ${liked ? "on":""}" data-act="like" data-id="${escapeHtml(p.id)}">
+          <div class="btns">
+            <button class="likeBtn ${liked?"on":""}" data-act="like" data-id="${escapeHtml(p.id)}">
               👍 Like <span class="tag" style="padding:4px 8px">${likes}</span>
             </button>
 
             <button class="likeBtn" data-act="share" data-url="${escapeHtml(url)}" data-cap="${escapeHtml(cap)}">📤 Condividi</button>
 
-            ${adminBtns}
+            ${isAdmin ? `
+              <button class="dangerBtn" data-act="delPhoto" data-id="${escapeHtml(p.id)}" data-path="${escapeHtml(p.path)}">🗑 Elimina</button>
+              <button class="likeBtn" data-act="editCap" data-id="${escapeHtml(p.id)}">✏️ Didascalia</button>
+            ` : ``}
           </div>
 
           <div class="commentBox">
-            <div class="mini" style="font-weight:900">💬 Commenti</div>
+            <div class="muted" style="font-weight:900">💬 Commenti</div>
 
             <div class="row" style="margin-top:8px">
               <input class="cAuthor" type="text" maxlength="18" placeholder="Nome (facoltativo, max 18)">
@@ -658,7 +540,7 @@
             <textarea class="cBody" maxlength="160" placeholder="Scrivi un commento (max 160)"></textarea>
 
             <div class="commentsList" data-list="${escapeHtml(p.id)}" style="margin-top:10px">
-              <div class="mini muted">Caricamento commenti…</div>
+              <div class="muted" style="font-weight:900">Caricamento commenti…</div>
             </div>
           </div>
         </div>
@@ -666,314 +548,230 @@
     `;
   }
 
-  function wirePhotoCards(container){
+  function wire(container){
     container.querySelectorAll("[data-act]").forEach(el=>{
-      el.addEventListener("click", async (e)=>{
+      el.onclick = async () => {
         const act = el.dataset.act;
 
-        if(act === "open"){
-          openLightbox(el.dataset.url, el.dataset.cap || "");
+        if(act==="open"){
+          openLightbox(el.dataset.url, el.dataset.cap||"");
           return;
         }
 
-        if(act === "like"){
+        if(act==="like"){
           const id = el.dataset.id;
-          if(hasLiked(id)){
-            showToast("Hai già messo like ✅", "warn");
-            return;
-          }
-          setLiked(id, true);
+          if(hasLiked(id)){ showToast("Hai già messo like ✅","warn"); return; }
+          setLiked(id,true);
 
-          const { data:row, error } = await client.from("photos").select("likes").eq("id", id).single();
-          if(error){
-            setLiked(id, false);
-            showToast("❌ Errore like", "bad");
-            return;
-          }
-          const newLikes = (row?.likes || 0) + 1;
-          const { error:upErr } = await client.from("photos").update({ likes:newLikes }).eq("id", id);
-          if(upErr){
-            setLiked(id, false);
-            showToast("❌ Errore like", "bad");
-            return;
-          }
-          showToast("👍 Like aggiunto!", "ok");
-          await refreshData();
+          const { data:row, error } = await client.from("photos").select("likes").eq("id",id).single();
+          if(error){ setLiked(id,false); showToast("❌ Errore like","bad"); return; }
+
+          const newLikes = (row?.likes||0)+1;
+          const { error:upErr } = await client.from("photos").update({likes:newLikes}).eq("id",id);
+          if(upErr){ setLiked(id,false); showToast("❌ Errore like","bad"); return; }
+
+          showToast("👍 Like aggiunto!","ok");
+          await refresh();
           return;
         }
 
-        if(act === "share"){
+        if(act==="share"){
           const url = el.dataset.url;
-          const cap = (el.dataset.cap || "").trim();
+          const cap = (el.dataset.cap||"").trim();
           const text = cap ? `QDP • ${cap}` : `QDP • Foto`;
           try{
             if(navigator.share){
-              await navigator.share({ title:"QDP Foto", text, url });
+              await navigator.share({title:"QDP Foto",text,url});
             }else{
-              const wa = `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`;
-              window.open(wa, "_blank");
+              window.open(`https://wa.me/?text=${encodeURIComponent(text+" "+url)}`,"_blank");
             }
-          }catch(err){
-            // annullato dall'utente = ok
-          }
+          }catch(e){}
           return;
         }
 
-        if(act === "delPhoto"){
+        if(act==="delPhoto"){
           if(!isAdmin) return;
           const id = el.dataset.id;
           const path = el.dataset.path;
           if(!confirm("Eliminare questa foto?")) return;
 
-          // 1) cancella DB row
-          const { error:delErr, data:delData } = await client.from("photos").delete().eq("id", id).select();
-          if(delErr){
-            showToast("❌ Errore elimina foto (DB)", "bad");
-            return;
-          }
+          const { error:delErr } = await client.from("photos").delete().eq("id",id);
+          if(delErr){ showToast("❌ Errore elimina (DB)","bad"); return; }
 
-          // 2) cancella storage file (se c'è)
-          const { error:storErr } = await client.storage.from(BUCKET).remove([path]);
-          // se fallisce lo storage non blocchiamo, ma avvisiamo
-          if(storErr){
-            showToast("⚠️ Foto rimossa dal DB, ma non dallo storage.", "warn");
-          }else{
-            showToast("🗑 Foto eliminata.", "ok");
-          }
+          await client.storage.from(BUCKET).remove([path]);
+          await client.from("photo_comments").delete().eq("photo_id",id);
 
-          // 3) cancella commenti collegati (best effort)
-          await client.from("photo_comments").delete().eq("photo_id", id);
-
-          await refreshData();
+          showToast("🗑 Foto eliminata.","ok");
+          await refresh();
           return;
         }
 
-        if(act === "editCaption"){
+        if(act==="editCap"){
           if(!isAdmin) return;
           const id = el.dataset.id;
-          const p = cachedPhotos.find(x => String(x.id) === String(id));
-          const oldCap = (p?.caption || "");
+          const p = photosCache.find(x=>String(x.id)===String(id));
+          const oldCap = (p?.caption||"");
           const newCap = prompt("Nuova didascalia (max 90):", oldCap);
-          if(newCap === null) return;
-          const cap = String(newCap).slice(0,90);
-          const { error:upErr } = await client.from("photos").update({ caption:cap }).eq("id", id);
-          if(upErr){
-            showToast("❌ Errore salvataggio didascalia", "bad");
-            return;
-          }
-          showToast("✅ Didascalia aggiornata.", "ok");
-          await refreshData();
+          if(newCap===null) return;
+
+          const cap = String(newCap).trim().slice(0,90);
+          const { error:upErr } = await client.from("photos").update({caption:cap||null}).eq("id",id);
+          if(upErr){ showToast("❌ Errore didascalia","bad"); return; }
+
+          showToast("✅ Didascalia aggiornata.","ok");
+          await refresh();
           return;
         }
 
-        if(act === "addComment"){
-          const id = el.dataset.id;
+        if(act==="addComment"){
+          const pid = el.dataset.id;
           const card = el.closest(".photoCard");
-          const author = (card.querySelector(".cAuthor")?.value || "").trim().slice(0,18);
-          const body = (card.querySelector(".cBody")?.value || "").trim().slice(0,160);
+          const author = (card.querySelector(".cAuthor").value||"").trim().slice(0,18) || "Anonimo";
+          const body = (card.querySelector(".cBody").value||"").trim().slice(0,160);
 
-          if(!body){
-            showToast("Scrivi un commento 🙂", "warn");
-            return;
-          }
-          if(!canCommentNow()){
-            showToast("Troppi commenti in poco tempo. Riprova tra 10 minuti.", "warn");
-            return;
-          }
+          if(!body){ showToast("Scrivi un commento 🙂","warn"); return; }
 
-          const payload = { photo_id:id, author: author || "Anonimo", body };
-          const { error:insErr } = await client.from("photo_comments").insert(payload);
-          if(insErr){
-            showToast("❌ Errore inserimento commento", "bad");
-            return;
-          }
+          const { error:insErr } = await client.from("photo_comments").insert({photo_id:pid,author,body});
+          if(insErr){ showToast("❌ Errore commento","bad"); return; }
 
-          card.querySelector(".cBody").value = "";
-          showToast("💬 Commento aggiunto!", "ok");
-          await loadCommentsFor(id, card.querySelector(`[data-list="${CSS.escape(id)}"]`));
+          card.querySelector(".cBody").value="";
+          showToast("💬 Commento aggiunto!","ok");
+
+          const listEl = card.querySelector(`[data-list="${CSS.escape(pid)}"]`);
+          await loadComments(pid, listEl);
+          wire(listEl);
           return;
         }
 
-        if(act === "delComment"){
+        if(act==="delComment"){
           if(!isAdmin) return;
           const cid = el.dataset.cid;
-          if(!confirm("Eliminare questo commento?")) return;
-          const { error:delErr } = await client.from("photo_comments").delete().eq("id", cid);
-          if(delErr){
-            showToast("❌ Errore elimina commento", "bad");
-            return;
-          }
-          showToast("🗑 Commento eliminato.", "ok");
           const pid = el.dataset.pid;
-          const card = container.querySelector(`.photoCard[data-photo="${CSS.escape(pid)}"]`);
+          if(!confirm("Eliminare questo commento?")) return;
+
+          const { error:delErr } = await client.from("photo_comments").delete().eq("id",cid);
+          if(delErr){ showToast("❌ Errore elimina commento","bad"); return; }
+
+          showToast("🗑 Commento eliminato.","ok");
+
+          const card = document.querySelector(`.photoCard[data-photo="${CSS.escape(pid)}"]`);
           if(card){
-            await loadCommentsFor(pid, card.querySelector(`[data-list="${CSS.escape(pid)}"]`));
+            const listEl = card.querySelector(`[data-list="${CSS.escape(pid)}"]`);
+            await loadComments(pid, listEl);
+            wire(listEl);
           }else{
-            await refreshData();
+            await refresh();
           }
           return;
         }
-      }, { passive:true });
+      };
     });
   }
 
-  async function loadCommentsFor(photoId, listEl){
-    if(!listEl) return;
-    const { data, error } = await client
-      .from("photo_comments")
-      .select("id,photo_id,author,body,created_at")
-      .eq("photo_id", photoId)
-      .order("created_at", { ascending:true });
+  function render(){
+    // contatore = TOTALE foto reali
+    countPill.textContent = `📸 ${photosCache.length} foto`;
 
-    if(error){
-      listEl.innerHTML = `<div class="mini muted">Errore commenti</div>`;
-      return;
-    }
+    // TOP 30 giorni
+    const cutoff = new Date(Date.now() - 30*24*60*60*1000).toISOString();
+    const top = photosCache
+      .filter(p => (p.created_at||"") >= cutoff)
+      .slice()
+      .sort((a,b)=> (b.likes||0)-(a.likes||0) || String(b.created_at||"").localeCompare(String(a.created_at||"")))
+      .slice(0,6);
 
-    if(!data || data.length === 0){
-      listEl.innerHTML = `<div class="mini muted">Nessun commento.</div>`;
-      return;
-    }
+    topInfo.textContent = `Mostro ${top.length} foto`;
+    topGrid.innerHTML = top.map(p => photoCard(p,true)).join("");
+    wire(topGrid);
 
-    listEl.innerHTML = data.map(c => `
-      <div class="comment">
-        <div class="commentTop">
-          <div>${escapeHtml(c.author || "Anonimo")} <span class="mini">• ${escapeHtml(formatIt(c.created_at))}</span></div>
-          ${isAdmin ? `<button class="commentDel" type="button" data-act="delComment" data-cid="${escapeHtml(c.id)}" data-pid="${escapeHtml(photoId)}">🗑</button>` : ``}
-        </div>
-        <div class="commentBody">${escapeHtml(c.body)}</div>
-      </div>
-    `).join("");
+    // galleria (escludi top)
+    const topIds = new Set(top.map(p=>String(p.id)));
+    let gal = photosCache.filter(p => !topIds.has(String(p.id)));
 
-    wirePhotoCards(listEl); // per i pulsanti delete comment
-  }
-
-  function renderAll(){
-    // render top + gallery già in cachedPhotos
-    // topPhotosIds = ids mostrati in top, così possiamo toglierli dalla galleria (come prima)
-    // MA il contatore deve essere il TOTALE, quindi useremo cachedPhotos.length totale.
-  }
-
-  async function refreshData(){
-    // 1) carica tutte le foto
-    const { data:all, error } = await client
-      .from("photos")
-      .select("id,created_at,path,caption,file_path,likes")
-      .order("created_at", { ascending:false });
-
-    if(error){
-      showToast("❌ Errore caricamento foto", "bad");
-      return;
-    }
-
-    cachedPhotos = all || [];
-
-    // ✅ CONTATORE = TOTALE FOTO (come richiesto)
-    countPill.textContent = `📸 ${cachedPhotos.length} foto`;
-
-    // 2) TOP
-    const topIds = await loadTopPhotos(cachedPhotos);
-
-    // 3) GALLERIA: escludi quelle del TOP
-    let gal = cachedPhotos.filter(p => !topIds.includes(String(p.id)));
-
-    // Ordina
     if(orderSelect.value === "likes"){
       gal = gal.slice().sort((a,b)=> (b.likes||0)-(a.likes||0) || String(b.created_at||"").localeCompare(String(a.created_at||"")));
     }else{
       gal = gal.slice().sort((a,b)=> String(b.created_at||"").localeCompare(String(a.created_at||"")));
     }
 
-    galInfo.textContent = gal.length ? `Mostro ${gal.length} foto in galleria (Top escluso)` : `Nessuna foto in galleria (tutte nel Top)`;
+    galInfo.textContent = gal.length ? `Mostro ${gal.length} foto (Top escluso)` : `Nessuna foto in galleria`;
+    grid.innerHTML = gal.map(p => photoCard(p,false)).join("");
+    wire(grid);
 
-    grid.innerHTML = gal.map(p => photoCardHtml(p, false)).join("");
-    wirePhotoCards(grid);
-
-    // 4) carica commenti per ogni card (top + gallery)
-    // TOP
-    topGrid.querySelectorAll(".photoCard").forEach(card=>{
+    // commenti per tutte le card (top + gallery)
+    [...topGrid.querySelectorAll(".photoCard"), ...grid.querySelectorAll(".photoCard")].forEach(async card=>{
       const pid = card.dataset.photo;
       const listEl = card.querySelector(`[data-list="${CSS.escape(pid)}"]`);
-      loadCommentsFor(pid, listEl);
-    });
-    // GALLERY
-    grid.querySelectorAll(".photoCard").forEach(card=>{
-      const pid = card.dataset.photo;
-      const listEl = card.querySelector(`[data-list="${CSS.escape(pid)}"]`);
-      loadCommentsFor(pid, listEl);
+      await loadComments(pid, listEl);
+      wire(listEl);
     });
   }
 
+  async function refresh(){
+    const { data, error } = await client
+      .from("photos")
+      .select("id,created_at,path,caption,likes")
+      .order("created_at",{ascending:false});
+
+    if(error){
+      showToast("❌ Errore caricamento foto","bad");
+      return;
+    }
+    photosCache = data || [];
+    render();
+  }
+
   /* =========================
-     UPLOAD (evita doppio caricamento)
+     UPLOAD (FIX doppio caricamento)
+     - disabilita bottone
+     - blocca se già in corso
+     - non usa submit/form (solo onclick)
   ========================= */
   uploadBtn.onclick = async () => {
-    if(uploadInProgress) return; // blocca doppio click
+    if(uploading) return;
     const file = fileInput.files?.[0];
-    if(!file){
-      showToast("Scegli un file prima di caricare.", "warn");
-      return;
-    }
+    if(!file){ showToast("Scegli un file prima di caricare.","warn"); return; }
 
-    const sizeMb = file.size / (1024*1024);
-    if(sizeMb > MAX_FILE_MB){
-      showToast(`File troppo grande (max ${MAX_FILE_MB}MB).`, "warn");
-      return;
-    }
+    const mb = file.size/(1024*1024);
+    if(mb > MAX_FILE_MB){ showToast(`File troppo grande (max ${MAX_FILE_MB}MB).`,"warn"); return; }
 
-    uploadInProgress = true;
+    uploading = true;
     uploadBtn.disabled = true;
     refreshBtn.disabled = true;
 
     try{
-      // nome unico
-      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-      const safeExt = ext.replace(/[^a-z0-9]/g,"").slice(0,6) || "jpg";
-      const name = `qdp_${Date.now()}_${Math.random().toString(16).slice(2)}.${safeExt}`;
-      const path = `uploads/${name}`;
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,6) || "jpg";
+      const path = `uploads/qdp_${Date.now()}_${Math.random().toString(16).slice(2)}.${ext}`;
 
-      // upload storage
-      const { error:upErr } = await client.storage.from(BUCKET).upload(path, file, {
-        cacheControl: "3600",
-        upsert: false,
-        contentType: file.type || "image/jpeg"
-      });
-      if(upErr){
-        showToast("❌ Errore upload storage", "bad");
-        return;
-      }
+      const { error:upErr } = await client.storage.from(BUCKET).upload(path, file, { upsert:false, contentType:file.type || "image/jpeg" });
+      if(upErr){ showToast("❌ Errore upload","bad"); return; }
 
-      // inserisci riga in DB
-      const cap = String(captionInput.value || "").trim().slice(0,90);
-      const payload = { path, file_path: path, caption: cap || null, likes: 0 };
+      const cap = String(captionInput.value||"").trim().slice(0,90);
+      const { error:insErr } = await client.from("photos").insert({ path, caption: cap || null, likes: 0 });
 
-      const { error:insErr } = await client.from("photos").insert(payload);
       if(insErr){
-        // rollback file nello storage
         await client.storage.from(BUCKET).remove([path]);
-        showToast("❌ Errore salvataggio DB", "bad");
+        showToast("❌ Errore DB","bad");
         return;
       }
 
-      // reset campi
       fileInput.value = "";
       captionInput.value = "";
-
-      showToast("✅ Foto caricata!", "ok");
-      await refreshData();
+      showToast("✅ Foto caricata!","ok");
+      await refresh();
 
     }finally{
-      uploadInProgress = false;
+      uploading = false;
       uploadBtn.disabled = false;
       refreshBtn.disabled = false;
     }
   };
 
-  refreshBtn.onclick = () => refreshData();
-  orderSelect.onchange = () => refreshData();
+  refreshBtn.onclick = () => refresh();
+  orderSelect.onchange = () => render();
 
-  // avvio
-  refreshData();
+  // start
+  refresh();
   </script>
 </body>
 </html>
