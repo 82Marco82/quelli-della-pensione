@@ -50,9 +50,7 @@
       gap:12px; flex-wrap:wrap;
       margin-bottom:10px;
     }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-    }
+    .brand{display:flex; align-items:center; gap:12px;}
     .logo{
       width:56px;height:56px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
@@ -178,11 +176,7 @@
       -webkit-backdrop-filter: blur(6px);
       box-shadow:0 8px 18px rgba(0,0,0,.25);
     }
-    .chipBtn{
-      pointer-events:auto;
-      border:0;
-      cursor:pointer;
-    }
+    .chipBtn{pointer-events:auto; border:0; cursor:pointer;}
 
     .pcBody{padding:12px}
     .pcMeta{
@@ -201,7 +195,6 @@
       display:flex; gap:10px; flex-wrap:wrap;
       margin-top:10px;
     }
-
     .divider{height:1px;background:var(--border); margin:12px 0}
 
     .commentsTitle{
@@ -217,6 +210,7 @@
     .commentHead{
       display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
       font-weight:900;
+      align-items:center;
     }
     .commentBody{margin-top:6px; color:var(--text); word-break:break-word}
     .mini{font-size:12px; color:var(--muted)}
@@ -256,7 +250,6 @@
     </div>
   </div>
 
-  <!-- UPLOAD -->
   <div class="card">
     <div class="muted" style="font-weight:800">Scegli una foto e premi “Carica”.</div>
 
@@ -284,11 +277,10 @@
       <div id="countPill" class="pill">📸 0 foto</div>
     </div>
 
-    <div id="adminHint" class="pill" style="display:none; margin-top:10px">✅ Admin attivo (puoi eliminare e modificare didascalie)</div>
+    <div id="adminHint" class="pill" style="display:none; margin-top:10px">✅ Admin attivo (puoi eliminare e modificare didascalie + commenti)</div>
     <div id="toast" class="toast"></div>
   </div>
 
-  <!-- TOP LIKE 30gg -->
   <div class="card" id="topBox" style="display:none">
     <div class="row">
       <div style="font-weight:900">🏆 Top foto più piaciute (ultimi 30 giorni)</div>
@@ -298,7 +290,6 @@
     <div class="grid" id="topGrid" style="margin-top:12px"></div>
   </div>
 
-  <!-- GALLERY -->
   <div class="card">
     <div class="row">
       <div style="font-weight:900">🖼 Galleria</div>
@@ -314,9 +305,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
-/* =======================
-   THEME
-======================= */
+/* THEME */
 const themeBtn = document.getElementById("themeToggle");
 function setTheme(mode){
   document.body.classList.toggle("dark", mode === "dark");
@@ -326,18 +315,14 @@ function setTheme(mode){
 setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
 themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 
-/* =======================
-   SUPABASE SETUP
-======================= */
+/* SUPABASE */
 if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
   alert("config.js non caricato o non valido");
   throw new Error("Missing config");
 }
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* =======================
-   DOM
-======================= */
+/* DOM */
 const adminBtn = document.getElementById("adminBtn");
 const adminHint = document.getElementById("adminHint");
 const toast = document.getElementById("toast");
@@ -354,9 +339,7 @@ const topBox = document.getElementById("topBox");
 const topGrid = document.getElementById("topGrid");
 const topMini = document.getElementById("topMini");
 
-/* =======================
-   HELPERS
-======================= */
+/* HELPERS */
 function showToast(msg, type="ok"){
   toast.classList.remove("show","bad","warn");
   if(type==="bad") toast.classList.add("bad");
@@ -381,21 +364,17 @@ function fmtDate(iso){
   }catch(e){ return String(iso||""); }
 }
 
-function isAdminSession(session){
-  return !!(session && session.user);
-}
-
 async function getSession(){
   const { data } = await client.auth.getSession();
   return data?.session || null;
 }
+function isAdminSession(session){ return !!(session && session.user); }
 
-/* =======================
-   ADMIN LOGIN/LOGOUT
-======================= */
+/* ADMIN UI */
+let adminOn = false;
 async function refreshAdminUI(){
   const session = await getSession();
-  const adminOn = isAdminSession(session);
+  adminOn = isAdminSession(session);
   adminBtn.textContent = adminOn ? "🔐 Admin: ON" : "🔐 Admin: OFF";
   adminBtn.classList.toggle("warn", !adminOn);
   adminBtn.classList.toggle("ok", adminOn);
@@ -412,7 +391,6 @@ adminBtn.onclick = async () => {
     await loadAll();
     return;
   }
-
   const email = prompt("Email admin:");
   if(!email) return;
   const password = prompt("Password admin:");
@@ -429,12 +407,10 @@ adminBtn.onclick = async () => {
   await loadAll();
 };
 
-/* =======================
-   DATA ACCESS
-======================= */
-const BUCKET = "photos";         // bucket storage
-const TABLE_PHOTOS = "photos";   // tabella foto
-const TABLE_COMMENTS = "photo_comments"; // tabella commenti
+/* CONFIG */
+const BUCKET = "photos";
+const TABLE_PHOTOS = "photos";
+const TABLE_COMMENTS = "photo_comments";
 
 function getLikedKey(photoId){ return `qdp_liked_${photoId}`; }
 function hasLiked(photoId){ return localStorage.getItem(getLikedKey(photoId)) === "1"; }
@@ -444,49 +420,47 @@ function antiSpamOk(){
   const key = "qdp_last_comment_at";
   const last = Number(localStorage.getItem(key) || "0");
   const now = Date.now();
-  const waitMs = 20000; // 20s
+  const waitMs = 20000;
   if(now - last < waitMs) return { ok:false, ms: waitMs - (now-last) };
   localStorage.setItem(key, String(now));
   return { ok:true, ms:0 };
 }
 
-/* =======================
-   UPLOAD
-======================= */
+/* ✅ ANTI DOPPIO UPLOAD */
+let uploading = false;
+
+/* UPLOAD */
 uploadBtn.onclick = async () => {
+  if(uploading) return; // blocca doppio tap
   try{
     const file = fileInput.files?.[0];
     if(!file){
       showToast("Scegli un file.", "warn");
       return;
     }
+
+    uploading = true;
+    uploadBtn.disabled = true;
+    uploadBtn.textContent = "⏳ Caricamento…";
+
     const caption = (captionInput.value || "").trim().slice(0,90);
 
-    // path unico
     const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
     const safeExt = ext.replace(/[^a-z0-9]/g,"") || "jpg";
     const filePath = `uploads/${Date.now()}_${Math.random().toString(16).slice(2)}.${safeExt}`;
 
-    uploadBtn.disabled = true;
-    uploadBtn.textContent = "⏳ Caricamento…";
-
-    // 1) upload storage
     const { error: upErr } = await client
       .storage
       .from(BUCKET)
       .upload(filePath, file, { cacheControl:"3600", upsert:false, contentType:file.type || "image/jpeg" });
-
     if(upErr) throw upErr;
 
-    // 2) public url
     const { data: pub } = client.storage.from(BUCKET).getPublicUrl(filePath);
     const publicUrl = pub?.publicUrl || "";
 
-    // 3) insert db
     const { error: insErr } = await client
       .from(TABLE_PHOTOS)
       .insert([{ file_path: filePath, path: publicUrl, caption, likes: 0 }]);
-
     if(insErr) throw insErr;
 
     fileInput.value = "";
@@ -498,6 +472,7 @@ uploadBtn.onclick = async () => {
     console.error(e);
     showToast("Errore upload.", "bad");
   }finally{
+    uploading = false;
     uploadBtn.disabled = false;
     uploadBtn.textContent = "⬆️ Carica";
   }
@@ -507,21 +482,16 @@ refreshBtn.onclick = async () => {
   showToast("Aggiorno…");
   await loadAll();
 };
-
 sortSelect.onchange = () => loadGallery();
 
-/* =======================
-   LIKE
-======================= */
+/* LIKE */
 async function likePhoto(photo){
   try{
     if(hasLiked(photo.id)){
       showToast("Like già dato ✅", "warn");
       return;
     }
-    // leggi likes attuali e incrementa
-    const current = Number(photo.likes || 0);
-    const next = current + 1;
+    const next = Number(photo.likes || 0) + 1;
 
     const { error } = await client
       .from(TABLE_PHOTOS)
@@ -533,39 +503,27 @@ async function likePhoto(photo){
     markLiked(photo.id);
     showToast("Like 👍");
     await loadAll();
-
   }catch(e){
     console.error(e);
     showToast("Errore like.", "bad");
   }
 }
 
-/* =======================
-   DELETE (ADMIN)
-======================= */
+/* DELETE PHOTO (ADMIN) */
 async function deletePhoto(photo){
   try{
     const ok = confirm("Vuoi eliminare questa foto?");
     if(!ok) return;
 
-    // 1) delete row
     const { error: delErr } = await client
       .from(TABLE_PHOTOS)
       .delete()
       .eq("id", photo.id);
-
     if(delErr) throw delErr;
 
-    // 2) delete storage (se c'è file_path)
     if(photo.file_path){
-      const { error: stErr } = await client
-        .storage
-        .from(BUCKET)
-        .remove([photo.file_path]);
-      if(stErr){
-        // non blocco tutto se storage fallisce, ma lo loggo
-        console.warn("Storage remove error:", stErr);
-      }
+      const { error: stErr } = await client.storage.from(BUCKET).remove([photo.file_path]);
+      if(stErr) console.warn("Storage remove error:", stErr);
     }
 
     showToast("Foto eliminata 🗑️");
@@ -576,9 +534,7 @@ async function deletePhoto(photo){
   }
 }
 
-/* =======================
-   CAPTION EDIT (ADMIN)
-======================= */
+/* EDIT CAPTION (ADMIN) */
 async function editCaption(photo){
   try{
     const next = prompt("Modifica didascalia (vuota = nessuna):", photo.caption || "");
@@ -589,8 +545,8 @@ async function editCaption(photo){
       .from(TABLE_PHOTOS)
       .update({ caption: clean })
       .eq("id", photo.id);
-
     if(error) throw error;
+
     showToast("Didascalia aggiornata ✅");
     await loadAll();
   }catch(e){
@@ -599,33 +555,22 @@ async function editCaption(photo){
   }
 }
 
-/* =======================
-   SHARE
-======================= */
+/* SHARE */
 async function sharePhoto(photo){
   try{
     const url = photo.path || "";
-    if(!url){
-      showToast("Link non disponibile.", "bad");
-      return;
-    }
+    if(!url) return showToast("Link non disponibile.", "bad");
     const text = "Guarda questa foto QDP 📸";
 
     if(navigator.share){
       await navigator.share({ title:"QDP Foto", text, url });
       return;
     }
-
-    // fallback WhatsApp
-    const wa = `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`;
-    window.open(wa, "_blank", "noopener");
-
+    window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`, "_blank", "noopener");
   }catch(e){
-    // share può fallire se l’utente annulla
     console.warn(e);
   }
 }
-
 async function copyLink(photo){
   try{
     const url = photo.path || "";
@@ -638,9 +583,7 @@ async function copyLink(photo){
   }
 }
 
-/* =======================
-   COMMENTS
-======================= */
+/* COMMENTS */
 async function loadComments(photoId){
   const { data, error } = await client
     .from(TABLE_COMMENTS)
@@ -659,37 +602,47 @@ async function addComment(photoId, author, body){
   try{
     const a = (author || "").trim().slice(0,24) || "Anonimo";
     const b = (body || "").trim().slice(0,220);
-    if(!b){
-      showToast("Scrivi un commento.", "warn");
-      return;
-    }
+    if(!b) return showToast("Scrivi un commento.", "warn");
 
     const spam = antiSpamOk();
-    if(!spam.ok){
-      showToast(`Aspetta ${Math.ceil(spam.ms/1000)}s prima di commentare.`, "warn");
-      return;
-    }
+    if(!spam.ok) return showToast(`Aspetta ${Math.ceil(spam.ms/1000)}s prima di commentare.`, "warn");
 
     const { error } = await client
       .from(TABLE_COMMENTS)
       .insert([{ photo_id: photoId, author: a, body: b }]);
-
     if(error) throw error;
 
     showToast("Commento inviato ✅");
     await loadAll();
-
   }catch(e){
     console.error(e);
     showToast("Errore commento.", "bad");
   }
 }
 
-/* =======================
-   LOAD PHOTOS
-======================= */
+/* ✅ DELETE COMMENT (ADMIN) */
+async function deleteComment(commentId){
+  try{
+    const ok = confirm("Vuoi eliminare questo commento?");
+    if(!ok) return;
+
+    const { error } = await client
+      .from(TABLE_COMMENTS)
+      .delete()
+      .eq("id", commentId);
+
+    if(error) throw error;
+
+    showToast("Commento eliminato 🗑️");
+    await loadAll();
+  }catch(e){
+    console.error(e);
+    showToast("Errore eliminazione commento.", "bad");
+  }
+}
+
+/* LOAD PHOTOS */
 let cachedPhotos = [];
-let adminOn = false;
 
 async function loadTop30(){
   try{
@@ -710,13 +663,11 @@ async function loadTop30(){
       topBox.style.display = "none";
       return;
     }
-
     topBox.style.display = "block";
     topMini.textContent = `Mostro ${rows.length} foto`;
 
     topGrid.innerHTML = rows.map(p => renderPhotoCard(p, true)).join("");
     await wireCardEvents(topGrid, rows);
-
   }catch(e){
     console.warn("top30 error", e);
     topBox.style.display = "none";
@@ -724,7 +675,7 @@ async function loadTop30(){
 }
 
 async function loadGallery(){
-  const sort = sortSelect.value; // new / likes
+  const sort = sortSelect.value;
   const orderByLikes = (sort === "likes");
 
   const { data, error } = await client
@@ -759,7 +710,6 @@ function renderPhotoCard(photo, isTop){
     : `<div class="cap muted">Nessuna didascalia</div>`;
 
   const badge = isTop ? `🏆 TOP` : `❤️ ${likes}`;
-
   const likeLabel = liked ? "✅ Like" : "👍 Like";
   const likeDisabled = liked ? "disabled" : "";
 
@@ -769,7 +719,7 @@ function renderPhotoCard(photo, isTop){
         <img src="${escapeHtml(url)}" alt="foto">
         <div class="imgTopActions">
           <div class="chip">${badge}</div>
-          ${adminOn ? `<button class="chip chipBtn js-del" type="button" title="Elimina">🗑️ Elimina</button>` : ``}
+          ${adminOn ? `<button class="chip chipBtn js-del" type="button">🗑️ Elimina</button>` : ``}
         </div>
       </div>
 
@@ -819,55 +769,50 @@ async function wireCardEvents(containerEl, photos){
     const photo = photos.find(p => String(p.id) === String(id));
     if(!photo) continue;
 
-    // Like
     const likeBtn = card.querySelector(".js-like");
-    if(likeBtn){
-      likeBtn.onclick = () => likePhoto(photo);
-    }
+    if(likeBtn) likeBtn.onclick = () => likePhoto(photo);
 
-    // Share
     const shareBtn = card.querySelector(".js-share");
-    if(shareBtn){
-      shareBtn.onclick = () => sharePhoto(photo);
-    }
+    if(shareBtn) shareBtn.onclick = () => sharePhoto(photo);
 
-    // Copy
     const copyBtn = card.querySelector(".js-copy");
-    if(copyBtn){
-      copyBtn.onclick = () => copyLink(photo);
-    }
+    if(copyBtn) copyBtn.onclick = () => copyLink(photo);
 
-    // Delete (admin)
     const delBtn = card.querySelector(".js-del");
-    if(delBtn){
-      delBtn.onclick = () => deletePhoto(photo);
-    }
+    if(delBtn) delBtn.onclick = () => deletePhoto(photo);
 
-    // Edit caption (admin)
     const editCapBtn = card.querySelector(".js-editcap");
-    if(editCapBtn){
-      editCapBtn.onclick = () => editCaption(photo);
-    }
+    if(editCapBtn) editCapBtn.onclick = () => editCaption(photo);
 
-    // Comments load
     const commentsBox = card.querySelector(".js-comments");
     if(commentsBox){
       commentsBox.innerHTML = `<div class="mini muted" style="margin-top:10px">Carico commenti…</div>`;
       const comments = await loadComments(photo.id);
+
       commentsBox.innerHTML = (comments.length === 0)
         ? `<div class="mini muted" style="margin-top:10px">Nessun commento.</div>`
         : comments.map(c => `
             <div class="comment">
               <div class="commentHead">
                 <div>👤 ${escapeHtml(c.author || "Anonimo")}</div>
-                <div class="mini">🕒 ${escapeHtml(fmtDate(c.created_at))}</div>
+                <div class="row" style="gap:8px">
+                  <div class="mini">🕒 ${escapeHtml(fmtDate(c.created_at))}</div>
+                  ${adminOn ? `<button class="btn small danger js-delc" type="button" data-cid="${escapeHtml(c.id)}">🗑</button>` : ``}
+                </div>
               </div>
               <div class="commentBody">${escapeHtml(c.body || "")}</div>
             </div>
           `).join("");
+
+      // wire delete comment buttons
+      if(adminOn){
+        const delCs = [...commentsBox.querySelectorAll(".js-delc")];
+        delCs.forEach(btn=>{
+          btn.onclick = () => deleteComment(btn.getAttribute("data-cid"));
+        });
+      }
     }
 
-    // Comments send
     const sendBtn = card.querySelector(".js-send");
     const authorEl = card.querySelector(".js-author");
     const bodyEl = card.querySelector(".js-body");
@@ -879,11 +824,9 @@ async function wireCardEvents(containerEl, photos){
   }
 }
 
-/* =======================
-   LOAD ALL
-======================= */
+/* LOAD ALL */
 async function loadAll(){
-  adminOn = await refreshAdminUI();
+  await refreshAdminUI();
   await loadTop30();
   await loadGallery();
 }
