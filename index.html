@@ -363,6 +363,10 @@
     <a href="storico.html">📚 Storico</a>
     <a href="marcatori.html">⚽ Marcatori</a>
     <a href="mvp.html">🏆 Vota MVP</a>
+
+    <!-- ✅ AGGIUNTO LINK FOTO -->
+    <a href="foto.html">📸 Foto</a>
+
     <a href="componenti.html">👥 Componenti</a>
     <a href="admin.html">🔐 Admin</a>
   </div>
@@ -546,7 +550,7 @@ function wxEmojiFromCode(code){
   if([1].includes(c)) return "🌤️";
   if([2].includes(c)) return "⛅";
   if([3].includes(c)) return "☁️";
-  if([45,48].includes(c)) return "🌫️";           // nebbia OK
+  if([45,48].includes(c)) return "🌫️";
   if([51,53,55].includes(c)) return "🌦️";
   if([56,57].includes(c)) return "🌧️";
   if([61,63,65].includes(c)) return "🌧️";
@@ -584,11 +588,8 @@ function riskLevel({code, precipProb, wind, temp}){
   const isSnow = [71,73,75,77].includes(c);
   const isHeavyRain = [65,67,82].includes(c);
 
-  // Rischio partita
   if(isThunder || isSnow || isHeavyRain || pp >= 70 || w >= 55) return "risk";
-  // Attenzione
   if(pp >= 35 || w >= 35 || t <= 4 || t >= 33) return "warn";
-  // OK
   return "ok";
 }
 
@@ -598,7 +599,6 @@ function setWeatherAlert(level, text){
 }
 
 async function loadWeather(matchDateISO, matchTimeStr){
-  // mostra box meteo solo se c'è la partita
   weatherBox.style.display = "block";
   weatherBig.textContent = "⏳";
   weatherLine.textContent = "Caricamento meteo…";
@@ -606,7 +606,6 @@ async function loadWeather(matchDateISO, matchTimeStr){
   setWeatherAlert("warn","ATTENDI…");
 
   try{
-    // matchTimeStr può essere "21:00:00" o "21:00"
     const hhmm = String(matchTimeStr||"21:00").slice(0,5);
     const target = `${matchDateISO}T${hhmm}`;
 
@@ -624,7 +623,6 @@ async function loadWeather(matchDateISO, matchTimeStr){
     const times = j?.hourly?.time || [];
     if(!times.length) throw new Error("Dati meteo vuoti");
 
-    // trova ora più vicina al target
     let bestIdx = 0;
     let bestDiff = Infinity;
     const targetMs = new Date(target).getTime();
@@ -688,7 +686,6 @@ async function load(){
 
   if(!data || !data.length){
     statusEl.textContent = "Nessuna partita creata";
-    // niente meteo se non c'è partita
     weatherBox.style.display = "none";
     return;
   }
@@ -700,7 +697,6 @@ async function load(){
   const result = (m.score_a!=null && m.score_b!=null) ? `${m.score_a}-${m.score_b}` : "da giocare";
   const voteOpen = isVoteOpen(m);
 
-  // MVP UI
   mvpBox.style.display = "block";
   mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
   mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
@@ -722,16 +718,13 @@ async function load(){
     scorersBox.style.display="none";
   }
 
-  // MAPPA
   mapBox.style.display = "block";
   mapActions.style.display = "flex";
   mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
   setupMapLinks();
 
-  // ✅ METEO (solo se esiste partita)
   await loadWeather(m.match_date, m.match_time);
 
-  // players map per convocati / squadre / MVP
   let playersForCalled = [];
   if(Array.isArray(m.called_up) && m.called_up.length){
     const { data:p, error:pe } = await client.from("players").select("id,name").in("id", m.called_up);
@@ -748,10 +741,8 @@ async function load(){
     calledEl.textContent = "—";
   }
 
-  // MVP
   await loadMVP(m.id, playersForCalled);
 
-  // Formazioni
   if((Array.isArray(m.team_a) && m.team_a.length) || (Array.isArray(m.team_b) && m.team_b.length)){
     teamsBox.style.display="block";
     tAIcon.innerHTML = kitSVG("#facc15","#111");
