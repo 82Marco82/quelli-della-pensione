@@ -62,7 +62,7 @@
 
     .header{text-align:center}
 
-    /* ✅ LOGO "MONETA" */
+    /* LOGO "MONETA" */
     .logo{
       width:80px;height:80px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
@@ -74,13 +74,11 @@
       transform-style:preserve-3d;
       will-change:transform;
     }
-    .logo.spin{
-      animation: coinSpin 900ms ease-in-out;
-    }
+    .logo.spin{ animation: coinSpin 900ms ease-in-out; }
     @keyframes coinSpin{
-      0%   { transform: rotateY(0deg); }
-      50%  { transform: rotateY(180deg); }
-      100% { transform: rotateY(360deg); }
+      0%{transform:rotateY(0deg)}
+      50%{transform:rotateY(180deg)}
+      100%{transform:rotateY(360deg)}
     }
 
     h1{
@@ -113,7 +111,6 @@
     }
 
     .line{margin-top:8px}
-
     .pill{
       display:inline-block;
       background:var(--pill);
@@ -123,7 +120,6 @@
       font-weight:900;
       border:1px solid var(--border);
     }
-
     .badge{
       display:inline-block;
       background:#111;
@@ -234,7 +230,7 @@
       font-weight:900;
     }
 
-    /* ✅ METEO */
+    /* METEO */
     .weatherBox{
       margin-top:12px;
       padding:12px;
@@ -281,35 +277,48 @@
     .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
     .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
 
-    /* ✅ AVATAR convocati */
-    .calledWrap{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:8px;
-    }
-    .calledItem{
+    /* ✅ AVATAR PILL (convocati + squadre) */
+    .chip{
       display:inline-flex;
       align-items:center;
-      gap:8px;
-      background:var(--pill);
+      gap:10px;
+      padding:6px 10px;
       border:1px solid var(--border);
       border-radius:999px;
-      padding:6px 10px 6px 6px;
+      background:var(--pill);
+      margin:4px 6px 0 0;
       font-weight:900;
       max-width:100%;
     }
-    .calledAvatar{
-      width:34px;height:34px;border-radius:999px;
-      border:2px solid rgba(255,255,255,.65);
-      background:rgba(0,0,0,.06);
+    .avatar{
+      width:34px;height:34px;
+      border-radius:999px;
       object-fit:cover;
-      display:block;
+      border:1px solid rgba(0,0,0,.18);
       flex:0 0 auto;
+      background:rgba(0,0,0,.04);
     }
-    body.dark .calledAvatar{
-      border-color:rgba(255,255,255,.20);
-      background:rgba(255,255,255,.06);
+    body.dark .avatar{border-color:rgba(255,255,255,.18); background:rgba(255,255,255,.06)}
+    .chipText{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+      min-width:0;
+    }
+    .chipName{
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:220px;
+    }
+    .chipRole{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:220px;
     }
   </style>
 </head>
@@ -456,56 +465,26 @@ const teamBEl = document.getElementById("teamB");
 const tAIcon = document.getElementById("tAIcon");
 const tBIcon = document.getElementById("tBIcon");
 
-/* MVP DOM */
 const mvpBox = document.getElementById("mvpBox");
 const mvpTitle = document.getElementById("mvpTitle");
 const mvpStatePill = document.getElementById("mvpStatePill");
 const mvpMain = document.getElementById("mvpMain");
 const mvpTop3 = document.getElementById("mvpTop3");
 
-/* METEO DOM */
 const weatherBox = document.getElementById("weatherBox");
 const weatherBig = document.getElementById("weatherBig");
 const weatherLine = document.getElementById("weatherLine");
 const weatherMini = document.getElementById("weatherMini");
 const weatherAlert = document.getElementById("weatherAlert");
 
-/* MAP */
+/* MAPPA */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
 const FIELD_LAT = 40.1239395;
 const FIELD_LNG = 18.1203671;
 
-/* ✅ AVATAR settings */
-const AVATAR_DIR = "avatars";          // cartella nel repo
-const DEFAULT_AVATAR = "default.png";  // fallback
-function avatarUrl(file){
-  const clean = String(file || "").trim();
-  const name = clean ? clean : DEFAULT_AVATAR;
-  return `${AVATAR_DIR}/${name}`;
-}
-
-/* HELPERS */
-function kitSVG(main, stripe){
-  return `
-  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M18 12 L26 6 H38 L46 12 L58 20 L52 33 L46 29 V58 H18 V29 L12 33 L6 20 Z"
-      fill="${main}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
-    <path d="M30 10 H34 V58 H30 Z" fill="${stripe}" opacity="0.85"/>
-  </svg>`;
-}
-
-function formatDateFull(iso){
-  try{
-    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-  }catch(e){ return String(iso||""); }
-}
-
-function medal(i){
-  if(i===0) return "🥇";
-  if(i===1) return "🥈";
-  if(i===2) return "🥉";
-  return String(i+1);
-}
+/* AVATAR PATHS (GitHub) */
+const AVATAR_DIR = "avatars/";
+const DEFAULT_AVATAR = "default.png";
 
 function escapeHtml(s){
   return String(s ?? "")
@@ -516,9 +495,62 @@ function escapeHtml(s){
     .replaceAll("'","&#039;");
 }
 
-/* Stato votazione: APERTA se almeno una colonna è true */
+function formatDateFull(iso){
+  try{
+    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  }catch(e){
+    return String(iso||"");
+  }
+}
+
+function kitSVG(main, stripe){
+  return `
+  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M18 12 L26 6 H38 L46 12 L58 20 L52 33 L46 29 V58 H18 V29 L12 33 L6 20 Z"
+      fill="${main}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
+    <path d="M30 10 H34 V58 H30 Z" fill="${stripe}" opacity="0.85"/>
+  </svg>`;
+}
+
+function medal(i){
+  if(i===0) return "🥇";
+  if(i===1) return "🥈";
+  if(i===2) return "🥉";
+  return String(i+1);
+}
+
+/* Stato votazione */
 function isVoteOpen(match){
   return (match?.vote_open === true) || (match?.voting_open === true);
+}
+
+/* ✅ Avatar helpers */
+function avatarUrl(fileName){
+  const f = (fileName && String(fileName).trim()) ? String(fileName).trim() : DEFAULT_AVATAR;
+  return AVATAR_DIR + f;
+}
+
+function avatarImgTag(fileName, alt){
+  const src = avatarUrl(fileName);
+  const safeAlt = escapeHtml(alt || "avatar");
+  // onerror => fallback default
+  return `<img class="avatar" src="${escapeHtml(src)}" alt="${safeAlt}" onerror="this.onerror=null;this.src='${escapeHtml(AVATAR_DIR + DEFAULT_AVATAR)}';">`;
+}
+
+function renderPlayerChip(player){
+  const name = player?.name || "";
+  const pos = (player?.position || "").trim(); // ruolo libero
+  const avatar = player?.avatar || DEFAULT_AVATAR;
+
+  return `
+    <span class="chip" title="${escapeHtml(name)}">
+      ${avatarImgTag(avatar, name)}
+      <span class="chipText">
+        <span class="chipName">${escapeHtml(name)}</span>
+        <span class="chipRole">${escapeHtml(pos || "—")}</span>
+      </span>
+    </span>
+  `;
 }
 
 /* MVP */
@@ -575,6 +607,7 @@ async function loadMVP(matchId, calledPlayers){
   }
 }
 
+/* MAPPA links */
 function setupMapLinks(){
   mapLink.href = FIXED_MAP_APP_URL;
   mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
@@ -676,7 +709,6 @@ async function loadWeather(matchDateISO, matchTimeStr){
 
     const emoji = wxEmojiFromCode(code);
     const desc = wxTextFromCode(code);
-
     const lvl = riskLevel({code, precipProb: pp, wind, temp});
 
     if(lvl === "ok"){
@@ -703,29 +735,7 @@ async function loadWeather(matchDateISO, matchTimeStr){
   }
 }
 
-/* ✅ Render convocati con avatar */
-function renderCalledWithAvatars(orderedIds, idToPlayer){
-  // wrapper a pill con avatar
-  const html = `
-    <div class="calledWrap">
-      ${orderedIds.map(pid=>{
-        const p = idToPlayer.get(String(pid));
-        const name = p?.name || "";
-        const av = p?.avatar || DEFAULT_AVATAR;
-        const src = avatarUrl(av);
-        return `
-          <div class="calledItem">
-            <img class="calledAvatar" src="${escapeHtml(src)}" alt="avatar"
-                 onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}';">
-            <span>${escapeHtml(name)}</span>
-          </div>
-        `;
-      }).join("")}
-    </div>
-  `;
-  calledEl.innerHTML = html;
-}
-
+/* ✅ LOAD */
 async function load(){
   const { data, error } = await client
     .from("matches")
@@ -781,37 +791,61 @@ async function load(){
 
   await loadWeather(m.match_date, m.match_time);
 
-  // ✅ Convocati con avatar
-  let playersForCalled = [];
+  /* ✅ chiamata players UNA volta, con avatar+position */
+  let playersMap = new Map();
   if(Array.isArray(m.called_up) && m.called_up.length){
-    // prendo anche avatar
-    const { data:p, error:pe } = await client.from("players").select("id,name,avatar").in("id", m.called_up);
+    const { data:p, error:pe } = await client
+      .from("players")
+      .select("id,name,avatar,position")
+      .in("id", m.called_up);
+
     if(!pe){
-      playersForCalled = (p||[]);
-      const idToPlayer = new Map((p||[]).map(x=>[String(x.id), x]));
-      // mantieni l'ordine dei called_up
-      renderCalledWithAvatars(m.called_up, idToPlayer);
+      (p||[]).forEach(row=>{
+        playersMap.set(String(row.id), row);
+      });
+      const ordered = (m.called_up||[]).map(id => playersMap.get(String(id))).filter(Boolean);
+
+      calledEl.innerHTML = ordered.length
+        ? ordered.map(pl => renderPlayerChip(pl)).join("")
+        : "—";
+
+      await loadMVP(m.id, p||[]);
     }else{
       calledEl.textContent = "—";
+      await loadMVP(m.id, []);
     }
   } else {
     calledEl.textContent = "—";
+    await loadMVP(m.id, []);
   }
 
-  await loadMVP(m.id, playersForCalled);
+  /* ✅ Squadre con avatar+ruolo */
+  const teamAIds = Array.isArray(m.team_a) ? m.team_a.map(String) : [];
+  const teamBIds = Array.isArray(m.team_b) ? m.team_b.map(String) : [];
 
-  // Formazioni (restano pill normali)
-  if((Array.isArray(m.team_a) && m.team_a.length) || (Array.isArray(m.team_b) && m.team_b.length)){
+  if(teamAIds.length || teamBIds.length){
     teamsBox.style.display="block";
     tAIcon.innerHTML = kitSVG("#facc15","#111");
     tBIcon.innerHTML = kitSVG("#ef4444","#fff");
 
-    const ids=[...new Set([...(m.team_a||[]),...(m.team_b||[])].map(String))];
-    const { data:p2 }=await client.from("players").select("id,name").in("id", ids);
-    const map2=new Map((p2||[]).map(x=>[String(x.id),x.name]));
+    const ids = [...new Set([...teamAIds, ...teamBIds])];
 
-    teamAEl.innerHTML=(m.team_a||[]).map(id=>`<span class="pill">${escapeHtml(map2.get(String(id)) || "")}</span>`).join("") || "—";
-    teamBEl.innerHTML=(m.team_b||[]).map(id=>`<span class="pill">${escapeHtml(map2.get(String(id)) || "")}</span>`).join("") || "—";
+    // prendi dati dal map dei convocati quando possibile, altrimenti fetch
+    const missing = ids.filter(id => !playersMap.has(String(id)));
+
+    if(missing.length){
+      const { data:p2 } = await client
+        .from("players")
+        .select("id,name,avatar,position")
+        .in("id", missing);
+      (p2||[]).forEach(row => playersMap.set(String(row.id), row));
+    }
+
+    const teamAPlayers = teamAIds.map(id => playersMap.get(String(id))).filter(Boolean);
+    const teamBPlayers = teamBIds.map(id => playersMap.get(String(id))).filter(Boolean);
+
+    teamAEl.innerHTML = teamAPlayers.length ? teamAPlayers.map(pl => renderPlayerChip(pl)).join("") : "—";
+    teamBEl.innerHTML = teamBPlayers.length ? teamBPlayers.map(pl => renderPlayerChip(pl)).join("") : "—";
   }else{
     teamsBox.style.display="none";
   }
