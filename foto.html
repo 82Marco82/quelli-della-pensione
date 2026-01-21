@@ -51,14 +51,24 @@
       margin-bottom:10px;
     }
     .brand{display:flex; align-items:center; gap:12px;}
+    /* ✅ LOGO FIX (non più sacrificato) */
     .logo{
-      width:56px;height:56px;border-radius:999px;
+      width:64px;
+      height:64px;
+      border-radius:16px; /* più “logo”, meno schiacciato */
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:26px;
-      letter-spacing:2px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-family:'Bebas Neue';
+      font-size:32px;
+      letter-spacing:1px;
       box-shadow:var(--shadow);
+      line-height:1;
+      flex:0 0 auto;
     }
+
     .titleWrap{line-height:1.1}
     .title{
       font-family:'Bebas Neue';
@@ -158,13 +168,13 @@
       background:#000;
       aspect-ratio: 4/5;
       overflow:hidden;
-      cursor:zoom-in;
     }
     .imgWrap img{
       width:100%;
       height:100%;
       object-fit:cover;
       display:block;
+      cursor:zoom-in; /* ✅ cliccabile */
     }
 
     .imgTopActions{
@@ -239,56 +249,61 @@
     .toast.bad{background:rgba(239,68,68,.10)}
     .toast.warn{background:rgba(245,158,11,.12)}
 
-    /* ✅ LIGHTBOX (zoom foto) */
-    .lightbox{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.82);
+    /* ✅ MODAL ZOOM */
+    .modal{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.72);
       display:none;
       align-items:center;
       justify-content:center;
-      padding:16px;
+      padding:18px;
       z-index:9999;
     }
-    .lightbox.show{display:flex}
-    .lbInner{
-      width:min(980px,100%);
-      max-height:92vh;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
+    .modal.show{display:flex;}
+    .modalInner{
+      width:min(980px, 100%);
+      max-height:86vh;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 20px 50px rgba(0,0,0,.6);
+      background:#000;
+      position:relative;
     }
-    .lbBar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
+    .modalImg{
+      width:100%;
+      height:100%;
+      max-height:86vh;
+      object-fit:contain; /* ✅ niente tagli */
+      display:block;
+      cursor:zoom-out;
+    }
+    .modalTop{
+      position:absolute;
+      top:12px; left:12px; right:12px;
+      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      pointer-events:none;
+    }
+    .modalPill{
+      pointer-events:auto;
+      background:rgba(0,0,0,.55);
       color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      padding:10px 12px;
+      border-radius:999px;
       font-weight:900;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
     }
-    .lbClose{
-      background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.22);
+    .modalBtn{
+      pointer-events:auto;
+      border:0;
+      cursor:pointer;
+      background:rgba(255,255,255,.14);
       color:#fff;
       padding:10px 12px;
-      border-radius:14px;
+      border-radius:999px;
       font-weight:900;
-      cursor:pointer;
-    }
-    .lbImg{
-      background:#000;
-      border-radius:16px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:0 20px 60px rgba(0,0,0,.45);
-    }
-    .lbImg img{
-      width:100%;
-      max-height:82vh;
-      object-fit:contain;
-      display:block;
-      background:#000;
     }
   </style>
 </head>
@@ -301,7 +316,7 @@
       <div class="logo">QDP</div>
       <div class="titleWrap">
         <h1 class="title">FOTO</h1>
-        <div class="subtitle">Carica una foto • aggiorna per vedere le nuove</div>
+        <div class="subtitle">Carica una foto • aggiorna per vedere le nuove • commentale e metti mi piace</div>
       </div>
     </div>
 
@@ -367,14 +382,14 @@
 
 </div>
 
-<!-- ✅ LIGHTBOX -->
-<div id="lightbox" class="lightbox" aria-hidden="true">
-  <div class="lbInner">
-    <div class="lbBar">
-      <div id="lbCaption">📷 Foto</div>
-      <button id="lbClose" class="lbClose" type="button">✖ Chiudi</button>
+<!-- ✅ MODAL ZOOM -->
+<div id="imgModal" class="modal" aria-hidden="true">
+  <div class="modalInner" role="dialog" aria-modal="true">
+    <div class="modalTop">
+      <div id="modalCaption" class="modalPill">📸</div>
+      <button id="modalClose" class="modalBtn" type="button">✖ Chiudi</button>
     </div>
-    <div class="lbImg"><img id="lbImg" src="" alt="Foto"></div>
+    <img id="modalImg" class="modalImg" src="" alt="Foto grande">
   </div>
 </div>
 
@@ -416,24 +431,34 @@ const topBox = document.getElementById("topBox");
 const topGrid = document.getElementById("topGrid");
 const topMini = document.getElementById("topMini");
 
-/* ✅ LIGHTBOX */
-const lightbox = document.getElementById("lightbox");
-const lbImg = document.getElementById("lbImg");
-const lbClose = document.getElementById("lbClose");
-const lbCaption = document.getElementById("lbCaption");
+/* MODAL */
+const imgModal = document.getElementById("imgModal");
+const modalImg = document.getElementById("modalImg");
+const modalCaption = document.getElementById("modalCaption");
+const modalClose = document.getElementById("modalClose");
 
-function openLightbox(url, caption){
-  lbImg.src = url;
-  lbCaption.textContent = caption ? `📷 ${caption}` : "📷 Foto";
-  lightbox.classList.add("show");
+function openModal(url, caption){
+  if(!url) return;
+  modalImg.src = url;
+  modalCaption.textContent = caption ? `📸 ${caption}` : "📸 Foto";
+  imgModal.classList.add("show");
+  imgModal.setAttribute("aria-hidden","false");
+  document.body.style.overflow = "hidden";
 }
-function closeLightbox(){
-  lightbox.classList.remove("show");
-  lbImg.src = "";
+function closeModal(){
+  imgModal.classList.remove("show");
+  imgModal.setAttribute("aria-hidden","true");
+  modalImg.src = "";
+  document.body.style.overflow = "";
 }
-lbClose.onclick = closeLightbox;
-lightbox.addEventListener("click",(e)=>{ if(e.target===lightbox) closeLightbox(); });
-window.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeLightbox(); });
+modalClose.onclick = closeModal;
+imgModal.addEventListener("click", (e)=>{
+  if(e.target === imgModal) closeModal();
+});
+document.addEventListener("keydown", (e)=>{
+  if(e.key === "Escape") closeModal();
+});
+modalImg.addEventListener("click", closeModal);
 
 /* HELPERS */
 function showToast(msg, type="ok"){
@@ -444,6 +469,7 @@ function showToast(msg, type="ok"){
   toast.classList.add("show");
   setTimeout(()=>toast.classList.remove("show"), 2200);
 }
+
 function escapeHtml(s){
   return String(s ?? "")
     .replaceAll("&","&amp;")
@@ -452,11 +478,13 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
+
 function fmtDate(iso){
   try{
     return new Date(iso).toLocaleString("it-IT", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" });
   }catch(e){ return String(iso||""); }
 }
+
 async function getSession(){
   const { data } = await client.auth.getSession();
   return data?.session || null;
@@ -471,7 +499,7 @@ async function refreshAdminUI(){
   adminBtn.textContent = adminOn ? "🔐 Admin: ON" : "🔐 Admin: OFF";
   adminBtn.classList.toggle("warn", !adminOn);
   adminBtn.classList.toggle("ok", adminOn);
-  adminHint.style.display = adminOn ? "inline-flex" : "none";
+  adminHint.style.display = adminOn ? "inline-flex" : "none"; /* ✅ sparisce davvero */
   return adminOn;
 }
 
@@ -739,17 +767,17 @@ async function deleteComment(commentId){
 /* LOAD PHOTOS */
 let cachedPhotos = [];
 
-/* ✅ Conteggio totale foto (non solo galleria, ma TUTTE) */
 async function loadTotalCount(){
   try{
     const { count, error } = await client
       .from(TABLE_PHOTOS)
-      .select("*", { count:"exact", head:true });
+      .select("id", { count:"exact", head:true });
+
     if(error) throw error;
-    countPill.textContent = `📸 ${Number(count || 0)} foto`;
+    countPill.textContent = `📸 ${count || 0} foto`;
   }catch(e){
     console.warn("count error", e);
-    // non blocco la pagina
+    countPill.textContent = `📸 — foto`;
   }
 }
 
@@ -806,8 +834,6 @@ async function loadGallery(){
   }
 
   const all = data || [];
-
-  /* ✅ FIX: non mostrare in Galleria quelle già presenti nel Top */
   cachedPhotos = all.filter(p => !topIds.has(String(p.id)));
 
   grid.innerHTML = cachedPhotos.map(p => renderPhotoCard(p, false)).join("");
@@ -832,7 +858,7 @@ function renderPhotoCard(photo, isTop){
   return `
     <div class="photoCard" data-id="${id}">
       <div class="imgWrap">
-        <img src="${escapeHtml(url)}" alt="foto">
+        <img class="js-zoom" src="${escapeHtml(url)}" alt="foto" data-url="${escapeHtml(url)}" data-cap="${escapeHtml(cap)}">
         <div class="imgTopActions">
           <div class="chip">${badge}</div>
           ${adminOn ? `<button class="chip chipBtn js-del" type="button">🗑️ Elimina</button>` : ``}
@@ -885,16 +911,6 @@ async function wireCardEvents(containerEl, photos){
     const photo = photos.find(p => String(p.id) === String(id));
     if(!photo) continue;
 
-    /* ✅ click sulla foto => ingrandisci */
-    const imgWrap = card.querySelector(".imgWrap");
-    if(imgWrap){
-      imgWrap.onclick = () => {
-        const url = photo.path || "";
-        const cap = (photo.caption || "").trim();
-        if(url) openLightbox(url, cap);
-      };
-    }
-
     const likeBtn = card.querySelector(".js-like");
     if(likeBtn) likeBtn.onclick = () => likePhoto(photo);
 
@@ -905,10 +921,16 @@ async function wireCardEvents(containerEl, photos){
     if(copyBtn) copyBtn.onclick = () => copyLink(photo);
 
     const delBtn = card.querySelector(".js-del");
-    if(delBtn) delBtn.onclick = (e) => { e.stopPropagation(); deletePhoto(photo); };
+    if(delBtn) delBtn.onclick = () => deletePhoto(photo);
 
     const editCapBtn = card.querySelector(".js-editcap");
     if(editCapBtn) editCapBtn.onclick = () => editCaption(photo);
+
+    /* ✅ ZOOM */
+    const zoomImg = card.querySelector(".js-zoom");
+    if(zoomImg){
+      zoomImg.onclick = () => openModal(photo.path || "", (photo.caption || "").trim());
+    }
 
     const commentsBox = card.querySelector(".js-comments");
     if(commentsBox){
@@ -952,7 +974,7 @@ async function wireCardEvents(containerEl, photos){
 /* LOAD ALL */
 async function loadAll(){
   await refreshAdminUI();
-  await loadTotalCount();   // ✅ totale foto inserite
+  await loadTotalCount();   /* ✅ totale foto vero */
   await loadTop30();
   await loadGallery();
 }
@@ -961,3 +983,4 @@ loadAll();
 </script>
 </body>
 </html>
+```0
