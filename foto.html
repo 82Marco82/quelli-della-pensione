@@ -58,7 +58,6 @@
       color:#fff;font-family:'Bebas Neue';font-size:26px;
       letter-spacing:2px;
       box-shadow:var(--shadow);
-      flex:0 0 auto;
     }
     .titleWrap{line-height:1.1}
     .title{
@@ -94,10 +93,12 @@
       white-space:nowrap;
       max-width:100%;
     }
+
+    /* ✅ FIX: questa pill deve andare a capo e restare dentro il box
+       (tolto display:flex !important che impediva di nasconderla quando Admin OFF) */
     .adminHint{
       width:100%;
       white-space:normal !important;
-      display:flex !important;
       line-height:1.25;
     }
 
@@ -238,8 +239,8 @@
     .toast.bad{background:rgba(239,68,68,.10)}
     .toast.warn{background:rgba(245,158,11,.12)}
 
-    /* LIGHTBOX */
-    .lb{
+    /* ✅ LIGHTBOX */
+    .lightbox{
       position:fixed;
       inset:0;
       background:rgba(0,0,0,.78);
@@ -249,55 +250,61 @@
       padding:18px;
       z-index:9999;
     }
-    .lb.show{display:flex}
-    .lbInner{
-      width:min(980px, 96vw);
-      max-height:92vh;
-      border-radius:16px;
+    .lightbox.show{display:flex}
+    .lightboxInner{
+      width:min(980px, 100%);
+      max-height:90vh;
+      border-radius:18px;
       overflow:hidden;
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow:0 18px 60px rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.15);
+      box-shadow:0 20px 60px rgba(0,0,0,.55);
       background:#000;
       position:relative;
     }
-    .lbImg{
+    .lightboxImg{
       width:100%;
-      height:92vh;
-      max-height:92vh;
+      height:90vh;
+      max-height:90vh;
       object-fit:contain;
       display:block;
       background:#000;
     }
-    .lbBar{
+    .lbTop{
       position:absolute;
-      left:12px; right:12px; top:12px;
+      top:10px; left:10px; right:10px;
       display:flex;
       justify-content:space-between;
       gap:10px;
+      align-items:center;
       pointer-events:none;
     }
-    .lbPill{
+    .lbBtn{
       pointer-events:auto;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:999px;
+      border:0;
+      cursor:pointer;
       background:rgba(0,0,0,.55);
       color:#fff;
       border:1px solid rgba(255,255,255,.18);
+      padding:10px 12px;
+      border-radius:999px;
       font-weight:900;
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
     }
-    .lbClose{
+    .lbCap{
       pointer-events:auto;
-      cursor:pointer;
-      border:0;
-      background:transparent;
+      max-width:70%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      background:rgba(0,0,0,.55);
       color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      padding:10px 12px;
+      border-radius:999px;
       font-weight:900;
-      font-size:14px;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
     }
   </style>
 </head>
@@ -310,6 +317,7 @@
       <div class="logo">QDP</div>
       <div class="titleWrap">
         <h1 class="title">FOTO</h1>
+        <!-- ✅ MODIFICA SUBTITLE -->
         <div class="subtitle">Carica una foto • aggiorna per vedere le nuove • commentale e metti mi piace</div>
       </div>
     </div>
@@ -349,8 +357,7 @@
       <div id="countPill" class="pill">📸 0 foto</div>
     </div>
 
-    <!-- ✅ QUI: niente "display:none" inline. Solo hidden gestito via JS -->
-    <div id="adminHint" class="pill adminHint" hidden style="margin-top:10px">
+    <div id="adminHint" class="pill adminHint" style="display:none; margin-top:10px">
       ✅ Admin attivo (puoi eliminare e modificare didascalie + commenti)
     </div>
 
@@ -377,14 +384,14 @@
 
 </div>
 
-<!-- LIGHTBOX -->
-<div id="lb" class="lb" aria-hidden="true">
-  <div class="lbInner">
-    <div class="lbBar">
-      <div id="lbCaption" class="lbPill">📸</div>
-      <button id="lbClose" class="lbPill lbClose" type="button">✖ Chiudi</button>
+<!-- ✅ LIGHTBOX -->
+<div id="lightbox" class="lightbox" aria-hidden="true">
+  <div class="lightboxInner" role="dialog" aria-modal="true">
+    <div class="lbTop">
+      <div id="lbCap" class="lbCap"></div>
+      <button id="lbClose" class="lbBtn" type="button">✕ Chiudi</button>
     </div>
-    <img id="lbImg" class="lbImg" alt="foto ingrandita">
+    <img id="lbImg" class="lightboxImg" alt="foto">
   </div>
 </div>
 
@@ -427,9 +434,9 @@ const topGrid = document.getElementById("topGrid");
 const topMini = document.getElementById("topMini");
 
 /* LIGHTBOX DOM */
-const lb = document.getElementById("lb");
+const lightbox = document.getElementById("lightbox");
 const lbImg = document.getElementById("lbImg");
-const lbCaption = document.getElementById("lbCaption");
+const lbCap = document.getElementById("lbCap");
 const lbClose = document.getElementById("lbClose");
 
 /* HELPERS */
@@ -457,6 +464,54 @@ function fmtDate(iso){
   }catch(e){ return String(iso||""); }
 }
 
+async function getSession(){
+  const { data } = await client.auth.getSession();
+  return data?.session || null;
+}
+function isAdminSession(session){ return !!(session && session.user); }
+
+/* ADMIN UI */
+let adminOn = false;
+async function refreshAdminUI(){
+  const session = await getSession();
+  adminOn = isAdminSession(session);
+  adminBtn.textContent = adminOn ? "🔐 Admin: ON" : "🔐 Admin: OFF";
+  adminBtn.classList.toggle("warn", !adminOn);
+  adminBtn.classList.toggle("ok", adminOn);
+  adminHint.style.display = adminOn ? "inline-flex" : "none"; /* ✅ ora funziona davvero */
+  return adminOn;
+}
+
+adminBtn.onclick = async () => {
+  const session = await getSession();
+  if(isAdminSession(session)){
+    await client.auth.signOut();
+    showToast("Admin disattivato.", "warn");
+    await refreshAdminUI();
+    await loadAll();
+    return;
+  }
+  const email = prompt("Email admin:");
+  if(!email) return;
+  const password = prompt("Password admin:");
+  if(!password) return;
+
+  const { error } = await client.auth.signInWithPassword({ email, password });
+  if(error){
+    console.error(error);
+    showToast("Login fallito.", "bad");
+    return;
+  }
+  showToast("Admin attivo ✅");
+  await refreshAdminUI();
+  await loadAll();
+};
+
+/* CONFIG */
+const BUCKET = "photos";
+const TABLE_PHOTOS = "photos";
+const TABLE_COMMENTS = "photo_comments";
+
 function getLikedKey(photoId){ return `qdp_liked_${photoId}`; }
 function hasLiked(photoId){ return localStorage.getItem(getLikedKey(photoId)) === "1"; }
 function markLiked(photoId){ localStorage.setItem(getLikedKey(photoId), "1"); }
@@ -477,92 +532,23 @@ let uploading = false;
 /* ✅ Top IDs per non duplicare in galleria */
 let topIds = new Set();
 
-/* CONFIG */
-const BUCKET = "photos";
-const TABLE_PHOTOS = "photos";
-const TABLE_COMMENTS = "photo_comments";
-
-/* ✅ FIX DEFINITIVO: adminHint sparisce SEMPRE appena disconnetti */
-let adminOn = false;
-
-async function refreshAdminUI(){
-  const { data } = await client.auth.getSession();
-  const session = data?.session || null;
-
-  adminOn = !!(session && session.user);
-
-  adminBtn.textContent = adminOn ? "🔐 Admin: ON" : "🔐 Admin: OFF";
-  adminBtn.classList.toggle("warn", !adminOn);
-  adminBtn.classList.toggle("ok", adminOn);
-
-  // 🔥 la riga che ti serve: se OFF => hidden=true SEMPRE
-  adminHint.hidden = !adminOn;
-
-  return adminOn;
-}
-
-// ascolta login/logout/scadenza sessione
-client.auth.onAuthStateChange(async () => {
-  await refreshAdminUI();
-  await loadAll();
-});
-
-adminBtn.onclick = async () => {
-  // forzo refresh UI immediato per evitare "stato appeso"
-  await refreshAdminUI();
-
-  const { data } = await client.auth.getSession();
-  const session = data?.session || null;
-
-  if(session && session.user){
-    await client.auth.signOut();
-
-    // ✅ IMPORTANTISSIMO: nascondo SUBITO, prima di qualsiasi reload
-    adminOn = false;
-    adminHint.hidden = true;
-
-    showToast("Admin disattivato.", "warn");
-    await refreshAdminUI();
-    await loadAll();
-    return;
-  }
-
-  const email = prompt("Email admin:");
-  if(!email) return;
-  const password = prompt("Password admin:");
-  if(!password) return;
-
-  const { error } = await client.auth.signInWithPassword({ email, password });
-  if(error){
-    console.error(error);
-    showToast("Login fallito.", "bad");
-    await refreshAdminUI();
-    return;
-  }
-
-  showToast("Admin attivo ✅");
-  await refreshAdminUI();
-  await loadAll();
-};
-
-/* LIGHTBOX */
+/* ✅ LIGHTBOX helpers */
 function openLightbox(url, caption){
-  lbImg.src = url || "";
+  if(!url) return;
+  lbImg.src = url;
   const cap = (caption || "").trim();
-  lbCaption.textContent = cap ? `📸 ${cap}` : "📸";
-  lb.classList.add("show");
-  lb.setAttribute("aria-hidden","false");
-  document.body.style.overflow = "hidden";
+  lbCap.textContent = cap ? cap : "Foto";
+  lightbox.classList.add("show");
+  lightbox.setAttribute("aria-hidden","false");
 }
 function closeLightbox(){
-  lb.classList.remove("show");
-  lb.setAttribute("aria-hidden","true");
-  document.body.style.overflow = "";
+  lightbox.classList.remove("show");
+  lightbox.setAttribute("aria-hidden","true");
   lbImg.src = "";
 }
 lbClose.onclick = closeLightbox;
-lb.onclick = (e) => { if(e.target === lb) closeLightbox(); };
-window.addEventListener("keydown", (e)=>{ if(e.key === "Escape" && lb.classList.contains("show")) closeLightbox(); });
+lightbox.onclick = (e)=>{ if(e.target === lightbox) closeLightbox(); };
+document.addEventListener("keydown",(e)=>{ if(e.key === "Escape") closeLightbox(); });
 
 /* UPLOAD */
 uploadBtn.onclick = async () => {
@@ -778,6 +764,19 @@ async function deleteComment(commentId){
 /* LOAD PHOTOS */
 let cachedPhotos = [];
 
+async function loadTotalCount(){
+  try{
+    const { count, error } = await client
+      .from(TABLE_PHOTOS)
+      .select("id", { count: "exact", head: true });
+    if(error) throw error;
+    countPill.textContent = `📸 ${Number(count || 0)} foto`;
+  }catch(e){
+    console.warn("count error", e);
+    // fallback: non bloccare la pagina
+  }
+}
+
 async function loadTop30(){
   try{
     topIds = new Set();
@@ -832,10 +831,7 @@ async function loadGallery(){
 
   const all = data || [];
 
-  // contatore = TOTALE foto in tabella
-  countPill.textContent = `📸 ${all.length} foto`;
-
-  // galleria = escludi top
+  /* ✅ non mostrare in Galleria quelle già presenti nel Top */
   cachedPhotos = all.filter(p => !topIds.has(String(p.id)));
 
   grid.innerHTML = cachedPhotos.map(p => renderPhotoCard(p, false)).join("");
@@ -859,7 +855,7 @@ function renderPhotoCard(photo, isTop){
 
   return `
     <div class="photoCard" data-id="${id}">
-      <div class="imgWrap js-zoom" data-url="${escapeHtml(url)}" data-cap="${escapeHtml(cap)}">
+      <div class="imgWrap js-zoom" data-url="${escapeHtml(url)}" data-cap="${escapeHtml(cap)}" title="Tocca per ingrandire">
         <img src="${escapeHtml(url)}" alt="foto">
         <div class="imgTopActions">
           <div class="chip">${badge}</div>
@@ -913,12 +909,10 @@ async function wireCardEvents(containerEl, photos){
     const photo = photos.find(p => String(p.id) === String(id));
     if(!photo) continue;
 
-    const zoomEl = card.querySelector(".js-zoom");
-    if(zoomEl){
-      zoomEl.onclick = (e) => {
-        if(e.target && (e.target.closest(".js-del"))) return;
-        openLightbox(photo.path || "", photo.caption || "");
-      };
+    // ✅ zoom lightbox
+    const zoom = card.querySelector(".js-zoom");
+    if(zoom){
+      zoom.onclick = () => openLightbox(photo.path || "", (photo.caption || ""));
     }
 
     const likeBtn = card.querySelector(".js-like");
@@ -978,13 +972,13 @@ async function wireCardEvents(containerEl, photos){
 /* LOAD ALL */
 async function loadAll(){
   await refreshAdminUI();
+  await loadTotalCount();  // ✅ contatore totale foto nel DB
   await loadTop30();
   await loadGallery();
 }
 
-// ✅ all’avvio forzo OFF visivamente, poi refresh da sessione
-adminHint.hidden = true;
-refreshAdminUI().then(loadAll);
+loadAll();
 </script>
 </body>
 </html>
+```0
