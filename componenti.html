@@ -22,6 +22,7 @@
       --ok:#16a34a;
       --warn:#f59e0b;
       --bad:#ef4444;
+      --chipBg:rgba(0,0,0,.02);
     }
     body.dark{
       --bg:#0f1115;
@@ -34,40 +35,28 @@
       --logo1:#0b0e14;
       --logo2:#2a3242;
       --btn:#0b0e14;
+      --chipBg:rgba(255,255,255,.03);
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,system-ui;
-      background:var(--bg);
-      color:var(--text);
-      transition:.2s;
-    }
+    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
     .wrap{max-width:980px;margin:auto;padding:16px}
 
     .topbar{
       display:flex; align-items:center; justify-content:space-between;
-      gap:12px; flex-wrap:wrap;
-      margin-bottom:10px;
+      gap:12px; flex-wrap:wrap; margin-bottom:10px;
     }
     .brand{display:flex; align-items:center; gap:12px;}
     .logo{
       width:70px;height:70px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
       display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:32px;
-      letter-spacing:2px;
+      color:#fff;font-family:'Bebas Neue';font-size:32px;letter-spacing:2px;
       box-shadow:var(--shadow);
-      cursor:pointer;
-      transform-style:preserve-3d;
-      will-change:transform;
+      cursor:pointer; user-select:none;
+      transform-style:preserve-3d; will-change:transform;
     }
-    .logo.spin{ animation: coinSpin 900ms ease-in-out; }
-    @keyframes coinSpin{
-      0%{transform:rotateY(0deg)}
-      50%{transform:rotateY(180deg)}
-      100%{transform:rotateY(360deg)}
-    }
+    .logo.spin{animation:coinSpin 900ms ease-in-out}
+    @keyframes coinSpin{0%{transform:rotateY(0deg)}50%{transform:rotateY(180deg)}100%{transform:rotateY(360deg)}}
 
     .titleWrap{line-height:1.1}
     .title{
@@ -105,14 +94,10 @@
       gap:8px;
       user-select:none;
     }
-    .btn.ghost{
-      background:transparent;
-      color:var(--text);
-      border:1px solid var(--border);
-    }
-    .btn.small{padding:10px 12px; border-radius:12px; font-size:14px}
+    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+    .btn.small{padding:10px 12px;border-radius:12px;font-size:14px}
     .btn.ok{background:var(--ok)}
-    .btn.warn{background:var(--warn); color:#111}
+    .btn.warn{background:var(--warn);color:#111}
 
     .input{
       width:100%;
@@ -147,31 +132,16 @@
       background:rgba(22,163,74,.10);
       color:var(--text);
       font-weight:800;
+      white-space:pre-wrap;
     }
     .toast.show{display:block}
     .toast.bad{background:rgba(239,68,68,.10)}
     .toast.warn{background:rgba(245,158,11,.12)}
 
-    /* MENU come index */
-    .nav{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      font-size:14px;
-    }
-    .nav a{
-      color:var(--text);
-      text-decoration:none;
-      font-weight:800;
-    }
+    .nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}
+    .nav a{color:var(--text);text-decoration:none;font-weight:800}
 
-    /* Grid componenti */
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(4, 1fr);
-      gap:12px;
-    }
+    .grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:12px}
     @media(max-width:980px){ .grid{grid-template-columns:repeat(3, 1fr)} }
     @media(max-width:720px){ .grid{grid-template-columns:repeat(2, 1fr)} }
     @media(max-width:460px){ .grid{grid-template-columns:1fr} }
@@ -183,7 +153,7 @@
       padding:12px;
       box-shadow:var(--shadow);
       cursor:pointer;
-      transition:transform .12s ease, border-color .12s ease;
+      transition:transform .12s ease;
       min-height:110px;
       display:flex;
       gap:12px;
@@ -206,26 +176,15 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .pMeta{
-      margin-top:4px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
+    .pMeta{margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
     .tag{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 10px;
-      border-radius:999px;
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 10px;border-radius:999px;
       border:1px solid var(--border);
-      background:rgba(0,0,0,.02);
-      font-weight:900;
-      font-size:12px;
-      color:var(--text);
+      background:var(--chipBg);
+      font-weight:900;font-size:12px;color:var(--text);
+      white-space:nowrap;
     }
-    body.dark .tag{background:rgba(255,255,255,.03)}
     .tag.gk{border-color:rgba(245,158,11,.45)}
     .pBio{
       margin-top:8px;
@@ -241,12 +200,10 @@
     }
     .mini{font-size:12px;color:var(--muted);font-weight:800}
 
-    /* Fab theme */
     .fab{
       position:fixed;
       right:16px;bottom:16px;
-      width:54px;height:54px;
-      border-radius:999px;
+      width:54px;height:54px;border-radius:999px;
       border:1px solid var(--border);
       background:var(--card);
       box-shadow:var(--shadow);
@@ -264,7 +221,7 @@
       <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
       <div class="titleWrap">
         <h1 class="title">COMPONENTI</h1>
-        <div class="subtitle">Tutta la rosa • Avatar • Ruoli • (Admin: descrizione giocatore)</div>
+        <div class="subtitle">Rosa • Avatar • Ruoli • Presenze • MVP • Gol</div>
       </div>
     </div>
 
@@ -276,7 +233,7 @@
 
   <div class="card">
     <div class="row">
-      <input id="searchInput" class="input" type="text" placeholder="🔎 Cerca giocatore... (es: Antonio)">
+      <input id="searchInput" class="input" type="text" placeholder="🔎 Cerca giocatore... (nome, ruolo, bio)">
       <div class="spacer"></div>
       <div id="countPill" class="pill">👥 0</div>
       <button id="refreshBtn" class="btn ghost" type="button">🔄 Aggiorna</button>
@@ -298,7 +255,6 @@
     <div id="grid" class="grid" style="margin-top:12px"></div>
   </div>
 
-  <!-- NAV come index -->
   <div class="card nav muted">
     <a href="storico.html">📚 Storico</a>
     <a href="marcatori.html">⚽ Marcatori</a>
@@ -354,6 +310,8 @@ const searchInput = document.getElementById("searchInput");
 
 /* ===== CONFIG ===== */
 const TABLE_PLAYERS = "players";
+const TABLE_MATCHES = "matches";
+const TABLE_VOTES = "mvp_votes";
 const AVATAR_BASE = "avatars/";
 const DEFAULT_AVATAR = "default.png";
 
@@ -364,7 +322,7 @@ function showToast(msg, type="ok"){
   if(type==="warn") toast.classList.add("warn");
   toast.textContent = msg;
   toast.classList.add("show");
-  setTimeout(()=>toast.classList.remove("show"), 2200);
+  setTimeout(()=>toast.classList.remove("show"), 2600);
 }
 function escapeHtml(s){
   return String(s ?? "")
@@ -374,23 +332,24 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-function norm(s){
-  return String(s||"").trim().toLowerCase().replace(/\s+/g," ");
-}
+function norm(s){ return String(s||"").trim().toLowerCase().replace(/\s+/g," "); }
 function avatarUrl(filename){
   const f = String(filename || "").trim();
   return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
 }
+function safeBio(p){ return (p?.bio ?? p?.note ?? p?.description ?? "").toString().trim(); }
 function isGK(p){
   const r = String(p?.role||"").toLowerCase();
   const pos = String(p?.position||"").toLowerCase();
   return r === "gk" || pos.includes("port");
 }
-function safeBio(p){
-  // se hai colonne diverse, le legge lo stesso
-  return (p?.bio ?? p?.note ?? p?.description ?? "").toString().trim();
+function bump(map, id, inc=1){
+  const k = String(id||"");
+  if(!k) return;
+  map.set(k, (map.get(k)||0) + inc);
 }
 
+/* ===== ADMIN SESSION ===== */
 async function getSession(){
   const { data } = await client.auth.getSession();
   return data?.session || null;
@@ -414,7 +373,7 @@ adminBtn.onclick = async () => {
     await client.auth.signOut();
     showToast("Admin disattivato.", "warn");
     await refreshAdminUI();
-    await loadPlayers();
+    await loadAll();
     return;
   }
   const email = prompt("Email admin:");
@@ -430,8 +389,60 @@ adminBtn.onclick = async () => {
   }
   showToast("Admin attivo ✅");
   await refreshAdminUI();
-  await loadPlayers();
+  await loadAll();
 };
+
+/* ===== STATS MAPS ===== */
+const appearances = new Map();
+const mvpWins = new Map();
+const goals = new Map();
+
+/* scorers parser (tollerante) */
+function parseScorersToGoals(scorersAny){
+  const out = new Map();
+  const s = scorersAny;
+  if(!s) return out;
+
+  // oggetto con items
+  if(typeof s === "object" && !Array.isArray(s)){
+    if(Array.isArray(s.items)){
+      s.items.forEach(it=>{
+        const pid = it.player_id || it.player || it.id;
+        const g = Number(it.goals ?? it.g ?? it.goal ?? it.count ?? 0);
+        if(pid && Number.isFinite(g) && g>0) bump(out, pid, g);
+      });
+      return out;
+    }
+    // mappa diretta {"uuid":2}
+    Object.keys(s).forEach(k=>{
+      const v = Number(s[k]);
+      if(Number.isFinite(v) && v>0) bump(out, k, v);
+    });
+    return out;
+  }
+
+  // array
+  if(Array.isArray(s)){
+    s.forEach(it=>{
+      if(!it) return;
+      if(typeof it === "string"){
+        const parts = it.split(":");
+        if(parts.length===2){
+          const pid = parts[0].trim();
+          const g = Number(parts[1]);
+          if(pid && Number.isFinite(g) && g>0) bump(out, pid, g);
+        }
+        return;
+      }
+      const pid = it.player_id || it.player || it.id;
+      const g = Number(it.goals ?? it.g ?? it.goal ?? it.count ?? 0);
+      if(pid && Number.isFinite(g) && g>0) bump(out, pid, g);
+    });
+    return out;
+  }
+
+  return out;
+}
 
 /* ===== DATA ===== */
 let ALL = [];
@@ -440,7 +451,12 @@ function renderCard(p){
   const gk = isGK(p);
   const nameHtml = gk ? `${escapeHtml(p.name||"")} <span title="Portiere">🧤</span>` : escapeHtml(p.name||"");
   const pos = String(p.position || "").trim() || "—";
-  const role = gk ? "PORTIERE" : "GIOCATORE";
+  const roleLabel = gk ? "PORTIERE" : "GIOCATORE";
+
+  const pres = appearances.get(String(p.id)) || 0;
+  const mvps = mvpWins.get(String(p.id)) || 0;
+  const gol = goals.get(String(p.id)) || 0;
+
   const bio = safeBio(p);
 
   return `
@@ -449,10 +465,15 @@ function renderCard(p){
            onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
       <div class="pTxt">
         <div class="pName">${nameHtml}</div>
+
         <div class="pMeta">
-          <span class="tag ${gk ? "gk" : ""}">${gk ? "🧤 " : ""}${role}</span>
+          <span class="tag ${gk ? "gk" : ""}">${gk ? "🧤 " : ""}${roleLabel}</span>
           <span class="tag">📌 ${escapeHtml(pos)}</span>
+          <span class="tag">🎽 Pres. ${pres}</span>
+          <span class="tag">🏆 MVP ${mvps}</span>
+          <span class="tag">⚽ Gol ${gol}</span>
         </div>
+
         <div class="pBio">${bio ? escapeHtml(bio) : (adminOn ? "✍️ (clicca per inserire descrizione)" : "—")}</div>
       </div>
     </div>
@@ -462,14 +483,12 @@ function renderCard(p){
 function applyFilter(){
   const q = norm(searchInput.value);
   const list = q
-    ? ALL.filter(p => norm(p.name).includes(q) || norm(p.position).includes(q) || norm(safeBio(p)).includes(q))
+    ? ALL.filter(p => norm(p.name).includes(q) || norm(p.position).includes(q) || norm(p.role).includes(q) || norm(safeBio(p)).includes(q))
     : ALL.slice();
 
   countPill.textContent = `👥 ${list.length}`;
-
   grid.innerHTML = list.map(renderCard).join("") || `<div class="mini muted">Nessun giocatore.</div>`;
 
-  // click card
   [...grid.querySelectorAll(".playerCard")].forEach(card=>{
     card.onclick = () => onCardClick(card.getAttribute("data-id"));
   });
@@ -483,14 +502,13 @@ async function onCardClick(playerId){
 
   if(adminOn){
     const next = prompt(
-      `Descrizione per ${p.name} (max 180 caratteri)\n\n⚠️ Nota: serve colonna "bio" in tabella players.`,
+      `Descrizione per ${p.name} (max 180 caratteri)\n\n⚠️ Serve colonna "bio" (text) in tabella players.`,
       bio
     );
     if(next === null) return;
 
     const clean = String(next||"").trim().slice(0,180);
 
-    // tenta update su bio
     const { error } = await client
       .from(TABLE_PLAYERS)
       .update({ bio: clean })
@@ -498,59 +516,134 @@ async function onCardClick(playerId){
 
     if(error){
       console.error(error);
-      // Se non hai creato la colonna bio
-      showToast("Errore: forse manca la colonna 'bio' in players.", "bad");
+      showToast("Errore salvataggio: manca colonna 'bio' o policy UPDATE.", "bad");
       return;
     }
 
     showToast("Descrizione salvata ✅");
-    await loadPlayers();
+    await loadAll();
     return;
   }
 
-  // non-admin: mostra popup sola lettura
-  const msg = bio ? bio : "Nessuna descrizione.";
-  alert(`${p.name}\n\n${msg}`);
+  alert(`${p.name}\n\n${bio ? bio : "Nessuna descrizione."}`);
 }
 
 /* ===== LOAD ===== */
 async function loadPlayers(){
-  await refreshAdminUI();
-
-  grid.innerHTML = `<div class="mini muted">Carico…</div>`;
-
-  // select * così non rompe se la colonna bio ancora non esiste
   const { data, error } = await client
     .from(TABLE_PLAYERS)
     .select("*")
     .order("name", { ascending:true });
 
-  if(error){
-    console.error(error);
-    grid.innerHTML = `<div class="mini muted">Errore caricamento: ${escapeHtml(error.message)}</div>`;
+  if(error) throw error;
+
+  ALL = (data || []).map(p=>({
+    id: p.id,
+    name: p.name || "",
+    role: p.role || "",
+    position: p.position || "",
+    avatar: p.avatar || p.avatar_file || p.avatar_url || DEFAULT_AVATAR,
+    bio: p.bio ?? p.note ?? p.description ?? ""
+  }));
+}
+
+async function loadMatchesForStats(){
+  const { data, error } = await client
+    .from(TABLE_MATCHES)
+    .select("id,called_up,scorers")
+    .order("match_date", { ascending:false })
+    .limit(400);
+
+  if(error) throw error;
+  return data || [];
+}
+
+async function loadVotesForStats(){
+  const { data, error } = await client
+    .from(TABLE_VOTES)
+    .select("match_id,voted_player")
+    .limit(5000);
+
+  if(error) throw error;
+  return data || [];
+}
+
+function computeStats(matches, votes){
+  appearances.clear(); mvpWins.clear(); goals.clear();
+
+  // Presenze + Gol
+  for(const m of (matches||[])){
+    const called = Array.isArray(m.called_up) ? m.called_up : [];
+    called.forEach(pid => bump(appearances, pid, 1));
+
+    const gmap = parseScorersToGoals(m.scorers);
+    for(const [pid, g] of gmap.entries()){
+      bump(goals, pid, g);
+    }
+  }
+
+  // MVP vinti per match (ex-aequo ok)
+  const byMatch = new Map();
+  for(const v of (votes||[])){
+    const mid = String(v.match_id || "");
+    const pid = String(v.voted_player || "");
+    if(!mid || !pid) continue;
+    if(!byMatch.has(mid)) byMatch.set(mid, new Map());
+    const mm = byMatch.get(mid);
+    mm.set(pid, (mm.get(pid)||0) + 1);
+  }
+
+  for(const mm of byMatch.values()){
+    let best = 0;
+    for(const c of mm.values()) best = Math.max(best, c);
+    if(best <= 0) continue;
+    for(const [pid, c] of mm.entries()){
+      if(c === best) bump(mvpWins, pid, 1);
+    }
+  }
+}
+
+async function loadAll(){
+  await refreshAdminUI();
+  grid.innerHTML = `<div class="mini muted">Carico…</div>`;
+
+  try{
+    await loadPlayers();
+  }catch(e){
+    console.error(e);
+    grid.innerHTML = `<div class="mini muted">Errore caricamento players: ${escapeHtml(e.message || String(e))}</div>`;
     return;
   }
 
-  ALL = (data || []).map(p=>{
-    // normalizza avatar: se ti salvano "1.png" va bene
-    return {
-      id: p.id,
-      name: p.name || "",
-      role: p.role || "",
-      position: p.position || "",
-      avatar: p.avatar || p.avatar_file || p.avatar_url || DEFAULT_AVATAR,
-      bio: p.bio ?? p.note ?? p.description ?? ""
-    };
-  });
+  let matches = [], votes = [];
+  let warn = [];
+
+  try{
+    matches = await loadMatchesForStats();
+  }catch(e){
+    console.error(e);
+    warn.push("⚠️ Non riesco a leggere matches (RLS/permessi): Presenze/Gol = 0");
+  }
+
+  try{
+    votes = await loadVotesForStats();
+  }catch(e){
+    console.error(e);
+    warn.push("⚠️ Non riesco a leggere mvp_votes (RLS/permessi): MVP = 0");
+  }
+
+  computeStats(matches, votes);
+
+  if(warn.length) showToast(warn.join("\n"), "warn");
 
   applyFilter();
 }
 
-refreshBtn.onclick = () => loadPlayers();
+refreshBtn.onclick = () => loadAll();
 searchInput.oninput = () => applyFilter();
 
 /* INIT */
-loadPlayers();
+loadAll();
 </script>
 </body>
 </html>
