@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Marcatori • Quelli della pensione</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -18,7 +18,9 @@
       --pill:#eeeeee;
       --logo1:#111;
       --logo2:#333;
-      --badge:#111;
+      --btn:#111;
+
+      --okBg:#dcfce7; --okText:#166534; --okBd:rgba(34,197,94,.35);
     }
     body.dark{
       --bg:#0f1115;
@@ -30,12 +32,20 @@
       --pill:#222631;
       --logo1:#0b0e14;
       --logo2:#2a3242;
-      --badge:#0b0e14;
+      --btn:#0b0e14;
+
+      --okBg:rgba(34,197,94,.15); --okText:#86efac; --okBd:rgba(34,197,94,.35);
     }
 
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
-    .wrap{max-width:760px;margin:auto;padding:16px}
+    body{
+      margin:0;
+      font-family:Inter,system-ui;
+      background:var(--bg);
+      color:var(--text);
+      transition:.2s;
+    }
+    .wrap{max-width:860px;margin:auto;padding:16px}
 
     .card{
       background:var(--card);
@@ -48,56 +58,56 @@
 
     .header{text-align:center}
     .logo{
-      width:74px;height:74px;border-radius:999px;
+      width:80px;height:80px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
       margin:auto;
       display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:30px;
+      color:#fff;font-family:'Bebas Neue';font-size:34px;
       letter-spacing:2px;
     }
     h1{
       font-family:'Bebas Neue';
       letter-spacing:2px;
-      font-size:44px;
+      font-size:48px;
       margin:10px 0 0;
       text-transform:uppercase;
     }
     .subtitle{color:var(--muted);font-size:14px}
 
-    .badge{
-      display:inline-block;
-      background:var(--badge);
-      color:#fff;
-      padding:6px 12px;
-      border-radius:999px;
-      font-weight:900;
-      font-size:13px;
-    }
-
     .muted{color:var(--muted)}
-    .line{margin-top:8px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .space{height:10px}
 
-    .twoCols{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-    }
-    @media(min-width:720px){ .twoCols{grid-template-columns:1fr 1fr} }
-
-    table{width:100%;border-collapse:separate;border-spacing:0 8px}
-    th{font-size:12px;color:var(--muted);text-align:left;padding:0 6px}
-    td{padding:0 6px;vertical-align:middle}
     .pill{
       display:inline-block;
       background:var(--pill);
-      border:1px solid var(--border);
       border-radius:999px;
       padding:6px 10px;
+      margin:4px 6px 0 0;
       font-weight:900;
-      white-space:nowrap;
+      border:1px solid var(--border);
     }
-    .shirt{width:18px;height:18px;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
-    .teamTitle{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+
+    .btn{
+      border:0;
+      background:var(--btn);
+      color:#fff;
+      padding:12px 14px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+    }
+    .btn.ghost{
+      background:transparent;
+      color:var(--text);
+      border:1px solid var(--border);
+    }
+
     .nav{
       display:flex;
       justify-content:space-between;
@@ -119,6 +129,127 @@
       cursor:pointer;
       font-size:22px;
     }
+
+    /* Controls */
+    .controls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .controlsLeft{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    select,input{
+      padding:12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:transparent;
+      color:var(--text);
+      outline:none;
+      font-family:Inter;
+    }
+    input{min-width:220px;flex:1 1 240px}
+
+    .hintOk{
+      display:inline-block;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--okBd);
+      background:var(--okBg);
+      color:var(--okText);
+      font-weight:900;
+      font-size:12px;
+    }
+
+    /* List */
+    .list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+    .scoreRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:transparent;
+    }
+    .left{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+    .rank{
+      width:34px;height:34px;border-radius:999px;
+      border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;
+      background:var(--card);
+      flex:0 0 auto;
+    }
+    .avatar{
+      width:50px;height:50px;border-radius:999px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#000;
+      flex:0 0 auto;
+    }
+    .txt{min-width:0}
+    .name{
+      font-weight:900;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .sub{
+      color:var(--muted);
+      font-weight:800;
+      font-size:13px;
+      margin-top:2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .right{
+      text-align:right;
+      flex:0 0 auto;
+    }
+    .goals{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:36px;
+      line-height:1;
+    }
+    .mini{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      margin-top:4px;
+    }
+
+    .empty{
+      padding:12px;
+      border:1px dashed var(--border);
+      border-radius:16px;
+      color:var(--muted);
+      font-weight:800;
+    }
+
+    /* small chips inside rows */
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--pill);
+      font-weight:900;
+      font-size:12px;
+      margin-top:6px;
+      max-width:100%;
+    }
+    .chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   </style>
 </head>
 
@@ -128,30 +259,52 @@
   <div class="header">
     <div class="logo">QDP</div>
     <h1>Marcatori</h1>
-    <div class="subtitle">Quelli della pensione</div>
+    <div class="subtitle">Quelli della pensione • classifica gol</div>
   </div>
 
   <div class="card">
     <div id="status" class="muted">Caricamento…</div>
-    <div id="meta"></div>
-  </div>
 
-  <div class="card">
-    <div class="twoCols">
-      <div>
-        <div class="teamTitle" id="titleA"></div>
-        <div id="boxA" class="muted">—</div>
+    <div class="space"></div>
+
+    <div class="controls">
+      <div class="controlsLeft">
+        <select id="rangeSel">
+          <option value="all">Tutte le partite</option>
+          <option value="last10">Ultime 10</option>
+          <option value="year">Anno corrente</option>
+        </select>
+
+        <select id="sortSel">
+          <option value="goals">Ordina: Gol</option>
+          <option value="name">Ordina: Nome</option>
+        </select>
+
+        <span id="hint" class="hintOk" style="display:none">✅ OK</span>
       </div>
-      <div>
-        <div class="teamTitle" id="titleB"></div>
-        <div id="boxB" class="muted">—</div>
-      </div>
+
+      <input id="search" type="text" placeholder="Cerca giocatore…">
     </div>
   </div>
 
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <div class="row">
+        <span class="pill" id="totMatches">Partite: —</span>
+        <span class="pill" id="totGoals">Gol totali: —</span>
+      </div>
+      <button id="btnReload" class="btn ghost" type="button">🔄 Aggiorna</button>
+    </div>
+
+    <div id="list" class="list"></div>
+  </div>
+
+  <!-- NAV come index -->
   <div class="card nav muted">
-    <a href="index.html">🏠 Home</a>
     <a href="storico.html">📚 Storico</a>
+    <a href="marcatori.html">⚽ Marcatori</a>
+    <a href="mvp.html">🏆 Vota MVP</a>
+    <a href="foto.html">📸 Foto</a>
     <a href="componenti.html">👥 Componenti</a>
     <a href="admin.html">🔐 Admin</a>
   </div>
@@ -164,134 +317,267 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
-  // THEME
-  function setTheme(mode){
-    document.body.classList.toggle("dark", mode === "dark");
-    document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
-    localStorage.setItem("qdp_theme", mode);
-  }
-  setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
-  document.getElementById("themeToggle").onclick = () => {
-    setTheme(document.body.classList.contains("dark") ? "light" : "dark");
-  };
+/* THEME */
+const themeBtn = document.getElementById("themeToggle");
+function setTheme(mode){
+  document.body.classList.toggle("dark", mode === "dark");
+  themeBtn.textContent = (mode === "dark") ? "☀️" : "🌙";
+  localStorage.setItem("qdp_theme", mode);
+}
+setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
+themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 
-  // HELPERS
-  function shirtSVG(color){
-    return `
-      <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M20 10 L28 6 H36 L44 10 L56 18 L50 30 L44 26 V58 H20 V26 L14 30 L8 18 Z"
-          fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
-      </svg>`;
-  }
-  document.getElementById("titleA").innerHTML = `${shirtSVG("#facc15")} <b>Squadra A</b>`;
-  document.getElementById("titleB").innerHTML = `${shirtSVG("#ef4444")} <b>Squadra B</b>`;
+/* SUPABASE */
+if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+  alert("config.js non caricato o non valido");
+  throw new Error("Missing config");
+}
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  function formatDateFull(iso){
-    if(!iso) return "";
-    const d = new Date(iso);
-    return d.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-  }
-  function formatTimeHHMM(t){
-    return t ? String(t).slice(0,5) : "";
-  }
-  function escapeHtml(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
+/* DOM */
+const statusEl = document.getElementById("status");
+const listEl = document.getElementById("list");
+const rangeSel = document.getElementById("rangeSel");
+const sortSel = document.getElementById("sortSel");
+const searchEl = document.getElementById("search");
+const btnReload = document.getElementById("btnReload");
+const totMatchesEl = document.getElementById("totMatches");
+const totGoalsEl = document.getElementById("totGoals");
+const hintEl = document.getElementById("hint");
 
-  // SUPABASE
-  if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
-    document.getElementById("status").textContent = "Errore: config.js non caricato";
-    throw new Error("Missing config");
+/* Avatar */
+const AVATAR_BASE = "avatars/";
+const DEFAULT_AVATAR = "default.png";
+function avatarUrl(filename){
+  const f = String(filename || "").trim();
+  return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
+}
+
+/* Utils */
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function normName(s){
+  return String(s||"").trim().toLowerCase().replace(/\s+/g," ");
+}
+function isGK(player){
+  const r = String(player?.role||"").toLowerCase();
+  const p = String(player?.position||"").toLowerCase();
+  return r === "gk" || r === "goalkeeper" || p.includes("port");
+}
+
+/* Data helpers */
+function yearOf(iso){
+  try{ return new Date(iso).getFullYear(); }catch(e){ return null; }
+}
+function formatHHMM(t){ return t ? String(t).slice(0,5) : ""; }
+
+/* State */
+let PLAYERS = [];
+let PLAYERS_BY_ID = new Map();
+let MATCHES = [];
+let ROWS = []; // computed scorers rows
+
+async function loadPlayers(){
+  const { data, error } = await client
+    .from("players")
+    .select("id,name,avatar,position,role");
+
+  if(error) throw error;
+
+  PLAYERS = data || [];
+  PLAYERS_BY_ID = new Map(PLAYERS.map(p => [String(p.id), p]));
+}
+
+async function loadMatches(){
+  const { data, error } = await client
+    .from("matches")
+    .select("id,match_date,match_time,scorers,scorers_text")
+    .order("match_date",{ascending:false})
+    .order("match_time",{ascending:false})
+    .limit(500);
+
+  if(error) throw error;
+  MATCHES = data || [];
+}
+
+function getFilteredMatches(){
+  const mode = rangeSel.value;
+  if(mode === "last10"){
+    return MATCHES.slice(0,10);
   }
-  const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  if(mode === "year"){
+    const y = new Date().getFullYear();
+    return MATCHES.filter(m => yearOf(m.match_date) === y);
+  }
+  return MATCHES;
+}
 
-  const statusEl = document.getElementById("status");
-  const metaEl = document.getElementById("meta");
-  const boxA = document.getElementById("boxA");
-  const boxB = document.getElementById("boxB");
+/* Parse scorers from matches.scorers; fallback to scorers_text if necessary */
+function accumulateScorers(matches){
+  const counts = new Map(); // playerId -> goals
+  let totalGoals = 0;
 
-  async function load(){
-    try{
-      const { data, error } = await client
-        .from("matches")
-        .select("match_date,match_time,venue,score_a,score_b,scorers")
-        .order("match_date",{ascending:false})
-        .order("match_time",{ascending:false})
-        .limit(1);
+  for(const m of matches){
+    const sc = m.scorers || null;
 
-      if(error) throw error;
-      if(!data || !data.length){
-        statusEl.textContent = "Nessuna partita trovata";
-        boxA.textContent = "—";
-        boxB.textContent = "—";
-        return;
+    if(sc && (Array.isArray(sc.team_a) || Array.isArray(sc.team_b))){
+      const addArr = (arr) => {
+        (arr||[]).forEach(x=>{
+          const pid = String(x?.player_id || "").trim();
+          const g = Number(x?.goals || 0);
+          if(!pid || !Number.isFinite(g) || g <= 0) return;
+          counts.set(pid, (counts.get(pid)||0) + g);
+          totalGoals += g;
+        });
+      };
+      addArr(sc.team_a);
+      addArr(sc.team_b);
+      continue;
+    }
+
+    // Fallback super semplice: prova a leggere "Nome 2" da scorers_text
+    // (non perfetto, ma aiuta se qualche match vecchio non ha scorers json)
+    const txt = String(m.scorers_text || "").trim();
+    if(!txt) continue;
+
+    // Esempio: "Squadra A: Mario 2, Luca 1"
+    const parts = txt.split(/[\n\r]+/g).map(s=>s.trim()).filter(Boolean);
+    for(const p of parts){
+      const afterColon = p.includes(":") ? p.split(":").slice(1).join(":") : p;
+      const chunks = afterColon.split(",").map(s=>s.trim()).filter(Boolean);
+
+      for(const c of chunks){
+        // prende ultima "parola numero"
+        const mm = c.match(/(.+?)\s+(\d+)\s*$/);
+        if(!mm) continue;
+        const name = normName(mm[1]);
+        const g = Number(mm[2] || 0);
+        if(!name || !g) continue;
+
+        // cerca player per nome
+        const found = PLAYERS.find(pp => normName(pp.name) === name);
+        if(!found) continue;
+
+        const pid = String(found.id);
+        counts.set(pid, (counts.get(pid)||0) + g);
+        totalGoals += g;
       }
-
-      const m = data[0];
-      statusEl.textContent = "Ultima partita ✅";
-
-      const dateFull = formatDateFull(m.match_date);
-      const time = formatTimeHHMM(m.match_time);
-
-      const result = (m.score_a != null && m.score_b != null)
-        ? `<span class="badge">🏁 ${m.score_a}-${m.score_b}</span>`
-        : `<span class="badge">🏁 da giocare</span>`;
-
-      metaEl.innerHTML = `
-        <div class="line"><b>📅 ${escapeHtml(dateFull)} • ⏰ ${escapeHtml(time)}</b></div>
-        <div class="line muted">📍 ${escapeHtml(m.venue || "")}</div>
-        <div class="line">${result}</div>
-      `;
-
-      const sc = m.scorers || {};
-      const ta = Array.isArray(sc.team_a) ? sc.team_a : [];
-      const tb = Array.isArray(sc.team_b) ? sc.team_b : [];
-
-      // serve mappa id->name, quindi carico players
-      const { data: players, error: e2 } = await client
-        .from("players")
-        .select("id,name");
-
-      if(e2) throw e2;
-
-      const idToName = new Map((players||[]).map(p=>[String(p.id), p.name]));
-
-      function renderTable(list){
-        if(!list.length) return `<div class="muted">Nessun marcatore inserito</div>`;
-        const rows = list
-          .slice()
-          .sort((a,b)=>Number(b.goals||0)-Number(a.goals||0))
-          .map(x=>{
-            const nm = idToName.get(String(x.player_id)) || x.player_id || "-";
-            return `<tr>
-              <td><span class="pill">${escapeHtml(nm)}</span></td>
-              <td><b>${escapeHtml(x.goals)}</b></td>
-            </tr>`;
-          }).join("");
-        return `<table>
-          <thead><tr><th>Giocatore</th><th style="width:70px">Gol</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>`;
-      }
-
-      boxA.innerHTML = renderTable(ta);
-      boxB.innerHTML = renderTable(tb);
-
-    }catch(err){
-      console.error(err);
-      statusEl.textContent = "Errore caricamento marcatori";
-      metaEl.innerHTML = `<div class="muted" style="margin-top:8px">${escapeHtml(err.message || String(err))}</div>`;
-      boxA.textContent = "—";
-      boxB.textContent = "—";
     }
   }
 
-  load();
+  // build rows
+  const rows = [...counts.entries()]
+    .map(([id, goals])=>{
+      const p = PLAYERS_BY_ID.get(String(id));
+      const name = p?.name || id;
+      const avatar = p?.avatar || DEFAULT_AVATAR;
+      const pos = String(p?.position || "").trim();
+      const role = String(p?.role || "").trim();
+      const badge = isGK(p) ? "🧤 GK" : "⚽ FIELD";
+      return { id, name, avatar, goals, pos, role, badge };
+    });
+
+  return { rows, totalGoals };
+}
+
+function render(){
+  const q = normName(searchEl.value);
+
+  let rows = ROWS.slice();
+
+  if(q){
+    rows = rows.filter(r => normName(r.name).includes(q));
+  }
+
+  if(sortSel.value === "name"){
+    rows.sort((a,b)=> String(a.name).localeCompare(String(b.name),"it"));
+  }else{
+    rows.sort((a,b)=> (b.goals - a.goals) || String(a.name).localeCompare(String(b.name),"it"));
+  }
+
+  if(!rows.length){
+    listEl.innerHTML = `<div class="empty">Nessun marcatore trovato.</div>`;
+    return;
+  }
+
+  // ranking con parità
+  let lastGoals = null;
+  let lastRank = 0;
+
+  listEl.innerHTML = rows.map((r, i)=>{
+    const rank = (lastGoals === r.goals) ? lastRank : (i + 1);
+    lastGoals = r.goals;
+    lastRank = rank;
+
+    const pos = r.pos ? r.pos : "—";
+    const chip = `<div class="chip"><span>${escapeHtml(r.badge)}</span><span>•</span><span>${escapeHtml(pos)}</span></div>`;
+
+    return `
+      <div class="scoreRow">
+        <div class="left">
+          <div class="rank">${escapeHtml(rank)}</div>
+          <img class="avatar" src="${escapeHtml(avatarUrl(r.avatar))}" alt="">
+          <div class="txt">
+            <div class="name">${escapeHtml(r.name)}</div>
+            <div class="sub">ID: ${escapeHtml(r.id)}</div>
+            ${chip}
+          </div>
+        </div>
+        <div class="right">
+          <div class="goals">${escapeHtml(r.goals)}</div>
+          <div class="mini">gol</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function reload(){
+  btnReload.disabled = true;
+  hintEl.style.display = "none";
+
+  try{
+    statusEl.textContent = "⏳ Caricamento…";
+
+    await loadPlayers();
+    await loadMatches();
+
+    const filtered = getFilteredMatches();
+    const { rows, totalGoals } = accumulateScorers(filtered);
+
+    ROWS = rows;
+
+    totMatchesEl.textContent = `Partite: ${filtered.length}`;
+    totGoalsEl.textContent = `Gol totali: ${totalGoals}`;
+
+    statusEl.textContent = "✅ Pronto.";
+    hintEl.textContent = "✅ OK";
+    hintEl.style.display = "inline-block";
+
+    render();
+  }catch(e){
+    console.error(e);
+    statusEl.textContent = "❌ Errore caricamento marcatori";
+    listEl.innerHTML = `<div class="empty">${escapeHtml(e.message || String(e))}</div>`;
+  }finally{
+    btnReload.disabled = false;
+  }
+}
+
+/* Events */
+rangeSel.onchange = reload;
+sortSel.onchange = render;
+searchEl.oninput = render;
+btnReload.onclick = reload;
+
+/* Init */
+reload();
 </script>
 </body>
 </html>
