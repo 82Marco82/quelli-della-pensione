@@ -62,7 +62,6 @@
 
     .header{text-align:center}
 
-    /* ✅ LOGO "MONETA" */
     .logo{
       width:80px;height:80px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
@@ -74,13 +73,11 @@
       transform-style:preserve-3d;
       will-change:transform;
     }
-    .logo.spin{
-      animation: coinSpin 900ms ease-in-out;
-    }
+    .logo.spin{ animation: coinSpin 900ms ease-in-out; }
     @keyframes coinSpin{
-      0%   { transform: rotateY(0deg); }
-      50%  { transform: rotateY(180deg); }
-      100% { transform: rotateY(360deg); }
+      0%{transform:rotateY(0deg)}
+      50%{transform:rotateY(180deg)}
+      100%{transform:rotateY(360deg)}
     }
 
     h1{
@@ -99,9 +96,7 @@
       max-height:360px;
       object-fit:cover;
     }
-    @media(max-width:600px){
-      .heroImgWrap img{max-height:240px}
-    }
+    @media(max-width:600px){ .heroImgWrap img{max-height:240px} }
     .heroCaption{
       margin-top:10px;
       text-align:center;
@@ -114,14 +109,29 @@
 
     .line{margin-top:8px}
     .pill{
-      display:inline-block;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
       background:var(--pill);
       border-radius:999px;
       padding:6px 10px;
       margin:4px 6px 0 0;
       font-weight:900;
       border:1px solid var(--border);
-      vertical-align:top;
+    }
+    .pill .name{white-space:nowrap}
+    .avatar{
+      width:28px;height:28px;border-radius:50%;
+      object-fit:cover;
+      border:1px solid rgba(0,0,0,.12);
+      background:rgba(0,0,0,.04);
+      flex:0 0 auto;
+    }
+    body.dark .avatar{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.06)}
+    .gkTag{
+      margin-left:2px;
+      font-size:15px;
+      line-height:1;
     }
     .badge{
       display:inline-block;
@@ -176,11 +186,7 @@
       flex-wrap:wrap;
       font-size:14px;
     }
-    .nav a{
-      color:var(--text);
-      text-decoration:none;
-      font-weight:800;
-    }
+    .nav a{color:var(--text);text-decoration:none;font-weight:800}
 
     .fab{
       position:fixed;
@@ -194,17 +200,9 @@
       font-size:22px;
     }
 
-    .kit{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-    }
-    .kit svg{
-      width:18px;height:18px;
-      filter:drop-shadow(0 2px 2px rgba(0,0,0,.25));
-    }
+    .kit{display:inline-flex;align-items:center;gap:6px}
+    .kit svg{width:18px;height:18px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 
-    /* MVP box */
     .mvpBox{
       margin-top:12px;
       padding:12px;
@@ -233,7 +231,6 @@
       font-weight:900;
     }
 
-    /* ✅ METEO */
     .weatherBox{
       margin-top:12px;
       padding:12px;
@@ -250,24 +247,9 @@
       flex-wrap:wrap;
       font-weight:900;
     }
-    .weatherBig{
-      font-size:46px;
-      line-height:1;
-      margin-top:8px;
-      text-align:center;
-    }
-    .weatherLine{
-      margin-top:8px;
-      font-weight:900;
-      text-align:center;
-    }
-    .weatherMini{
-      margin-top:6px;
-      text-align:center;
-      color:var(--muted);
-      font-size:13px;
-      font-weight:700;
-    }
+    .weatherBig{font-size:46px;line-height:1;margin-top:8px;text-align:center}
+    .weatherLine{margin-top:8px;font-weight:900;text-align:center}
+    .weatherMini{margin-top:6px;text-align:center;color:var(--muted);font-size:13px;font-weight:700}
     .alertPill{
       display:inline-block;
       border-radius:999px;
@@ -279,41 +261,18 @@
     .alert-ok{ background:var(--okBg); color:var(--okText); border-color:var(--okBd); }
     .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
     .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
-
-    /* ✅ Avatar pill */
-    .playerPill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:6px 10px;
-    }
-    .avatar{
-      width:26px;height:26px;border-radius:999px;
-      object-fit:cover;
-      border:1px solid var(--border);
-      flex:0 0 auto;
-      background:#000;
-    }
-    .role{
-      font-weight:800;
-      color:var(--muted);
-      margin-left:6px;
-      white-space:nowrap;
-    }
   </style>
 </head>
 
 <body>
 <div class="wrap">
 
-  <!-- HEADER -->
   <div class="header">
     <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
     <h1>Quelli della pensione</h1>
     <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
   </div>
 
-  <!-- HERO -->
   <div class="card">
     <div class="heroImgWrap">
       <img src="foto.jpg" alt="Quelli della pensione">
@@ -321,12 +280,10 @@
     <div class="heroCaption">OGNI MALEDETTO GIOVEDÌ</div>
   </div>
 
-  <!-- PARTITA -->
   <div class="card">
     <div id="status" class="muted">Caricamento…</div>
     <div id="info"></div>
 
-    <!-- MVP -->
     <div id="mvpBox" class="mvpBox" style="display:none">
       <div class="mvpTitle">
         <div id="mvpTitle">🏆 MVP</div>
@@ -336,7 +293,6 @@
       <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
     </div>
 
-    <!-- MAPPA -->
     <div id="mapBox" class="mapWrap" style="display:none">
       <iframe
         id="mapFrame"
@@ -351,7 +307,6 @@
       <a id="mapOpen" class="btn ghost" href="#" target="_blank" rel="noopener">🗺 Apri su Maps</a>
     </div>
 
-    <!-- METEO -->
     <div id="weatherBox" class="weatherBox" style="display:none">
       <div class="weatherHead">
         <div>🌤 Meteo partita</div>
@@ -362,7 +317,6 @@
       <div id="weatherMini" class="weatherMini"></div>
     </div>
 
-    <!-- MARCATORI -->
     <div id="scorersBox" style="display:none;margin-top:12px">
       <div class="line"><b>⚽ Marcatori</b></div>
       <div id="scorersText" class="muted"></div>
@@ -380,7 +334,6 @@
     </div>
   </div>
 
-  <!-- NAV -->
   <div class="card nav muted">
     <a href="storico.html">📚 Storico</a>
     <a href="marcatori.html">⚽ Marcatori</a>
@@ -445,53 +398,30 @@ const teamBEl = document.getElementById("teamB");
 const tAIcon = document.getElementById("tAIcon");
 const tBIcon = document.getElementById("tBIcon");
 
-/* MVP */
 const mvpBox = document.getElementById("mvpBox");
 const mvpTitle = document.getElementById("mvpTitle");
 const mvpStatePill = document.getElementById("mvpStatePill");
 const mvpMain = document.getElementById("mvpMain");
 const mvpTop3 = document.getElementById("mvpTop3");
 
-/* METEO */
 const weatherBox = document.getElementById("weatherBox");
 const weatherBig = document.getElementById("weatherBig");
 const weatherLine = document.getElementById("weatherLine");
 const weatherMini = document.getElementById("weatherMini");
 const weatherAlert = document.getElementById("weatherAlert");
 
-/* CAMPO ARadeo (coordinate campo) */
+/* MAP */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
 const FIELD_LAT = 40.1239395;
 const FIELD_LNG = 18.1203671;
 
-/* Avatar folder su GitHub */
-const AVATAR_BASE = "avatars"; // es: avatars/1.png ... avatars/18.png ... avatars/default.png
-
-/* Helpers */
-function kitSVG(main, stripe){
-  return `
-  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M18 12 L26 6 H38 L46 12 L58 20 L52 33 L46 29 V58 H18 V29 L12 33 L6 20 Z"
-      fill="${main}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
-    <path d="M30 10 H34 V58 H30 Z" fill="${stripe}" opacity="0.85"/>
-  </svg>`;
+/* AVATAR */
+const AVATAR_BASE = "avatars";
+const DEFAULT_AVATAR = "default.png";
+function avatarUrl(file){
+  const f = (file && String(file).trim()) ? String(file).trim() : DEFAULT_AVATAR;
+  return `${AVATAR_BASE}/${f}`;
 }
-
-function formatDateFull(iso){
-  try{
-    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-  }catch(e){
-    return String(iso||"");
-  }
-}
-
-function medal(i){
-  if(i===0) return "🥇";
-  if(i===1) return "🥈";
-  if(i===2) return "🥉";
-  return String(i+1);
-}
-
 function escapeHtml(s){
   return String(s ?? "")
     .replaceAll("&","&amp;")
@@ -500,23 +430,37 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-
-/* Ruolo (position) */
-function fmtRole(pos){
-  const p = String(pos || "").trim();
-  return p ? `<span class="role">(${escapeHtml(p)})</span>` : "";
+function renderPlayerPill(pl, size=28){
+  const isGK = String(pl?.role || "").toUpperCase() === "GK";
+  const gloves = isGK ? `<span class="gkTag" title="Portiere">🧤</span>` : "";
+  return `
+    <span class="pill">
+      <img class="avatar"
+           src="${avatarUrl(pl.avatar)}"
+           style="width:${size}px;height:${size}px"
+           onerror="this.src='${AVATAR_BASE}/${DEFAULT_AVATAR}'"
+           alt="">
+      <span class="name">${escapeHtml(pl.name)}${gloves}</span>
+    </span>
+  `;
 }
 
-/* avatar: se players.avatar è "1.png" ecc, usa quello, altrimenti default.png */
-function avatarUrl(avatarName){
-  const a = String(avatarName || "").trim();
-  return `${AVATAR_BASE}/${a || "default.png"}`;
+/* UI HELPERS */
+function kitSVG(main, stripe){
+  return `
+  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M18 12 L26 6 H38 L46 12 L58 20 L52 33 L46 29 V58 H18 V29 L12 33 L6 20 Z"
+      fill="${main}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
+    <path d="M30 10 H34 V58 H30 Z" fill="${stripe}" opacity="0.85"/>
+  </svg>`;
 }
-
-/* Stato votazione */
-function isVoteOpen(match){
-  return (match?.vote_open === true) || (match?.voting_open === true);
+function formatDateFull(iso){
+  try{
+    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  }catch(e){ return String(iso||""); }
 }
+function medal(i){ return i===0?"🥇":i===1?"🥈":i===2?"🥉":String(i+1); }
+function isVoteOpen(match){ return (match?.vote_open === true) || (match?.voting_open === true); }
 
 /* MVP */
 async function loadMVP(matchId, calledPlayers){
@@ -572,6 +516,7 @@ async function loadMVP(matchId, calledPlayers){
   }
 }
 
+/* MAP LINKS */
 function setupMapLinks(){
   mapLink.href = FIXED_MAP_APP_URL;
   mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
@@ -581,20 +526,17 @@ function setupMapLinks(){
 function wxEmojiFromCode(code){
   const c = Number(code);
   if(c === 0) return "☀️";
-  if([1].includes(c)) return "🌤️";
-  if([2].includes(c)) return "⛅";
-  if([3].includes(c)) return "☁️";
+  if(c === 1) return "🌤️";
+  if(c === 2) return "⛅";
+  if(c === 3) return "☁️";
   if([45,48].includes(c)) return "🌫️";
   if([51,53,55].includes(c)) return "🌦️";
   if([56,57].includes(c)) return "🌧️";
-  if([61,63,65].includes(c)) return "🌧️";
-  if([66,67].includes(c)) return "🌧️";
+  if([61,63,65,66,67,80,81,82].includes(c)) return "🌧️";
   if([71,73,75,77].includes(c)) return "❄️";
-  if([80,81,82].includes(c)) return "🌧️";
   if([95,96,99].includes(c)) return "⛈️";
   return "🌥️";
 }
-
 function wxTextFromCode(code){
   const c = Number(code);
   if(c === 0) return "Sereno";
@@ -603,35 +545,29 @@ function wxTextFromCode(code){
   if(c === 3) return "Nuvoloso";
   if([45,48].includes(c)) return "Nebbia";
   if([51,53,55].includes(c)) return "Pioviggine";
-  if([56,57].includes(c)) return "Pioggia gelata";
+  if([56,57,66,67].includes(c)) return "Pioggia gelata";
   if([61,63,65].includes(c)) return "Pioggia";
-  if([66,67].includes(c)) return "Pioggia gelata";
   if([71,73,75,77].includes(c)) return "Neve";
   if([80,81,82].includes(c)) return "Rovesci";
   if([95,96,99].includes(c)) return "Temporale";
   return "Variabile";
 }
-
 function riskLevel({code, precipProb, wind, temp}){
   const c = Number(code);
   const pp = Number(precipProb ?? 0);
   const w = Number(wind ?? 0);
   const t = Number(temp ?? 0);
-
   const isThunder = [95,96,99].includes(c);
   const isSnow = [71,73,75,77].includes(c);
   const isHeavyRain = [65,67,82].includes(c);
-
   if(isThunder || isSnow || isHeavyRain || pp >= 70 || w >= 55) return "risk";
   if(pp >= 35 || w >= 35 || t <= 4 || t >= 33) return "warn";
   return "ok";
 }
-
 function setWeatherAlert(level, text){
   weatherAlert.className = "alertPill " + (level==="ok" ? "alert-ok" : level==="warn" ? "alert-warn" : "alert-risk");
   weatherAlert.textContent = text;
 }
-
 async function loadWeather(matchDateISO, matchTimeStr){
   weatherBox.style.display = "block";
   weatherBig.textContent = "⏳";
@@ -664,10 +600,7 @@ async function loadWeather(matchDateISO, matchTimeStr){
     for(let i=0;i<times.length;i++){
       const ms = new Date(times[i]).getTime();
       const diff = Math.abs(ms - targetMs);
-      if(diff < bestDiff){
-        bestDiff = diff;
-        bestIdx = i;
-      }
+      if(diff < bestDiff){ bestDiff = diff; bestIdx = i; }
     }
 
     const temp = j.hourly.temperature_2m?.[bestIdx];
@@ -677,7 +610,6 @@ async function loadWeather(matchDateISO, matchTimeStr){
 
     const emoji = wxEmojiFromCode(code);
     const desc = wxTextFromCode(code);
-
     const lvl = riskLevel({code, precipProb: pp, wind, temp});
 
     if(lvl === "ok"){
@@ -696,6 +628,7 @@ async function loadWeather(matchDateISO, matchTimeStr){
 
   }catch(e){
     console.error(e);
+    weatherBox.style.display = "block";
     weatherBig.textContent = "🌦️";
     setWeatherAlert("warn","⚠️ METEO");
     weatherLine.textContent = "Meteo non disponibile al momento.";
@@ -703,19 +636,7 @@ async function loadWeather(matchDateISO, matchTimeStr){
   }
 }
 
-/* Render player pill (avatar + nome + ruolo) */
-function playerPillHTML(player){
-  const name = player?.name || "";
-  const av = avatarUrl(player?.avatar);
-  const roleHtml = fmtRole(player?.position);
-  return `
-    <span class="pill playerPill">
-      <img class="avatar" src="${escapeHtml(av)}" alt="">
-      <span>${escapeHtml(name)}${roleHtml}</span>
-    </span>
-  `;
-}
-
+/* LOAD */
 async function load(){
   const { data, error } = await client
     .from("matches")
@@ -743,7 +664,6 @@ async function load(){
   const result = (m.score_a!=null && m.score_b!=null) ? `${m.score_a}-${m.score_b}` : "da giocare";
   const voteOpen = isVoteOpen(m);
 
-  /* MVP UI */
   mvpBox.style.display = "block";
   mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
   mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
@@ -758,7 +678,6 @@ async function load(){
     <div class="line"><span class="badge">🏁 ${escapeHtml(result)}</span></div>
   `;
 
-  /* Marcatori */
   if(m.scorers_text && String(m.scorers_text).trim() !== ""){
     scorersBox.style.display="block";
     scorersText.innerHTML = escapeHtml(m.scorers_text).replaceAll("\n","<br>");
@@ -766,67 +685,68 @@ async function load(){
     scorersBox.style.display="none";
   }
 
-  /* Mappa */
   mapBox.style.display = "block";
   mapActions.style.display = "flex";
   mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
   setupMapLinks();
 
-  /* Meteo: coordinate campo Aradeo */
   await loadWeather(m.match_date, m.match_time);
 
-  /* Convocati */
+  /* Convocati: avatar + guanti ai GK */
   let playersForCalled = [];
   if(Array.isArray(m.called_up) && m.called_up.length){
     const { data:p, error:pe } = await client
       .from("players")
-      .select("id,name,avatar,position")
+      .select("id,name,avatar,role")
       .in("id", m.called_up);
 
     if(!pe){
       playersForCalled = (p||[]);
-      const map = new Map((playersForCalled||[]).map(x=>[String(x.id), x]));
+      const pMap = new Map((p||[]).map(x => [String(x.id), x]));
 
-      calledEl.innerHTML = m.called_up.map(id=>{
-        const pl = map.get(String(id));
-        if(!pl) return "";
-        return playerPillHTML(pl);
-      }).join("") || "—";
+      calledEl.innerHTML = m.called_up
+        .map(id => {
+          const pl = pMap.get(String(id));
+          return pl ? renderPlayerPill(pl, 28) : "";
+        })
+        .join("") || "—";
     }else{
       calledEl.textContent = "—";
     }
-  } else {
+  }else{
     calledEl.textContent = "—";
   }
 
-  /* MVP */
   await loadMVP(m.id, playersForCalled);
 
-  /* Squadre A/B */
+  /* Squadre A/B: avatar + guanti ai GK */
   if((Array.isArray(m.team_a) && m.team_a.length) || (Array.isArray(m.team_b) && m.team_b.length)){
     teamsBox.style.display="block";
     tAIcon.innerHTML = kitSVG("#facc15","#111");
     tBIcon.innerHTML = kitSVG("#ef4444","#fff");
 
     const ids=[...new Set([...(m.team_a||[]),...(m.team_b||[])].map(String))];
-    const { data:p2, error:p2e } = await client
+    const { data:p2 } = await client
       .from("players")
-      .select("id,name,avatar,position")
+      .select("id,name,avatar,role")
       .in("id", ids);
 
-    if(p2e){
-      teamAEl.textContent = "—";
-      teamBEl.textContent = "—";
-    }else{
-      const map2=new Map((p2||[]).map(x=>[String(x.id), x]));
-      const pill = (id)=>{
-        const pl = map2.get(String(id));
-        return pl ? playerPillHTML(pl) : "";
-      };
+    const map2 = new Map((p2||[]).map(x=>[String(x.id), x]));
 
-      teamAEl.innerHTML = (m.team_a||[]).map(pill).join("") || "—";
-      teamBEl.innerHTML = (m.team_b||[]).map(pill).join("") || "—";
-    }
+    teamAEl.innerHTML = (m.team_a||[])
+      .map(id => {
+        const pl = map2.get(String(id));
+        return pl ? renderPlayerPill(pl, 26) : "";
+      })
+      .join("") || "—";
+
+    teamBEl.innerHTML = (m.team_b||[])
+      .map(id => {
+        const pl = map2.get(String(id));
+        return pl ? renderPlayerPill(pl, 26) : "";
+      })
+      .join("") || "—";
+
   }else{
     teamsBox.style.display="none";
   }
@@ -836,4 +756,4 @@ load();
 </script>
 </body>
 </html>
-```0
+```SITO REALIZZATO DA MARCO P.#9
