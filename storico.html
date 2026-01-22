@@ -9,65 +9,35 @@
 
   <style>
     :root{
-      --bg:#f4f6f8;
-      --card:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --border:#e5e7eb;
-      --shadow:0 6px 20px rgba(0,0,0,.08);
-      --pill:#eeeeee;
-      --logo1:#111;
-      --logo2:#333;
-      --badge:#111;
-      --chipBg:rgba(0,0,0,.04);
-      --btn:#111;
+      --bg:#f4f6f8; --card:#ffffff; --text:#111827; --muted:#6b7280;
+      --border:#e5e7eb; --shadow:0 6px 20px rgba(0,0,0,.08);
+      --pill:#eeeeee; --logo1:#111; --logo2:#333; --badge:#111;
+      --chipBg:rgba(0,0,0,.04); --btn:#111;
+      --y:#facc15; --r:#ef4444;
     }
     body.dark{
-      --bg:#0f1115;
-      --card:#171a21;
-      --text:#e5e7eb;
-      --muted:#a1a1aa;
-      --border:#2a2f3a;
-      --shadow:0 10px 28px rgba(0,0,0,.45);
-      --pill:#222631;
-      --logo1:#0b0e14;
-      --logo2:#2a3242;
-      --badge:#0b0e14;
-      --chipBg:rgba(255,255,255,.04);
-      --btn:#0b0e14;
+      --bg:#0f1115; --card:#171a21; --text:#e5e7eb; --muted:#a1a1aa;
+      --border:#2a2f3a; --shadow:0 10px 28px rgba(0,0,0,.45);
+      --pill:#222631; --logo1:#0b0e14; --logo2:#2a3242; --badge:#0b0e14;
+      --chipBg:rgba(255,255,255,.04); --btn:#0b0e14;
+      --y:#facc15; --r:#ef4444;
     }
-
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
     a{color:inherit}
 
     .wrap{max-width:980px;margin:auto;padding:16px}
 
-    /* topbar come le altre pagine */
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px; flex-wrap:wrap;
-      margin-bottom:10px;
-    }
-    .brand{display:flex; align-items:center; gap:12px;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+    .brand{display:flex;align-items:center;gap:12px}
     .logo{
       width:70px;height:70px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
       display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:32px;
-      letter-spacing:2px;
-      box-shadow:var(--shadow);
-      user-select:none;
-      cursor:default;
+      color:#fff;font-family:'Bebas Neue';font-size:32px;letter-spacing:2px;
+      box-shadow:var(--shadow); user-select:none;
     }
-    .titleWrap{line-height:1.1}
-    .title{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:44px;
-      margin:0;
-      text-transform:uppercase;
-    }
+    .title{font-family:'Bebas Neue';letter-spacing:2px;font-size:44px;margin:0;text-transform:uppercase}
     .subtitle{color:var(--muted);font-size:14px;margin-top:2px}
 
     .card{
@@ -85,168 +55,74 @@
     .space{height:10px}
 
     .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      background:var(--badge);
-      color:#fff;
-      padding:7px 12px;
-      border-radius:999px;
-      font-weight:900;
-      font-size:13px;
-      white-space:nowrap;
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--badge);color:#fff;
+      padding:7px 12px;border-radius:999px;
+      font-weight:900;font-size:13px;white-space:nowrap;
     }
 
     .btn{
-      border:0;
-      background:var(--btn);
-      color:#fff;
-      padding:10px 12px;
-      border-radius:14px;
-      cursor:pointer;
-      font-weight:900;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      user-select:none;
-      text-decoration:none;
+      border:0;background:var(--btn);color:#fff;
+      padding:10px 12px;border-radius:14px;
+      cursor:pointer;font-weight:900;
+      display:inline-flex;align-items:center;gap:8px;
+      user-select:none;text-decoration:none;
     }
-    .btn.ghost{
-      background:transparent;
-      color:var(--text);
-      border:1px solid var(--border);
-    }
+    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
 
-    .details{
-      margin-top:12px;
-      border-top:1px solid var(--border);
-      padding-top:12px;
-      display:none;
-      animation: fadeIn .18s ease-out;
-    }
+    .details{margin-top:12px;border-top:1px solid var(--border);padding-top:12px;display:none}
     .details.open{display:block}
-    @keyframes fadeIn{ from{opacity:.2;transform:translateY(-2px)} to{opacity:1;transform:translateY(0)} }
 
-    .twoCols{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-    }
+    .twoCols{display:grid;grid-template-columns:1fr;gap:12px}
     @media(min-width:760px){ .twoCols{grid-template-columns:1fr 1fr} }
-
-    table{width:100%;border-collapse:separate;border-spacing:0 8px}
-    th{font-size:12px;color:var(--muted);text-align:left;padding:0 6px}
-    td{padding:0 6px;vertical-align:middle}
 
     .teamTitle{display:flex;align-items:center;gap:10px;margin:0 0 10px}
     .shirt{width:18px;height:18px;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
+    .chipBox{background:var(--chipBg);border:1px solid var(--border);border-radius:16px;padding:12px;overflow:hidden}
 
-    .chipBox{
-      background:var(--chipBg);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:12px;
-      overflow:hidden;
-    }
-
-    /* pill avatar+nome */
+    /* pill player */
     .pillP{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:7px 10px;
-      border-radius:999px;
+      display:inline-flex;align-items:center;gap:8px;
+      padding:7px 10px;border-radius:999px;
       border:1px solid var(--border);
       background:var(--pill);
-      font-weight:900;
-      font-size:12px;
+      font-weight:900;font-size:12px;
       margin:6px 8px 0 0;
       max-width:100%;
     }
     .pAva{
       width:22px;height:22px;border-radius:999px;
       border:1px solid var(--border);
-      object-fit:cover;
-      background:#000;
-      flex:0 0 auto;
+      object-fit:cover;background:#000;flex:0 0 auto;
     }
     .pillP span{
-      min-width:0;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-      display:inline-block;
-      max-width:220px;
-      vertical-align:middle;
+      min-width:0;overflow:hidden;text-overflow:ellipsis;
+      white-space:nowrap;display:inline-block;max-width:220px;
     }
-    .pillP.gk{
-      border-color: rgba(245,158,11,.55);
-    }
+    .pillP.gk{border-color: rgba(245,158,11,.55)}
+    .pillP.small{font-size:12px}
 
-    /* mvp line */
-    .mvpLine{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-      max-width:100%;
-    }
-    .mvpAvatar{
-      width:34px;height:34px;border-radius:999px;
-      border:1px solid var(--border);
-      object-fit:cover;
-      background:#000;
-      flex:0 0 auto;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      background:var(--pill);
-      border:1px solid var(--border);
-      border-radius:999px;
-      padding:7px 10px;
-      font-weight:900;
-      font-size:12px;
-      max-width:100%;
-    }
-    .pill.wrap{
-      white-space:normal;
-      overflow-wrap:anywhere;
-      word-break:break-word;
-    }
-
-    /* più compatto su mobile */
     @media(max-width:520px){
-      .pillP{ padding:6px 8px; gap:7px; font-size:12px; margin:6px 6px 0 0; }
-      .pAva{ width:20px; height:20px; }
-      .pillP span{ max-width:160px; }
-      .title{ font-size:40px; }
-      .logo{ width:64px; height:64px; font-size:30px; }
+      .pillP{padding:6px 8px;gap:7px;margin:6px 6px 0 0}
+      .pAva{width:20px;height:20px}
+      .pillP span{max-width:160px}
+      .title{font-size:40px}
+      .logo{width:64px;height:64px;font-size:30px}
     }
 
-    /* menu come index */
-    .nav{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      font-size:14px;
-    }
+    table{width:100%;border-collapse:separate;border-spacing:0 8px}
+    th{font-size:12px;color:var(--muted);text-align:left;padding:0 6px}
+    td{padding:0 6px;vertical-align:middle}
+
+    .nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}
     .nav a{color:var(--text);text-decoration:none;font-weight:800}
     .nav a:hover{text-decoration:underline}
 
     .fab{
-      position:fixed;
-      right:16px;bottom:16px;
-      width:54px;height:54px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--card);
-      box-shadow:var(--shadow);
-      cursor:pointer;
-      font-size:22px;
+      position:fixed;right:16px;bottom:16px;
+      width:54px;height:54px;border-radius:999px;
+      border:1px solid var(--border);background:var(--card);
+      box-shadow:var(--shadow);cursor:pointer;font-size:22px;
     }
   </style>
 </head>
@@ -257,12 +133,11 @@
   <div class="topbar">
     <div class="brand">
       <div class="logo">QDP</div>
-      <div class="titleWrap">
+      <div>
         <h1 class="title">STORICO</h1>
         <div class="subtitle">Risultati • convocati • formazioni • marcatori • MVP</div>
       </div>
     </div>
-
     <div class="row">
       <a class="btn ghost" href="index.html">⬅️ Home</a>
     </div>
@@ -270,7 +145,7 @@
 
   <div class="card">
     <div class="row" style="justify-content:space-between">
-      <div id="status" class="pill">⏳ Caricamento…</div>
+      <div id="status" class="badge">⏳ Caricamento…</div>
       <button id="btnCollapse" class="btn ghost" type="button">📦 Chiudi dettagli</button>
     </div>
     <div class="muted" style="margin-top:8px">Apri “Dettagli” per vedere convocati, formazioni e marcatori.</div>
@@ -306,12 +181,32 @@ document.getElementById("themeToggle").onclick = () => {
   setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 };
 
-/* ===== AVATAR ===== */
-const AVATAR_BASE = "avatars/";
+/* ===== SUPABASE ===== */
+if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+  document.getElementById("status").textContent = "Errore: config.js non caricato";
+  throw new Error("Missing config");
+}
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ===== AVATAR (uguale “logica index”) =====
+   - se avatar è URL -> usa quello
+   - altrimenti: public bucket "avatars" -> /storage/v1/object/public/avatars/<file>
+   - se avatar è "7" -> diventa "7.png"
+*/
+const AVATAR_BUCKET = "avatars";  // <-- se il bucket si chiama diverso, cambialo qui
 const DEFAULT_AVATAR = "default.png";
-function avatarUrl(filename){
-  const f = String(filename || "").trim();
-  return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
+
+function normalizeAvatarFile(v){
+  let s = String(v || "").trim();
+  if(!s) return DEFAULT_AVATAR;
+  if(/^https?:\/\//i.test(s)) return s;            // url piena
+  if(!s.includes(".")) s = s + ".png";             // numero o nome senza estensione
+  return s;
+}
+function avatarUrl(avatarValue){
+  const f = normalizeAvatarFile(avatarValue);
+  if(/^https?:\/\//i.test(f)) return f;
+  return `${SUPABASE_URL}/storage/v1/object/public/${AVATAR_BUCKET}/${encodeURIComponent(f)}`;
 }
 
 /* ===== HELPERS ===== */
@@ -341,29 +236,34 @@ function resultBadge(m){
   return `🏁 da giocare`;
 }
 
-/* riconosco portiere */
+/* ruolo GK: se c’è role/position, lo uso */
 function isGK(p){
   const r = String(p?.role||"").toLowerCase();
   const pos = String(p?.position||"").toLowerCase();
   return r === "gk" || r === "portiere" || pos.includes("port");
 }
 
-/* pill avatar+nome */
-function pillPlayer(player){
-  const name = player?.name || "—";
-  const av = player?.avatar || DEFAULT_AVATAR;
-  const gk = isGK(player);
+/* trova player da nome (per mettere avatar ai portieri di match) */
+function findPlayerByName(name, playersArr){
+  const n = String(name||"").trim().toLowerCase();
+  if(!n) return null;
+  return (playersArr||[]).find(p => String(p.name||"").trim().toLowerCase() === n) || null;
+}
+
+function pillPlayer(p, forceLabel){
+  const name = forceLabel || (p?.name || "—");
+  const avVal = (p && p.avatar != null) ? p.avatar : DEFAULT_AVATAR;
+  const gk = isGK(p);
   return `
     <span class="pillP ${gk ? "gk" : ""}" title="${escapeHtml(name)}">
-      <img class="pAva" src="${escapeHtml(avatarUrl(av))}" alt=""
+      <img class="pAva" src="${escapeHtml(avatarUrl(avVal))}" alt=""
            onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
       <span>${escapeHtml(name)}${gk ? " 🧤" : ""}</span>
     </span>
   `;
 }
 
-/* ordina: GK prima, poi nome */
-function sortIdsByRoleThenName(ids, idToPlayer){
+function sortIdsByGKThenName(ids, idToPlayer){
   const arr = (ids||[]).map(id => {
     const p = idToPlayer.get(String(id)) || { name: String(id), avatar: DEFAULT_AVATAR, role:"", position:"" };
     return { id: String(id), p };
@@ -377,10 +277,9 @@ function sortIdsByRoleThenName(ids, idToPlayer){
   return arr.map(x => x.id);
 }
 
-/* MVP: {text, avatar?} */
+/* MVP */
 function computeMvp(votes, idToPlayer, isOpen){
   if(!votes || !votes.length) return null;
-
   const counts = new Map();
   for(const v of votes){
     const id = String(v.voted_player || "");
@@ -392,27 +291,20 @@ function computeMvp(votes, idToPlayer, isOpen){
 
   const top = entries[0][1];
   const leaders = entries.filter(e=>e[1]===top).map(e=>e[0]);
-  const leaderNames = leaders.map(id => (idToPlayer.get(String(id))?.name || id));
 
   const label = isOpen ? "provvisorio" : "finale";
-  const avatar = (leaders.length === 1)
-    ? (idToPlayer.get(String(leaders[0]))?.avatar || DEFAULT_AVATAR)
-    : null;
-
-  const text = (leaders.length === 1)
-    ? `🏆 MVP (${label}): ${leaderNames[0]} • voti: ${top}`
-    : `🏆 MVP (${label}): Parità: ${leaderNames.join(", ")} • voti: ${top}`;
-
-  return { text, avatar };
+  if(leaders.length === 1){
+    const p = idToPlayer.get(String(leaders[0]));
+    return {
+      avatar: p?.avatar ?? DEFAULT_AVATAR,
+      text: `🏆 MVP (${label}): ${(p?.name || leaders[0])} • voti: ${top}`
+    };
+  }
+  const names = leaders.map(id => idToPlayer.get(String(id))?.name || id);
+  return { avatar: null, text: `🏆 MVP (${label}): Parità: ${names.join(", ")} • voti: ${top}` };
 }
 
-/* ===== SUPABASE ===== */
-if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
-  document.getElementById("status").textContent = "Errore: config.js non caricato";
-  throw new Error("Missing config");
-}
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+/* ===== UI ===== */
 const statusEl = document.getElementById("status");
 const listEl = document.getElementById("list");
 const btnCollapse = document.getElementById("btnCollapse");
@@ -425,18 +317,13 @@ btnCollapse.onclick = closeAllDetails;
 
 async function load(){
   try{
-    // Players: prendo campi per avatar + ruolo (se non esistono, non rompe)
-    const { data: players, error: eP } = await client.from("players").select("*");
+    // players: prendo name/avatar/role/position (se non esistono non rompe)
+    const { data: players, error: eP } = await client.from("players").select("id,name,avatar,role,position");
     if(eP) throw eP;
 
     const idToPlayer = new Map((players||[]).map(p=>[
       String(p.id),
-      {
-        name: p.name || "",
-        avatar: p.avatar || p.avatar_file || p.avatar_url || DEFAULT_AVATAR,
-        role: p.role || "",
-        position: p.position || ""
-      }
+      { name: p.name || "", avatar: p.avatar || DEFAULT_AVATAR, role: p.role || "", position: p.position || "" }
     ]));
 
     const { data: matches, error: eM } = await client
@@ -445,7 +332,6 @@ async function load(){
       .order("match_date",{ascending:false})
       .order("match_time",{ascending:false})
       .limit(200);
-
     if(eM) throw eM;
 
     if(!matches || !matches.length){
@@ -454,13 +340,12 @@ async function load(){
       return;
     }
 
-    // MVP votes
+    // votes
     const matchIds = matches.map(m => m.id);
     const { data: votes, error: eV } = await client
       .from("mvp_votes")
       .select("match_id,voted_player")
       .in("match_id", matchIds);
-
     if(eV) throw eV;
 
     const votesByMatch = new Map();
@@ -475,24 +360,27 @@ async function load(){
     listEl.innerHTML = matches.map(m => {
       const dateFull = formatDateFull(m.match_date);
       const time = formatTimeHHMM(m.match_time);
-      const keepA = escapeHtml(m.keeper_a || "—");
-      const keepB = escapeHtml(m.keeper_b || "—");
       const venue = escapeHtml(m.venue || "");
+
+      // portieri match (con avatar se esiste player con lo stesso nome)
+      const keepAName = String(m.keeper_a || "—");
+      const keepBName = String(m.keeper_b || "—");
+      const keepAPl = findPlayerByName(keepAName, players) || { name: keepAName, avatar: DEFAULT_AVATAR, role:"gk", position:"" };
+      const keepBPl = findPlayerByName(keepBName, players) || { name: keepBName, avatar: DEFAULT_AVATAR, role:"gk", position:"" };
 
       const calledRaw = Array.isArray(m.called_up) ? m.called_up : [];
       const teamARaw  = Array.isArray(m.team_a) ? m.team_a : [];
       const teamBRaw  = Array.isArray(m.team_b) ? m.team_b : [];
 
-      const called   = sortIdsByRoleThenName(calledRaw, idToPlayer);
-      const teamAIds = sortIdsByRoleThenName(teamARaw,  idToPlayer);
-      const teamBIds = sortIdsByRoleThenName(teamBRaw,  idToPlayer);
+      const called   = sortIdsByGKThenName(calledRaw, idToPlayer);
+      const teamAIds = sortIdsByGKThenName(teamARaw,  idToPlayer);
+      const teamBIds = sortIdsByGKThenName(teamBRaw,  idToPlayer);
 
-      const renderPlayerPills = (ids) => {
+      const renderPills = (ids) => {
         if(!ids.length) return `<div class="muted">—</div>`;
-        return `<div>${ids.map(id => pillPlayer(idToPlayer.get(String(id)) || { name:String(id), avatar: DEFAULT_AVATAR })).join("")}</div>`;
+        return `<div>${ids.map(id => pillPlayer(idToPlayer.get(String(id)) || { name:String(id), avatar:DEFAULT_AVATAR, role:"", position:"" })).join("")}</div>`;
       };
 
-      // scorers
       const sc = m.scorers || {};
       const ta = Array.isArray(sc.team_a) ? sc.team_a : [];
       const tb = Array.isArray(sc.team_b) ? sc.team_b : [];
@@ -504,10 +392,7 @@ async function load(){
           .sort((a,b)=>Number(b.goals||0)-Number(a.goals||0))
           .map(x=>{
             const pl = idToPlayer.get(String(x.player_id)) || { name: String(x.player_id||"-"), avatar: DEFAULT_AVATAR, role:"", position:"" };
-            return `<tr>
-              <td>${pillPlayer(pl)}</td>
-              <td><b>${escapeHtml(x.goals)}</b></td>
-            </tr>`;
+            return `<tr><td>${pillPlayer(pl)}</td><td><b>${escapeHtml(x.goals)}</b></td></tr>`;
           }).join("");
         return `<table>
           <thead><tr><th>Giocatore</th><th style="width:70px">Gol</th></tr></thead>
@@ -516,19 +401,15 @@ async function load(){
       };
 
       const detailsId = `det_${m.id}`;
-
       const isOpen = (m.vote_open === true) || (m.voting_open === true);
       const mvp = computeMvp(votesByMatch.get(String(m.id)) || [], idToPlayer, isOpen);
 
-      const mvpHtml = mvp
-        ? `<div class="mvpLine">
-            ${mvp.avatar ? `
-              <img class="mvpAvatar" src="${escapeHtml(avatarUrl(mvp.avatar))}" alt="MVP"
-                   onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
-            ` : ``}
-            <span class="pill wrap">${escapeHtml(mvp.text)}</span>
-          </div>`
-        : ``;
+      const mvpHtml = mvp ? `
+        <div class="row" style="margin-top:10px">
+          ${mvp.avatar ? `<img class="pAva" style="width:30px;height:30px" src="${escapeHtml(avatarUrl(mvp.avatar))}" alt=""
+               onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">` : ``}
+          <span class="pillP small"><span>${escapeHtml(mvp.text)}</span></span>
+        </div>` : ``;
 
       return `
         <div class="card">
@@ -539,12 +420,25 @@ async function load(){
 
               <div class="row" style="margin-top:10px">
                 <span class="badge">${escapeHtml(resultBadge(m))}</span>
-                <span class="pill">🟨 ${keepA}</span>
-                <span class="pill">🟥 ${keepB}</span>
+              </div>
+
+              <!-- PORTIERI come in index -->
+              <div class="row" style="margin-top:10px">
+                <span class="pillP" style="border-color:rgba(250,204,21,.6)">
+                  <img class="pAva" src="${escapeHtml(avatarUrl(keepAPl.avatar))}" alt=""
+                       onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
+                  <span>🟨 ${escapeHtml(keepAName)} • PORTIERE</span>
+                </span>
+                <span class="pillP" style="border-color:rgba(239,68,68,.6)">
+                  <img class="pAva" src="${escapeHtml(avatarUrl(keepBPl.avatar))}" alt=""
+                       onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
+                  <span>🟥 ${escapeHtml(keepBName)} • PORTIERE</span>
+                </span>
               </div>
 
               ${mvpHtml}
             </div>
+
             <div>
               <button class="btn ghost" data-target="${detailsId}">Dettagli ▾</button>
             </div>
@@ -553,9 +447,7 @@ async function load(){
           <div class="details" id="${detailsId}">
             <div class="chipBox">
               <div style="font-weight:900">Convocati</div>
-              <div style="margin-top:8px">
-                ${renderPlayerPills(called)}
-              </div>
+              <div style="margin-top:8px">${renderPills(called)}</div>
             </div>
 
             <div class="space"></div>
@@ -563,11 +455,11 @@ async function load(){
             <div class="twoCols">
               <div class="chipBox">
                 <div class="teamTitle">${shirtSVG("#facc15")} <b>Formazione Squadra A</b></div>
-                ${renderPlayerPills(teamAIds)}
+                ${renderPills(teamAIds)}
               </div>
               <div class="chipBox">
                 <div class="teamTitle">${shirtSVG("#ef4444")} <b>Formazione Squadra B</b></div>
-                ${renderPlayerPills(teamBIds)}
+                ${renderPills(teamBIds)}
               </div>
             </div>
 
@@ -597,7 +489,6 @@ async function load(){
         const opened = box.classList.contains("open");
 
         closeAllDetails();
-
         if(!opened){
           box.classList.add("open");
           btn.textContent = "Dettagli ▴";
