@@ -62,7 +62,7 @@
 
     .header{text-align:center}
 
-    /* ✅ LOGO "MONETA" */
+    /* LOGO "MONETA" */
     .logo{
       width:80px;height:80px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
@@ -221,7 +221,7 @@
       margin-top:8px;
       font-weight:800;
     }
-    .mvpLeft{display:flex;align-items:center;gap:8px}
+    .mvpLeft{display:flex;align-items:center;gap:10px}
     .medal{
       width:28px;height:28px;border-radius:999px;
       display:flex;align-items:center;justify-content:center;
@@ -230,7 +230,7 @@
       font-weight:900;
     }
 
-    /* ✅ METEO */
+    /* Meteo */
     .weatherBox{
       margin-top:12px;
       padding:12px;
@@ -277,160 +277,113 @@
     .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
     .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
 
-    /* ===========================
-       ✅ AVATAR + RUOLI + GK 🧤
-       (convocati + formazioni)
-       + stile "Serie A"
-    ============================*/
-    .pGrid{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:8px;
-    }
+    /* ====== PLAYER CARDS (Convocati + Formazioni) ====== */
+    .playerList{display:flex;flex-direction:column;gap:10px;margin-top:8px}
     .pCard{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
+      display:flex;align-items:center;gap:12px;
       padding:10px 12px;
       border:1px solid var(--border);
-      background:rgba(0,0,0,.02);
       border-radius:16px;
-      box-shadow:0 2px 10px rgba(0,0,0,.04);
-      min-width: 190px;
-      animation: popIn .35s ease both;
+      background:rgba(0,0,0,.02);
     }
-    body.dark .pCard{ background:rgba(255,255,255,.03); box-shadow:none; }
-    @keyframes popIn{ from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+    body.dark .pCard{background:rgba(255,255,255,.03)}
+    .pName{font-weight:900;font-size:18px;line-height:1.1}
+    .pPos{margin-top:2px;font-weight:800;color:var(--muted)}
+    .pRight{display:flex;flex-direction:column;min-width:0}
+    .pName,.pPos{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
+    @media(max-width:520px){ .pName,.pPos{max-width:260px} }
 
+    /* Avatar bigger */
     .avatarWrap{
       position:relative;
-      width:54px;height:54px;
-      flex:0 0 54px;
-      border-radius:999px;
-      border:2px solid rgba(0,0,0,.12);
-      overflow:hidden;
-      background:var(--card);
+      width:56px;height:56px;
+      flex-shrink:0;
     }
-    body.dark .avatarWrap{ border-color:rgba(255,255,255,.14); }
-    .avatarWrap img{
-      width:100%;
-      height:100%;
+    .avatarImg{
+      width:56px;height:56px;
+      border-radius:999px;
       object-fit:cover;
-      display:block;
+      border:2px solid var(--border);
+      background:#ddd;
     }
 
-    /* badge guanti GK */
+    /* GK glove badge + entrance animation */
     .gkBadge{
       position:absolute;
-      right:-6px;
-      top:-6px;
-      width:22px;height:22px;
+      bottom:-7px;
+      right:-7px;
+      width:24px;height:24px;
       border-radius:999px;
-      display:flex;align-items:center;justify-content:center;
-      font-size:14px;
       background:var(--card);
       border:1px solid var(--border);
-      box-shadow:0 6px 14px rgba(0,0,0,.18);
-    }
-
-    .pMeta{display:flex;flex-direction:column;gap:2px;min-width:0}
-    .pNameLine{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-weight:900;
-      font-size:14px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .pNameLine .gkText{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-    }
-    .pPos{
-      font-size:12px;
-      font-weight:800;
-      color:var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    /* Header "FORMAZIONI" stile Serie A con GK vs GK */
-    .formationsHeader{
-      margin-top:14px;
-      border:1px solid var(--border);
-      border-radius:18px;
-      overflow:hidden;
-      background:linear-gradient(135deg, rgba(0,0,0,.06), rgba(0,0,0,.02));
-    }
-    body.dark .formationsHeader{
-      background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-    }
-    .formationsTop{
-      padding:10px 12px;
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:12px;
+      font-size:15px;
+      box-shadow:var(--shadow);
+      transform:scale(0);
+      opacity:0;
+      animation: gkPop 520ms cubic-bezier(.2,.9,.2,1.2) forwards;
     }
-    .gkFace{
+    @keyframes gkPop{
+      0%{ transform:scale(0); opacity:0; }
+      60%{ transform:scale(1.15); opacity:1; }
+      100%{ transform:scale(1); opacity:1; }
+    }
+
+    /* FORMATIONS header (keepers VS) */
+    .formHeader{
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:rgba(0,0,0,.02);
+      overflow:hidden;
       position:relative;
-      width:54px;height:54px;border-radius:999px;
-      overflow:hidden;border:2px solid rgba(0,0,0,.12);
-      background:var(--card);
-      opacity:0;
-      transform:translateX(-10px);
-      animation: slideInL .5s ease forwards;
+      margin-top:14px;
     }
-    .gkFace.right{
-      transform:translateX(10px);
-      animation: slideInR .5s ease forwards;
+    body.dark .formHeader{background:rgba(255,255,255,.03)}
+    .formTop{
+      display:flex;align-items:center;justify-content:center;gap:12px;
+      padding-top:2px;
     }
-    body.dark .gkFace{ border-color:rgba(255,255,255,.14); }
-    .gkFace img{width:100%;height:100%;object-fit:cover;display:block}
-    .gkFace .gkBadge{ right:-6px; top:-6px; }
-
-    @keyframes slideInL{ to{opacity:1; transform:none} }
-    @keyframes slideInR{ to{opacity:1; transform:none} }
-
     .vsText{
-      font-weight:1000;
-      letter-spacing:2px;
       font-family:'Bebas Neue';
-      font-size:28px;
-      opacity:0;
-      transform:scale(.92);
-      animation: fadeVs .55s ease .05s forwards;
+      font-size:34px;
+      letter-spacing:2px;
+      opacity:.9;
     }
-    @keyframes fadeVs{ to{opacity:1; transform:none} }
-
-    .formationsTitle{
-      padding:10px 12px 12px;
+    .formTitle{
+      margin-top:10px;
       text-align:center;
       font-family:'Bebas Neue';
+      font-size:46px;
       letter-spacing:4px;
-      font-size:34px;
-      font-weight:900;
       text-transform:uppercase;
-      border-top:1px solid var(--border);
-      opacity:0;
-      transform:translateY(6px);
-      animation: popTitle .5s ease .08s forwards;
     }
-    @keyframes popTitle{ to{opacity:1; transform:none} }
-
-    .subHint{
-      margin-top:-6px;
-      padding:0 12px 12px;
+    .formSub{
       text-align:center;
       color:var(--muted);
-      font-weight:800;
-      font-size:12px;
+      font-weight:900;
+      margin-top:6px;
     }
+
+    /* Small keeper avatars in header */
+    .kAvatarWrap{position:relative;width:52px;height:52px}
+    .kAvatarWrap img{
+      width:52px;height:52px;border-radius:999px;object-fit:cover;border:2px solid var(--border);
+    }
+    .kGlove{
+      position:absolute;bottom:-7px;right:-7px;
+      width:24px;height:24px;border-radius:999px;
+      background:var(--card);
+      border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:var(--shadow);
+      font-size:15px;
+      transform:scale(0);opacity:0;
+      animation: gkPop 520ms cubic-bezier(.2,.9,.2,1.2) forwards;
+    }
+
   </style>
 </head>
 
@@ -463,7 +416,18 @@
         <div id="mvpTitle">🏆 MVP</div>
         <div id="mvpStatePill" class="pill" style="margin:0"></div>
       </div>
-      <div id="mvpMain" class="muted" style="margin-top:6px">Caricamento…</div>
+
+      <!-- MVP main row with avatar -->
+      <div id="mvpMainRow" class="pCard" style="display:none;margin-top:10px">
+        <div class="avatarWrap">
+          <img id="mvpMainAvatar" class="avatarImg" src="avatars/default.png" alt="MVP">
+        </div>
+        <div class="pRight">
+          <div id="mvpMainText" class="pName">Caricamento…</div>
+          <div id="mvpMainSub" class="pPos muted" style="font-weight:900">—</div>
+        </div>
+      </div>
+
       <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
     </div>
 
@@ -501,33 +465,35 @@
 
     <!-- CONVOCATI -->
     <div class="line"><b>Convocati</b></div>
-    <div id="called" class="muted">—</div>
+    <div id="calledList" class="playerList"></div>
 
-    <!-- FORMAZIONI header stile Serie A -->
-    <div id="formationsHeader" class="formationsHeader" style="display:none">
-      <div class="formationsTop">
-        <div id="gkABox" class="gkFace">
-          <img id="gkAImg" src="avatars/default.png" alt="GK A">
-          <span class="gkBadge">🧤</span>
+    <!-- FORMATIONS HEADER + TEAMS -->
+    <div id="formationsBlock" style="display:none">
+      <div id="formHeader" class="formHeader">
+        <div class="formTop">
+          <div class="kAvatarWrap">
+            <img id="kAImg" src="avatars/default.png" alt="Keeper A" onerror="this.src='avatars/default.png'">
+            <div id="kABadge" class="kGlove" style="display:none">🧤</div>
+          </div>
+          <div class="vsText">VS</div>
+          <div class="kAvatarWrap">
+            <img id="kBImg" src="avatars/default.png" alt="Keeper B" onerror="this.src='avatars/default.png'">
+            <div id="kBBadge" class="kGlove" style="display:none">🧤</div>
+          </div>
         </div>
-        <div class="vsText">VS</div>
-        <div id="gkBBox" class="gkFace right">
-          <img id="gkBImg" src="avatars/default.png" alt="GK B">
-          <span class="gkBadge">🧤</span>
-        </div>
+        <div class="formTitle">FORMAZIONI</div>
+        <div class="formSub">Portieri in evidenza • Squadra A vs Squadra B</div>
       </div>
-      <div class="formationsTitle">FORMAZIONI</div>
-      <div class="subHint">Portieri in evidenza • Squadra A vs Squadra B</div>
+
+      <div id="teamsBox" style="margin-top:12px">
+        <div class="line kit"><span id="tAIcon"></span><b>Squadra A</b></div>
+        <div id="teamAList" class="playerList"></div>
+
+        <div class="line kit" style="margin-top:12px"><span id="tBIcon"></span><b>Squadra B</b></div>
+        <div id="teamBList" class="playerList"></div>
+      </div>
     </div>
 
-    <!-- SQUADRE -->
-    <div id="teamsBox" style="display:none;margin-top:12px">
-      <div class="line kit"><span id="tAIcon"></span><b>Squadra A</b></div>
-      <div id="teamA" class="muted"></div>
-
-      <div class="line kit" style="margin-top:8px"><span id="tBIcon"></span><b>Squadra B</b></div>
-      <div id="teamB" class="muted"></div>
-    </div>
   </div>
 
   <!-- NAV -->
@@ -548,9 +514,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
-/* ======================
-   THEME
-====================== */
+/* ===== THEME ===== */
 const themeBtn = document.getElementById("themeToggle");
 function setTheme(mode){
   document.body.classList.toggle("dark", mode === "dark");
@@ -570,21 +534,16 @@ function spinLogo(){
 logoCoin.addEventListener("click", spinLogo);
 logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
 
-/* ======================
-   SUPABASE
-====================== */
+/* ===== SUPABASE ===== */
 if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
   alert("config.js non caricato o non valido");
   throw new Error("Missing config");
 }
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ======================
-   DOM
-====================== */
+/* ===== DOM ===== */
 const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
-const calledEl = document.getElementById("called");
 
 const mapBox = document.getElementById("mapBox");
 const mapFrame = document.getElementById("mapFrame");
@@ -595,17 +554,27 @@ const mapOpen = document.getElementById("mapOpen");
 const scorersBox = document.getElementById("scorersBox");
 const scorersText = document.getElementById("scorersText");
 
-const teamsBox = document.getElementById("teamsBox");
-const teamAEl = document.getElementById("teamA");
-const teamBEl = document.getElementById("teamB");
+const calledList = document.getElementById("calledList");
+
+const formationsBlock = document.getElementById("formationsBlock");
+const teamAList = document.getElementById("teamAList");
+const teamBList = document.getElementById("teamBList");
 const tAIcon = document.getElementById("tAIcon");
 const tBIcon = document.getElementById("tBIcon");
+
+const kAImg = document.getElementById("kAImg");
+const kBImg = document.getElementById("kBImg");
+const kABadge = document.getElementById("kABadge");
+const kBBadge = document.getElementById("kBBadge");
 
 /* MVP DOM */
 const mvpBox = document.getElementById("mvpBox");
 const mvpTitle = document.getElementById("mvpTitle");
 const mvpStatePill = document.getElementById("mvpStatePill");
-const mvpMain = document.getElementById("mvpMain");
+const mvpMainRow = document.getElementById("mvpMainRow");
+const mvpMainAvatar = document.getElementById("mvpMainAvatar");
+const mvpMainText = document.getElementById("mvpMainText");
+const mvpMainSub = document.getElementById("mvpMainSub");
 const mvpTop3 = document.getElementById("mvpTop3");
 
 /* METEO DOM */
@@ -615,49 +584,12 @@ const weatherLine = document.getElementById("weatherLine");
 const weatherMini = document.getElementById("weatherMini");
 const weatherAlert = document.getElementById("weatherAlert");
 
-/* FORMAZIONI header GK VS GK */
-const formationsHeader = document.getElementById("formationsHeader");
-const gkAImg = document.getElementById("gkAImg");
-const gkBImg = document.getElementById("gkBImg");
-
-/* ======================
-   COSTANTI
-====================== */
+/* ===== CONST ===== */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
 const FIELD_LAT = 40.1239395;
 const FIELD_LNG = 18.1203671;
 
-/* avatars folder */
-const AVATAR_BASE = "avatars/";
-const DEFAULT_AVATAR = "default.png";
-
-/* ======================
-   HELPERS
-====================== */
-function kitSVG(main, stripe){
-  return `
-  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M18 12 L26 6 H38 L46 12 L58 20 L52 33 L46 29 V58 H18 V29 L12 33 L6 20 Z"
-      fill="${main}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
-    <path d="M30 10 H34 V58 H30 Z" fill="${stripe}" opacity="0.85"/>
-  </svg>`;
-}
-
-function formatDateFull(iso){
-  try{
-    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-  }catch(e){
-    return String(iso||"");
-  }
-}
-
-function medal(i){
-  if(i===0) return "🥇";
-  if(i===1) return "🥈";
-  if(i===2) return "🥉";
-  return String(i+1);
-}
-
+/* ===== HELPERS ===== */
 function escapeHtml(s){
   return String(s ?? "")
     .replaceAll("&","&amp;")
@@ -666,120 +598,69 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-
-/* Stato votazione: APERTA se almeno una colonna è true */
+function formatDateFull(iso){
+  try{
+    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  }catch(e){ return String(iso||""); }
+}
 function isVoteOpen(match){
   return (match?.vote_open === true) || (match?.voting_open === true);
 }
-
-/* Avatar URL + fallback robusto */
-function avatarUrlFromPlayer(p){
-  const file = (p && p.avatar) ? String(p.avatar) : DEFAULT_AVATAR;
-  return AVATAR_BASE + file;
-}
-function onAvatarError(img){
-  img.onerror = null;
-  img.src = AVATAR_BASE + DEFAULT_AVATAR;
-}
-
-/* role: "GK"/"FIELD"  | position: "Portiere / Difensore / ..." */
-function isGK(player){
-  const r = String(player?.role || "").toUpperCase();
-  const pos = String(player?.position || "").toLowerCase();
-  return (r === "GK") || pos.includes("portier");
-}
-
-/* ✅ Render player card (avatar + nome + (🧤 solo se GK) + sotto position) */
-function renderPlayerCard(p){
-  const gk = isGK(p);
-  const name = String(p?.name || "");
-  const pos = String(p?.position || "").trim();
-  const avatarSrc = avatarUrlFromPlayer(p);
-
+function kitSVG(main, stripe){
   return `
-    <div class="pCard">
-      <div class="avatarWrap">
-        <img src="${escapeHtml(avatarSrc)}" alt="${escapeHtml(name)}" onerror="onAvatarError(this)">
-        ${gk ? `<span class="gkBadge">🧤</span>` : ``}
-      </div>
-      <div class="pMeta">
-        <div class="pNameLine">
-          ${gk
-            ? `<span class="gkText">🧤 ${escapeHtml(name)}</span>`
-            : `${escapeHtml(name)}`
-          }
-        </div>
-        <div class="pPos">${pos ? escapeHtml(pos) : ""}</div>
-      </div>
-    </div>
-  `;
+  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M18 12 L26 6 H38 L46 12 L58 20 L52 33 L46 29 V58 H18 V29 L12 33 L6 20 Z"
+      fill="${main}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
+    <path d="M30 10 H34 V58 H30 Z" fill="${stripe}" opacity="0.85"/>
+  </svg>`;
 }
-
-/* ======================
-   MVP
-====================== */
-async function loadMVP(matchId, calledPlayers){
-  try{
-    const { data: votes, error } = await client
-      .from("mvp_votes")
-      .select("voted_player")
-      .eq("match_id", matchId);
-
-    if(error) throw error;
-
-    const counts = new Map();
-    (votes||[]).forEach(v=>{
-      const id = String(v.voted_player || "");
-      if(!id) return;
-      counts.set(id, (counts.get(id)||0) + 1);
-    });
-
-    if(counts.size === 0){
-      mvpMain.textContent = "Nessun voto ancora.";
-      mvpTop3.style.display = "none";
-      return;
-    }
-
-    const idToName = new Map((calledPlayers||[]).map(p=>[String(p.id), p.name]));
-    const rows = [...counts.entries()]
-      .map(([id,c])=>({ id, name: idToName.get(String(id)) || id, votes: c }))
-      .sort((a,b)=> b.votes - a.votes || String(a.name).localeCompare(String(b.name),"it"));
-
-    const topVotes = rows[0].votes;
-    const tops = rows.filter(r=>r.votes===topVotes).map(r=>r.name);
-
-    mvpMain.textContent = (tops.length === 1)
-      ? `${tops[0]} (${topVotes} voto/i)`
-      : `Parità: ${tops.join(", ")} (${topVotes} voto/i)`;
-
-    const top3 = rows.slice(0,3);
-    mvpTop3.innerHTML = top3.map((r,i)=>`
-      <div class="mvpRow">
-        <div class="mvpLeft">
-          <div class="medal">${escapeHtml(medal(i))}</div>
-          <div>${escapeHtml(r.name)}</div>
-        </div>
-        <div>${r.votes}</div>
-      </div>
-    `).join("");
-    mvpTop3.style.display = "block";
-
-  }catch(e){
-    console.error(e);
-    mvpMain.textContent = "Errore MVP";
-    mvpTop3.style.display = "none";
-  }
-}
-
-/* MAP */
 function setupMapLinks(){
   mapLink.href = FIXED_MAP_APP_URL;
   mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
 }
+function avatarUrl(file){
+  const f = (file && String(file).trim()) ? String(file).trim() : "default.png";
+  return `avatars/${f}`;
+}
+function isGK(player){
+  const role = String(player?.role || "").toLowerCase();
+  const pos  = String(player?.position || "").toLowerCase();
+  return role === "gk" || pos.includes("portiere");
+}
+function nicePosition(player){
+  const pos = String(player?.position || "").trim();
+  if(pos) return pos;
+  // fallback
+  return isGK(player) ? "Portiere" : "Giocatore";
+}
+function renderPlayerCard(player, opts={}){
+  const gk = isGK(player);
+  const showGloves = opts.showGloves !== false; // default true
+  const showNameGlove = opts.showNameGlove !== false; // default true
+  const av = avatarUrl(player?.avatar);
 
-/* ======================
-   METEO (Open-Meteo)
-====================== */
+  return `
+    <div class="pCard">
+      <div class="avatarWrap">
+        <img class="avatarImg" src="${escapeHtml(av)}" alt="${escapeHtml(player?.name||"")}"
+          onerror="this.onerror=null;this.src='avatars/default.png';" />
+        ${(gk && showGloves) ? `<div class="gkBadge">🧤</div>` : ``}
+      </div>
+      <div class="pRight">
+        <div class="pName">${escapeHtml(player?.name||"")}${(gk && showNameGlove) ? " 🧤" : ""}</div>
+        <div class="pPos">${escapeHtml(nicePosition(player))}</div>
+      </div>
+    </div>
+  `;
+}
+function medal(i){
+  if(i===0) return "🥇";
+  if(i===1) return "🥈";
+  if(i===2) return "🥉";
+  return String(i+1);
+}
+
+/* ===== METEO (Open-Meteo) ===== */
 function wxEmojiFromCode(code){
   const c = Number(code);
   if(c === 0) return "☀️";
@@ -789,14 +670,12 @@ function wxEmojiFromCode(code){
   if([45,48].includes(c)) return "🌫️";
   if([51,53,55].includes(c)) return "🌦️";
   if([56,57].includes(c)) return "🌧️";
-  if([61,63,65].includes(c)) return "🌧️";
-  if([66,67].includes(c)) return "🌧️";
+  if([61,63,65,66,67].includes(c)) return "🌧️";
   if([71,73,75,77].includes(c)) return "❄️";
   if([80,81,82].includes(c)) return "🌧️";
   if([95,96,99].includes(c)) return "⛈️";
   return "🌥️";
 }
-
 function wxTextFromCode(code){
   const c = Number(code);
   if(c === 0) return "Sereno";
@@ -813,7 +692,6 @@ function wxTextFromCode(code){
   if([95,96,99].includes(c)) return "Temporale";
   return "Variabile";
 }
-
 function riskLevel({code, precipProb, wind, temp}){
   const c = Number(code);
   const pp = Number(precipProb ?? 0);
@@ -828,12 +706,10 @@ function riskLevel({code, precipProb, wind, temp}){
   if(pp >= 35 || w >= 35 || t <= 4 || t >= 33) return "warn";
   return "ok";
 }
-
 function setWeatherAlert(level, text){
   weatherAlert.className = "alertPill " + (level==="ok" ? "alert-ok" : level==="warn" ? "alert-warn" : "alert-risk");
   weatherAlert.textContent = text;
 }
-
 async function loadWeather(matchDateISO, matchTimeStr){
   weatherBox.style.display = "block";
   weatherBig.textContent = "⏳";
@@ -906,9 +782,89 @@ async function loadWeather(matchDateISO, matchTimeStr){
   }
 }
 
-/* ======================
-   LOAD PAGE
-====================== */
+/* ===== MVP (with avatar) ===== */
+async function loadMVP(matchId, calledPlayersFull){
+  try{
+    const { data: votes, error } = await client
+      .from("mvp_votes")
+      .select("voted_player")
+      .eq("match_id", matchId);
+
+    if(error) throw error;
+
+    const counts = new Map();
+    (votes||[]).forEach(v=>{
+      const id = String(v.voted_player || "");
+      if(!id) return;
+      counts.set(id, (counts.get(id)||0) + 1);
+    });
+
+    mvpMainRow.style.display = "flex";
+    mvpTop3.style.display = "none";
+
+    if(counts.size === 0){
+      mvpMainAvatar.src = "avatars/default.png";
+      mvpMainText.textContent = "Nessun voto ancora.";
+      mvpMainSub.textContent = "";
+      return;
+    }
+
+    const idToPlayer = new Map((calledPlayersFull||[]).map(p=>[String(p.id), p]));
+    const rows = [...counts.entries()]
+      .map(([id,c])=>{
+        const p = idToPlayer.get(String(id)) || {id, name:id, avatar:"default.png", position:""};
+        return { id, player: p, votes: c };
+      })
+      .sort((a,b)=> b.votes - a.votes || String(a.player?.name||"").localeCompare(String(b.player?.name||""),"it"));
+
+    const topVotes = rows[0].votes;
+    const tops = rows.filter(r=>r.votes===topVotes);
+
+    if(tops.length === 1){
+      const p = tops[0].player;
+      mvpMainAvatar.src = avatarUrl(p.avatar);
+      mvpMainAvatar.onerror = ()=>{ mvpMainAvatar.src="avatars/default.png"; };
+      mvpMainText.textContent = `${p.name}`;
+      mvpMainSub.textContent = `${topVotes} voto/i`;
+    }else{
+      // parità: mostra default e testo
+      mvpMainAvatar.src = "avatars/default.png";
+      mvpMainText.textContent = `Parità: ${tops.map(t=>t.player?.name).join(", ")}`;
+      mvpMainSub.textContent = `${topVotes} voto/i`;
+    }
+
+    const top3 = rows.slice(0,3);
+    mvpTop3.innerHTML = top3.map((r,i)=>{
+      const p = r.player;
+      return `
+        <div class="mvpRow">
+          <div class="mvpLeft">
+            <div class="medal">${escapeHtml(medal(i))}</div>
+            <div class="avatarWrap" style="width:38px;height:38px">
+              <img class="avatarImg" style="width:38px;height:38px;border-width:1px"
+                src="${escapeHtml(avatarUrl(p.avatar))}"
+                onerror="this.onerror=null;this.src='avatars/default.png';"
+                alt="${escapeHtml(p.name)}">
+            </div>
+            <div>${escapeHtml(p.name)}</div>
+          </div>
+          <div>${r.votes}</div>
+        </div>
+      `;
+    }).join("");
+    mvpTop3.style.display = "block";
+
+  }catch(e){
+    console.error(e);
+    mvpMainRow.style.display = "flex";
+    mvpMainAvatar.src = "avatars/default.png";
+    mvpMainText.textContent = "Errore MVP";
+    mvpMainSub.textContent = "";
+    mvpTop3.style.display = "none";
+  }
+}
+
+/* ===== MAIN LOAD ===== */
 async function load(){
   const { data, error } = await client
     .from("matches")
@@ -926,7 +882,8 @@ async function load(){
   if(!data || !data.length){
     statusEl.textContent = "Nessuna partita creata";
     weatherBox.style.display = "none";
-    formationsHeader.style.display = "none";
+    calledList.innerHTML = "";
+    formationsBlock.style.display = "none";
     return;
   }
 
@@ -940,8 +897,6 @@ async function load(){
   mvpBox.style.display = "block";
   mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
   mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
-  mvpMain.textContent = "Caricamento…";
-  mvpTop3.style.display = "none";
 
   infoEl.innerHTML = `
     <div class="line"><b>📅 ${escapeHtml(formatDateFull(m.match_date))}</b></div>
@@ -965,8 +920,8 @@ async function load(){
 
   await loadWeather(m.match_date, m.match_time);
 
-  /* ====== CONVOCATI con avatar + pos + 🧤 GK ====== */
-  let playersForCalled = [];
+  // ===== PLAYERS: fetch called with avatar, role, position =====
+  let calledPlayersFull = [];
   const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
   if(calledIds.length){
     const { data:p, error:pe } = await client
@@ -975,78 +930,64 @@ async function load(){
       .in("id", calledIds);
 
     if(!pe){
-      playersForCalled = (p||[]);
+      // keep order as called_up
+      const map = new Map((p||[]).map(x=>[String(x.id), x]));
+      calledPlayersFull = calledIds.map(id=>map.get(String(id))).filter(Boolean);
 
-      // Ordina come chiamati nel match (stesso ordine chiamata)
-      const byId = new Map(playersForCalled.map(x=>[String(x.id), x]));
-      const ordered = calledIds.map(id=>byId.get(String(id))).filter(Boolean);
-
-      calledEl.innerHTML = `<div class="pGrid">` + ordered.map(renderPlayerCard).join("") + `</div>`;
+      calledList.innerHTML = calledPlayersFull.map(pl => renderPlayerCard(pl)).join("");
     }else{
-      calledEl.textContent = "—";
+      calledList.innerHTML = `<div class="muted">—</div>`;
     }
-  } else {
-    calledEl.textContent = "—";
+  }else{
+    calledList.innerHTML = `<div class="muted">—</div>`;
   }
 
-  await loadMVP(m.id, playersForCalled.map(x=>({id:x.id,name:x.name})));
+  // MVP with avatar
+  await loadMVP(m.id, calledPlayersFull);
 
-  /* ====== FORMAZIONI con avatar + pos + 🧤 GK + header GK VS GK ====== */
+  // ===== FORMATIONS (teams A & B) =====
   const hasTeams = (Array.isArray(m.team_a) && m.team_a.length) || (Array.isArray(m.team_b) && m.team_b.length);
   if(hasTeams){
-    teamsBox.style.display="block";
+    formationsBlock.style.display = "block";
     tAIcon.innerHTML = kitSVG("#facc15","#111");
     tBIcon.innerHTML = kitSVG("#ef4444","#fff");
 
     const ids=[...new Set([...(m.team_a||[]),...(m.team_b||[])].map(String))];
-
-    const { data:p2, error: e2 } = await client
+    const { data:p2, error:err2 } = await client
       .from("players")
       .select("id,name,avatar,role,position")
       .in("id", ids);
-
-    if(e2){
-      teamAEl.textContent = "—";
-      teamBEl.textContent = "—";
-      formationsHeader.style.display = "none";
-      return;
-    }
 
     const map2=new Map((p2||[]).map(x=>[String(x.id),x]));
 
     const teamAPlayers = (m.team_a||[]).map(id=>map2.get(String(id))).filter(Boolean);
     const teamBPlayers = (m.team_b||[]).map(id=>map2.get(String(id))).filter(Boolean);
 
-    teamAEl.innerHTML = `<div class="pGrid">` + teamAPlayers.map(renderPlayerCard).join("") + `</div>` || "—";
-    teamBEl.innerHTML = `<div class="pGrid">` + teamBPlayers.map(renderPlayerCard).join("") + `</div>` || "—";
+    teamAList.innerHTML = teamAPlayers.length ? teamAPlayers.map(pl=>renderPlayerCard(pl)).join("") : `<div class="muted">—</div>`;
+    teamBList.innerHTML = teamBPlayers.length ? teamBPlayers.map(pl=>renderPlayerCard(pl)).join("") : `<div class="muted">—</div>`;
 
-    // header GK vs GK
-    const gkA = teamAPlayers.find(isGK) || null;
-    const gkB = teamBPlayers.find(isGK) || null;
+    // Header keepers VS: use keeper_a / keeper_b names to find player (best-effort)
+    const keeperA = teamAPlayers.find(isGK) || calledPlayersFull.find(p=>String(p.name||"").toLowerCase()===String(m.keeper_a||"").toLowerCase()) || null;
+    const keeperB = teamBPlayers.find(isGK) || calledPlayersFull.find(p=>String(p.name||"").toLowerCase()===String(m.keeper_b||"").toLowerCase()) || null;
 
-    if(gkA || gkB){
-      formationsHeader.style.display = "block";
-
-      if(gkA){
-        gkAImg.src = avatarUrlFromPlayer(gkA);
-        gkAImg.onerror = () => onAvatarError(gkAImg);
-      }else{
-        gkAImg.src = AVATAR_BASE + DEFAULT_AVATAR;
-      }
-
-      if(gkB){
-        gkBImg.src = avatarUrlFromPlayer(gkB);
-        gkBImg.onerror = () => onAvatarError(gkBImg);
-      }else{
-        gkBImg.src = AVATAR_BASE + DEFAULT_AVATAR;
-      }
+    if(keeperA){
+      kAImg.src = avatarUrl(keeperA.avatar);
+      kABadge.style.display = "flex"; // always show glove in header
     }else{
-      formationsHeader.style.display = "none";
+      kAImg.src = "avatars/default.png";
+      kABadge.style.display = "none";
+    }
+
+    if(keeperB){
+      kBImg.src = avatarUrl(keeperB.avatar);
+      kBBadge.style.display = "flex";
+    }else{
+      kBImg.src = "avatars/default.png";
+      kBBadge.style.display = "none";
     }
 
   }else{
-    teamsBox.style.display="none";
-    formationsHeader.style.display = "none";
+    formationsBlock.style.display = "none";
   }
 }
 
@@ -1054,4 +995,3 @@ load();
 </script>
 </body>
 </html>
-```0
