@@ -20,8 +20,7 @@
       --logo2:#333;
       --badge:#111;
       --chipBg:rgba(0,0,0,.04);
-      --btnBg:#111;
-      --btnText:#fff;
+      --btn:#111;
     }
     body.dark{
       --bg:#0f1115;
@@ -35,100 +34,87 @@
       --logo2:#2a3242;
       --badge:#0b0e14;
       --chipBg:rgba(255,255,255,.04);
-      --btnBg:#0b0e14;
-      --btnText:#fff;
+      --btn:#0b0e14;
     }
 
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
-    .wrap{max-width:860px;margin:auto;padding:16px}
+    a{color:inherit}
+
+    .wrap{max-width:980px;margin:auto;padding:16px}
+
+    /* topbar come le altre pagine */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .brand{display:flex; align-items:center; gap:12px;}
+    .logo{
+      width:70px;height:70px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:32px;
+      letter-spacing:2px;
+      box-shadow:var(--shadow);
+      user-select:none;
+      cursor:default;
+    }
+    .titleWrap{line-height:1.1}
+    .title{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:44px;
+      margin:0;
+      text-transform:uppercase;
+    }
+    .subtitle{color:var(--muted);font-size:14px;margin-top:2px}
 
     .card{
       background:var(--card);
       border:1px solid var(--border);
-      border-radius:16px;
+      border-radius:18px;
       padding:14px;
       box-shadow:var(--shadow);
       margin:12px 0;
       overflow:hidden;
     }
 
-    .header{text-align:center}
-    .logo{
-      width:74px;height:74px;border-radius:999px;
-      background:linear-gradient(135deg,var(--logo1),var(--logo2));
-      margin:auto;
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:30px;
-      letter-spacing:2px;
-    }
-    h1{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:44px;
-      margin:10px 0 0;
-      text-transform:uppercase;
-    }
-    .subtitle{color:var(--muted);font-size:14px}
-
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .muted{color:var(--muted)}
-    .space{height:8px}
+    .space{height:10px}
 
     .badge{
-      display:inline-block;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
       background:var(--badge);
       color:#fff;
-      padding:6px 12px;
+      padding:7px 12px;
       border-radius:999px;
       font-weight:900;
       font-size:13px;
       white-space:nowrap;
     }
 
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-
-    .pill{
-      display:inline-block;
-      background:var(--pill);
-      border:1px solid var(--border);
-      border-radius:999px;
-      padding:6px 10px;
-      font-weight:900;
-      margin:6px 8px 0 0;
-      white-space:nowrap;
-    }
-
-    .mvpLine{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:10px;
-      max-width:100%;
-    }
-    .mvpLine .pill{
-      max-width:100%;
-      white-space:normal;
-      overflow-wrap:anywhere;
-      word-break:break-word;
-    }
-
     .btn{
-      border:1px solid var(--border);
-      background:var(--btnBg);
-      color:var(--btnText);
+      border:0;
+      background:var(--btn);
+      color:#fff;
       padding:10px 12px;
-      border-radius:12px;
+      border-radius:14px;
       cursor:pointer;
       font-weight:900;
       display:inline-flex;
       align-items:center;
       gap:8px;
       user-select:none;
+      text-decoration:none;
     }
     .btn.ghost{
       background:transparent;
       color:var(--text);
+      border:1px solid var(--border);
     }
 
     .details{
@@ -136,8 +122,10 @@
       border-top:1px solid var(--border);
       padding-top:12px;
       display:none;
+      animation: fadeIn .18s ease-out;
     }
     .details.open{display:block}
+    @keyframes fadeIn{ from{opacity:.2;transform:translateY(-2px)} to{opacity:1;transform:translateY(0)} }
 
     .twoCols{
       display:grid;
@@ -156,11 +144,89 @@
     .chipBox{
       background:var(--chipBg);
       border:1px solid var(--border);
-      border-radius:14px;
+      border-radius:16px;
       padding:12px;
       overflow:hidden;
     }
 
+    /* pill avatar+nome */
+    .pillP{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--pill);
+      font-weight:900;
+      font-size:12px;
+      margin:6px 8px 0 0;
+      max-width:100%;
+    }
+    .pAva{
+      width:22px;height:22px;border-radius:999px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#000;
+      flex:0 0 auto;
+    }
+    .pillP span{
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      display:inline-block;
+      max-width:220px;
+      vertical-align:middle;
+    }
+    .pillP.gk{
+      border-color: rgba(245,158,11,.55);
+    }
+
+    /* mvp line */
+    .mvpLine{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+      max-width:100%;
+    }
+    .mvpAvatar{
+      width:34px;height:34px;border-radius:999px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#000;
+      flex:0 0 auto;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:var(--pill);
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:7px 10px;
+      font-weight:900;
+      font-size:12px;
+      max-width:100%;
+    }
+    .pill.wrap{
+      white-space:normal;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+    }
+
+    /* più compatto su mobile */
+    @media(max-width:520px){
+      .pillP{ padding:6px 8px; gap:7px; font-size:12px; margin:6px 6px 0 0; }
+      .pAva{ width:20px; height:20px; }
+      .pillP span{ max-width:160px; }
+      .title{ font-size:40px; }
+      .logo{ width:64px; height:64px; font-size:30px; }
+    }
+
+    /* menu come index */
     .nav{
       display:flex;
       justify-content:space-between;
@@ -188,21 +254,35 @@
 <body>
 <div class="wrap">
 
-  <div class="header">
-    <div class="logo">QDP</div>
-    <h1>Storico</h1>
-    <div class="subtitle">Quelli della pensione</div>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">QDP</div>
+      <div class="titleWrap">
+        <h1 class="title">STORICO</h1>
+        <div class="subtitle">Risultati • convocati • formazioni • marcatori • MVP</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <a class="btn ghost" href="index.html">⬅️ Home</a>
+    </div>
   </div>
 
   <div class="card">
-    <div id="status" class="muted">Caricamento…</div>
+    <div class="row" style="justify-content:space-between">
+      <div id="status" class="pill">⏳ Caricamento…</div>
+      <button id="btnCollapse" class="btn ghost" type="button">📦 Chiudi dettagli</button>
+    </div>
+    <div class="muted" style="margin-top:8px">Apri “Dettagli” per vedere convocati, formazioni e marcatori.</div>
   </div>
 
   <div id="list"></div>
 
   <div class="card nav muted">
-    <a href="index.html">🏠 Home</a>
+    <a href="storico.html">📚 Storico</a>
     <a href="marcatori.html">⚽ Marcatori</a>
+    <a href="mvp.html">🏆 Vota MVP</a>
+    <a href="foto.html">📸 Foto</a>
     <a href="componenti.html">👥 Componenti</a>
     <a href="admin.html">🔐 Admin</a>
   </div>
@@ -215,7 +295,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
-/* THEME */
+/* ===== THEME ===== */
 function setTheme(mode){
   document.body.classList.toggle("dark", mode === "dark");
   document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
@@ -226,7 +306,15 @@ document.getElementById("themeToggle").onclick = () => {
   setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 };
 
-/* HELPERS */
+/* ===== AVATAR ===== */
+const AVATAR_BASE = "avatars/";
+const DEFAULT_AVATAR = "default.png";
+function avatarUrl(filename){
+  const f = String(filename || "").trim();
+  return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
+}
+
+/* ===== HELPERS ===== */
 function escapeHtml(s){
   return String(s ?? "")
     .replaceAll("&","&amp;")
@@ -240,9 +328,7 @@ function formatDateFull(iso){
   const d = new Date(iso);
   return d.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 }
-function formatTimeHHMM(t){
-  return t ? String(t).slice(0,5) : "";
-}
+function formatTimeHHMM(t){ return t ? String(t).slice(0,5) : ""; }
 function shirtSVG(color){
   return `
     <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -255,8 +341,44 @@ function resultBadge(m){
   return `🏁 da giocare`;
 }
 
-/* MVP helpers */
-function computeMvpLine(votes, idToName, isOpen){
+/* riconosco portiere */
+function isGK(p){
+  const r = String(p?.role||"").toLowerCase();
+  const pos = String(p?.position||"").toLowerCase();
+  return r === "gk" || r === "portiere" || pos.includes("port");
+}
+
+/* pill avatar+nome */
+function pillPlayer(player){
+  const name = player?.name || "—";
+  const av = player?.avatar || DEFAULT_AVATAR;
+  const gk = isGK(player);
+  return `
+    <span class="pillP ${gk ? "gk" : ""}" title="${escapeHtml(name)}">
+      <img class="pAva" src="${escapeHtml(avatarUrl(av))}" alt=""
+           onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
+      <span>${escapeHtml(name)}${gk ? " 🧤" : ""}</span>
+    </span>
+  `;
+}
+
+/* ordina: GK prima, poi nome */
+function sortIdsByRoleThenName(ids, idToPlayer){
+  const arr = (ids||[]).map(id => {
+    const p = idToPlayer.get(String(id)) || { name: String(id), avatar: DEFAULT_AVATAR, role:"", position:"" };
+    return { id: String(id), p };
+  });
+  arr.sort((a,b)=>{
+    const ag = isGK(a.p) ? 0 : 1;
+    const bg = isGK(b.p) ? 0 : 1;
+    if(ag !== bg) return ag - bg;
+    return String(a.p.name||"").localeCompare(String(b.p.name||""), "it", { sensitivity:"base" });
+  });
+  return arr.map(x => x.id);
+}
+
+/* MVP: {text, avatar?} */
+function computeMvp(votes, idToPlayer, isOpen){
   if(!votes || !votes.length) return null;
 
   const counts = new Map();
@@ -270,17 +392,21 @@ function computeMvpLine(votes, idToName, isOpen){
 
   const top = entries[0][1];
   const leaders = entries.filter(e=>e[1]===top).map(e=>e[0]);
-  const leaderNames = leaders.map(id => idToName.get(String(id)) || id);
+  const leaderNames = leaders.map(id => (idToPlayer.get(String(id))?.name || id));
 
   const label = isOpen ? "provvisorio" : "finale";
+  const avatar = (leaders.length === 1)
+    ? (idToPlayer.get(String(leaders[0]))?.avatar || DEFAULT_AVATAR)
+    : null;
 
-  if(leaders.length === 1){
-    return `🏆 MVP (${label}): ${leaderNames[0]} • voti: ${top}`;
-  }
-  return `🏆 MVP (${label}): Parità: ${leaderNames.join(", ")} • voti: ${top}`;
+  const text = (leaders.length === 1)
+    ? `🏆 MVP (${label}): ${leaderNames[0]} • voti: ${top}`
+    : `🏆 MVP (${label}): Parità: ${leaderNames.join(", ")} • voti: ${top}`;
+
+  return { text, avatar };
 }
 
-/* SUPABASE */
+/* ===== SUPABASE ===== */
 if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
   document.getElementById("status").textContent = "Errore: config.js non caricato";
   throw new Error("Missing config");
@@ -289,12 +415,29 @@ const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const statusEl = document.getElementById("status");
 const listEl = document.getElementById("list");
+const btnCollapse = document.getElementById("btnCollapse");
+
+function closeAllDetails(){
+  document.querySelectorAll(".details.open").forEach(d => d.classList.remove("open"));
+  document.querySelectorAll("button[data-target]").forEach(b => b.textContent = "Dettagli ▾");
+}
+btnCollapse.onclick = closeAllDetails;
 
 async function load(){
   try{
-    const { data: players, error: eP } = await client.from("players").select("id,name");
+    // Players: prendo campi per avatar + ruolo (se non esistono, non rompe)
+    const { data: players, error: eP } = await client.from("players").select("*");
     if(eP) throw eP;
-    const idToName = new Map((players||[]).map(p=>[String(p.id), p.name]));
+
+    const idToPlayer = new Map((players||[]).map(p=>[
+      String(p.id),
+      {
+        name: p.name || "",
+        avatar: p.avatar || p.avatar_file || p.avatar_url || DEFAULT_AVATAR,
+        role: p.role || "",
+        position: p.position || ""
+      }
+    ]));
 
     const { data: matches, error: eM } = await client
       .from("matches")
@@ -306,11 +449,12 @@ async function load(){
     if(eM) throw eM;
 
     if(!matches || !matches.length){
-      statusEl.textContent = "Nessuna partita nello storico";
+      statusEl.textContent = "ℹ️ Nessuna partita nello storico";
       listEl.innerHTML = "";
       return;
     }
 
+    // MVP votes
     const matchIds = matches.map(m => m.id);
     const { data: votes, error: eV } = await client
       .from("mvp_votes")
@@ -326,7 +470,7 @@ async function load(){
       votesByMatch.get(k).push(v);
     });
 
-    statusEl.textContent = `Partite: ${matches.length}`;
+    statusEl.textContent = `📚 Partite: ${matches.length}`;
 
     listEl.innerHTML = matches.map(m => {
       const dateFull = formatDateFull(m.match_date);
@@ -335,14 +479,20 @@ async function load(){
       const keepB = escapeHtml(m.keeper_b || "—");
       const venue = escapeHtml(m.venue || "");
 
-      const called = Array.isArray(m.called_up) ? m.called_up : [];
-      const calledNames = called.map(id => idToName.get(String(id)) || String(id));
+      const calledRaw = Array.isArray(m.called_up) ? m.called_up : [];
+      const teamARaw  = Array.isArray(m.team_a) ? m.team_a : [];
+      const teamBRaw  = Array.isArray(m.team_b) ? m.team_b : [];
 
-      const teamAIds = Array.isArray(m.team_a) ? m.team_a : [];
-      const teamBIds = Array.isArray(m.team_b) ? m.team_b : [];
-      const teamANames = teamAIds.map(id => idToName.get(String(id)) || String(id));
-      const teamBNames = teamBIds.map(id => idToName.get(String(id)) || String(id));
+      const called   = sortIdsByRoleThenName(calledRaw, idToPlayer);
+      const teamAIds = sortIdsByRoleThenName(teamARaw,  idToPlayer);
+      const teamBIds = sortIdsByRoleThenName(teamBRaw,  idToPlayer);
 
+      const renderPlayerPills = (ids) => {
+        if(!ids.length) return `<div class="muted">—</div>`;
+        return `<div>${ids.map(id => pillPlayer(idToPlayer.get(String(id)) || { name:String(id), avatar: DEFAULT_AVATAR })).join("")}</div>`;
+      };
+
+      // scorers
       const sc = m.scorers || {};
       const ta = Array.isArray(sc.team_a) ? sc.team_a : [];
       const tb = Array.isArray(sc.team_b) ? sc.team_b : [];
@@ -353,9 +503,9 @@ async function load(){
           .slice()
           .sort((a,b)=>Number(b.goals||0)-Number(a.goals||0))
           .map(x=>{
-            const nm = idToName.get(String(x.player_id)) || x.player_id || "-";
+            const pl = idToPlayer.get(String(x.player_id)) || { name: String(x.player_id||"-"), avatar: DEFAULT_AVATAR, role:"", position:"" };
             return `<tr>
-              <td><span class="pill">${escapeHtml(nm)}</span></td>
+              <td>${pillPlayer(pl)}</td>
               <td><b>${escapeHtml(x.goals)}</b></td>
             </tr>`;
           }).join("");
@@ -365,26 +515,28 @@ async function load(){
         </table>`;
       };
 
-      const renderPills = (arr) => {
-        if(!arr.length) return `<div class="muted">—</div>`;
-        return `<div>${arr.map(n=>`<span class="pill">${escapeHtml(n)}</span>`).join("")}</div>`;
-      };
-
       const detailsId = `det_${m.id}`;
 
       const isOpen = (m.vote_open === true) || (m.voting_open === true);
-      const mvpLine = computeMvpLine(votesByMatch.get(String(m.id)) || [], idToName, isOpen);
+      const mvp = computeMvp(votesByMatch.get(String(m.id)) || [], idToPlayer, isOpen);
 
-      const mvpHtml = mvpLine
-        ? `<div class="mvpLine"><span class="pill">${escapeHtml(mvpLine)}</span></div>`
+      const mvpHtml = mvp
+        ? `<div class="mvpLine">
+            ${mvp.avatar ? `
+              <img class="mvpAvatar" src="${escapeHtml(avatarUrl(mvp.avatar))}" alt="MVP"
+                   onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
+            ` : ``}
+            <span class="pill wrap">${escapeHtml(mvp.text)}</span>
+          </div>`
         : ``;
 
       return `
         <div class="card">
           <div class="row" style="justify-content:space-between">
             <div style="min-width:0">
-              <div><b>📅 ${escapeHtml(dateFull)} • ⏰ ${escapeHtml(time)}</b></div>
+              <div style="font-weight:900">📅 ${escapeHtml(dateFull)} • ⏰ ${escapeHtml(time)}</div>
               <div class="muted" style="margin-top:6px">📍 ${venue}</div>
+
               <div class="row" style="margin-top:10px">
                 <span class="badge">${escapeHtml(resultBadge(m))}</span>
                 <span class="pill">🟨 ${keepA}</span>
@@ -401,8 +553,8 @@ async function load(){
           <div class="details" id="${detailsId}">
             <div class="chipBox">
               <div style="font-weight:900">Convocati</div>
-              <div class="muted" style="margin-top:8px">
-                ${ calledNames.length ? calledNames.map(n=>`<span class="pill">${escapeHtml(n)}</span>`).join("") : "—" }
+              <div style="margin-top:8px">
+                ${renderPlayerPills(called)}
               </div>
             </div>
 
@@ -411,11 +563,11 @@ async function load(){
             <div class="twoCols">
               <div class="chipBox">
                 <div class="teamTitle">${shirtSVG("#facc15")} <b>Formazione Squadra A</b></div>
-                ${renderPills(teamANames)}
+                ${renderPlayerPills(teamAIds)}
               </div>
               <div class="chipBox">
                 <div class="teamTitle">${shirtSVG("#ef4444")} <b>Formazione Squadra B</b></div>
-                ${renderPills(teamBNames)}
+                ${renderPlayerPills(teamBIds)}
               </div>
             </div>
 
@@ -436,18 +588,17 @@ async function load(){
       `;
     }).join("");
 
-    // ACCORDION
+    // accordion
     const buttons = [...document.querySelectorAll("button[data-target]")];
     buttons.forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const id = btn.getAttribute("data-target");
         const box = document.getElementById(id);
-        const isOpen = box.classList.contains("open");
+        const opened = box.classList.contains("open");
 
-        document.querySelectorAll(".details.open").forEach(d => d.classList.remove("open"));
-        buttons.forEach(b => b.textContent = "Dettagli ▾");
+        closeAllDetails();
 
-        if(!isOpen){
+        if(!opened){
           box.classList.add("open");
           btn.textContent = "Dettagli ▴";
         }
@@ -456,7 +607,7 @@ async function load(){
 
   }catch(err){
     console.error(err);
-    statusEl.textContent = "Errore caricamento storico";
+    statusEl.textContent = "❌ Errore caricamento storico";
     listEl.innerHTML = `<div class="card"><div class="muted">${escapeHtml(err.message || String(err))}</div></div>`;
   }
 }
