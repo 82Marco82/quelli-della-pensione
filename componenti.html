@@ -9,142 +9,249 @@
 
   <style>
     :root{
-      --bg:#f4f6f8; --card:#ffffff; --text:#111827; --muted:#6b7280; --border:#e5e7eb;
-      --shadow:0 6px 20px rgba(0,0,0,.08); --pill:#eeeeee; --btn:#111;
-      --logo1:#111; --logo2:#333;
-      --ok:#16a34a; --warn:#f59e0b; --bad:#ef4444;
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --pill:#eeeeee;
+      --logo1:#111;
+      --logo2:#333;
+      --btn:#111;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#ef4444;
     }
     body.dark{
-      --bg:#0f1115; --card:#171a21; --text:#e5e7eb; --muted:#a1a1aa; --border:#2a2f3a;
-      --shadow:0 10px 28px rgba(0,0,0,.45); --pill:#222631; --btn:#0b0e14;
-      --logo1:#0b0e14; --logo2:#2a3242;
+      --bg:#0f1115;
+      --card:#171a21;
+      --text:#e5e7eb;
+      --muted:#a1a1aa;
+      --border:#2a2f3a;
+      --shadow:0 10px 28px rgba(0,0,0,.45);
+      --pill:#222631;
+      --logo1:#0b0e14;
+      --logo2:#2a3242;
+      --btn:#0b0e14;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
-    .wrap{max-width:980px;margin:16px auto;padding:16px}
+    body{
+      margin:0;
+      font-family:Inter,system-ui;
+      background:var(--bg);
+      color:var(--text);
+      transition:.2s;
+    }
+    .wrap{max-width:980px;margin:auto;padding:16px}
 
     .topbar{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; flex-wrap:wrap;
+      margin-bottom:10px;
     }
-    .brand{display:flex;align-items:center;gap:12px}
+    .brand{display:flex; align-items:center; gap:12px;}
     .logo{
-      width:62px;height:62px;border-radius:999px;
+      width:70px;height:70px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
       display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:30px;letter-spacing:2px;
+      color:#fff;font-family:'Bebas Neue';font-size:32px;
+      letter-spacing:2px;
       box-shadow:var(--shadow);
-      flex:0 0 auto;
+      cursor:pointer;
+      transform-style:preserve-3d;
+      will-change:transform;
     }
+    .logo.spin{ animation: coinSpin 900ms ease-in-out; }
+    @keyframes coinSpin{
+      0%{transform:rotateY(0deg)}
+      50%{transform:rotateY(180deg)}
+      100%{transform:rotateY(360deg)}
+    }
+
     .titleWrap{line-height:1.1}
-    .title{font-family:'Bebas Neue';letter-spacing:2px;font-size:44px;margin:0;text-transform:uppercase}
+    .title{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:44px;
+      margin:0;
+      text-transform:uppercase;
+    }
     .subtitle{color:var(--muted);font-size:14px;margin-top:2px}
 
-    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
     .spacer{flex:1}
 
     .card{
-      background:var(--card);border:1px solid var(--border);border-radius:16px;
-      padding:14px;box-shadow:var(--shadow);margin:12px 0;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      margin:12px 0;
     }
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      background:var(--pill);border-radius:999px;padding:8px 12px;
-      font-weight:900;border:1px solid var(--border);white-space:nowrap;
-    }
-    .pill.wrap{white-space:normal;width:100%;line-height:1.25}
-    .muted{color:var(--muted)}
 
     .btn{
-      border:0;background:var(--btn);color:#fff;padding:12px 14px;border-radius:14px;
-      font-weight:900;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+      border:0;
+      background:var(--btn);
+      color:#fff;
+      padding:12px 14px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
       user-select:none;
     }
-    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
-    .btn.small{padding:10px 12px;border-radius:12px;font-size:14px}
+    .btn.ghost{
+      background:transparent;
+      color:var(--text);
+      border:1px solid var(--border);
+    }
+    .btn.small{padding:10px 12px; border-radius:12px; font-size:14px}
     .btn.ok{background:var(--ok)}
-    .btn.warn{background:var(--warn);color:#111}
-    .btn.danger{background:var(--bad)}
-    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn.warn{background:var(--warn); color:#111}
 
-    .input, select{
-      padding:12px 12px;border-radius:14px;border:1px solid var(--border);
-      background:transparent;color:var(--text);font-family:inherit;outline:none;
-    }
-
-    .grid{
-      display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
-    }
-    @media(max-width:980px){.grid{grid-template-columns:repeat(3,1fr)}}
-    @media(max-width:720px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:480px){.grid{grid-template-columns:1fr}}
-
-    .playerCard{
-      border:1px solid var(--border);border-radius:16px;background:var(--card);
-      box-shadow:var(--shadow);padding:12px;
-      display:flex;gap:12px;align-items:center;
-    }
-    .avatar{
-      width:64px;height:64px;border-radius:999px;flex:0 0 auto;
-      border:1px solid var(--border);
-      object-fit:cover;object-position:center;
-      background:#000;
-    }
-    .pInfo{min-width:0}
-    .pName{
-      font-weight:900;font-size:16px;line-height:1.1;
-      display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-    }
-    .pMeta{margin-top:6px;color:var(--muted);font-weight:800;font-size:13px;display:flex;gap:8px;flex-wrap:wrap}
-    .tag{
-      display:inline-flex;align-items:center;gap:6px;
-      border:1px solid var(--border);
-      background:rgba(0,0,0,.03);
-      border-radius:999px;
-      padding:6px 10px;
-      font-weight:900;font-size:12px;
-    }
-    body.dark .tag{background:rgba(255,255,255,.04)}
-
-    .stats{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
-    .stat{
-      display:inline-flex;align-items:center;gap:6px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      padding:6px 10px;
-      font-weight:900;font-size:12px;
-      background:rgba(0,0,0,.03);
-    }
-    body.dark .stat{background:rgba(255,255,255,.04)}
-
-    .comment{
-      margin-top:8px;
-      border:1px solid var(--border);
+    .input{
+      width:100%;
+      padding:12px 12px;
       border-radius:14px;
-      padding:10px 12px;
-      background:rgba(0,0,0,.02);
-      font-weight:800;
-      line-height:1.25;
-      word-break:break-word;
+      border:1px solid var(--border);
+      background:transparent;
+      color:var(--text);
+      font-family:inherit;
+      outline:none;
     }
-    body.dark .comment{background:rgba(255,255,255,.03)}
-    .commentHead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-    .mini{font-size:12px;color:var(--muted);font-weight:800}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:var(--pill);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:900;
+      border:1px solid var(--border);
+      white-space:nowrap;
+      max-width:100%;
+    }
 
     .toast{
-      display:none;margin-top:10px;padding:12px 12px;border-radius:14px;border:1px solid var(--border);
-      background:rgba(22,163,74,.10);color:var(--text);font-weight:800;
+      display:none;
+      margin-top:10px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(22,163,74,.10);
+      color:var(--text);
+      font-weight:800;
     }
     .toast.show{display:block}
     .toast.bad{background:rgba(239,68,68,.10)}
     .toast.warn{background:rgba(245,158,11,.12)}
 
-    .nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}
-    .nav a{color:var(--text);text-decoration:none;font-weight:800}
+    /* MENU come index */
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size:14px;
+    }
+    .nav a{
+      color:var(--text);
+      text-decoration:none;
+      font-weight:800;
+    }
 
+    /* Grid componenti */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:12px;
+    }
+    @media(max-width:980px){ .grid{grid-template-columns:repeat(3, 1fr)} }
+    @media(max-width:720px){ .grid{grid-template-columns:repeat(2, 1fr)} }
+    @media(max-width:460px){ .grid{grid-template-columns:1fr} }
+
+    .playerCard{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease;
+      min-height:110px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .playerCard:hover{transform:translateY(-1px)}
+    .avatar{
+      width:64px;height:64px;border-radius:999px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#000;
+      flex:0 0 auto;
+    }
+    .pTxt{min-width:0;flex:1}
+    .pName{
+      font-weight:900;
+      font-size:16px;
+      line-height:1.1;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .pMeta{
+      margin-top:4px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.02);
+      font-weight:900;
+      font-size:12px;
+      color:var(--text);
+    }
+    body.dark .tag{background:rgba(255,255,255,.03)}
+    .tag.gk{border-color:rgba(245,158,11,.45)}
+    .pBio{
+      margin-top:8px;
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
+      line-height:1.25;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+      word-break:break-word;
+    }
+    .mini{font-size:12px;color:var(--muted);font-weight:800}
+
+    /* Fab theme */
     .fab{
-      position:fixed;right:16px;bottom:16px;width:54px;height:54px;border-radius:999px;
-      border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);
-      cursor:pointer;font-size:22px;
+      position:fixed;
+      right:16px;bottom:16px;
+      width:54px;height:54px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      font-size:22px;
     }
   </style>
 </head>
@@ -154,49 +261,29 @@
 
   <div class="topbar">
     <div class="brand">
-      <div class="logo">QDP</div>
+      <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
       <div class="titleWrap">
-        <h1 class="title">Componenti</h1>
-        <div class="subtitle">Avatar • Ruoli • Presenze • MVP • Gol</div>
+        <h1 class="title">COMPONENTI</h1>
+        <div class="subtitle">Tutta la rosa • Avatar • Ruoli • (Admin: descrizione giocatore)</div>
       </div>
     </div>
 
     <div class="row">
       <a class="btn ghost" href="index.html">⬅️ Home</a>
       <button id="adminBtn" class="btn small warn" type="button">🔐 Admin: OFF</button>
-      <button id="themeToggle" class="btn small ghost" type="button">🌙</button>
     </div>
   </div>
 
   <div class="card">
     <div class="row">
-      <div id="adminHint" class="pill wrap" style="display:none">
-        ✅ Admin attivo (puoi modificare il commento giocatore)
-      </div>
-    </div>
-
-    <div class="row" style="margin-top:10px">
-      <label class="pill" style="gap:10px">
-        Filtro:
-        <select id="filterRole" style="width:auto">
-          <option value="all">Tutti</option>
-          <option value="gk">Solo Portieri</option>
-          <option value="field">Solo Giocatori</option>
-        </select>
-      </label>
-
-      <label class="pill" style="gap:10px">
-        Ordina:
-        <select id="sortBy" style="width:auto">
-          <option value="name">Nome</option>
-          <option value="pres">Presenze</option>
-          <option value="mvp">MVP</option>
-          <option value="goals">Gol</option>
-        </select>
-      </label>
-
+      <input id="searchInput" class="input" type="text" placeholder="🔎 Cerca giocatore... (es: Antonio)">
       <div class="spacer"></div>
       <div id="countPill" class="pill">👥 0</div>
+      <button id="refreshBtn" class="btn ghost" type="button">🔄 Aggiorna</button>
+    </div>
+
+    <div id="adminHint" class="pill" style="display:none;margin-top:10px;white-space:normal">
+      ✅ Admin attivo (clicca un giocatore per scrivere/modificare descrizione)
     </div>
 
     <div id="toast" class="toast"></div>
@@ -206,11 +293,12 @@
     <div class="row">
       <div style="font-weight:900">👥 Rosa</div>
       <div class="spacer"></div>
-      <div class="mini">Se vedi “0” su stats, significa che non ci sono dati in partite/voti/gol.</div>
+      <div class="mini">Tip: clicca un giocatore per vedere/modificare la descrizione (solo admin).</div>
     </div>
     <div id="grid" class="grid" style="margin-top:12px"></div>
   </div>
 
+  <!-- NAV come index -->
   <div class="card nav muted">
     <a href="storico.html">📚 Storico</a>
     <a href="marcatori.html">⚽ Marcatori</a>
@@ -222,7 +310,7 @@
 
 </div>
 
-<button id="themeToggleFab" class="fab">🌙</button>
+<button id="themeToggle" class="fab">🌙</button>
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -230,17 +318,23 @@
 <script>
 /* ===== THEME ===== */
 const themeBtn = document.getElementById("themeToggle");
-const themeFab = document.getElementById("themeToggleFab");
 function setTheme(mode){
   document.body.classList.toggle("dark", mode === "dark");
-  const ico = (mode === "dark") ? "☀️" : "🌙";
-  themeBtn.textContent = ico;
-  themeFab.textContent = ico;
+  themeBtn.textContent = (mode === "dark") ? "☀️" : "🌙";
   localStorage.setItem("qdp_theme", mode);
 }
 setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
 themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
-themeFab.onclick = themeBtn.onclick;
+
+/* LOGO MONETA */
+const logoCoin = document.getElementById("logoCoin");
+function spinLogo(){
+  logoCoin.classList.remove("spin");
+  void logoCoin.offsetWidth;
+  logoCoin.classList.add("spin");
+}
+logoCoin.addEventListener("click", spinLogo);
+logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
 
 /* ===== SUPABASE ===== */
 if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
@@ -253,14 +347,15 @@ const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const adminBtn = document.getElementById("adminBtn");
 const adminHint = document.getElementById("adminHint");
 const toast = document.getElementById("toast");
+const refreshBtn = document.getElementById("refreshBtn");
 const grid = document.getElementById("grid");
 const countPill = document.getElementById("countPill");
-const filterRole = document.getElementById("filterRole");
-const sortBy = document.getElementById("sortBy");
+const searchInput = document.getElementById("searchInput");
 
 /* ===== CONFIG ===== */
-const AVATAR_DIR = "avatars";          // /avatars/1.png ...
-const DEFAULT_AVATAR = "default.png";  // /avatars/default.png
+const TABLE_PLAYERS = "players";
+const AVATAR_BASE = "avatars/";
+const DEFAULT_AVATAR = "default.png";
 
 /* ===== HELPERS ===== */
 function showToast(msg, type="ok"){
@@ -273,43 +368,55 @@ function showToast(msg, type="ok"){
 }
 function escapeHtml(s){
   return String(s ?? "")
-    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
+function norm(s){
+  return String(s||"").trim().toLowerCase().replace(/\s+/g," ");
+}
+function avatarUrl(filename){
+  const f = String(filename || "").trim();
+  return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
+}
+function isGK(p){
+  const r = String(p?.role||"").toLowerCase();
+  const pos = String(p?.position||"").toLowerCase();
+  return r === "gk" || pos.includes("port");
+}
+function safeBio(p){
+  // se hai colonne diverse, le legge lo stesso
+  return (p?.bio ?? p?.note ?? p?.description ?? "").toString().trim();
+}
+
 async function getSession(){
   const { data } = await client.auth.getSession();
   return data?.session || null;
 }
 function isAdminSession(session){ return !!(session && session.user); }
 
-/* ===== ADMIN UI (FIX: sempre si aggiorna e si nasconde davvero) ===== */
 let adminOn = false;
 async function refreshAdminUI(){
   const session = await getSession();
   adminOn = isAdminSession(session);
-
   adminBtn.textContent = adminOn ? "🔐 Admin: ON" : "🔐 Admin: OFF";
   adminBtn.classList.toggle("warn", !adminOn);
   adminBtn.classList.toggle("ok", adminOn);
-
   adminHint.style.display = adminOn ? "inline-flex" : "none";
   return adminOn;
 }
-client.auth.onAuthStateChange(async () => {
-  await refreshAdminUI();
-  await loadAll();
-});
 
-adminBtn.addEventListener("click", async ()=>{
+adminBtn.onclick = async () => {
   const session = await getSession();
   if(isAdminSession(session)){
     await client.auth.signOut();
     showToast("Admin disattivato.", "warn");
     await refreshAdminUI();
-    await loadAll();
+    await loadPlayers();
     return;
   }
-
   const email = prompt("Email admin:");
   if(!email) return;
   const password = prompt("Password admin:");
@@ -318,245 +425,132 @@ adminBtn.addEventListener("click", async ()=>{
   const { error } = await client.auth.signInWithPassword({ email, password });
   if(error){
     console.error(error);
-    showToast("Login fallito: " + (error.message || ""), "bad");
+    showToast("Login fallito.", "bad");
     return;
   }
   showToast("Admin attivo ✅");
   await refreshAdminUI();
-  await loadAll();
-});
+  await loadPlayers();
+};
 
 /* ===== DATA ===== */
-let PLAYERS = [];
-let STATS = new Map(); // playerId -> { pres, mvpWins, goals }
+let ALL = [];
 
-/* ===== STATS CALC ===== */
-function addStat(pid, key, inc=1){
-  const o = STATS.get(pid) || { pres:0, mvpWins:0, goals:0 };
-  o[key] = (o[key] || 0) + inc;
-  STATS.set(pid, o);
+function renderCard(p){
+  const gk = isGK(p);
+  const nameHtml = gk ? `${escapeHtml(p.name||"")} <span title="Portiere">🧤</span>` : escapeHtml(p.name||"");
+  const pos = String(p.position || "").trim() || "—";
+  const role = gk ? "PORTIERE" : "GIOCATORE";
+  const bio = safeBio(p);
+
+  return `
+    <div class="playerCard" data-id="${escapeHtml(p.id)}" title="${adminOn ? "Clicca per modificare descrizione" : "Clicca per vedere descrizione"}">
+      <img class="avatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt="avatar"
+           onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
+      <div class="pTxt">
+        <div class="pName">${nameHtml}</div>
+        <div class="pMeta">
+          <span class="tag ${gk ? "gk" : ""}">${gk ? "🧤 " : ""}${role}</span>
+          <span class="tag">📌 ${escapeHtml(pos)}</span>
+        </div>
+        <div class="pBio">${bio ? escapeHtml(bio) : (adminOn ? "✍️ (clicca per inserire descrizione)" : "—")}</div>
+      </div>
+    </div>
+  `;
 }
-function getStat(pid){
-  return STATS.get(pid) || { pres:0, mvpWins:0, goals:0 };
+
+function applyFilter(){
+  const q = norm(searchInput.value);
+  const list = q
+    ? ALL.filter(p => norm(p.name).includes(q) || norm(p.position).includes(q) || norm(safeBio(p)).includes(q))
+    : ALL.slice();
+
+  countPill.textContent = `👥 ${list.length}`;
+
+  grid.innerHTML = list.map(renderCard).join("") || `<div class="mini muted">Nessun giocatore.</div>`;
+
+  // click card
+  [...grid.querySelectorAll(".playerCard")].forEach(card=>{
+    card.onclick = () => onCardClick(card.getAttribute("data-id"));
+  });
 }
 
-/* Presenze + Gol (se matches.scorers è usabile) */
-async function calcFromMatches(){
-  STATS = new Map();
+async function onCardClick(playerId){
+  const p = ALL.find(x => String(x.id) === String(playerId));
+  if(!p) return;
 
-  const { data: matches, error } = await client
-    .from("matches")
-    .select("id,called_up,scorers")
-    .order("match_date",{ascending:false})
-    .limit(500);
+  const bio = safeBio(p);
 
-  if(error){
-    console.warn("matches stats error", error);
+  if(adminOn){
+    const next = prompt(
+      `Descrizione per ${p.name} (max 180 caratteri)\n\n⚠️ Nota: serve colonna "bio" in tabella players.`,
+      bio
+    );
+    if(next === null) return;
+
+    const clean = String(next||"").trim().slice(0,180);
+
+    // tenta update su bio
+    const { error } = await client
+      .from(TABLE_PLAYERS)
+      .update({ bio: clean })
+      .eq("id", p.id);
+
+    if(error){
+      console.error(error);
+      // Se non hai creato la colonna bio
+      showToast("Errore: forse manca la colonna 'bio' in players.", "bad");
+      return;
+    }
+
+    showToast("Descrizione salvata ✅");
+    await loadPlayers();
     return;
   }
 
-  (matches || []).forEach(m=>{
-    const called = Array.isArray(m.called_up) ? m.called_up.map(String) : [];
-    called.forEach(pid => addStat(pid, "pres", 1));
-
-    // Goals: prova a leggere scorers se è un array (id ripetuti o oggetti)
-    const sc = m.scorers;
-    if(Array.isArray(sc)){
-      sc.forEach(x=>{
-        if(x && typeof x === "object"){
-          // es: {player_id:"uuid", goals:2} oppure {id:"uuid"}
-          const pid = String(x.player_id || x.id || "");
-          const g = Number(x.goals || 1);
-          if(pid) addStat(pid, "goals", isFinite(g) ? g : 1);
-        }else{
-          const pid = String(x || "");
-          if(pid) addStat(pid, "goals", 1);
-        }
-      });
-    }
-  });
-}
-
-/* MVP vinti: calcolati dai voti per match (se match senza voti -> skip). Parità = vince per tutti i pari merito. */
-async function calcMvpWins(){
-  // prendo un po' di match recenti (aumenta se vuoi)
-  const { data: matches, error: me } = await client
-    .from("matches")
-    .select("id")
-    .order("match_date",{ascending:false})
-    .limit(300);
-
-  if(me || !matches?.length) return;
-
-  for(const m of matches){
-    const { data: votes, error: ve } = await client
-      .from("mvp_votes")
-      .select("voted_player")
-      .eq("match_id", m.id);
-
-    if(ve || !votes?.length) continue;
-
-    const counts = new Map();
-    votes.forEach(v=>{
-      const pid = String(v.voted_player || "");
-      if(!pid) return;
-      counts.set(pid, (counts.get(pid)||0) + 1);
-    });
-
-    if(!counts.size) continue;
-
-    let top = 0;
-    counts.forEach(v=>{ if(v>top) top=v; });
-
-    // vincitori (anche più di uno)
-    counts.forEach((v,pid)=>{
-      if(v === top) addStat(String(pid), "mvpWins", 1);
-    });
-  }
-}
-
-/* ===== RENDER ===== */
-function isGK(p){
-  // role può essere "gk" oppure "GK" oppure "goalkeeper"
-  const r = String(p.role || "").toLowerCase();
-  return r === "gk" || r === "goalkeeper" || r === "portiere";
-}
-function avatarUrl(p){
-  const file = (p.avatar && String(p.avatar).trim()) ? String(p.avatar).trim() : DEFAULT_AVATAR;
-  return `./${AVATAR_DIR}/${file}`;
-}
-function roleLabel(p){
-  // position = "Portiere/Difensore/Attaccante..." (come mi hai detto)
-  const pos = String(p.position || "").trim();
-  const isgk = isGK(p);
-  const glove = isgk ? " 🧤" : "";
-  return pos ? `${pos}${glove}` : (isgk ? `Portiere 🧤` : `Giocatore`);
-}
-
-function render(){
-  const f = filterRole.value;
-  let rows = [...PLAYERS];
-
-  if(f === "gk") rows = rows.filter(isGK);
-  if(f === "field") rows = rows.filter(p=>!isGK(p));
-
-  const s = sortBy.value;
-  rows.sort((a,b)=>{
-    if(s === "name"){
-      return String(a.name).localeCompare(String(b.name),"it");
-    }
-    const sa = getStat(String(a.id));
-    const sb = getStat(String(b.id));
-    if(s === "pres") return (sb.pres - sa.pres) || String(a.name).localeCompare(String(b.name),"it");
-    if(s === "mvp") return (sb.mvpWins - sa.mvpWins) || String(a.name).localeCompare(String(b.name),"it");
-    if(s === "goals") return (sb.goals - sa.goals) || String(a.name).localeCompare(String(b.name),"it");
-    return 0;
-  });
-
-  countPill.textContent = `👥 ${rows.length}`;
-
-  grid.innerHTML = rows.map(p=>{
-    const pid = String(p.id);
-    const st = getStat(pid);
-    const comment = String(p.comment || "").trim();
-
-    return `
-      <div class="playerCard" data-pid="${escapeHtml(pid)}">
-        <img class="avatar" src="${escapeHtml(avatarUrl(p))}" alt="avatar"
-             onerror="this.onerror=null;this.src='./${AVATAR_DIR}/${DEFAULT_AVATAR}';">
-        <div class="pInfo">
-          <div class="pName">
-            <span>${escapeHtml(p.name || "")}</span>
-            ${isGK(p) ? `<span class="tag">🧤 GK</span>` : `<span class="tag">⚽ FIELD</span>`}
-          </div>
-
-          <div class="pMeta">
-            <span class="tag">📌 ${escapeHtml(roleLabel(p))}</span>
-          </div>
-
-          <div class="stats">
-            <span class="stat">✅ Presenze: ${st.pres}</span>
-            <span class="stat">🏆 MVP: ${st.mvpWins}</span>
-            <span class="stat">⚽ Gol: ${st.goals}</span>
-          </div>
-
-          <div class="comment">
-            <div class="commentHead">
-              <div><b>📝 Commento</b></div>
-              ${adminOn ? `<button class="btn small warn js-edit" type="button">✏️ Modifica</button>` : `<span class="mini">Solo admin può modificare</span>`}
-            </div>
-            <div style="margin-top:8px">${comment ? escapeHtml(comment) : `<span class="muted">Nessun commento.</span>`}</div>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join("");
-
-  if(adminOn){
-    grid.querySelectorAll(".playerCard").forEach(card=>{
-      const pid = card.getAttribute("data-pid");
-      const btn = card.querySelector(".js-edit");
-      if(!btn) return;
-
-      btn.onclick = async ()=>{
-        const p = PLAYERS.find(x=>String(x.id)===String(pid));
-        if(!p) return;
-
-        const next = prompt("Commento giocatore (max 160, vuoto = nessuno):", String(p.comment || ""));
-        if(next === null) return;
-        const clean = String(next || "").trim().slice(0,160);
-
-        try{
-          const { error } = await client
-            .from("players")
-            .update({ comment: clean })
-            .eq("id", pid);
-
-          if(error) throw error;
-
-          showToast("Commento aggiornato ✅");
-          await loadAll();
-        }catch(e){
-          console.error(e);
-          showToast("Non riesco a salvare: " + (e.message || e), "bad");
-        }
-      };
-    });
-  }
+  // non-admin: mostra popup sola lettura
+  const msg = bio ? bio : "Nessuna descrizione.";
+  alert(`${p.name}\n\n${msg}`);
 }
 
 /* ===== LOAD ===== */
 async function loadPlayers(){
+  await refreshAdminUI();
+
+  grid.innerHTML = `<div class="mini muted">Carico…</div>`;
+
+  // select * così non rompe se la colonna bio ancora non esiste
   const { data, error } = await client
-    .from("players")
-    .select("id,name,role,position,avatar,comment")
+    .from(TABLE_PLAYERS)
+    .select("*")
     .order("name", { ascending:true });
 
-  if(error) throw error;
-  PLAYERS = data || [];
-}
-
-async function loadAll(){
-  try{
-    await refreshAdminUI();
-    await loadPlayers();
-
-    // stats (non bloccanti: se una parte fallisce, mostra comunque i giocatori)
-    await calcFromMatches();
-    await calcMvpWins();
-
-    render();
-  }catch(e){
-    console.error(e);
-    grid.innerHTML = `<div class="muted">Errore caricamento giocatori.</div>`;
-    showToast("Errore: " + (e.message || e), "bad");
+  if(error){
+    console.error(error);
+    grid.innerHTML = `<div class="mini muted">Errore caricamento: ${escapeHtml(error.message)}</div>`;
+    return;
   }
+
+  ALL = (data || []).map(p=>{
+    // normalizza avatar: se ti salvano "1.png" va bene
+    return {
+      id: p.id,
+      name: p.name || "",
+      role: p.role || "",
+      position: p.position || "",
+      avatar: p.avatar || p.avatar_file || p.avatar_url || DEFAULT_AVATAR,
+      bio: p.bio ?? p.note ?? p.description ?? ""
+    };
+  });
+
+  applyFilter();
 }
 
-filterRole.onchange = () => render();
-sortBy.onchange = () => render();
+refreshBtn.onclick = () => loadPlayers();
+searchInput.oninput = () => applyFilter();
 
-loadAll();
+/* INIT */
+loadPlayers();
 </script>
 </body>
 </html>
