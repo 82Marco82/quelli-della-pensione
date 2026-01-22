@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Componenti • Quelli della pensione</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -15,11 +15,13 @@
       --muted:#6b7280;
       --border:#e5e7eb;
       --shadow:0 6px 20px rgba(0,0,0,.08);
-      --chipBg:rgba(0,0,0,.04);
-      --btn:#111;
-      --btnText:#fff;
       --pill:#eeeeee;
-      --logo1:#111; --logo2:#333;
+      --logo1:#111;
+      --logo2:#333;
+      --btn:#111;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#ef4444;
     }
     body.dark{
       --bg:#0f1115;
@@ -28,164 +30,129 @@
       --muted:#a1a1aa;
       --border:#2a2f3a;
       --shadow:0 10px 28px rgba(0,0,0,.45);
-      --chipBg:rgba(255,255,255,.04);
-      --btn:#0b0e14;
-      --btnText:#fff;
       --pill:#222631;
-      --logo1:#0b0e14; --logo2:#2a3242;
+      --logo1:#0b0e14;
+      --logo2:#2a3242;
+      --btn:#0b0e14;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui;
+      background:var(--bg);
+      color:var(--text);
+      transition:.2s;
+    }
+    .wrap{max-width:980px;margin:auto;padding:16px}
+
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .brand{display:flex; align-items:center; gap:12px;}
+    .logo{
+      width:70px;height:70px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:32px;
+      letter-spacing:2px;
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      transform-style:preserve-3d;
+      will-change:transform;
+    }
+    .logo.spin{ animation: coinSpin 900ms ease-in-out; }
+    @keyframes coinSpin{
+      0%{transform:rotateY(0deg)}
+      50%{transform:rotateY(180deg)}
+      100%{transform:rotateY(360deg)}
     }
 
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
-    .wrap{max-width:860px;margin:auto;padding:16px}
+    .titleWrap{line-height:1.1}
+    .title{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:44px;
+      margin:0;
+      text-transform:uppercase;
+    }
+    .subtitle{color:var(--muted);font-size:14px;margin-top:2px}
+
+    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+    .spacer{flex:1}
 
     .card{
       background:var(--card);
       border:1px solid var(--border);
-      border-radius:18px;
+      border-radius:16px;
       padding:14px;
       box-shadow:var(--shadow);
       margin:12px 0;
     }
 
-    .header{text-align:center}
-    .logo{
-      width:74px;height:74px;border-radius:999px;
-      background:linear-gradient(135deg,var(--logo1),var(--logo2));
-      margin:auto;
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:30px;letter-spacing:2px;
-    }
-    h1{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:44px;
-      margin:10px 0 0;
-      text-transform:uppercase;
-    }
-    .subtitle{color:var(--muted);font-size:14px;margin-top:6px}
-
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .muted{color:var(--muted)}
-    .space{height:10px}
-
     .btn{
-      border:1px solid var(--border);
+      border:0;
       background:var(--btn);
-      color:var(--btnText);
+      color:#fff;
       padding:12px 14px;
       border-radius:14px;
-      cursor:pointer;
       font-weight:900;
+      cursor:pointer;
+      text-decoration:none;
       display:inline-flex;
       align-items:center;
-      gap:10px;
+      gap:8px;
       user-select:none;
     }
     .btn.ghost{
       background:transparent;
       color:var(--text);
+      border:1px solid var(--border);
     }
-    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn.small{padding:10px 12px; border-radius:12px; font-size:14px}
+    .btn.ok{background:var(--ok)}
+    .btn.warn{background:var(--warn); color:#111}
+
+    .input{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:transparent;
+      color:var(--text);
+      font-family:inherit;
+      outline:none;
+    }
 
     .pill{
       display:inline-flex;
       align-items:center;
       gap:8px;
-      padding:10px 12px;
+      background:var(--pill);
       border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--chipBg);
+      padding:8px 12px;
       font-weight:900;
-      font-size:13px;
+      border:1px solid var(--border);
       white-space:nowrap;
+      max-width:100%;
     }
 
-    .controls{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      margin-top:12px;
-    }
-    .controlsLeft{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-
-    /* LISTA */
-    .list{margin-top:10px}
-
-    .playerCard{
-      padding:16px;
-      border-radius:22px;
+    .toast{
+      display:none;
+      margin-top:10px;
+      padding:12px 12px;
+      border-radius:14px;
       border:1px solid var(--border);
-      background:var(--card);
-      box-shadow:var(--shadow);
-      cursor:pointer;
-      user-select:none;
+      background:rgba(22,163,74,.10);
+      color:var(--text);
+      font-weight:800;
     }
+    .toast.show{display:block}
+    .toast.bad{background:rgba(239,68,68,.10)}
+    .toast.warn{background:rgba(245,158,11,.12)}
 
-    .playerTop{
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
-      justify-content:space-between;
-    }
-
-    /* IMPORTANTISSIMO: evita troncamento su mobile */
-    .playerLeft{
-      flex:1;
-      min-width:0;
-    }
-
-    .badgeMedal{
-      width:34px;height:34px;border-radius:999px;
-      display:flex;align-items:center;justify-content:center;
-      border:1px solid var(--border);
-      background:var(--chipBg);
-      font-weight:900;
-      flex:0 0 auto;
-    }
-
-    .playerName{
-      font-weight:900;
-      font-size:22px;
-      line-height:1.1;
-
-      /* FIX: niente ... */
-      white-space:normal !important;
-      overflow:visible !important;
-      text-overflow:clip !important;
-      word-break:break-word;
-      overflow-wrap:anywhere;
-    }
-
-    .playerSub{
-      margin-top:6px;
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .chips{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-start;
-      margin-top:14px;
-    }
-
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--chipBg);
-      font-weight:900;
-      font-size:13px;
-      white-space:nowrap;
-    }
-
+    /* MENU come index */
     .nav{
       display:flex;
       justify-content:space-between;
@@ -193,9 +160,88 @@
       flex-wrap:wrap;
       font-size:14px;
     }
-    .nav a{color:var(--text);text-decoration:none;font-weight:800}
-    .nav a:hover{text-decoration:underline}
+    .nav a{
+      color:var(--text);
+      text-decoration:none;
+      font-weight:800;
+    }
 
+    /* Grid componenti */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:12px;
+    }
+    @media(max-width:980px){ .grid{grid-template-columns:repeat(3, 1fr)} }
+    @media(max-width:720px){ .grid{grid-template-columns:repeat(2, 1fr)} }
+    @media(max-width:460px){ .grid{grid-template-columns:1fr} }
+
+    .playerCard{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease;
+      min-height:110px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .playerCard:hover{transform:translateY(-1px)}
+    .avatar{
+      width:64px;height:64px;border-radius:999px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#000;
+      flex:0 0 auto;
+    }
+    .pTxt{min-width:0;flex:1}
+    .pName{
+      font-weight:900;
+      font-size:16px;
+      line-height:1.1;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .pMeta{
+      margin-top:4px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.02);
+      font-weight:900;
+      font-size:12px;
+      color:var(--text);
+    }
+    body.dark .tag{background:rgba(255,255,255,.03)}
+    .tag.gk{border-color:rgba(245,158,11,.45)}
+    .pBio{
+      margin-top:8px;
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
+      line-height:1.25;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+      word-break:break-word;
+    }
+    .mini{font-size:12px;color:var(--muted);font-weight:800}
+
+    /* Fab theme */
     .fab{
       position:fixed;
       right:16px;bottom:16px;
@@ -206,304 +252,305 @@
       box-shadow:var(--shadow);
       cursor:pointer;
       font-size:22px;
-      display:flex;align-items:center;justify-content:center;
-      z-index:9999;
-    }
-
-    .infoBox{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-start;
-      margin-top:10px;
-    }
-
-    .msg{
-      margin-top:10px;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:var(--chipBg);
-      color:var(--muted);
-      white-space:pre-wrap;
-      font-size:13px;
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
+<div class="wrap">
 
-    <div class="header">
-      <div class="logo">QDP</div>
-      <h1>Componenti</h1>
-      <div class="subtitle">Quelli della pensione</div>
-    </div>
-
-    <div class="card">
-      <div class="infoBox">
-        <span class="pill">👥 Totale componenti: <span id="totPlayers">—</span></span>
-        <span class="pill">📚 Partite in archivio: <span id="totMatches">—</span></span>
+  <div class="topbar">
+    <div class="brand">
+      <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
+      <div class="titleWrap">
+        <h1 class="title">COMPONENTI</h1>
+        <div class="subtitle">Tutta la rosa • Avatar • Ruoli • (Admin: descrizione giocatore)</div>
       </div>
-
-      <div class="controls">
-        <div class="controlsLeft">
-          <button id="btnSortPresence" class="btn">🏅 Classifica presenze</button>
-          <button id="btnSortAZ" class="btn ghost">A–Z</button>
-        </div>
-        <button id="btnRefresh" class="btn ghost">🔄 Aggiorna</button>
-      </div>
-
-      <div id="status" class="msg">Caricamento…</div>
     </div>
 
-    <div id="list" class="list"></div>
-
-    <div class="card nav muted">
-      <a href="index.html">🏠 Home</a>
-      <a href="storico.html">📚 Storico</a>
-      <a href="marcatori.html">⚽ Marcatori</a>
-      <a href="admin.html">🔐 Admin</a>
+    <div class="row">
+      <a class="btn ghost" href="index.html">⬅️ Home</a>
+      <button id="adminBtn" class="btn small warn" type="button">🔐 Admin: OFF</button>
     </div>
-
   </div>
 
-  <button id="themeToggle" class="fab">🌙</button>
+  <div class="card">
+    <div class="row">
+      <input id="searchInput" class="input" type="text" placeholder="🔎 Cerca giocatore... (es: Antonio)">
+      <div class="spacer"></div>
+      <div id="countPill" class="pill">👥 0</div>
+      <button id="refreshBtn" class="btn ghost" type="button">🔄 Aggiorna</button>
+    </div>
 
-  <script src="config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <div id="adminHint" class="pill" style="display:none;margin-top:10px;white-space:normal">
+      ✅ Admin attivo (clicca un giocatore per scrivere/modificare descrizione)
+    </div>
 
-  <script>
-    /* ===== THEME ===== */
-    function setTheme(mode){
-      document.body.classList.toggle("dark", mode === "dark");
-      document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
-      localStorage.setItem("qdp_theme", mode);
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div style="font-weight:900">👥 Rosa</div>
+      <div class="spacer"></div>
+      <div class="mini">Tip: clicca un giocatore per vedere/modificare la descrizione (solo admin).</div>
+    </div>
+    <div id="grid" class="grid" style="margin-top:12px"></div>
+  </div>
+
+  <!-- NAV come index -->
+  <div class="card nav muted">
+    <a href="storico.html">📚 Storico</a>
+    <a href="marcatori.html">⚽ Marcatori</a>
+    <a href="mvp.html">🏆 Vota MVP</a>
+    <a href="foto.html">📸 Foto</a>
+    <a href="componenti.html">👥 Componenti</a>
+    <a href="admin.html">🔐 Admin</a>
+  </div>
+
+</div>
+
+<button id="themeToggle" class="fab">🌙</button>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<script>
+/* ===== THEME ===== */
+const themeBtn = document.getElementById("themeToggle");
+function setTheme(mode){
+  document.body.classList.toggle("dark", mode === "dark");
+  themeBtn.textContent = (mode === "dark") ? "☀️" : "🌙";
+  localStorage.setItem("qdp_theme", mode);
+}
+setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
+themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+
+/* LOGO MONETA */
+const logoCoin = document.getElementById("logoCoin");
+function spinLogo(){
+  logoCoin.classList.remove("spin");
+  void logoCoin.offsetWidth;
+  logoCoin.classList.add("spin");
+}
+logoCoin.addEventListener("click", spinLogo);
+logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
+
+/* ===== SUPABASE ===== */
+if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+  alert("config.js non caricato o non valido");
+  throw new Error("Missing config");
+}
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ===== DOM ===== */
+const adminBtn = document.getElementById("adminBtn");
+const adminHint = document.getElementById("adminHint");
+const toast = document.getElementById("toast");
+const refreshBtn = document.getElementById("refreshBtn");
+const grid = document.getElementById("grid");
+const countPill = document.getElementById("countPill");
+const searchInput = document.getElementById("searchInput");
+
+/* ===== CONFIG ===== */
+const TABLE_PLAYERS = "players";
+const AVATAR_BASE = "avatars/";
+const DEFAULT_AVATAR = "default.png";
+
+/* ===== HELPERS ===== */
+function showToast(msg, type="ok"){
+  toast.classList.remove("show","bad","warn");
+  if(type==="bad") toast.classList.add("bad");
+  if(type==="warn") toast.classList.add("warn");
+  toast.textContent = msg;
+  toast.classList.add("show");
+  setTimeout(()=>toast.classList.remove("show"), 2200);
+}
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function norm(s){
+  return String(s||"").trim().toLowerCase().replace(/\s+/g," ");
+}
+function avatarUrl(filename){
+  const f = String(filename || "").trim();
+  return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
+}
+function isGK(p){
+  const r = String(p?.role||"").toLowerCase();
+  const pos = String(p?.position||"").toLowerCase();
+  return r === "gk" || pos.includes("port");
+}
+function safeBio(p){
+  // se hai colonne diverse, le legge lo stesso
+  return (p?.bio ?? p?.note ?? p?.description ?? "").toString().trim();
+}
+
+async function getSession(){
+  const { data } = await client.auth.getSession();
+  return data?.session || null;
+}
+function isAdminSession(session){ return !!(session && session.user); }
+
+let adminOn = false;
+async function refreshAdminUI(){
+  const session = await getSession();
+  adminOn = isAdminSession(session);
+  adminBtn.textContent = adminOn ? "🔐 Admin: ON" : "🔐 Admin: OFF";
+  adminBtn.classList.toggle("warn", !adminOn);
+  adminBtn.classList.toggle("ok", adminOn);
+  adminHint.style.display = adminOn ? "inline-flex" : "none";
+  return adminOn;
+}
+
+adminBtn.onclick = async () => {
+  const session = await getSession();
+  if(isAdminSession(session)){
+    await client.auth.signOut();
+    showToast("Admin disattivato.", "warn");
+    await refreshAdminUI();
+    await loadPlayers();
+    return;
+  }
+  const email = prompt("Email admin:");
+  if(!email) return;
+  const password = prompt("Password admin:");
+  if(!password) return;
+
+  const { error } = await client.auth.signInWithPassword({ email, password });
+  if(error){
+    console.error(error);
+    showToast("Login fallito.", "bad");
+    return;
+  }
+  showToast("Admin attivo ✅");
+  await refreshAdminUI();
+  await loadPlayers();
+};
+
+/* ===== DATA ===== */
+let ALL = [];
+
+function renderCard(p){
+  const gk = isGK(p);
+  const nameHtml = gk ? `${escapeHtml(p.name||"")} <span title="Portiere">🧤</span>` : escapeHtml(p.name||"");
+  const pos = String(p.position || "").trim() || "—";
+  const role = gk ? "PORTIERE" : "GIOCATORE";
+  const bio = safeBio(p);
+
+  return `
+    <div class="playerCard" data-id="${escapeHtml(p.id)}" title="${adminOn ? "Clicca per modificare descrizione" : "Clicca per vedere descrizione"}">
+      <img class="avatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt="avatar"
+           onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
+      <div class="pTxt">
+        <div class="pName">${nameHtml}</div>
+        <div class="pMeta">
+          <span class="tag ${gk ? "gk" : ""}">${gk ? "🧤 " : ""}${role}</span>
+          <span class="tag">📌 ${escapeHtml(pos)}</span>
+        </div>
+        <div class="pBio">${bio ? escapeHtml(bio) : (adminOn ? "✍️ (clicca per inserire descrizione)" : "—")}</div>
+      </div>
+    </div>
+  `;
+}
+
+function applyFilter(){
+  const q = norm(searchInput.value);
+  const list = q
+    ? ALL.filter(p => norm(p.name).includes(q) || norm(p.position).includes(q) || norm(safeBio(p)).includes(q))
+    : ALL.slice();
+
+  countPill.textContent = `👥 ${list.length}`;
+
+  grid.innerHTML = list.map(renderCard).join("") || `<div class="mini muted">Nessun giocatore.</div>`;
+
+  // click card
+  [...grid.querySelectorAll(".playerCard")].forEach(card=>{
+    card.onclick = () => onCardClick(card.getAttribute("data-id"));
+  });
+}
+
+async function onCardClick(playerId){
+  const p = ALL.find(x => String(x.id) === String(playerId));
+  if(!p) return;
+
+  const bio = safeBio(p);
+
+  if(adminOn){
+    const next = prompt(
+      `Descrizione per ${p.name} (max 180 caratteri)\n\n⚠️ Nota: serve colonna "bio" in tabella players.`,
+      bio
+    );
+    if(next === null) return;
+
+    const clean = String(next||"").trim().slice(0,180);
+
+    // tenta update su bio
+    const { error } = await client
+      .from(TABLE_PLAYERS)
+      .update({ bio: clean })
+      .eq("id", p.id);
+
+    if(error){
+      console.error(error);
+      // Se non hai creato la colonna bio
+      showToast("Errore: forse manca la colonna 'bio' in players.", "bad");
+      return;
     }
-    setTheme(localStorage.getItem("qdp_theme")==="dark" ? "dark" : "light");
-    document.getElementById("themeToggle").onclick = () => {
-      setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+
+    showToast("Descrizione salvata ✅");
+    await loadPlayers();
+    return;
+  }
+
+  // non-admin: mostra popup sola lettura
+  const msg = bio ? bio : "Nessuna descrizione.";
+  alert(`${p.name}\n\n${msg}`);
+}
+
+/* ===== LOAD ===== */
+async function loadPlayers(){
+  await refreshAdminUI();
+
+  grid.innerHTML = `<div class="mini muted">Carico…</div>`;
+
+  // select * così non rompe se la colonna bio ancora non esiste
+  const { data, error } = await client
+    .from(TABLE_PLAYERS)
+    .select("*")
+    .order("name", { ascending:true });
+
+  if(error){
+    console.error(error);
+    grid.innerHTML = `<div class="mini muted">Errore caricamento: ${escapeHtml(error.message)}</div>`;
+    return;
+  }
+
+  ALL = (data || []).map(p=>{
+    // normalizza avatar: se ti salvano "1.png" va bene
+    return {
+      id: p.id,
+      name: p.name || "",
+      role: p.role || "",
+      position: p.position || "",
+      avatar: p.avatar || p.avatar_file || p.avatar_url || DEFAULT_AVATAR,
+      bio: p.bio ?? p.note ?? p.description ?? ""
     };
+  });
 
-    /* ===== SUPABASE ===== */
-    if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
-      alert("Errore: config.js non caricato");
-      throw new Error("Missing config");
-    }
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  applyFilter();
+}
 
-    const totPlayersEl = document.getElementById("totPlayers");
-    const totMatchesEl = document.getElementById("totMatches");
-    const statusEl = document.getElementById("status");
-    const listEl = document.getElementById("list");
+refreshBtn.onclick = () => loadPlayers();
+searchInput.oninput = () => applyFilter();
 
-    const btnSortPresence = document.getElementById("btnSortPresence");
-    const btnSortAZ = document.getElementById("btnSortAZ");
-    const btnRefresh = document.getElementById("btnRefresh");
-
-    function escapeHtml(s){
-      return String(s ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    function medal(i){
-      if(i===0) return "🥇";
-      if(i===1) return "🥈";
-      if(i===2) return "🥉";
-      return String(i+1);
-    }
-
-    function isVoteOpen(m){
-      return (m?.vote_open === true) || (m?.voting_open === true);
-    }
-
-    let SORT_MODE = "presence"; // "presence" | "az"
-
-    btnSortPresence.onclick = () => { SORT_MODE = "presence"; render(); };
-    btnSortAZ.onclick = () => { SORT_MODE = "az"; render(); };
-    btnRefresh.onclick = () => loadAll();
-
-    let PLAYERS = []; // [{id,name}]
-    let MATCHES = []; // [{id,called_up,vote_open,voting_open}]
-    let MVP_VOTES = []; // [{match_id,voted_player}]
-
-    let PRESENCE_MAP = new Map(); // playerId -> presenze
-    let MVP_WIN_MAP = new Map();  // playerId -> mvp wins (per match closed)
-    let TOTAL_MATCHES = 0;
-
-    function setStatus(text){
-      statusEl.textContent = text;
-      statusEl.style.display = text ? "block" : "none";
-    }
-
-    async function loadAll(){
-      try{
-        setStatus("Caricamento…");
-        listEl.innerHTML = "";
-
-        // players
-        const { data: players, error: eP } = await client
-          .from("players")
-          .select("id,name")
-          .order("name",{ascending:true});
-        if(eP) throw eP;
-        PLAYERS = players || [];
-
-        // matches (archivio)
-        const { data: matches, error: eM } = await client
-          .from("matches")
-          .select("id,called_up,vote_open,voting_open,match_date,match_time")
-          .order("match_date",{ascending:false})
-          .order("match_time",{ascending:false})
-          .limit(1000);
-        if(eM) throw eM;
-        MATCHES = matches || [];
-        TOTAL_MATCHES = MATCHES.length;
-
-        // votes
-        const matchIds = MATCHES.map(m=>m.id);
-        if(matchIds.length){
-          const { data: votes, error: eV } = await client
-            .from("mvp_votes")
-            .select("match_id,voted_player")
-            .in("match_id", matchIds);
-          if(eV) throw eV;
-          MVP_VOTES = votes || [];
-        }else{
-          MVP_VOTES = [];
-        }
-
-        computeStats();
-        render();
-        setStatus("");
-
-      }catch(err){
-        console.error(err);
-        setStatus("❌ Errore caricamento: " + (err?.message || String(err)));
-      }
-    }
-
-    function computeStats(){
-      PRESENCE_MAP = new Map();
-      MVP_WIN_MAP = new Map();
-
-      // presenze: quante volte compare in called_up
-      for(const m of MATCHES){
-        const cu = Array.isArray(m.called_up) ? m.called_up : [];
-        for(const pid of cu){
-          const k = String(pid);
-          PRESENCE_MAP.set(k, (PRESENCE_MAP.get(k) || 0) + 1);
-        }
-      }
-
-      // MVP wins per match chiusa:
-      // 1) raggruppo voti per match
-      const votesByMatch = new Map();
-      for(const v of MVP_VOTES){
-        const mk = String(v.match_id);
-        if(!votesByMatch.has(mk)) votesByMatch.set(mk, []);
-        votesByMatch.get(mk).push(v);
-      }
-
-      // 2) per ogni match chiusa: conto voti e assegno 1 win ai leader (anche in parità)
-      for(const m of MATCHES){
-        if(isVoteOpen(m)) continue; // solo chiuse
-        const mk = String(m.id);
-        const vv = votesByMatch.get(mk) || [];
-        if(!vv.length) continue;
-
-        const counts = new Map();
-        for(const x of vv){
-          const pid = String(x.voted_player || "");
-          if(!pid) continue;
-          counts.set(pid, (counts.get(pid) || 0) + 1);
-        }
-        if(!counts.size) continue;
-
-        let top = 0;
-        for(const c of counts.values()) top = Math.max(top, c);
-        const leaders = [...counts.entries()].filter(([_,c])=>c===top).map(([pid])=>pid);
-
-        for(const pid of leaders){
-          MVP_WIN_MAP.set(pid, (MVP_WIN_MAP.get(pid) || 0) + 1);
-        }
-      }
-    }
-
-    function render(){
-      // header counters
-      totPlayersEl.textContent = String(PLAYERS.length);
-      totMatchesEl.textContent = String(TOTAL_MATCHES);
-
-      // buttons style
-      if(SORT_MODE === "presence"){
-        btnSortPresence.className = "btn";
-        btnSortAZ.className = "btn ghost";
-      }else{
-        btnSortPresence.className = "btn ghost";
-        btnSortAZ.className = "btn";
-      }
-
-      // rows
-      const rows = PLAYERS.map(p=>{
-        const id = String(p.id);
-        const presenze = PRESENCE_MAP.get(id) || 0;
-        const mvp = MVP_WIN_MAP.get(id) || 0;
-        const perc = TOTAL_MATCHES > 0 ? Math.round((presenze / TOTAL_MATCHES) * 100) : 0;
-        return { id, name: p.name || id, presenze, perc, mvp };
-      });
-
-      if(SORT_MODE === "presence"){
-        rows.sort((a,b)=> b.presenze - a.presenze || a.name.localeCompare(b.name,"it"));
-      }else{
-        rows.sort((a,b)=> a.name.localeCompare(b.name,"it"));
-      }
-
-      if(!rows.length){
-        listEl.innerHTML = `<div class="card"><div class="muted">Nessun componente trovato.</div></div>`;
-        return;
-      }
-
-      listEl.innerHTML = rows.map((r, idx)=>{
-        const showMedal = (SORT_MODE === "presence");
-        const medalHtml = showMedal ? `<div class="badgeMedal">${escapeHtml(medal(idx))}</div>` : `<div class="badgeMedal">👤</div>`;
-
-        return `
-          <div class="playerCard" data-id="${escapeHtml(r.id)}" style="margin-top:12px">
-            <div class="playerTop">
-              ${medalHtml}
-
-              <div class="playerLeft">
-                <div class="playerName">${escapeHtml(r.name)}</div>
-                <div class="playerSub">Tocca per aprire la scheda</div>
-
-                <div class="chips">
-                  <div class="chip">👥 Presenze: ${escapeHtml(r.presenze)}</div>
-                  <div class="chip">📊 ${escapeHtml(r.perc)}%</div>
-                  <div class="chip">🏆 MVP: ${escapeHtml(r.mvp)}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join("");
-
-      // click -> giocatore.html?id=
-      [...document.querySelectorAll(".playerCard")].forEach(card=>{
-        card.addEventListener("click", ()=>{
-          const id = card.getAttribute("data-id");
-          if(!id) return;
-          location.href = `giocatore.html?id=${encodeURIComponent(id)}`;
-        });
-      });
-    }
-
-    loadAll();
-  </script>
+/* INIT */
+loadPlayers();
+</script>
 </body>
 </html>
