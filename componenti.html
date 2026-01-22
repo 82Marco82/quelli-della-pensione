@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Componenti • Quelli della pensione</title>
+  <title>QDP • Componenti</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
@@ -19,11 +19,8 @@
       --logo1:#111;
       --logo2:#333;
       --btn:#111;
-
       --ok:#16a34a;
-      --warn:#f59e0b;
       --bad:#ef4444;
-      --chipBg:rgba(0,0,0,.04);
     }
     body.dark{
       --bg:#0f1115;
@@ -36,27 +33,10 @@
       --logo1:#0b0e14;
       --logo2:#2a3242;
       --btn:#0b0e14;
-      --chipBg:rgba(255,255,255,.04);
     }
-
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,system-ui;
-      background:var(--bg);
-      color:var(--text);
-      transition:.2s;
-    }
-    .wrap{max-width:980px;margin:auto;padding:16px}
-
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:14px;
-      box-shadow:var(--shadow);
-      margin:12px 0;
-    }
+    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
+    .wrap{max-width:980px;margin:18px auto;padding:16px}
 
     .topbar{
       display:flex; align-items:center; justify-content:space-between;
@@ -65,11 +45,10 @@
     }
     .brand{display:flex; align-items:center; gap:12px;}
     .logo{
-      width:56px;height:56px;border-radius:999px;
+      width:64px;height:64px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
       display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:26px;
-      letter-spacing:2px;
+      color:#fff;font-family:'Bebas Neue';font-size:28px;letter-spacing:2px;
       box-shadow:var(--shadow);
       flex:0 0 auto;
     }
@@ -87,17 +66,15 @@
     .spacer{flex:1}
     .muted{color:var(--muted)}
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
+      display:inline-flex; align-items:center; gap:8px;
       background:var(--pill);
       border-radius:999px;
       padding:8px 12px;
       font-weight:900;
       border:1px solid var(--border);
       white-space:nowrap;
-      max-width:100%;
     }
+
     .btn{
       border:0;
       background:var(--btn);
@@ -119,20 +96,16 @@
     }
     .btn.small{padding:10px 12px; border-radius:12px; font-size:14px}
     .btn.ok{background:var(--ok)}
-    .btn.warn{background:var(--warn); color:#111}
-    .btn.danger{background:var(--bad)}
+    .btn.bad{background:var(--bad)}
 
-    .input, select, textarea{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
+    .card{
+      background:var(--card);
       border:1px solid var(--border);
-      background:transparent;
-      color:var(--text);
-      font-family:inherit;
-      outline:none;
+      border-radius:16px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      margin:12px 0;
     }
-    textarea{min-height:90px; resize:vertical}
 
     .grid{
       display:grid;
@@ -149,63 +122,48 @@
       overflow:hidden;
       background:var(--card);
       box-shadow:var(--shadow);
-      cursor:pointer;
-      transition:transform .12s ease;
+      display:flex;
+      flex-direction:column;
     }
-    .pCard:active{transform:scale(.99)}
     .pTop{
-      padding:14px 14px 10px;
       display:flex;
       gap:12px;
+      padding:12px;
       align-items:center;
     }
     .avatar{
-      width:58px;height:58px;border-radius:999px;
+      width:64px;height:64px;border-radius:999px;
       border:1px solid var(--border);
+      flex:0 0 auto;
       object-fit:cover;
       background:#000;
-      flex:0 0 auto;
     }
     .pName{
       font-weight:900;
-      line-height:1.1;
+      font-size:16px;
+      line-height:1.15;
     }
-    .pMeta{
-      margin-top:4px;
-      color:var(--muted);
-      font-weight:800;
-      font-size:12px;
-      line-height:1.2;
-    }
-    .gkBadge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      margin-top:6px;
+    .tags{margin-top:6px; display:flex; flex-wrap:wrap; gap:6px}
+    .tag{
+      display:inline-flex; align-items:center; gap:6px;
       padding:6px 10px;
       border-radius:999px;
       border:1px solid var(--border);
-      background:var(--chipBg);
+      background:rgba(0,0,0,.02);
       font-weight:900;
       font-size:12px;
     }
+    body.dark .tag{background:rgba(255,255,255,.03)}
+    .tag.gk{background:rgba(22,163,74,.10); border-color:rgba(22,163,74,.35)}
+    .tag.field{background:rgba(0,0,0,.02)}
+    body.dark .tag.field{background:rgba(255,255,255,.03)}
 
-    .stats{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      padding:0 14px 14px;
-    }
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--chipBg);
-      font-weight:900;
+    .pBottom{
+      padding:12px;
+      border-top:1px solid var(--border);
+      color:var(--muted);
       font-size:12px;
+      font-weight:800;
     }
 
     .nav{
@@ -233,79 +191,14 @@
       font-size:22px;
     }
 
-    /* Modal */
-    .modalBack{
-      position:fixed; inset:0;
-      background:rgba(0,0,0,.55);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:16px;
-      z-index:50;
-    }
-    .modal{
-      width:min(720px, 100%);
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:18px;
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-    .mHead{
-      padding:14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      border-bottom:1px solid var(--border);
-    }
-    .mTitle{
-      font-weight:900;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .mBody{padding:14px}
-    .mTop{
-      display:flex;
-      gap:14px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-    .avatarBig{
-      width:110px;height:110px;border-radius:999px;
-      border:1px solid var(--border);
-      object-fit:cover;
-      background:#000;
-    }
-    .mInfo{flex:1}
-    .mName{font-weight:900;font-size:18px}
-    .mSub{margin-top:6px;color:var(--muted);font-weight:800}
-    .mStats{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
-    .divider{height:1px;background:var(--border); margin:12px 0}
-    .adminBox{
-      display:none;
-      border:1px solid var(--border);
+    .errBox{
+      border:1px solid rgba(239,68,68,.35);
+      background:rgba(239,68,68,.08);
       border-radius:14px;
       padding:12px;
-      background:var(--chipBg);
-      margin-top:12px;
+      font-weight:900;
+      white-space:pre-wrap;
     }
-    .adminBox .row{margin-top:10px}
-    .toast{
-      display:none;
-      margin-top:10px;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:rgba(22,163,74,.10);
-      color:var(--text);
-      font-weight:800;
-    }
-    .toast.show{display:block}
-    .toast.bad{background:rgba(239,68,68,.10)}
-    .toast.warn{background:rgba(245,158,11,.12)}
   </style>
 </head>
 
@@ -316,47 +209,35 @@
     <div class="brand">
       <div class="logo">QDP</div>
       <div class="titleWrap">
-        <h1 class="title">COMPONENTI</h1>
-        <div class="subtitle">Avatar • Ruoli • Presenze • Gol • MVP</div>
+        <h1 class="title">Componenti</h1>
+        <div class="subtitle">Giocatori • Avatar • Ruoli</div>
       </div>
     </div>
 
     <div class="row">
       <a class="btn ghost" href="index.html">⬅️ Home</a>
-      <button id="adminBtn" class="btn small warn" type="button">🔐 Admin: OFF</button>
+      <button id="refreshBtn" class="btn small ghost" type="button">🔄 Aggiorna</button>
       <button id="themeToggle" class="btn small ghost" type="button">🌙</button>
     </div>
   </div>
 
   <div class="card">
     <div class="row">
-      <input id="searchInput" class="input" type="text" placeholder="Cerca giocatore... (nome)">
-      <label class="pill" style="gap:10px">
-        🔽 Ordina:
-        <select id="sortSelect" style="width:auto; padding:8px 10px; border-radius:12px">
-          <option value="name">Nome</option>
-          <option value="apps">Presenze</option>
-          <option value="goals">Gol</option>
-          <option value="mvps">MVP</option>
-        </select>
-      </label>
-      <div class="spacer"></div>
       <div id="countPill" class="pill">👥 0 giocatori</div>
+      <div class="spacer"></div>
+      <div class="pill">📌 Avatar: cartella <b>/avatars</b> (1.png…18.png + default.png)</div>
     </div>
 
-    <div id="adminHint" class="pill" style="display:none; margin-top:10px; white-space:normal">
-      ✅ Admin attivo (puoi modificare descrizione + presenze/gol/mvp)
-    </div>
-
-    <div id="toast" class="toast"></div>
+    <div id="msg" style="margin-top:12px"></div>
   </div>
 
   <div class="card">
     <div class="row">
-      <div style="font-weight:900">👥 Lista giocatori</div>
+      <div style="font-weight:900">🧑‍🤝‍🧑 Lista</div>
       <div class="spacer"></div>
-      <div class="muted" style="font-size:13px;font-weight:800">Clicca un giocatore per aprire la scheda.</div>
+      <div class="muted" style="font-weight:800">Se vedi errore qui sotto, è quasi sempre una colonna/policy.</div>
     </div>
+
     <div id="grid" class="grid" style="margin-top:12px"></div>
   </div>
 
@@ -374,92 +255,41 @@
 
 <button id="themeToggleFab" class="fab">🌙</button>
 
-<!-- MODAL -->
-<div id="modalBack" class="modalBack">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="mHead">
-      <div class="mTitle" id="mTitle">Giocatore</div>
-      <button id="btnClose" class="btn small ghost" type="button">✖️</button>
-    </div>
-    <div class="mBody">
-      <div class="mTop">
-        <img id="mAvatar" class="avatarBig" src="" alt="avatar">
-        <div class="mInfo">
-          <div id="mName" class="mName">—</div>
-          <div id="mSub" class="mSub">—</div>
-          <div id="mStats" class="mStats"></div>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div style="font-weight:900">📝 Descrizione</div>
-      <div id="mBio" class="muted" style="margin-top:8px; font-weight:800; white-space:pre-wrap">—</div>
-
-      <div id="adminBox" class="adminBox">
-        <div style="font-weight:900">🔧 Modifica (solo Admin)</div>
-
-        <div class="row">
-          <label class="muted" style="font-weight:900; font-size:12px">Presenze</label>
-          <input id="inApps" class="input" type="number" min="0" step="1" placeholder="Presenze">
-        </div>
-
-        <div class="row">
-          <label class="muted" style="font-weight:900; font-size:12px">Gol</label>
-          <input id="inGoals" class="input" type="number" min="0" step="1" placeholder="Gol">
-        </div>
-
-        <div class="row">
-          <label class="muted" style="font-weight:900; font-size:12px">MVP</label>
-          <input id="inMvps" class="input" type="number" min="0" step="1" placeholder="MVP">
-        </div>
-
-        <div class="row">
-          <label class="muted" style="font-weight:900; font-size:12px">Descrizione</label>
-          <textarea id="inBio" class="input" maxlength="300" placeholder="Scrivi una breve descrizione (max 300)"></textarea>
-        </div>
-
-        <div class="row">
-          <button id="btnSave" class="btn ok" type="button">💾 Salva</button>
-          <button id="btnReset" class="btn ghost" type="button">↩️ Annulla</button>
-        </div>
-
-        <div class="muted" style="margin-top:8px; font-weight:800; font-size:12px">
-          Nota: se non salva, controlla RLS su tabella <b>players</b>.
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
 /* ===== THEME ===== */
 const themeBtn = document.getElementById("themeToggle");
-const themeBtnFab = document.getElementById("themeToggleFab");
+const themeFab = document.getElementById("themeToggleFab");
+
 function setTheme(mode){
   document.body.classList.toggle("dark", mode === "dark");
-  themeBtn.textContent = (mode === "dark") ? "☀️" : "🌙";
-  themeBtnFab.textContent = (mode === "dark") ? "☀️" : "🌙";
+  const icon = (mode === "dark") ? "☀️" : "🌙";
+  themeBtn.textContent = icon;
+  themeFab.textContent = icon;
   localStorage.setItem("qdp_theme", mode);
 }
 setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
 themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
-themeBtnFab.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+themeFab.onclick = themeBtn.onclick;
 
 /* ===== SUPABASE ===== */
 if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
   alert("config.js non caricato o non valido");
   throw new Error("Missing config");
 }
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const client = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
 
-/* ===== AVATAR PATH (GitHub) =====
-   Se la cartella avatars è nella root del sito, lascia così.
-*/
-const AVATAR_BASE = "avatars/";
+/* ===== DOM ===== */
+const gridEl = document.getElementById("grid");
+const msgEl = document.getElementById("msg");
+const countPill = document.getElementById("countPill");
+document.getElementById("refreshBtn").onclick = () => loadPlayers();
+
+/* ===== CONFIG ===== */
+const TABLE_PLAYERS = "players";
+const AVATAR_BASE = "./avatars/";
 const DEFAULT_AVATAR = "default.png";
 
 function escapeHtml(s){
@@ -470,315 +300,122 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-function showToast(msg, type="ok"){
-  const toast = document.getElementById("toast");
-  toast.classList.remove("show","bad","warn");
-  if(type==="bad") toast.classList.add("bad");
-  if(type==="warn") toast.classList.add("warn");
-  toast.textContent = msg;
-  toast.classList.add("show");
-  setTimeout(()=>toast.classList.remove("show"), 2200);
+
+function showError(text){
+  msgEl.innerHTML = `<div class="errBox">❌ ${escapeHtml(text)}</div>`;
+}
+function clearMsg(){
+  msgEl.innerHTML = "";
 }
 
-/* ===== ADMIN ===== */
-const adminBtn = document.getElementById("adminBtn");
-const adminHint = document.getElementById("adminHint");
-let adminOn = false;
-
-async function getSession(){
-  const { data } = await client.auth.getSession();
-  return data?.session || null;
-}
-function isAdminSession(session){ return !!(session && session.user); }
-
-async function refreshAdminUI(){
-  const session = await getSession();
-  adminOn = isAdminSession(session);
-  adminBtn.textContent = adminOn ? "🔐 Admin: ON" : "🔐 Admin: OFF";
-  adminBtn.classList.toggle("warn", !adminOn);
-  adminBtn.classList.toggle("ok", adminOn);
-  adminHint.style.display = adminOn ? "inline-flex" : "none";
-
-  // admin box nel modal
-  const adminBox = document.getElementById("adminBox");
-  adminBox.style.display = adminOn ? "block" : "none";
-  return adminOn;
+function roleLabel(role){
+  const r = String(role || "").toLowerCase();
+  if(r === "gk") return "Portiere (GK)";
+  if(r === "field") return "Giocatore";
+  return role ? String(role) : "—";
 }
 
-adminBtn.onclick = async () => {
-  const session = await getSession();
-  if(isAdminSession(session)){
-    await client.auth.signOut();
-    showToast("Admin disattivato.", "warn");
-    await refreshAdminUI();
-    return;
+/* ✅ select “intelligente”: se una colonna non esiste, riprova */
+async function safeSelectPlayers(){
+  const tries = [
+    "id,name,role,position,avatar",
+    "id,name,role,position,avatar_file",
+    "id,name,role,position,avatar_path",
+    "id,name,role,position",
+    "id,name,role",
+    "id,name"
+  ];
+
+  let lastErr = null;
+  for(const sel of tries){
+    const { data, error } = await client
+      .from(TABLE_PLAYERS)
+      .select(sel)
+      .order("name", { ascending:true });
+
+    if(!error) return { data: data || [], used: sel };
+    lastErr = error;
+    const msg = String(error.message || "");
+    // se è un errore diverso da “colonna non esiste”, fermiamoci subito
+    if(!msg.toLowerCase().includes("column") && !msg.toLowerCase().includes("does not exist")){
+      break;
+    }
   }
-  const email = prompt("Email admin:");
-  if(!email) return;
-  const password = prompt("Password admin:");
-  if(!password) return;
-
-  const { error } = await client.auth.signInWithPassword({ email, password });
-  if(error){
-    console.error(error);
-    showToast("Login fallito.", "bad");
-    return;
-  }
-  showToast("Admin attivo ✅");
-  await refreshAdminUI();
-};
-
-/* ===== UI CONTROLS ===== */
-const grid = document.getElementById("grid");
-const countPill = document.getElementById("countPill");
-const searchInput = document.getElementById("searchInput");
-const sortSelect = document.getElementById("sortSelect");
-
-/* ===== MODAL DOM ===== */
-const modalBack = document.getElementById("modalBack");
-const btnClose = document.getElementById("btnClose");
-const mTitle = document.getElementById("mTitle");
-const mAvatar = document.getElementById("mAvatar");
-const mName = document.getElementById("mName");
-const mSub = document.getElementById("mSub");
-const mStats = document.getElementById("mStats");
-const mBio = document.getElementById("mBio");
-
-const inApps = document.getElementById("inApps");
-const inGoals = document.getElementById("inGoals");
-const inMvps = document.getElementById("inMvps");
-const inBio = document.getElementById("inBio");
-const btnSave = document.getElementById("btnSave");
-const btnReset = document.getElementById("btnReset");
-
-btnClose.onclick = closeModal;
-modalBack.addEventListener("click", (e)=>{ if(e.target === modalBack) closeModal(); });
-document.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeModal(); });
-
-function openModal(){
-  modalBack.style.display = "flex";
-}
-function closeModal(){
-  modalBack.style.display = "none";
-  CURRENT_MODAL_PLAYER = null;
+  throw lastErr || new Error("Errore select players");
 }
 
-/* ===== DATA ===== */
-let PLAYERS = [];
-let CURRENT_MODAL_PLAYER = null;
-
-function getAvatarUrl(p){
-  const file = (p.avatar || p.avatar_file || p.avatar_path || "").trim() || DEFAULT_AVATAR;
-  return AVATAR_BASE + file;
-}
-function safeNum(v){
-  const n = Number(v);
-  return Number.isFinite(n) ? n : null;
-}
-function statText(label, val){
-  return `${label}: ${val == null ? "—" : val}`;
+function getAvatarFile(p){
+  // prova a leggere vari nomi colonna, in base a come l’hai chiamata
+  const file =
+    p.avatar ||
+    p.avatar_file ||
+    p.avatar_path ||
+    "";
+  const clean = String(file || "").trim();
+  return clean ? clean : DEFAULT_AVATAR;
 }
 
-function roleLabel(p){
-  // role = "gk" / "field"
-  const r = String(p.role || "").toLowerCase();
-  const pos = (p.position || "").trim();
-  const posTxt = pos ? pos : (r === "gk" ? "Portiere" : "Giocatore");
-  return posTxt;
-}
-function isGK(p){
-  return String(p.role || "").toLowerCase() === "gk";
-}
+function playerCard(p){
+  const name = String(p.name || "—");
+  const role = String(p.role || "");
+  const position = String(p.position || "");
+  const av = getAvatarFile(p);
 
-function renderCard(p){
-  const avatar = getAvatarUrl(p);
-  const name = (p.name || "").trim();
-  const pos = roleLabel(p);
+  const isGK = role.toLowerCase() === "gk";
 
-  const apps = safeNum(p.appearances);
-  const goals = safeNum(p.goals);
-  const mvps = safeNum(p.mvps);
+  const avatarUrl = AVATAR_BASE + av;
 
   return `
-    <div class="pCard" data-id="${escapeHtml(p.id)}" role="button" tabindex="0">
+    <div class="pCard">
       <div class="pTop">
-        <img class="avatar" src="${escapeHtml(avatar)}" alt="avatar"
-             onerror="this.onerror=null;this.src='${escapeHtml(AVATAR_BASE + DEFAULT_AVATAR)}';">
+        <img class="avatar"
+          src="${escapeHtml(avatarUrl)}"
+          alt="avatar"
+          loading="lazy"
+          onerror="this.onerror=null;this.src='${escapeHtml(AVATAR_BASE + DEFAULT_AVATAR)}';"
+        >
         <div style="min-width:0">
-          <div class="pName">${escapeHtml(name)}${isGK(p) ? " 🧤" : ""}</div>
-          <div class="pMeta">${escapeHtml(pos)}</div>
-          ${isGK(p) ? `<div class="gkBadge">🧤 Portiere</div>` : ``}
+          <div class="pName">${escapeHtml(name)}</div>
+          <div class="tags">
+            <span class="tag ${isGK ? "gk" : "field"}">${isGK ? "🧤 GK" : "👟 FIELD"}</span>
+            <span class="tag">📌 ${escapeHtml(position || "—")}</span>
+          </div>
         </div>
       </div>
-      <div class="stats">
-        <div class="chip">🎮 ${escapeHtml(statText("Pres", apps))}</div>
-        <div class="chip">⚽ ${escapeHtml(statText("Gol", goals))}</div>
-        <div class="chip">🏆 ${escapeHtml(statText("MVP", mvps))}</div>
-      </div>
+      <div class="pBottom">ID: ${escapeHtml(String(p.id || "").slice(0,8))}…</div>
     </div>
   `;
 }
 
-function applyFiltersAndRender(){
-  const q = (searchInput.value || "").trim().toLowerCase();
-  const sort = sortSelect.value;
+async function loadPlayers(){
+  clearMsg();
+  gridEl.innerHTML = `<div class="muted" style="font-weight:900">Caricamento…</div>`;
 
-  let rows = [...PLAYERS];
-
-  if(q){
-    rows = rows.filter(p => String(p.name||"").toLowerCase().includes(q));
-  }
-
-  const num = (v)=> (Number.isFinite(Number(v)) ? Number(v) : -Infinity);
-
-  rows.sort((a,b)=>{
-    if(sort === "apps") return num(b.appearances) - num(a.appearances) || String(a.name).localeCompare(String(b.name),"it");
-    if(sort === "goals") return num(b.goals) - num(a.goals) || String(a.name).localeCompare(String(b.name),"it");
-    if(sort === "mvps") return num(b.mvps) - num(a.mvps) || String(a.name).localeCompare(String(b.name),"it");
-    return String(a.name).localeCompare(String(b.name),"it");
-  });
-
-  countPill.textContent = `👥 ${rows.length} giocatori`;
-
-  grid.innerHTML = rows.map(renderCard).join("") || `<div class="muted">Nessun giocatore.</div>`;
-
-  // click cards
-  [...grid.querySelectorAll(".pCard")].forEach(card=>{
-    const id = card.getAttribute("data-id");
-    const p = rows.find(x=>String(x.id)===String(id));
-    if(!p) return;
-
-    card.onclick = ()=>openPlayer(p);
-    card.onkeydown = (e)=>{ if(e.key==="Enter" || e.key===" "){ e.preventDefault(); openPlayer(p); } };
-  });
-}
-
-function fillModal(p){
-  const avatar = getAvatarUrl(p);
-  const name = (p.name || "").trim();
-  const pos = roleLabel(p);
-
-  const apps = safeNum(p.appearances);
-  const goals = safeNum(p.goals);
-  const mvps = safeNum(p.mvps);
-  const bio = (p.bio || "").trim();
-
-  mTitle.textContent = "Scheda giocatore";
-  mAvatar.src = avatar;
-  mAvatar.onerror = ()=>{ mAvatar.onerror=null; mAvatar.src = AVATAR_BASE + DEFAULT_AVATAR; };
-
-  mName.textContent = name + (isGK(p) ? " 🧤" : "");
-  mSub.textContent = pos + (isGK(p) ? " • GK" : "");
-
-  mStats.innerHTML = `
-    <span class="chip">🎮 Presenze: <b>${apps == null ? "—" : apps}</b></span>
-    <span class="chip">⚽ Gol: <b>${goals == null ? "—" : goals}</b></span>
-    <span class="chip">🏆 MVP: <b>${mvps == null ? "—" : mvps}</b></span>
-  `;
-
-  mBio.textContent = bio ? bio : "—";
-
-  // admin fields
-  inApps.value = (apps == null) ? "" : String(apps);
-  inGoals.value = (goals == null) ? "" : String(goals);
-  inMvps.value = (mvps == null) ? "" : String(mvps);
-  inBio.value = bio;
-
-  // mostra/nasconde admin box in base a sessione
-  document.getElementById("adminBox").style.display = adminOn ? "block" : "none";
-}
-
-function openPlayer(p){
-  CURRENT_MODAL_PLAYER = p;
-  fillModal(p);
-  openModal();
-}
-
-btnReset.onclick = ()=>{
-  if(!CURRENT_MODAL_PLAYER) return;
-  fillModal(CURRENT_MODAL_PLAYER);
-};
-
-btnSave.onclick = async ()=>{
   try{
-    if(!adminOn){
-      showToast("Solo admin può salvare.", "warn");
+    const res = await safeSelectPlayers();
+    const players = res.data || [];
+
+    countPill.textContent = `👥 ${players.length} giocatori`;
+
+    if(!players.length){
+      gridEl.innerHTML = `<div class="muted" style="font-weight:900">Nessun giocatore trovato.</div>`;
       return;
     }
-    if(!CURRENT_MODAL_PLAYER) return;
 
-    const apps = inApps.value === "" ? null : Math.max(0, parseInt(inApps.value, 10));
-    const goals = inGoals.value === "" ? null : Math.max(0, parseInt(inGoals.value, 10));
-    const mvps = inMvps.value === "" ? null : Math.max(0, parseInt(inMvps.value, 10));
-    const bio = (inBio.value || "").trim().slice(0,300);
+    gridEl.innerHTML = players.map(playerCard).join("");
 
-    const patch = { appearances: apps, goals: goals, mvps: mvps, bio: bio };
+    // info tecnica (utile se qualcosa non torna)
+    msgEl.innerHTML = `<div class="muted" style="font-weight:900">✅ Caricati con select: <b>${escapeHtml(res.used)}</b></div>`;
 
-    const { error } = await client
-      .from("players")
-      .update(patch)
-      .eq("id", CURRENT_MODAL_PLAYER.id);
-
-    if(error) throw error;
-
-    // aggiorna cache locale
-    PLAYERS = PLAYERS.map(x=>{
-      if(String(x.id) !== String(CURRENT_MODAL_PLAYER.id)) return x;
-      return { ...x, ...patch };
-    });
-
-    // aggiorna modal
-    CURRENT_MODAL_PLAYER = PLAYERS.find(x=>String(x.id)===String(CURRENT_MODAL_PLAYER.id)) || CURRENT_MODAL_PLAYER;
-    fillModal(CURRENT_MODAL_PLAYER);
-
-    // aggiorna griglia
-    applyFiltersAndRender();
-
-    showToast("Salvato ✅");
   }catch(e){
     console.error(e);
-    showToast("Errore salvataggio.", "bad");
+    countPill.textContent = `👥 0 giocatori`;
+    gridEl.innerHTML = "";
+    showError((e && e.message) ? e.message : String(e));
   }
-};
-
-/* ===== LOAD ===== */
-async function loadPlayers(){
-  // prendo anche active se esiste, così se vuoi puoi filtrare (ora non filtro)
-  const { data, error } = await client
-    .from("players")
-    .select("id,name,role,position,avatar,avatar_file,avatar_path,appearances,goals,mvps,bio,active")
-    .order("name", { ascending:true });
-
-  if(error){
-    console.error(error);
-    grid.innerHTML = `<div class="muted">Errore caricamento giocatori.</div>`;
-    countPill.textContent = "👥 0 giocatori";
-    return;
-  }
-
-  PLAYERS = data || [];
-  applyFiltersAndRender();
 }
 
-searchInput.addEventListener("input", applyFiltersAndRender);
-sortSelect.addEventListener("change", applyFiltersAndRender);
-
-/* INIT */
-(async()=>{
-  await refreshAdminUI();
-  await loadPlayers();
-
-  // se cambia sessione (login/logout), aggiorno UI admin
-  client.auth.onAuthStateChange(async ()=>{
-    await refreshAdminUI();
-    // aggiorna modal se aperto
-    if(CURRENT_MODAL_PLAYER){
-      const updated = PLAYERS.find(x=>String(x.id)===String(CURRENT_MODAL_PLAYER.id)) || CURRENT_MODAL_PLAYER;
-      CURRENT_MODAL_PLAYER = updated;
-      fillModal(updated);
-    }
-  });
-})();
+loadPlayers();
 </script>
 </body>
 </html>
