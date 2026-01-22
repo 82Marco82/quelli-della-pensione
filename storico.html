@@ -9,152 +9,223 @@
 
   <style>
     :root{
-      --bg:#f4f6f8; --card:#ffffff; --text:#111827; --muted:#6b7280;
-      --border:#e5e7eb; --shadow:0 6px 20px rgba(0,0,0,.08);
-      --pill:#eeeeee; --logo1:#111; --logo2:#333; --badge:#111;
-      --chipBg:rgba(0,0,0,.04); --btn:#111;
-      --y:#facc15; --r:#ef4444;
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --pill:#eeeeee;
+      --logo1:#111;
+      --logo2:#333;
+      --badge:#111;
+      --chipBg:rgba(0,0,0,.04);
+      --btnBg:#111;
+      --btnText:#fff;
     }
     body.dark{
-      --bg:#0f1115; --card:#171a21; --text:#e5e7eb; --muted:#a1a1aa;
-      --border:#2a2f3a; --shadow:0 10px 28px rgba(0,0,0,.45);
-      --pill:#222631; --logo1:#0b0e14; --logo2:#2a3242; --badge:#0b0e14;
-      --chipBg:rgba(255,255,255,.04); --btn:#0b0e14;
-      --y:#facc15; --r:#ef4444;
+      --bg:#0f1115;
+      --card:#171a21;
+      --text:#e5e7eb;
+      --muted:#a1a1aa;
+      --border:#2a2f3a;
+      --shadow:0 10px 28px rgba(0,0,0,.45);
+      --pill:#222631;
+      --logo1:#0b0e14;
+      --logo2:#2a3242;
+      --badge:#0b0e14;
+      --chipBg:rgba(255,255,255,.04);
+      --btnBg:#0b0e14;
+      --btnText:#fff;
     }
+
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
-    a{color:inherit}
-
-    .wrap{max-width:980px;margin:auto;padding:16px}
-
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{
-      width:70px;height:70px;border-radius:999px;
-      background:linear-gradient(135deg,var(--logo1),var(--logo2));
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:32px;letter-spacing:2px;
-      box-shadow:var(--shadow); user-select:none;
-    }
-    .title{font-family:'Bebas Neue';letter-spacing:2px;font-size:44px;margin:0;text-transform:uppercase}
-    .subtitle{color:var(--muted);font-size:14px;margin-top:2px}
+    .wrap{max-width:920px;margin:auto;padding:16px}
 
     .card{
       background:var(--card);
       border:1px solid var(--border);
-      border-radius:18px;
+      border-radius:16px;
       padding:14px;
       box-shadow:var(--shadow);
       margin:12px 0;
       overflow:hidden;
     }
 
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .header{text-align:center}
+    .logo{
+      width:74px;height:74px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      margin:auto;
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:30px;
+      letter-spacing:2px;
+    }
+    h1{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:44px;
+      margin:10px 0 0;
+      text-transform:uppercase;
+    }
+    .subtitle{color:var(--muted);font-size:14px}
+
     .muted{color:var(--muted)}
     .space{height:10px}
 
     .badge{
-      display:inline-flex;align-items:center;gap:8px;
-      background:var(--badge);color:#fff;
-      padding:7px 12px;border-radius:999px;
-      font-weight:900;font-size:13px;white-space:nowrap;
+      display:inline-block;
+      background:var(--badge);
+      color:#fff;
+      padding:6px 12px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:13px;
+      white-space:nowrap;
+    }
+
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+    .pill{
+      display:inline-block;
+      background:var(--pill);
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:6px 10px;
+      font-weight:900;
+      margin:6px 8px 0 0;
+      white-space:nowrap;
+    }
+
+    .mvpLine{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
+      max-width:100%;
+    }
+    .mvpLine .pill{
+      max-width:100%;
+      white-space:normal;
+      overflow-wrap:anywhere;
+      word-break:break-word;
     }
 
     .btn{
-      border:0;background:var(--btn);color:#fff;
-      padding:10px 12px;border-radius:14px;
-      cursor:pointer;font-weight:900;
-      display:inline-flex;align-items:center;gap:8px;
-      user-select:none;text-decoration:none;
+      border:1px solid var(--border);
+      background:var(--btnBg);
+      color:var(--btnText);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:900;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
     }
-    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+    .btn.ghost{
+      background:transparent;
+      color:var(--text);
+    }
 
-    .details{margin-top:12px;border-top:1px solid var(--border);padding-top:12px;display:none}
+    .details{
+      margin-top:12px;
+      border-top:1px solid var(--border);
+      padding-top:12px;
+      display:none;
+    }
     .details.open{display:block}
 
-    .twoCols{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:760px){ .twoCols{grid-template-columns:1fr 1fr} }
-
-    .teamTitle{display:flex;align-items:center;gap:10px;margin:0 0 10px}
-    .shirt{width:18px;height:18px;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
-    .chipBox{background:var(--chipBg);border:1px solid var(--border);border-radius:16px;padding:12px;overflow:hidden}
-
-    /* pill player */
-    .pillP{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:7px 10px;border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--pill);
-      font-weight:900;font-size:12px;
-      margin:6px 8px 0 0;
-      max-width:100%;
+    .twoCols{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
     }
-    .pAva{
-      width:22px;height:22px;border-radius:999px;
-      border:1px solid var(--border);
-      object-fit:cover;background:#000;flex:0 0 auto;
-    }
-    .pillP span{
-      min-width:0;overflow:hidden;text-overflow:ellipsis;
-      white-space:nowrap;display:inline-block;max-width:220px;
-    }
-    .pillP.gk{border-color: rgba(245,158,11,.55)}
-    .pillP.small{font-size:12px}
-
-    @media(max-width:520px){
-      .pillP{padding:6px 8px;gap:7px;margin:6px 6px 0 0}
-      .pAva{width:20px;height:20px}
-      .pillP span{max-width:160px}
-      .title{font-size:40px}
-      .logo{width:64px;height:64px;font-size:30px}
-    }
+    @media(min-width:860px){ .twoCols{grid-template-columns:1fr 1fr} }
 
     table{width:100%;border-collapse:separate;border-spacing:0 8px}
     th{font-size:12px;color:var(--muted);text-align:left;padding:0 6px}
     td{padding:0 6px;vertical-align:middle}
 
-    .nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}
+    .teamTitle{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+    .shirt{width:18px;height:18px;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
+
+    .chipBox{
+      background:var(--chipBg);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+      overflow:hidden;
+    }
+
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size:14px;
+    }
     .nav a{color:var(--text);text-decoration:none;font-weight:800}
     .nav a:hover{text-decoration:underline}
 
     .fab{
-      position:fixed;right:16px;bottom:16px;
-      width:54px;height:54px;border-radius:999px;
-      border:1px solid var(--border);background:var(--card);
-      box-shadow:var(--shadow);cursor:pointer;font-size:22px;
+      position:fixed;
+      right:16px;bottom:16px;
+      width:54px;height:54px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      font-size:22px;
     }
+
+    /* ✅ Player pills con avatar + ruolo/pos come index */
+    .playersWrap{margin-top:6px}
+    .playerPill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--pill);
+      margin:6px 8px 0 0;
+      max-width:100%;
+    }
+    .playerAvatar{
+      width:42px;height:42px;border-radius:999px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#000;
+      flex:0 0 auto;
+    }
+    .playerTxt{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+    .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   </style>
 </head>
 
 <body>
 <div class="wrap">
 
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo">QDP</div>
-      <div>
-        <h1 class="title">STORICO</h1>
-        <div class="subtitle">Risultati • convocati • formazioni • marcatori • MVP</div>
-      </div>
-    </div>
-    <div class="row">
-      <a class="btn ghost" href="index.html">⬅️ Home</a>
-    </div>
+  <div class="header">
+    <div class="logo">QDP</div>
+    <h1>Storico</h1>
+    <div class="subtitle">Quelli della pensione</div>
   </div>
 
   <div class="card">
-    <div class="row" style="justify-content:space-between">
-      <div id="status" class="badge">⏳ Caricamento…</div>
-      <button id="btnCollapse" class="btn ghost" type="button">📦 Chiudi dettagli</button>
-    </div>
-    <div class="muted" style="margin-top:8px">Apri “Dettagli” per vedere convocati, formazioni e marcatori.</div>
+    <div id="status" class="muted">Caricamento…</div>
   </div>
 
   <div id="list"></div>
 
   <div class="card nav muted">
-    <a href="storico.html">📚 Storico</a>
+    <a href="index.html">🏠 Home</a>
     <a href="marcatori.html">⚽ Marcatori</a>
     <a href="mvp.html">🏆 Vota MVP</a>
     <a href="foto.html">📸 Foto</a>
@@ -170,7 +241,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
-/* ===== THEME ===== */
+/* THEME */
 function setTheme(mode){
   document.body.classList.toggle("dark", mode === "dark");
   document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
@@ -181,35 +252,25 @@ document.getElementById("themeToggle").onclick = () => {
   setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 };
 
-/* ===== SUPABASE ===== */
+/* SUPABASE */
 if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
   document.getElementById("status").textContent = "Errore: config.js non caricato";
   throw new Error("Missing config");
 }
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ===== AVATAR (uguale “logica index”) =====
-   - se avatar è URL -> usa quello
-   - altrimenti: public bucket "avatars" -> /storage/v1/object/public/avatars/<file>
-   - se avatar è "7" -> diventa "7.png"
-*/
-const AVATAR_BUCKET = "avatars";  // <-- se il bucket si chiama diverso, cambialo qui
+const statusEl = document.getElementById("status");
+const listEl = document.getElementById("list");
+
+/* AVATAR PATH (come index) */
+const AVATAR_BASE = "avatars/";
 const DEFAULT_AVATAR = "default.png";
-
-function normalizeAvatarFile(v){
-  let s = String(v || "").trim();
-  if(!s) return DEFAULT_AVATAR;
-  if(/^https?:\/\//i.test(s)) return s;            // url piena
-  if(!s.includes(".")) s = s + ".png";             // numero o nome senza estensione
-  return s;
-}
-function avatarUrl(avatarValue){
-  const f = normalizeAvatarFile(avatarValue);
-  if(/^https?:\/\//i.test(f)) return f;
-  return `${SUPABASE_URL}/storage/v1/object/public/${AVATAR_BUCKET}/${encodeURIComponent(f)}`;
+function avatarUrl(filename){
+  const f = String(filename || "").trim();
+  return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
 }
 
-/* ===== HELPERS ===== */
+/* HELPERS */
 function escapeHtml(s){
   return String(s ?? "")
     .replaceAll("&","&amp;")
@@ -223,7 +284,9 @@ function formatDateFull(iso){
   const d = new Date(iso);
   return d.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 }
-function formatTimeHHMM(t){ return t ? String(t).slice(0,5) : ""; }
+function formatTimeHHMM(t){
+  return t ? String(t).slice(0,5) : "";
+}
 function shirtSVG(color){
   return `
     <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -235,51 +298,32 @@ function resultBadge(m){
   if(m.score_a != null && m.score_b != null) return `🏁 ${m.score_a}-${m.score_b}`;
   return `🏁 da giocare`;
 }
-
-/* ruolo GK: se c’è role/position, lo uso */
 function isGK(p){
-  const r = String(p?.role||"").toLowerCase();
-  const pos = String(p?.position||"").toLowerCase();
-  return r === "gk" || r === "portiere" || pos.includes("port");
+  // nel tuo DB usi GK / FIELD (ma supporto anche varianti)
+  const r = String(p?.role || "").toUpperCase();
+  const pos = String(p?.position || "").toLowerCase();
+  return r === "GK" || r === "G" || pos.includes("port");
 }
+function renderPlayerPill(p){
+  const nameHtml = isGK(p) ? (escapeHtml(p.name) + ` <span title="Portiere">🧤</span>`) : escapeHtml(p.name);
+  const pos = String(p.position || "").trim();
+  const posHtml = pos ? escapeHtml(pos) : "—";
 
-/* trova player da nome (per mettere avatar ai portieri di match) */
-function findPlayerByName(name, playersArr){
-  const n = String(name||"").trim().toLowerCase();
-  if(!n) return null;
-  return (playersArr||[]).find(p => String(p.name||"").trim().toLowerCase() === n) || null;
-}
-
-function pillPlayer(p, forceLabel){
-  const name = forceLabel || (p?.name || "—");
-  const avVal = (p && p.avatar != null) ? p.avatar : DEFAULT_AVATAR;
-  const gk = isGK(p);
   return `
-    <span class="pillP ${gk ? "gk" : ""}" title="${escapeHtml(name)}">
-      <img class="pAva" src="${escapeHtml(avatarUrl(avVal))}" alt=""
-           onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
-      <span>${escapeHtml(name)}${gk ? " 🧤" : ""}</span>
+    <span class="playerPill">
+      <img class="playerAvatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt="">
+      <span class="playerTxt">
+        <span class="playerName">${nameHtml}</span>
+        <span class="playerPos">${posHtml}</span>
+      </span>
     </span>
   `;
 }
 
-function sortIdsByGKThenName(ids, idToPlayer){
-  const arr = (ids||[]).map(id => {
-    const p = idToPlayer.get(String(id)) || { name: String(id), avatar: DEFAULT_AVATAR, role:"", position:"" };
-    return { id: String(id), p };
-  });
-  arr.sort((a,b)=>{
-    const ag = isGK(a.p) ? 0 : 1;
-    const bg = isGK(b.p) ? 0 : 1;
-    if(ag !== bg) return ag - bg;
-    return String(a.p.name||"").localeCompare(String(b.p.name||""), "it", { sensitivity:"base" });
-  });
-  return arr.map(x => x.id);
-}
-
-/* MVP */
-function computeMvp(votes, idToPlayer, isOpen){
+/* MVP helpers */
+function computeMvpLine(votes, playersById, isOpen){
   if(!votes || !votes.length) return null;
+
   const counts = new Map();
   for(const v of votes){
     const id = String(v.voted_player || "");
@@ -291,41 +335,27 @@ function computeMvp(votes, idToPlayer, isOpen){
 
   const top = entries[0][1];
   const leaders = entries.filter(e=>e[1]===top).map(e=>e[0]);
+  const leaderNames = leaders.map(id => playersById.get(String(id))?.name || id);
 
   const label = isOpen ? "provvisorio" : "finale";
+
   if(leaders.length === 1){
-    const p = idToPlayer.get(String(leaders[0]));
-    return {
-      avatar: p?.avatar ?? DEFAULT_AVATAR,
-      text: `🏆 MVP (${label}): ${(p?.name || leaders[0])} • voti: ${top}`
-    };
+    return `🏆 MVP (${label}): ${leaderNames[0]} • voti: ${top}`;
   }
-  const names = leaders.map(id => idToPlayer.get(String(id))?.name || id);
-  return { avatar: null, text: `🏆 MVP (${label}): Parità: ${names.join(", ")} • voti: ${top}` };
+  return `🏆 MVP (${label}): Parità: ${leaderNames.join(", ")} • voti: ${top}`;
 }
-
-/* ===== UI ===== */
-const statusEl = document.getElementById("status");
-const listEl = document.getElementById("list");
-const btnCollapse = document.getElementById("btnCollapse");
-
-function closeAllDetails(){
-  document.querySelectorAll(".details.open").forEach(d => d.classList.remove("open"));
-  document.querySelectorAll("button[data-target]").forEach(b => b.textContent = "Dettagli ▾");
-}
-btnCollapse.onclick = closeAllDetails;
 
 async function load(){
   try{
-    // players: prendo name/avatar/role/position (se non esistono non rompe)
-    const { data: players, error: eP } = await client.from("players").select("id,name,avatar,role,position");
+    // ✅ carico players completi (serve per avatar/role/position)
+    const { data: players, error: eP } = await client
+      .from("players")
+      .select("id,name,avatar,role,position");
     if(eP) throw eP;
 
-    const idToPlayer = new Map((players||[]).map(p=>[
-      String(p.id),
-      { name: p.name || "", avatar: p.avatar || DEFAULT_AVATAR, role: p.role || "", position: p.position || "" }
-    ]));
+    const playersById = new Map((players||[]).map(p=>[String(p.id), p]));
 
+    // ✅ carico matches
     const { data: matches, error: eM } = await client
       .from("matches")
       .select("id,match_date,match_time,venue,keeper_a,keeper_b,score_a,score_b,called_up,team_a,team_b,scorers,vote_open,voting_open")
@@ -335,12 +365,12 @@ async function load(){
     if(eM) throw eM;
 
     if(!matches || !matches.length){
-      statusEl.textContent = "ℹ️ Nessuna partita nello storico";
+      statusEl.textContent = "Nessuna partita nello storico";
       listEl.innerHTML = "";
       return;
     }
 
-    // votes
+    // ✅ carico voti MVP per tutte le partite
     const matchIds = matches.map(m => m.id);
     const { data: votes, error: eV } = await client
       .from("mvp_votes")
@@ -355,31 +385,23 @@ async function load(){
       votesByMatch.get(k).push(v);
     });
 
-    statusEl.textContent = `📚 Partite: ${matches.length}`;
+    statusEl.textContent = `Partite: ${matches.length}`;
 
     listEl.innerHTML = matches.map(m => {
       const dateFull = formatDateFull(m.match_date);
       const time = formatTimeHHMM(m.match_time);
       const venue = escapeHtml(m.venue || "");
 
-      // portieri match (con avatar se esiste player con lo stesso nome)
-      const keepAName = String(m.keeper_a || "—");
-      const keepBName = String(m.keeper_b || "—");
-      const keepAPl = findPlayerByName(keepAName, players) || { name: keepAName, avatar: DEFAULT_AVATAR, role:"gk", position:"" };
-      const keepBPl = findPlayerByName(keepBName, players) || { name: keepBName, avatar: DEFAULT_AVATAR, role:"gk", position:"" };
+      const keepA = escapeHtml(m.keeper_a || "—");
+      const keepB = escapeHtml(m.keeper_b || "—");
 
-      const calledRaw = Array.isArray(m.called_up) ? m.called_up : [];
-      const teamARaw  = Array.isArray(m.team_a) ? m.team_a : [];
-      const teamBRaw  = Array.isArray(m.team_b) ? m.team_b : [];
+      const calledIds = Array.isArray(m.called_up) ? m.called_up.map(String) : [];
+      const teamAIds  = Array.isArray(m.team_a) ? m.team_a.map(String) : [];
+      const teamBIds  = Array.isArray(m.team_b) ? m.team_b.map(String) : [];
 
-      const called   = sortIdsByGKThenName(calledRaw, idToPlayer);
-      const teamAIds = sortIdsByGKThenName(teamARaw,  idToPlayer);
-      const teamBIds = sortIdsByGKThenName(teamBRaw,  idToPlayer);
-
-      const renderPills = (ids) => {
-        if(!ids.length) return `<div class="muted">—</div>`;
-        return `<div>${ids.map(id => pillPlayer(idToPlayer.get(String(id)) || { name:String(id), avatar:DEFAULT_AVATAR, role:"", position:"" })).join("")}</div>`;
-      };
+      const calledPlayers = calledIds.map(id => playersById.get(id)).filter(Boolean);
+      const teamAPlayers  = teamAIds.map(id => playersById.get(id)).filter(Boolean);
+      const teamBPlayers  = teamBIds.map(id => playersById.get(id)).filter(Boolean);
 
       const sc = m.scorers || {};
       const ta = Array.isArray(sc.team_a) ? sc.team_a : [];
@@ -391,8 +413,12 @@ async function load(){
           .slice()
           .sort((a,b)=>Number(b.goals||0)-Number(a.goals||0))
           .map(x=>{
-            const pl = idToPlayer.get(String(x.player_id)) || { name: String(x.player_id||"-"), avatar: DEFAULT_AVATAR, role:"", position:"" };
-            return `<tr><td>${pillPlayer(pl)}</td><td><b>${escapeHtml(x.goals)}</b></td></tr>`;
+            const pid = String(x.player_id || "");
+            const nm = playersById.get(pid)?.name || pid || "-";
+            return `<tr>
+              <td><span class="pill">${escapeHtml(nm)}</span></td>
+              <td><b>${escapeHtml(x.goals)}</b></td>
+            </tr>`;
           }).join("");
         return `<table>
           <thead><tr><th>Giocatore</th><th style="width:70px">Gol</th></tr></thead>
@@ -400,45 +426,30 @@ async function load(){
         </table>`;
       };
 
-      const detailsId = `det_${m.id}`;
-      const isOpen = (m.vote_open === true) || (m.voting_open === true);
-      const mvp = computeMvp(votesByMatch.get(String(m.id)) || [], idToPlayer, isOpen);
+      const renderPlayersWrap = (arr) => {
+        if(!arr.length) return `<div class="muted">—</div>`;
+        return `<div class="playersWrap">${arr.map(renderPlayerPill).join("")}</div>`;
+      };
 
-      const mvpHtml = mvp ? `
-        <div class="row" style="margin-top:10px">
-          ${mvp.avatar ? `<img class="pAva" style="width:30px;height:30px" src="${escapeHtml(avatarUrl(mvp.avatar))}" alt=""
-               onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">` : ``}
-          <span class="pillP small"><span>${escapeHtml(mvp.text)}</span></span>
-        </div>` : ``;
+      const detailsId = `det_${m.id}`;
+
+      const isOpen = (m.vote_open === true) || (m.voting_open === true);
+      const mvpLine = computeMvpLine(votesByMatch.get(String(m.id)) || [], playersById, isOpen);
+      const mvpHtml = mvpLine ? `<div class="mvpLine"><span class="pill">${escapeHtml(mvpLine)}</span></div>` : ``;
 
       return `
         <div class="card">
           <div class="row" style="justify-content:space-between">
             <div style="min-width:0">
-              <div style="font-weight:900">📅 ${escapeHtml(dateFull)} • ⏰ ${escapeHtml(time)}</div>
+              <div><b>📅 ${escapeHtml(dateFull)} • ⏰ ${escapeHtml(time)}</b></div>
               <div class="muted" style="margin-top:6px">📍 ${venue}</div>
-
               <div class="row" style="margin-top:10px">
                 <span class="badge">${escapeHtml(resultBadge(m))}</span>
+                <span class="pill">🟨 ${keepA}</span>
+                <span class="pill">🟥 ${keepB}</span>
               </div>
-
-              <!-- PORTIERI come in index -->
-              <div class="row" style="margin-top:10px">
-                <span class="pillP" style="border-color:rgba(250,204,21,.6)">
-                  <img class="pAva" src="${escapeHtml(avatarUrl(keepAPl.avatar))}" alt=""
-                       onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
-                  <span>🟨 ${escapeHtml(keepAName)} • PORTIERE</span>
-                </span>
-                <span class="pillP" style="border-color:rgba(239,68,68,.6)">
-                  <img class="pAva" src="${escapeHtml(avatarUrl(keepBPl.avatar))}" alt=""
-                       onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
-                  <span>🟥 ${escapeHtml(keepBName)} • PORTIERE</span>
-                </span>
-              </div>
-
               ${mvpHtml}
             </div>
-
             <div>
               <button class="btn ghost" data-target="${detailsId}">Dettagli ▾</button>
             </div>
@@ -447,7 +458,9 @@ async function load(){
           <div class="details" id="${detailsId}">
             <div class="chipBox">
               <div style="font-weight:900">Convocati</div>
-              <div style="margin-top:8px">${renderPills(called)}</div>
+              <div style="margin-top:8px">
+                ${renderPlayersWrap(calledPlayers)}
+              </div>
             </div>
 
             <div class="space"></div>
@@ -455,11 +468,11 @@ async function load(){
             <div class="twoCols">
               <div class="chipBox">
                 <div class="teamTitle">${shirtSVG("#facc15")} <b>Formazione Squadra A</b></div>
-                ${renderPills(teamAIds)}
+                ${renderPlayersWrap(teamAPlayers)}
               </div>
               <div class="chipBox">
                 <div class="teamTitle">${shirtSVG("#ef4444")} <b>Formazione Squadra B</b></div>
-                ${renderPills(teamBIds)}
+                ${renderPlayersWrap(teamBPlayers)}
               </div>
             </div>
 
@@ -480,16 +493,18 @@ async function load(){
       `;
     }).join("");
 
-    // accordion
+    // ACCORDION
     const buttons = [...document.querySelectorAll("button[data-target]")];
     buttons.forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const id = btn.getAttribute("data-target");
         const box = document.getElementById(id);
-        const opened = box.classList.contains("open");
+        const open = box.classList.contains("open");
 
-        closeAllDetails();
-        if(!opened){
+        document.querySelectorAll(".details.open").forEach(d => d.classList.remove("open"));
+        buttons.forEach(b => b.textContent = "Dettagli ▾");
+
+        if(!open){
           box.classList.add("open");
           btn.textContent = "Dettagli ▴";
         }
@@ -498,7 +513,7 @@ async function load(){
 
   }catch(err){
     console.error(err);
-    statusEl.textContent = "❌ Errore caricamento storico";
+    statusEl.textContent = "Errore caricamento storico";
     listEl.innerHTML = `<div class="card"><div class="muted">${escapeHtml(err.message || String(err))}</div></div>`;
   }
 }
@@ -507,3 +522,4 @@ load();
 </script>
 </body>
 </html>
+```0
