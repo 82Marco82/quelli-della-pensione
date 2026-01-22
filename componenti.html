@@ -19,9 +19,11 @@
       --logo1:#111;
       --logo2:#333;
       --btn:#111;
+
       --ok:#16a34a;
       --warn:#f59e0b;
       --bad:#ef4444;
+      --chipBg:rgba(0,0,0,.04);
     }
     body.dark{
       --bg:#0f1115;
@@ -34,7 +36,9 @@
       --logo1:#0b0e14;
       --logo2:#2a3242;
       --btn:#0b0e14;
+      --chipBg:rgba(255,255,255,.04);
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -45,6 +49,15 @@
     }
     .wrap{max-width:980px;margin:auto;padding:16px}
 
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      margin:12px 0;
+    }
+
     .topbar{
       display:flex; align-items:center; justify-content:space-between;
       gap:12px; flex-wrap:wrap;
@@ -52,23 +65,14 @@
     }
     .brand{display:flex; align-items:center; gap:12px;}
     .logo{
-      width:70px;height:70px;border-radius:999px;
+      width:56px;height:56px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
       display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:32px;
+      color:#fff;font-family:'Bebas Neue';font-size:26px;
       letter-spacing:2px;
       box-shadow:var(--shadow);
-      cursor:pointer;
-      transform-style:preserve-3d;
-      will-change:transform;
+      flex:0 0 auto;
     }
-    .logo.spin{ animation: coinSpin 900ms ease-in-out; }
-    @keyframes coinSpin{
-      0%{transform:rotateY(0deg)}
-      50%{transform:rotateY(180deg)}
-      100%{transform:rotateY(360deg)}
-    }
-
     .titleWrap{line-height:1.1}
     .title{
       font-family:'Bebas Neue';
@@ -81,16 +85,19 @@
 
     .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
     .spacer{flex:1}
-
-    .card{
-      background:var(--card);
+    .muted{color:var(--muted)}
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:var(--pill);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:900;
       border:1px solid var(--border);
-      border-radius:16px;
-      padding:14px;
-      box-shadow:var(--shadow);
-      margin:12px 0;
+      white-space:nowrap;
+      max-width:100%;
     }
-
     .btn{
       border:0;
       background:var(--btn);
@@ -113,8 +120,9 @@
     .btn.small{padding:10px 12px; border-radius:12px; font-size:14px}
     .btn.ok{background:var(--ok)}
     .btn.warn{background:var(--warn); color:#111}
+    .btn.danger{background:var(--bad)}
 
-    .input{
+    .input, select, textarea{
       width:100%;
       padding:12px 12px;
       border-radius:14px;
@@ -124,35 +132,82 @@
       font-family:inherit;
       outline:none;
     }
+    textarea{min-height:90px; resize:vertical}
 
-    .pill{
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:12px;
+    }
+    @media(max-width:980px){ .grid{grid-template-columns:repeat(3, 1fr)} }
+    @media(max-width:760px){ .grid{grid-template-columns:repeat(2, 1fr)} }
+    @media(max-width:480px){ .grid{grid-template-columns:1fr} }
+
+    .pCard{
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      transition:transform .12s ease;
+    }
+    .pCard:active{transform:scale(.99)}
+    .pTop{
+      padding:14px 14px 10px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .avatar{
+      width:58px;height:58px;border-radius:999px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#000;
+      flex:0 0 auto;
+    }
+    .pName{
+      font-weight:900;
+      line-height:1.1;
+    }
+    .pMeta{
+      margin-top:4px;
+      color:var(--muted);
+      font-weight:800;
+      font-size:12px;
+      line-height:1.2;
+    }
+    .gkBadge{
       display:inline-flex;
       align-items:center;
-      gap:8px;
-      background:var(--pill);
+      gap:6px;
+      margin-top:6px;
+      padding:6px 10px;
       border-radius:999px;
-      padding:8px 12px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
       font-weight:900;
-      border:1px solid var(--border);
-      white-space:nowrap;
-      max-width:100%;
+      font-size:12px;
     }
 
-    .toast{
-      display:none;
-      margin-top:10px;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:rgba(22,163,74,.10);
-      color:var(--text);
-      font-weight:800;
+    .stats{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      padding:0 14px 14px;
     }
-    .toast.show{display:block}
-    .toast.bad{background:rgba(239,68,68,.10)}
-    .toast.warn{background:rgba(245,158,11,.12)}
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      font-weight:900;
+      font-size:12px;
+    }
 
-    /* MENU come index */
     .nav{
       display:flex;
       justify-content:space-between;
@@ -166,82 +221,6 @@
       font-weight:800;
     }
 
-    /* Grid componenti */
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(4, 1fr);
-      gap:12px;
-    }
-    @media(max-width:980px){ .grid{grid-template-columns:repeat(3, 1fr)} }
-    @media(max-width:720px){ .grid{grid-template-columns:repeat(2, 1fr)} }
-    @media(max-width:460px){ .grid{grid-template-columns:1fr} }
-
-    .playerCard{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:12px;
-      box-shadow:var(--shadow);
-      cursor:pointer;
-      transition:transform .12s ease, border-color .12s ease;
-      min-height:110px;
-      display:flex;
-      gap:12px;
-      align-items:center;
-    }
-    .playerCard:hover{transform:translateY(-1px)}
-    .avatar{
-      width:64px;height:64px;border-radius:999px;
-      border:1px solid var(--border);
-      object-fit:cover;
-      background:#000;
-      flex:0 0 auto;
-    }
-    .pTxt{min-width:0;flex:1}
-    .pName{
-      font-weight:900;
-      font-size:16px;
-      line-height:1.1;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .pMeta{
-      margin-top:4px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:rgba(0,0,0,.02);
-      font-weight:900;
-      font-size:12px;
-      color:var(--text);
-    }
-    body.dark .tag{background:rgba(255,255,255,.03)}
-    .tag.gk{border-color:rgba(245,158,11,.45)}
-    .pBio{
-      margin-top:8px;
-      font-size:12px;
-      color:var(--muted);
-      font-weight:800;
-      line-height:1.25;
-      display:-webkit-box;
-      -webkit-line-clamp:2;
-      -webkit-box-orient:vertical;
-      overflow:hidden;
-      word-break:break-word;
-    }
-    .mini{font-size:12px;color:var(--muted);font-weight:800}
-
-    /* Fab theme */
     .fab{
       position:fixed;
       right:16px;bottom:16px;
@@ -253,6 +232,80 @@
       cursor:pointer;
       font-size:22px;
     }
+
+    /* Modal */
+    .modalBack{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:50;
+    }
+    .modal{
+      width:min(720px, 100%);
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .mHead{
+      padding:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom:1px solid var(--border);
+    }
+    .mTitle{
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .mBody{padding:14px}
+    .mTop{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .avatarBig{
+      width:110px;height:110px;border-radius:999px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#000;
+    }
+    .mInfo{flex:1}
+    .mName{font-weight:900;font-size:18px}
+    .mSub{margin-top:6px;color:var(--muted);font-weight:800}
+    .mStats{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+    .divider{height:1px;background:var(--border); margin:12px 0}
+    .adminBox{
+      display:none;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+      background:var(--chipBg);
+      margin-top:12px;
+    }
+    .adminBox .row{margin-top:10px}
+    .toast{
+      display:none;
+      margin-top:10px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(22,163,74,.10);
+      color:var(--text);
+      font-weight:800;
+    }
+    .toast.show{display:block}
+    .toast.bad{background:rgba(239,68,68,.10)}
+    .toast.warn{background:rgba(245,158,11,.12)}
   </style>
 </head>
 
@@ -261,29 +314,38 @@
 
   <div class="topbar">
     <div class="brand">
-      <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
+      <div class="logo">QDP</div>
       <div class="titleWrap">
         <h1 class="title">COMPONENTI</h1>
-        <div class="subtitle">Tutta la rosa • Avatar • Ruoli • (Admin: descrizione giocatore)</div>
+        <div class="subtitle">Avatar • Ruoli • Presenze • Gol • MVP</div>
       </div>
     </div>
 
     <div class="row">
       <a class="btn ghost" href="index.html">⬅️ Home</a>
       <button id="adminBtn" class="btn small warn" type="button">🔐 Admin: OFF</button>
+      <button id="themeToggle" class="btn small ghost" type="button">🌙</button>
     </div>
   </div>
 
   <div class="card">
     <div class="row">
-      <input id="searchInput" class="input" type="text" placeholder="🔎 Cerca giocatore... (es: Antonio)">
+      <input id="searchInput" class="input" type="text" placeholder="Cerca giocatore... (nome)">
+      <label class="pill" style="gap:10px">
+        🔽 Ordina:
+        <select id="sortSelect" style="width:auto; padding:8px 10px; border-radius:12px">
+          <option value="name">Nome</option>
+          <option value="apps">Presenze</option>
+          <option value="goals">Gol</option>
+          <option value="mvps">MVP</option>
+        </select>
+      </label>
       <div class="spacer"></div>
-      <div id="countPill" class="pill">👥 0</div>
-      <button id="refreshBtn" class="btn ghost" type="button">🔄 Aggiorna</button>
+      <div id="countPill" class="pill">👥 0 giocatori</div>
     </div>
 
-    <div id="adminHint" class="pill" style="display:none;margin-top:10px;white-space:normal">
-      ✅ Admin attivo (clicca un giocatore per scrivere/modificare descrizione)
+    <div id="adminHint" class="pill" style="display:none; margin-top:10px; white-space:normal">
+      ✅ Admin attivo (puoi modificare descrizione + presenze/gol/mvp)
     </div>
 
     <div id="toast" class="toast"></div>
@@ -291,14 +353,14 @@
 
   <div class="card">
     <div class="row">
-      <div style="font-weight:900">👥 Rosa</div>
+      <div style="font-weight:900">👥 Lista giocatori</div>
       <div class="spacer"></div>
-      <div class="mini">Tip: clicca un giocatore per vedere/modificare la descrizione (solo admin).</div>
+      <div class="muted" style="font-size:13px;font-weight:800">Clicca un giocatore per aprire la scheda.</div>
     </div>
     <div id="grid" class="grid" style="margin-top:12px"></div>
   </div>
 
-  <!-- NAV come index -->
+  <!-- NAV (come index) -->
   <div class="card nav muted">
     <a href="storico.html">📚 Storico</a>
     <a href="marcatori.html">⚽ Marcatori</a>
@@ -310,7 +372,65 @@
 
 </div>
 
-<button id="themeToggle" class="fab">🌙</button>
+<button id="themeToggleFab" class="fab">🌙</button>
+
+<!-- MODAL -->
+<div id="modalBack" class="modalBack">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="mHead">
+      <div class="mTitle" id="mTitle">Giocatore</div>
+      <button id="btnClose" class="btn small ghost" type="button">✖️</button>
+    </div>
+    <div class="mBody">
+      <div class="mTop">
+        <img id="mAvatar" class="avatarBig" src="" alt="avatar">
+        <div class="mInfo">
+          <div id="mName" class="mName">—</div>
+          <div id="mSub" class="mSub">—</div>
+          <div id="mStats" class="mStats"></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="font-weight:900">📝 Descrizione</div>
+      <div id="mBio" class="muted" style="margin-top:8px; font-weight:800; white-space:pre-wrap">—</div>
+
+      <div id="adminBox" class="adminBox">
+        <div style="font-weight:900">🔧 Modifica (solo Admin)</div>
+
+        <div class="row">
+          <label class="muted" style="font-weight:900; font-size:12px">Presenze</label>
+          <input id="inApps" class="input" type="number" min="0" step="1" placeholder="Presenze">
+        </div>
+
+        <div class="row">
+          <label class="muted" style="font-weight:900; font-size:12px">Gol</label>
+          <input id="inGoals" class="input" type="number" min="0" step="1" placeholder="Gol">
+        </div>
+
+        <div class="row">
+          <label class="muted" style="font-weight:900; font-size:12px">MVP</label>
+          <input id="inMvps" class="input" type="number" min="0" step="1" placeholder="MVP">
+        </div>
+
+        <div class="row">
+          <label class="muted" style="font-weight:900; font-size:12px">Descrizione</label>
+          <textarea id="inBio" class="input" maxlength="300" placeholder="Scrivi una breve descrizione (max 300)"></textarea>
+        </div>
+
+        <div class="row">
+          <button id="btnSave" class="btn ok" type="button">💾 Salva</button>
+          <button id="btnReset" class="btn ghost" type="button">↩️ Annulla</button>
+        </div>
+
+        <div class="muted" style="margin-top:8px; font-weight:800; font-size:12px">
+          Nota: se non salva, controlla RLS su tabella <b>players</b>.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -318,23 +438,16 @@
 <script>
 /* ===== THEME ===== */
 const themeBtn = document.getElementById("themeToggle");
+const themeBtnFab = document.getElementById("themeToggleFab");
 function setTheme(mode){
   document.body.classList.toggle("dark", mode === "dark");
   themeBtn.textContent = (mode === "dark") ? "☀️" : "🌙";
+  themeBtnFab.textContent = (mode === "dark") ? "☀️" : "🌙";
   localStorage.setItem("qdp_theme", mode);
 }
 setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
 themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
-
-/* LOGO MONETA */
-const logoCoin = document.getElementById("logoCoin");
-function spinLogo(){
-  logoCoin.classList.remove("spin");
-  void logoCoin.offsetWidth;
-  logoCoin.classList.add("spin");
-}
-logoCoin.addEventListener("click", spinLogo);
-logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
+themeBtnFab.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 
 /* ===== SUPABASE ===== */
 if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
@@ -343,29 +456,12 @@ if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
 }
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ===== DOM ===== */
-const adminBtn = document.getElementById("adminBtn");
-const adminHint = document.getElementById("adminHint");
-const toast = document.getElementById("toast");
-const refreshBtn = document.getElementById("refreshBtn");
-const grid = document.getElementById("grid");
-const countPill = document.getElementById("countPill");
-const searchInput = document.getElementById("searchInput");
-
-/* ===== CONFIG ===== */
-const TABLE_PLAYERS = "players";
+/* ===== AVATAR PATH (GitHub) =====
+   Se la cartella avatars è nella root del sito, lascia così.
+*/
 const AVATAR_BASE = "avatars/";
 const DEFAULT_AVATAR = "default.png";
 
-/* ===== HELPERS ===== */
-function showToast(msg, type="ok"){
-  toast.classList.remove("show","bad","warn");
-  if(type==="bad") toast.classList.add("bad");
-  if(type==="warn") toast.classList.add("warn");
-  toast.textContent = msg;
-  toast.classList.add("show");
-  setTimeout(()=>toast.classList.remove("show"), 2200);
-}
 function escapeHtml(s){
   return String(s ?? "")
     .replaceAll("&","&amp;")
@@ -374,22 +470,20 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-function norm(s){
-  return String(s||"").trim().toLowerCase().replace(/\s+/g," ");
+function showToast(msg, type="ok"){
+  const toast = document.getElementById("toast");
+  toast.classList.remove("show","bad","warn");
+  if(type==="bad") toast.classList.add("bad");
+  if(type==="warn") toast.classList.add("warn");
+  toast.textContent = msg;
+  toast.classList.add("show");
+  setTimeout(()=>toast.classList.remove("show"), 2200);
 }
-function avatarUrl(filename){
-  const f = String(filename || "").trim();
-  return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
-}
-function isGK(p){
-  const r = String(p?.role||"").toLowerCase();
-  const pos = String(p?.position||"").toLowerCase();
-  return r === "gk" || pos.includes("port");
-}
-function safeBio(p){
-  // se hai colonne diverse, le legge lo stesso
-  return (p?.bio ?? p?.note ?? p?.description ?? "").toString().trim();
-}
+
+/* ===== ADMIN ===== */
+const adminBtn = document.getElementById("adminBtn");
+const adminHint = document.getElementById("adminHint");
+let adminOn = false;
 
 async function getSession(){
   const { data } = await client.auth.getSession();
@@ -397,7 +491,6 @@ async function getSession(){
 }
 function isAdminSession(session){ return !!(session && session.user); }
 
-let adminOn = false;
 async function refreshAdminUI(){
   const session = await getSession();
   adminOn = isAdminSession(session);
@@ -405,6 +498,10 @@ async function refreshAdminUI(){
   adminBtn.classList.toggle("warn", !adminOn);
   adminBtn.classList.toggle("ok", adminOn);
   adminHint.style.display = adminOn ? "inline-flex" : "none";
+
+  // admin box nel modal
+  const adminBox = document.getElementById("adminBox");
+  adminBox.style.display = adminOn ? "block" : "none";
   return adminOn;
 }
 
@@ -414,7 +511,6 @@ adminBtn.onclick = async () => {
     await client.auth.signOut();
     showToast("Admin disattivato.", "warn");
     await refreshAdminUI();
-    await loadPlayers();
     return;
   }
   const email = prompt("Email admin:");
@@ -430,127 +526,259 @@ adminBtn.onclick = async () => {
   }
   showToast("Admin attivo ✅");
   await refreshAdminUI();
-  await loadPlayers();
 };
 
+/* ===== UI CONTROLS ===== */
+const grid = document.getElementById("grid");
+const countPill = document.getElementById("countPill");
+const searchInput = document.getElementById("searchInput");
+const sortSelect = document.getElementById("sortSelect");
+
+/* ===== MODAL DOM ===== */
+const modalBack = document.getElementById("modalBack");
+const btnClose = document.getElementById("btnClose");
+const mTitle = document.getElementById("mTitle");
+const mAvatar = document.getElementById("mAvatar");
+const mName = document.getElementById("mName");
+const mSub = document.getElementById("mSub");
+const mStats = document.getElementById("mStats");
+const mBio = document.getElementById("mBio");
+
+const inApps = document.getElementById("inApps");
+const inGoals = document.getElementById("inGoals");
+const inMvps = document.getElementById("inMvps");
+const inBio = document.getElementById("inBio");
+const btnSave = document.getElementById("btnSave");
+const btnReset = document.getElementById("btnReset");
+
+btnClose.onclick = closeModal;
+modalBack.addEventListener("click", (e)=>{ if(e.target === modalBack) closeModal(); });
+document.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeModal(); });
+
+function openModal(){
+  modalBack.style.display = "flex";
+}
+function closeModal(){
+  modalBack.style.display = "none";
+  CURRENT_MODAL_PLAYER = null;
+}
+
 /* ===== DATA ===== */
-let ALL = [];
+let PLAYERS = [];
+let CURRENT_MODAL_PLAYER = null;
+
+function getAvatarUrl(p){
+  const file = (p.avatar || p.avatar_file || p.avatar_path || "").trim() || DEFAULT_AVATAR;
+  return AVATAR_BASE + file;
+}
+function safeNum(v){
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+function statText(label, val){
+  return `${label}: ${val == null ? "—" : val}`;
+}
+
+function roleLabel(p){
+  // role = "gk" / "field"
+  const r = String(p.role || "").toLowerCase();
+  const pos = (p.position || "").trim();
+  const posTxt = pos ? pos : (r === "gk" ? "Portiere" : "Giocatore");
+  return posTxt;
+}
+function isGK(p){
+  return String(p.role || "").toLowerCase() === "gk";
+}
 
 function renderCard(p){
-  const gk = isGK(p);
-  const nameHtml = gk ? `${escapeHtml(p.name||"")} <span title="Portiere">🧤</span>` : escapeHtml(p.name||"");
-  const pos = String(p.position || "").trim() || "—";
-  const role = gk ? "PORTIERE" : "GIOCATORE";
-  const bio = safeBio(p);
+  const avatar = getAvatarUrl(p);
+  const name = (p.name || "").trim();
+  const pos = roleLabel(p);
+
+  const apps = safeNum(p.appearances);
+  const goals = safeNum(p.goals);
+  const mvps = safeNum(p.mvps);
 
   return `
-    <div class="playerCard" data-id="${escapeHtml(p.id)}" title="${adminOn ? "Clicca per modificare descrizione" : "Clicca per vedere descrizione"}">
-      <img class="avatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt="avatar"
-           onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
-      <div class="pTxt">
-        <div class="pName">${nameHtml}</div>
-        <div class="pMeta">
-          <span class="tag ${gk ? "gk" : ""}">${gk ? "🧤 " : ""}${role}</span>
-          <span class="tag">📌 ${escapeHtml(pos)}</span>
+    <div class="pCard" data-id="${escapeHtml(p.id)}" role="button" tabindex="0">
+      <div class="pTop">
+        <img class="avatar" src="${escapeHtml(avatar)}" alt="avatar"
+             onerror="this.onerror=null;this.src='${escapeHtml(AVATAR_BASE + DEFAULT_AVATAR)}';">
+        <div style="min-width:0">
+          <div class="pName">${escapeHtml(name)}${isGK(p) ? " 🧤" : ""}</div>
+          <div class="pMeta">${escapeHtml(pos)}</div>
+          ${isGK(p) ? `<div class="gkBadge">🧤 Portiere</div>` : ``}
         </div>
-        <div class="pBio">${bio ? escapeHtml(bio) : (adminOn ? "✍️ (clicca per inserire descrizione)" : "—")}</div>
+      </div>
+      <div class="stats">
+        <div class="chip">🎮 ${escapeHtml(statText("Pres", apps))}</div>
+        <div class="chip">⚽ ${escapeHtml(statText("Gol", goals))}</div>
+        <div class="chip">🏆 ${escapeHtml(statText("MVP", mvps))}</div>
       </div>
     </div>
   `;
 }
 
-function applyFilter(){
-  const q = norm(searchInput.value);
-  const list = q
-    ? ALL.filter(p => norm(p.name).includes(q) || norm(p.position).includes(q) || norm(safeBio(p)).includes(q))
-    : ALL.slice();
+function applyFiltersAndRender(){
+  const q = (searchInput.value || "").trim().toLowerCase();
+  const sort = sortSelect.value;
 
-  countPill.textContent = `👥 ${list.length}`;
+  let rows = [...PLAYERS];
 
-  grid.innerHTML = list.map(renderCard).join("") || `<div class="mini muted">Nessun giocatore.</div>`;
+  if(q){
+    rows = rows.filter(p => String(p.name||"").toLowerCase().includes(q));
+  }
 
-  // click card
-  [...grid.querySelectorAll(".playerCard")].forEach(card=>{
-    card.onclick = () => onCardClick(card.getAttribute("data-id"));
+  const num = (v)=> (Number.isFinite(Number(v)) ? Number(v) : -Infinity);
+
+  rows.sort((a,b)=>{
+    if(sort === "apps") return num(b.appearances) - num(a.appearances) || String(a.name).localeCompare(String(b.name),"it");
+    if(sort === "goals") return num(b.goals) - num(a.goals) || String(a.name).localeCompare(String(b.name),"it");
+    if(sort === "mvps") return num(b.mvps) - num(a.mvps) || String(a.name).localeCompare(String(b.name),"it");
+    return String(a.name).localeCompare(String(b.name),"it");
+  });
+
+  countPill.textContent = `👥 ${rows.length} giocatori`;
+
+  grid.innerHTML = rows.map(renderCard).join("") || `<div class="muted">Nessun giocatore.</div>`;
+
+  // click cards
+  [...grid.querySelectorAll(".pCard")].forEach(card=>{
+    const id = card.getAttribute("data-id");
+    const p = rows.find(x=>String(x.id)===String(id));
+    if(!p) return;
+
+    card.onclick = ()=>openPlayer(p);
+    card.onkeydown = (e)=>{ if(e.key==="Enter" || e.key===" "){ e.preventDefault(); openPlayer(p); } };
   });
 }
 
-async function onCardClick(playerId){
-  const p = ALL.find(x => String(x.id) === String(playerId));
-  if(!p) return;
+function fillModal(p){
+  const avatar = getAvatarUrl(p);
+  const name = (p.name || "").trim();
+  const pos = roleLabel(p);
 
-  const bio = safeBio(p);
+  const apps = safeNum(p.appearances);
+  const goals = safeNum(p.goals);
+  const mvps = safeNum(p.mvps);
+  const bio = (p.bio || "").trim();
 
-  if(adminOn){
-    const next = prompt(
-      `Descrizione per ${p.name} (max 180 caratteri)\n\n⚠️ Nota: serve colonna "bio" in tabella players.`,
-      bio
-    );
-    if(next === null) return;
+  mTitle.textContent = "Scheda giocatore";
+  mAvatar.src = avatar;
+  mAvatar.onerror = ()=>{ mAvatar.onerror=null; mAvatar.src = AVATAR_BASE + DEFAULT_AVATAR; };
 
-    const clean = String(next||"").trim().slice(0,180);
+  mName.textContent = name + (isGK(p) ? " 🧤" : "");
+  mSub.textContent = pos + (isGK(p) ? " • GK" : "");
 
-    // tenta update su bio
-    const { error } = await client
-      .from(TABLE_PLAYERS)
-      .update({ bio: clean })
-      .eq("id", p.id);
+  mStats.innerHTML = `
+    <span class="chip">🎮 Presenze: <b>${apps == null ? "—" : apps}</b></span>
+    <span class="chip">⚽ Gol: <b>${goals == null ? "—" : goals}</b></span>
+    <span class="chip">🏆 MVP: <b>${mvps == null ? "—" : mvps}</b></span>
+  `;
 
-    if(error){
-      console.error(error);
-      // Se non hai creato la colonna bio
-      showToast("Errore: forse manca la colonna 'bio' in players.", "bad");
+  mBio.textContent = bio ? bio : "—";
+
+  // admin fields
+  inApps.value = (apps == null) ? "" : String(apps);
+  inGoals.value = (goals == null) ? "" : String(goals);
+  inMvps.value = (mvps == null) ? "" : String(mvps);
+  inBio.value = bio;
+
+  // mostra/nasconde admin box in base a sessione
+  document.getElementById("adminBox").style.display = adminOn ? "block" : "none";
+}
+
+function openPlayer(p){
+  CURRENT_MODAL_PLAYER = p;
+  fillModal(p);
+  openModal();
+}
+
+btnReset.onclick = ()=>{
+  if(!CURRENT_MODAL_PLAYER) return;
+  fillModal(CURRENT_MODAL_PLAYER);
+};
+
+btnSave.onclick = async ()=>{
+  try{
+    if(!adminOn){
+      showToast("Solo admin può salvare.", "warn");
       return;
     }
+    if(!CURRENT_MODAL_PLAYER) return;
 
-    showToast("Descrizione salvata ✅");
-    await loadPlayers();
-    return;
+    const apps = inApps.value === "" ? null : Math.max(0, parseInt(inApps.value, 10));
+    const goals = inGoals.value === "" ? null : Math.max(0, parseInt(inGoals.value, 10));
+    const mvps = inMvps.value === "" ? null : Math.max(0, parseInt(inMvps.value, 10));
+    const bio = (inBio.value || "").trim().slice(0,300);
+
+    const patch = { appearances: apps, goals: goals, mvps: mvps, bio: bio };
+
+    const { error } = await client
+      .from("players")
+      .update(patch)
+      .eq("id", CURRENT_MODAL_PLAYER.id);
+
+    if(error) throw error;
+
+    // aggiorna cache locale
+    PLAYERS = PLAYERS.map(x=>{
+      if(String(x.id) !== String(CURRENT_MODAL_PLAYER.id)) return x;
+      return { ...x, ...patch };
+    });
+
+    // aggiorna modal
+    CURRENT_MODAL_PLAYER = PLAYERS.find(x=>String(x.id)===String(CURRENT_MODAL_PLAYER.id)) || CURRENT_MODAL_PLAYER;
+    fillModal(CURRENT_MODAL_PLAYER);
+
+    // aggiorna griglia
+    applyFiltersAndRender();
+
+    showToast("Salvato ✅");
+  }catch(e){
+    console.error(e);
+    showToast("Errore salvataggio.", "bad");
   }
-
-  // non-admin: mostra popup sola lettura
-  const msg = bio ? bio : "Nessuna descrizione.";
-  alert(`${p.name}\n\n${msg}`);
-}
+};
 
 /* ===== LOAD ===== */
 async function loadPlayers(){
-  await refreshAdminUI();
-
-  grid.innerHTML = `<div class="mini muted">Carico…</div>`;
-
-  // select * così non rompe se la colonna bio ancora non esiste
+  // prendo anche active se esiste, così se vuoi puoi filtrare (ora non filtro)
   const { data, error } = await client
-    .from(TABLE_PLAYERS)
-    .select("*")
+    .from("players")
+    .select("id,name,role,position,avatar,avatar_file,avatar_path,appearances,goals,mvps,bio,active")
     .order("name", { ascending:true });
 
   if(error){
     console.error(error);
-    grid.innerHTML = `<div class="mini muted">Errore caricamento: ${escapeHtml(error.message)}</div>`;
+    grid.innerHTML = `<div class="muted">Errore caricamento giocatori.</div>`;
+    countPill.textContent = "👥 0 giocatori";
     return;
   }
 
-  ALL = (data || []).map(p=>{
-    // normalizza avatar: se ti salvano "1.png" va bene
-    return {
-      id: p.id,
-      name: p.name || "",
-      role: p.role || "",
-      position: p.position || "",
-      avatar: p.avatar || p.avatar_file || p.avatar_url || DEFAULT_AVATAR,
-      bio: p.bio ?? p.note ?? p.description ?? ""
-    };
-  });
-
-  applyFilter();
+  PLAYERS = data || [];
+  applyFiltersAndRender();
 }
 
-refreshBtn.onclick = () => loadPlayers();
-searchInput.oninput = () => applyFilter();
+searchInput.addEventListener("input", applyFiltersAndRender);
+sortSelect.addEventListener("change", applyFiltersAndRender);
 
 /* INIT */
-loadPlayers();
+(async()=>{
+  await refreshAdminUI();
+  await loadPlayers();
+
+  // se cambia sessione (login/logout), aggiorno UI admin
+  client.auth.onAuthStateChange(async ()=>{
+    await refreshAdminUI();
+    // aggiorna modal se aperto
+    if(CURRENT_MODAL_PLAYER){
+      const updated = PLAYERS.find(x=>String(x.id)===String(CURRENT_MODAL_PLAYER.id)) || CURRENT_MODAL_PLAYER;
+      CURRENT_MODAL_PLAYER = updated;
+      fillModal(updated);
+    }
+  });
+})();
 </script>
 </body>
 </html>
