@@ -171,7 +171,7 @@
       z-index:10000;
     }
     .modal{
-      width:min(520px,100%);
+      width:min(560px,100%);
       background:var(--card);
       border:1px solid var(--border);
       border-radius:16px;
@@ -180,6 +180,26 @@
     }
     .modalTitle{margin:0;font-size:16px}
     .modalActions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px}
+
+    .modalGrid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+    @media(min-width:520px){
+      .modalGrid{grid-template-columns:1fr 1fr}
+    }
+    .hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.35}
+    .inlinePill{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--chipBg);
+      font-weight:900;
+      font-size:12px;
+    }
   </style>
 </head>
 
@@ -350,11 +370,37 @@
       <button id="btnCloseModal" class="btn ghost small" type="button">✖</button>
     </div>
 
-    <label>Nome giocatore</label>
-    <input id="newPlayerName" type="text" placeholder="Es. Marco">
+    <div class="modalGrid">
+      <div>
+        <label>Nome giocatore</label>
+        <input id="newPlayerName" type="text" placeholder="Es. Marco">
+      </div>
+
+      <div>
+        <label>Ruolo (obbligatorio)</label>
+        <!-- NB: i valori devono rispettare il check constraint players_role_check -->
+        <select id="newPlayerRole">
+          <option value="player">player</option>
+          <option value="gk">gk</option>
+        </select>
+        <div class="hint">Se hai il vincolo su Supabase, qui devi usare i valori ammessi (es: <span class="inlinePill">player</span> / <span class="inlinePill">gk</span>).</div>
+      </div>
+
+      <div>
+        <label>Posizione (facoltativa)</label>
+        <input id="newPlayerPosition" type="text" placeholder="Es. Centrocampista">
+        <div class="hint">Questa è quella che vedi in Home sotto il nome.</div>
+      </div>
+
+      <div>
+        <label>Avatar (facoltativo)</label>
+        <input id="newPlayerAvatar" type="text" placeholder="Es. 7.png (vuoto = default.png)">
+        <div class="hint">Nel tuo caso: <b>1.png, 2.png...</b> e chi non ce l’ha usa <b>default.png</b>.</div>
+      </div>
+    </div>
 
     <div class="mini" style="margin-top:10px">
-      Verrà aggiunto alla lista “players” e potrai convocarlo subito.
+      Verrà aggiunto alla tabella <b>players</b> e potrai convocarlo subito.
     </div>
 
     <div class="modalActions">
@@ -485,7 +531,11 @@ async function refetchCurrent(){
 
 /* ===== Load players & matches ===== */
 async function loadPlayers(){
-  const { data, error } = await client.from("players").select("id,name").order("name",{ascending:true});
+  // ✅ prendiamo anche role/position/avatar così la home non mostra più "—"
+  const { data, error } = await client
+    .from("players")
+    .select("id,name,role,position,avatar")
+    .order("name",{ascending:true});
   if(error) throw error;
   PLAYERS = data || [];
 }
@@ -774,10 +824,16 @@ const btnCloseModal = $("btnCloseModal");
 const btnCancelModal = $("btnCancelModal");
 const btnCreatePlayer = $("btnCreatePlayer");
 const newPlayerName = $("newPlayerName");
+const newPlayerRole = $("newPlayerRole");
+const newPlayerPosition = $("newPlayerPosition");
+const newPlayerAvatar = $("newPlayerAvatar");
 
 function openModal(){
   modalOverlay.style.display = "flex";
   newPlayerName.value = "";
+  newPlayerRole.value = "player";
+  newPlayerPosition.value = "";
+  newPlayerAvatar.value = "";
   setTimeout(()=>newPlayerName.focus(), 10);
 }
 function closeModal(){
@@ -793,10 +849,21 @@ newPlayerName.addEventListener("keydown", (e)=>{
   if(e.key === "Escape") closeModal();
   if(e.key === "Enter") btnCreatePlayer.click();
 });
+newPlayerPosition.addEventListener("keydown", (e)=>{
+  if(e.key === "Escape") closeModal();
+});
+newPlayerAvatar.addEventListener("keydown", (e)=>{
+  if(e.key === "Escape") closeModal();
+});
 
 async function createPlayer(){
   const name = (newPlayerName.value || "").trim();
+  const role = (newPlayerRole.value || "").trim();
+  const position = (newPlayerPosition.value || "").trim();
+  const avatar = (newPlayerAvatar.value || "").trim();
+
   if(!name) return setMsg("Inserisci un nome valido.", "err");
+  if(!role) return setMsg("Seleziona un ruolo.", "err");
 
   // check duplicato soft (case-insensitive)
   const lower = name.toLowerCase();
@@ -812,16 +879,23 @@ async function createPlayer(){
   try{
     setMsg("➕ Creo giocatore…");
 
+    // ✅ inseriamo SEMPRE role (per non violare players_role_check)
+    // e in più position + avatar (se presenti)
+    const payload = { name, role };
+    if(position) payload.position = position;
+    if(avatar) payload.avatar = avatar;
+
     const { data, error } = await client
       .from("players")
-      .insert([{ name }])
-      .select("id,name")
+      .insert([payload])
+      .select("id,name,role,position,avatar")
       .single();
 
     if(error) throw error;
 
     // aggiorna cache e UI
     PLAYERS = [...PLAYERS, data].sort((a,b)=>String(a.name).localeCompare(String(b.name),"it"));
+
     const prevChecked = getCalledUp(); // mantieni check attuali
     renderPlayersBox(prevChecked);
 
@@ -836,7 +910,7 @@ async function createPlayer(){
     }
 
     closeModal();
-    setMsg(`✅ Giocatore aggiunto: ${data.name}`, "ok");
+    setMsg(`✅ Giocatore aggiunto: ${data.name} (${data.role}${data.position ? ", " + data.position : ""})`, "ok");
 
   }catch(e){
     console.error(e);
@@ -1059,3 +1133,4 @@ $("btnLogout").onclick = async () => {
 </script>
 </body>
 </html>
+```0
