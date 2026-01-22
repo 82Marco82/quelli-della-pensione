@@ -171,7 +171,7 @@
       z-index:10000;
     }
     .modal{
-      width:min(560px,100%);
+      width:min(520px,100%);
       background:var(--card);
       border:1px solid var(--border);
       border-radius:16px;
@@ -180,26 +180,6 @@
     }
     .modalTitle{margin:0;font-size:16px}
     .modalActions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px}
-
-    .modalGrid{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
-      margin-top:10px;
-    }
-    @media(min-width:520px){
-      .modalGrid{grid-template-columns:1fr 1fr}
-    }
-    .hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.35}
-    .inlinePill{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--chipBg);
-      font-weight:900;
-      font-size:12px;
-    }
   </style>
 </head>
 
@@ -216,7 +196,6 @@
     </div>
     <div class="row" style="margin-top:0">
       <a class="btn ghost small" href="index.html" style="text-decoration:none">⬅️ Sito</a>
-      <a class="btn ghost small" href="storico.html" style="text-decoration:none">📚 Storico</a>
       <button id="btnLogout" class="btn secondary small">🚪 Esci</button>
     </div>
   </div>
@@ -370,37 +349,23 @@
       <button id="btnCloseModal" class="btn ghost small" type="button">✖</button>
     </div>
 
-    <div class="modalGrid">
-      <div>
-        <label>Nome giocatore</label>
-        <input id="newPlayerName" type="text" placeholder="Es. Marco">
-      </div>
+    <label>Nome giocatore</label>
+    <input id="newPlayerName" type="text" placeholder="Es. Marco">
 
-      <div>
-        <label>Ruolo (obbligatorio)</label>
-        <!-- NB: i valori devono rispettare il check constraint players_role_check -->
-        <select id="newPlayerRole">
-          <option value="player">player</option>
-          <option value="gk">gk</option>
-        </select>
-        <div class="hint">Se hai il vincolo su Supabase, qui devi usare i valori ammessi (es: <span class="inlinePill">player</span> / <span class="inlinePill">gk</span>).</div>
-      </div>
+    <label>Ruolo</label>
+    <select id="newPlayerRole">
+      <option value="FIELD">FIELD</option>
+      <option value="GK">GK</option>
+    </select>
 
-      <div>
-        <label>Posizione (facoltativa)</label>
-        <input id="newPlayerPosition" type="text" placeholder="Es. Centrocampista">
-        <div class="hint">Questa è quella che vedi in Home sotto il nome.</div>
-      </div>
+    <label>Position</label>
+    <input id="newPlayerPosition" type="text" placeholder="Es. Centrocampista">
 
-      <div>
-        <label>Avatar (facoltativo)</label>
-        <input id="newPlayerAvatar" type="text" placeholder="Es. 7.png (vuoto = default.png)">
-        <div class="hint">Nel tuo caso: <b>1.png, 2.png...</b> e chi non ce l’ha usa <b>default.png</b>.</div>
-      </div>
-    </div>
+    <label>Avatar (file)</label>
+    <input id="newPlayerAvatar" type="text" placeholder="Es. 1.png (vuoto = default.png)">
 
     <div class="mini" style="margin-top:10px">
-      Verrà aggiunto alla tabella <b>players</b> e potrai convocarlo subito.
+      Verrà aggiunto alla lista “players” e potrai convocarlo subito.
     </div>
 
     <div class="modalActions">
@@ -465,12 +430,11 @@ function escapeHtml(s){
     .replaceAll("'","&#039;");
 }
 
-/* ===== MVP: usiamo entrambe le colonne e le teniamo allineate ===== */
+/* ===== MVP ===== */
 function isVoteOpen(m){
   if(!m) return false;
   return (m.vote_open === true) || (m.voting_open === true);
 }
-
 function updateVoteUI(){
   const stateEl = $("voteState");
   const btn = $("btnToggleVote");
@@ -489,7 +453,6 @@ function updateVoteUI(){
   btn.className = open ? "off" : "";
   btn.disabled = false;
 }
-
 function updateCurrentHint(){
   const hint = $("currentHint");
   if(!CURRENT){
@@ -500,6 +463,7 @@ function updateCurrentHint(){
   hint.textContent = `${CURRENT.match_date} ${t} • ${CURRENT.venue||""}`.trim();
 }
 
+/* ===== Convocati helpers ===== */
 function getCalledUp(){
   return [...$("playersBox").querySelectorAll('input[type="checkbox"]')]
     .filter(x=>x.checked)
@@ -531,11 +495,8 @@ async function refetchCurrent(){
 
 /* ===== Load players & matches ===== */
 async function loadPlayers(){
-  // ✅ prendiamo anche role/position/avatar così la home non mostra più "—"
-  const { data, error } = await client
-    .from("players")
-    .select("id,name,role,position,avatar")
-    .order("name",{ascending:true});
+  // id + name bastano per dashboard (role/position/avatar li usi altrove in home)
+  const { data, error } = await client.from("players").select("id,name").order("name",{ascending:true});
   if(error) throw error;
   PLAYERS = data || [];
 }
@@ -568,7 +529,6 @@ async function loadMatches(){
       $("matchSelect").value = "";
     }
   }
-
   updateVoteUI();
 }
 
@@ -615,7 +575,6 @@ function getCalledUpPlayers(){
   const ids = new Set(getCalledUp().map(String));
   return PLAYERS.filter(p => ids.has(String(p.id)));
 }
-
 function renderTeamBox(boxId, presetIds = []){
   const preset = new Set((presetIds||[]).map(String));
   const box = $(boxId);
@@ -652,13 +611,11 @@ function renderTeamBox(boxId, presetIds = []){
     box.appendChild(row);
   });
 }
-
 function getTeamIds(boxId){
   return [...$(boxId).querySelectorAll('input[type="checkbox"]')]
     .filter(x=>x.checked)
     .map(x=>x.value);
 }
-
 function refreshTeamsUI(){
   const aNow = new Set(getTeamIds("teamABox").map(String));
   const bNow = new Set(getTeamIds("teamBBox").map(String));
@@ -681,7 +638,6 @@ function buildOptionsHTML(selectedValue){
   });
   return opts.join("");
 }
-
 function addScorerRow(tbodyId, presetPlayerId="", presetGoals=""){
   const tbody = $(tbodyId);
   const tr = document.createElement("tr");
@@ -712,14 +668,12 @@ function addScorerRow(tbodyId, presetPlayerId="", presetGoals=""){
   tr.appendChild(tdX);
   tbody.appendChild(tr);
 }
-
 function clearScorersUI(){
   $("tbodyA").innerHTML = "";
   $("tbodyB").innerHTML = "";
   addScorerRow("tbodyA");
   addScorerRow("tbodyB");
 }
-
 function refreshScorersSelectOptions(){
   ["tbodyA","tbodyB"].forEach(tid=>{
     const rows = [...$(tid).querySelectorAll("tr")];
@@ -731,7 +685,6 @@ function refreshScorersSelectOptions(){
     });
   });
 }
-
 function readScorersFromUI(tbodyId){
   const rows = [...$(tbodyId).querySelectorAll("tr")];
   const out = [];
@@ -746,7 +699,6 @@ function readScorersFromUI(tbodyId){
   }
   return out;
 }
-
 function buildScorersText(teamA, teamB){
   const idToName = new Map(PLAYERS.map(p=>[String(p.id), p.name]));
   const fmt = (arr) => arr.map(x => `${idToName.get(String(x.player_id)) || x.player_id} ${x.goals}`).join(", ");
@@ -774,7 +726,6 @@ function clearForm(){
   updateCurrentHint();
   updateVoteUI();
 }
-
 function fillForm(m){
   CURRENT = m;
 
@@ -823,6 +774,7 @@ const btnAddPlayer = $("btnAddPlayer");
 const btnCloseModal = $("btnCloseModal");
 const btnCancelModal = $("btnCancelModal");
 const btnCreatePlayer = $("btnCreatePlayer");
+
 const newPlayerName = $("newPlayerName");
 const newPlayerRole = $("newPlayerRole");
 const newPlayerPosition = $("newPlayerPosition");
@@ -831,7 +783,7 @@ const newPlayerAvatar = $("newPlayerAvatar");
 function openModal(){
   modalOverlay.style.display = "flex";
   newPlayerName.value = "";
-  newPlayerRole.value = "player";
+  newPlayerRole.value = "FIELD";
   newPlayerPosition.value = "";
   newPlayerAvatar.value = "";
   setTimeout(()=>newPlayerName.focus(), 10);
@@ -849,23 +801,24 @@ newPlayerName.addEventListener("keydown", (e)=>{
   if(e.key === "Escape") closeModal();
   if(e.key === "Enter") btnCreatePlayer.click();
 });
-newPlayerPosition.addEventListener("keydown", (e)=>{
-  if(e.key === "Escape") closeModal();
-});
-newPlayerAvatar.addEventListener("keydown", (e)=>{
-  if(e.key === "Escape") closeModal();
-});
+newPlayerRole.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeModal(); });
+newPlayerPosition.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeModal(); });
+newPlayerAvatar.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeModal(); });
 
 async function createPlayer(){
   const name = (newPlayerName.value || "").trim();
-  const role = (newPlayerRole.value || "").trim();
-  const position = (newPlayerPosition.value || "").trim();
-  const avatar = (newPlayerAvatar.value || "").trim();
-
   if(!name) return setMsg("Inserisci un nome valido.", "err");
-  if(!role) return setMsg("Seleziona un ruolo.", "err");
 
-  // check duplicato soft (case-insensitive)
+  // ✅ role deve rispettare il vincolo: SOLO FIELD o GK (maiuscolo)
+  const role = String(newPlayerRole.value || "FIELD").trim().toUpperCase();
+  if(!["FIELD","GK"].includes(role)){
+    return setMsg("Ruolo non valido: usa FIELD oppure GK.", "err");
+  }
+
+  const position = (newPlayerPosition.value || "").trim() || null;
+  const avatar = (newPlayerAvatar.value || "").trim() || null;
+
+  // duplicato soft (case-insensitive)
   const lower = name.toLowerCase();
   const exists = PLAYERS.find(p => String(p.name||"").trim().toLowerCase() === lower);
   if(exists){
@@ -879,24 +832,17 @@ async function createPlayer(){
   try{
     setMsg("➕ Creo giocatore…");
 
-    // ✅ inseriamo SEMPRE role (per non violare players_role_check)
-    // e in più position + avatar (se presenti)
-    const payload = { name, role };
-    if(position) payload.position = position;
-    if(avatar) payload.avatar = avatar;
-
     const { data, error } = await client
       .from("players")
-      .insert([payload])
-      .select("id,name,role,position,avatar")
+      .insert([{ name, role, position, avatar }])
+      .select("id,name")
       .single();
 
     if(error) throw error;
 
     // aggiorna cache e UI
     PLAYERS = [...PLAYERS, data].sort((a,b)=>String(a.name).localeCompare(String(b.name),"it"));
-
-    const prevChecked = getCalledUp(); // mantieni check attuali
+    const prevChecked = getCalledUp();
     renderPlayersBox(prevChecked);
 
     // auto-spunta il nuovo se c'è spazio
@@ -910,7 +856,7 @@ async function createPlayer(){
     }
 
     closeModal();
-    setMsg(`✅ Giocatore aggiunto: ${data.name} (${data.role}${data.position ? ", " + data.position : ""})`, "ok");
+    setMsg(`✅ Giocatore aggiunto: ${data.name}`, "ok");
 
   }catch(e){
     console.error(e);
