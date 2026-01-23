@@ -62,7 +62,7 @@
 
     .header{text-align:center}
 
-    /* ✅ LOGO "MONETA" */
+    /* LOGO "MONETA" */
     .logo{
       width:80px;height:80px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
@@ -242,7 +242,7 @@
       font-weight:900;
     }
 
-    /* ✅ METEO */
+    /* METEO */
     .weatherBox{
       margin-top:12px;
       padding:12px;
@@ -266,7 +266,7 @@
     .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
     .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
 
-    /* ✅ Players pills with avatars */
+    /* Players pills with avatars */
     .playersWrap{margin-top:6px}
     .playerPill{
       display:inline-flex;
@@ -290,7 +290,7 @@
     .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-    /* ✅ FORMazioni header (GK VS GK) */
+    /* Formazioni header */
     .formationsHead{
       margin-top:12px;
       padding:12px;
@@ -341,7 +341,6 @@
       flex:0 0 auto;
     }
 
-    /* ✅ glove entrance animation */
     .glove{
       display:inline-block;
       margin-left:6px;
@@ -355,44 +354,149 @@
       100%{transform:translateY(0) scale(1);opacity:1}
     }
 
-    /* ✅ SCOREBOARD (immagine + overlay) */
-    .scoreboardWrap{
-      margin-top:12px;
+    /* ==================================================
+       ✅ SCOREBOARD (immagine + overlay pulito e allineato)
+       Metti: scoreboard.jpg nella root (stessa cartella)
+       ================================================== */
+    .scoreCard{ padding:0; overflow:hidden; margin-top:12px; }
+    .scoreboardStage{
+      position:relative;
       border-radius:16px;
       overflow:hidden;
       border:1px solid var(--border);
-      position:relative;
       background:#000;
+      aspect-ratio: 16 / 9;
     }
-    .scoreboardWrap img{
+    .scoreboardStage img{
       width:100%;
-      height:auto;
+      height:100%;
+      object-fit:cover;
       display:block;
     }
-    /* overlay: usa percentuali per stare SEMPRE al posto giusto */
-    .sbTxt{
+    .sbOverlay{
       position:absolute;
-      font-family: Inter, system-ui;
-      font-weight:900;
-      color:#fff;
-      text-shadow:0 2px 8px rgba(0,0,0,.65);
-      letter-spacing:.5px;
-      user-select:none;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      padding:14px;
       pointer-events:none;
     }
-    /* scritte alte HOME/AWAY */
-    .sbTeamA{ left:12.5%; top:11%; transform:translateX(-50%); font-size:clamp(14px, 2.2vw, 22px); }
-    .sbTeamB{ right:12.5%; top:11%; transform:translateX(50%); font-size:clamp(14px, 2.2vw, 22px); }
 
-    /* competizione sopra al tempo */
-    .sbComp{ left:50%; top:4.5%; transform:translateX(-50%); font-size:clamp(10px, 1.6vw, 16px); opacity:.9; }
+    .sbTopRow{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+    }
+    .sbCompetition{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:18px;
+      padding:6px 12px;
+      border-radius:999px;
+      background:rgba(0,0,0,.55);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(4px);
+    }
 
-    /* tempo */
-    .sbTime{ left:50%; top:9.2%; transform:translateX(-50%); font-size:clamp(18px, 3.2vw, 30px); }
+    .sbMidRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:0 8px 10px 8px;
+    }
 
-    /* punteggi grandi */
-    .sbScoreA{ left:28.5%; top:46%; transform:translate(-50%,-50%); font-size:clamp(48px, 10vw, 110px); letter-spacing:2px; }
-    .sbScoreB{ right:28.5%; top:46%; transform:translate(50%,-50%); font-size:clamp(48px, 10vw, 110px); letter-spacing:2px; }
+    .sbPlate{
+      min-width:92px;
+      text-align:center;
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:28px;
+      padding:8px 12px;
+      border-radius:14px;
+      background:rgba(0,0,0,.55);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(4px);
+    }
+
+    .sbScorePlate{
+      flex:1;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:14px;
+      padding:10px 14px;
+      border-radius:16px;
+      background:rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(4px);
+    }
+    .sbDigits{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:60px;
+      color:#dbeafe;
+      text-shadow: 0 6px 18px rgba(0,0,0,.55);
+      line-height:1;
+    }
+    .sbColon{
+      font-family:'Bebas Neue';
+      font-size:54px;
+      color:#fff;
+      opacity:.9;
+      line-height:1;
+    }
+
+    .sbBottomRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .sbTag{
+      font-weight:900;
+      font-size:13px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(0,0,0,.55);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(4px);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .sbFT{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:18px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(220,38,38,.8);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(4px);
+      display:none;
+    }
+
+    /* Animazione elegante uscita/ingresso risultato */
+    .reveal{
+      animation: sbIn 520ms cubic-bezier(.2,.9,.2,1) both;
+    }
+    @keyframes sbIn{
+      0%{ transform: translateY(10px) scale(.98); opacity:0; }
+      100%{ transform: translateY(0) scale(1); opacity:1; }
+    }
+
+    @media(max-width:520px){
+      .sbDigits{font-size:46px}
+      .sbPlate{font-size:24px; min-width:74px}
+      .sbCompetition{font-size:16px}
+    }
   </style>
 </head>
 
@@ -417,20 +521,36 @@
   <!-- PARTITA -->
   <div class="card">
     <div id="status" class="muted">Caricamento…</div>
-
-    <!-- ✅ SCOREBOARD -->
-    <div id="scoreboardBox" class="scoreboardWrap" style="display:none">
-      <img src="scoreboard.jpg" alt="Scoreboard">
-      <div id="sbComp"  class="sbTxt sbComp">QDP</div>
-      <div id="sbTime"  class="sbTxt sbTime">60:00</div>
-      <div id="sbTeamA" class="sbTxt sbTeamA">A</div>
-      <div id="sbTeamB" class="sbTxt sbTeamB">B</div>
-      <div id="sbScoreA" class="sbTxt sbScoreA">--</div>
-      <div id="sbScoreB" class="sbTxt sbScoreB">--</div>
-    </div>
-
-    <!-- info testuale sotto (data/ora ecc.) -->
     <div id="info"></div>
+
+    <!-- ✅ SCOREBOARD (visibile solo a fine partita) -->
+    <div id="scoreCard" class="card scoreCard" style="display:none">
+      <div id="scoreStage" class="scoreboardStage">
+        <img src="scoreboard.jpg" alt="Scoreboard">
+        <div class="sbOverlay">
+          <div class="sbTopRow">
+            <div class="sbCompetition">QDP</div>
+          </div>
+
+          <div class="sbMidRow">
+            <div class="sbPlate">A</div>
+
+            <div class="sbScorePlate">
+              <div id="sbA" class="sbDigits">0</div>
+              <div class="sbColon">:</div>
+              <div id="sbB" class="sbDigits">0</div>
+            </div>
+
+            <div class="sbPlate">B</div>
+          </div>
+
+          <div class="sbBottomRow">
+            <div class="sbTag">⏱ 60'</div>
+            <div id="sbFT" class="sbFT">PARTITA TERMINATA</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- MVP -->
     <div id="mvpBox" class="mvpBox" style="display:none">
@@ -534,7 +654,6 @@
 
 <button id="themeToggle" class="fab">🌙</button>
 
-<!-- ✅ resta config.js -->
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
@@ -559,25 +678,17 @@ function spinLogo(){
 logoCoin.addEventListener("click", spinLogo);
 logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
 
-/* SUPABASE (usa config.js) */
+/* SUPABASE */
 if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
   alert("config.js non caricato o non valido");
   throw new Error("Missing config");
 }
-const client = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* DOM */
 const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
 const calledEl = document.getElementById("called");
-
-const scoreboardBox = document.getElementById("scoreboardBox");
-const sbComp  = document.getElementById("sbComp");
-const sbTime  = document.getElementById("sbTime");
-const sbTeamA = document.getElementById("sbTeamA");
-const sbTeamB = document.getElementById("sbTeamB");
-const sbScoreA = document.getElementById("sbScoreA");
-const sbScoreB = document.getElementById("sbScoreB");
 
 const mapBox = document.getElementById("mapBox");
 const mapFrame = document.getElementById("mapFrame");
@@ -616,16 +727,17 @@ const weatherLine = document.getElementById("weatherLine");
 const weatherMini = document.getElementById("weatherMini");
 const weatherAlert = document.getElementById("weatherAlert");
 
+/* ✅ SCOREBOARD DOM */
+const scoreCard = document.getElementById("scoreCard");
+const scoreStage = document.getElementById("scoreStage");
+const sbA = document.getElementById("sbA");
+const sbB = document.getElementById("sbB");
+const sbFT = document.getElementById("sbFT");
+
 /* MAP */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
 const FIELD_LAT = 40.1239395;
 const FIELD_LNG = 18.1203671;
-
-/* SCOREBOARD STATICI */
-const SB_TEAM_A = "A";
-const SB_TEAM_B = "B";
-const SB_COMPETITION = "QDP";
-const SB_MINUTES = "60:00";
 
 /* AVATAR PATH */
 const AVATAR_BASE = "avatars/";
@@ -672,8 +784,10 @@ function isGK(player){
   const p = String(player?.position||"").toLowerCase();
   return r === "gk" || p.includes("port");
 }
-
-/* Stato votazione: APERTA se almeno una colonna è true */
+function gkNameWithGlove(player){
+  const n = player?.name || "";
+  return `${escapeHtml(n)}<span class="glove">🧤</span>`;
+}
 function isVoteOpen(match){
   return (match?.vote_open === true) || (match?.voting_open === true);
 }
@@ -682,6 +796,22 @@ function isVoteOpen(match){
 function setupMapLinks(){
   mapLink.href = FIXED_MAP_APP_URL;
   mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
+}
+
+/* ✅ SCOREBOARD helpers */
+function showScoreboard(a,b){
+  scoreCard.style.display = "block";
+  scoreStage.classList.remove("reveal");
+  void scoreStage.offsetWidth;
+  scoreStage.classList.add("reveal");
+
+  sbA.textContent = String(a ?? 0);
+  sbB.textContent = String(b ?? 0);
+  sbFT.style.display = "inline-flex";
+}
+function hideScoreboard(){
+  scoreCard.style.display = "none";
+  sbFT.style.display = "none";
 }
 
 /* METEO (Open-Meteo) */
@@ -830,12 +960,7 @@ async function loadMVP(matchId, playersById){
     const rows = [...counts.entries()]
       .map(([id,c])=>{
         const p = playersById.get(String(id));
-        return {
-          id,
-          name: p?.name || id,
-          avatar: p?.avatar || DEFAULT_AVATAR,
-          votes: c
-        };
+        return { id, name: p?.name || id, avatar: p?.avatar || DEFAULT_AVATAR, votes: c };
       })
       .sort((a,b)=> b.votes - a.votes || String(a.name).localeCompare(String(b.name),"it"));
 
@@ -904,14 +1029,14 @@ async function load(){
     statusEl.textContent = "Errore caricamento partita";
     infoEl.innerHTML = `<div class="muted">${escapeHtml(error.message)}</div>`;
     weatherBox.style.display = "none";
-    scoreboardBox.style.display = "none";
+    hideScoreboard();
     return;
   }
 
   if(!data || !data.length){
     statusEl.textContent = "Nessuna partita creata";
     weatherBox.style.display = "none";
-    scoreboardBox.style.display = "none";
+    hideScoreboard();
     mapBox.style.display = "none";
     mapActions.style.display = "none";
     mvpBox.style.display = "none";
@@ -924,20 +1049,9 @@ async function load(){
   const m = data[0];
   statusEl.textContent = "Partita trovata ✅";
 
-  // ✅ SCOREBOARD
-  scoreboardBox.style.display = "block";
-  sbComp.textContent = SB_COMPETITION;
-  sbTime.textContent = SB_MINUTES;
-  sbTeamA.textContent = SB_TEAM_A;
-  sbTeamB.textContent = SB_TEAM_B;
-
-  const a = (m.score_a == null) ? "--" : String(m.score_a);
-  const b = (m.score_b == null) ? "--" : String(m.score_b);
-  sbScoreA.textContent = a;
-  sbScoreB.textContent = b;
-
   const time = String(m.match_time||"").slice(0,5);
-  const resultText = (m.score_a!=null && m.score_b!=null) ? `${m.score_a}-${m.score_b}` : "da giocare";
+  const hasResult = (m.score_a!=null && m.score_b!=null);
+  const resultTxt = hasResult ? `${m.score_a}-${m.score_b}` : "da giocare";
   const voteOpen = isVoteOpen(m);
 
   // MVP UI
@@ -949,11 +1063,13 @@ async function load(){
   mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
   mvpTop3.style.display = "none";
 
-  // info sotto (senza più “Squadra A/B” testuali)
+  // INFO: mantengo i tuoi keeper, ma il risultato lo gestisco elegante
   infoEl.innerHTML = `
     <div class="line"><b>📅 ${escapeHtml(formatDateFull(m.match_date))}</b></div>
     <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
-    <div class="line"><span class="badge">🏁 ${escapeHtml(resultText)}</span></div>
+    <div class="line kit">${kitSVG("#facc15","#111")} <b>Squadra A:</b> ${escapeHtml(m.keeper_a || "")} <span class="glove">🧤</span></div>
+    <div class="line kit">${kitSVG("#ef4444","#fff")} <b>Squadra B:</b> ${escapeHtml(m.keeper_b || "")} <span class="glove">🧤</span></div>
+    <div class="line"><span class="badge">🏁 ${escapeHtml(resultTxt)}</span></div>
   `;
 
   // Marcatori
@@ -970,10 +1086,16 @@ async function load(){
   mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
   setupMapLinks();
 
-  // METEO
-  await loadWeather(m.match_date, m.match_time);
+  // ✅ METEO: lo carico SOLO se NON c'è risultato
+  if(hasResult){
+    weatherBox.style.display = "none";
+    showScoreboard(m.score_a, m.score_b);
+  }else{
+    hideScoreboard();
+    await loadWeather(m.match_date, m.match_time);
+  }
 
-  // Players (convocati + squadre)
+  // Carica players (convocati + squadre)
   const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
   const teamAIds = Array.isArray(m.team_a) ? m.team_a : [];
   const teamBIds = Array.isArray(m.team_b) ? m.team_b : [];
@@ -986,6 +1108,7 @@ async function load(){
       .from("players")
       .select("id,name,role,position,avatar")
       .in("id", allIds);
+
     if(!pe) players = p || [];
   }
 
@@ -1002,7 +1125,7 @@ async function load(){
     calledEl.textContent = "—";
   }
 
-  // MVP
+  // MVP con avatar
   await loadMVP(m.id, playersById);
 
   // Formazioni + Squadre
@@ -1030,6 +1153,7 @@ async function load(){
 
     gkAName.innerHTML = ka ? (escapeHtml(ka.name) + `<span class="glove">🧤</span>`) : "—";
     gkBName.innerHTML = kb ? (escapeHtml(kb.name) + `<span class="glove">🧤</span>`) : "—";
+
   }else{
     formationsHead.style.display = "none";
     teamsBox.style.display = "none";
@@ -1039,4 +1163,5 @@ async function load(){
 load();
 </script>
 </body>
-</html>
+  </html>
+  2026
