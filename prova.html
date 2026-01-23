@@ -23,6 +23,9 @@
       --okBg:#dcfce7; --okText:#166534; --okBd:rgba(34,197,94,.35);
       --warnBg:#fff7ed; --warnText:#9a3412; --warnBd:rgba(249,115,22,.35);
       --riskBg:#ffe4e6; --riskText:#9f1239; --riskBd:rgba(244,63,94,.35);
+
+      --a:#facc15;
+      --b:#ef4444;
     }
     body.dark{
       --bg:#0f1115;
@@ -62,7 +65,6 @@
 
     .header{text-align:center}
 
-    /* ✅ LOGO "MONETA" */
     .logo{
       width:80px;height:80px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
@@ -91,22 +93,12 @@
     .subtitle{color:var(--muted);font-size:14px}
 
     .heroImgWrap{border-radius:16px;overflow:hidden}
-    .heroImgWrap img{
-      width:100%;
-      display:block;
-      max-height:360px;
-      object-fit:cover;
-    }
-    @media(max-width:600px){
-      .heroImgWrap img{max-height:240px}
-    }
+    .heroImgWrap img{width:100%;display:block;max-height:360px;object-fit:cover}
+    @media(max-width:600px){.heroImgWrap img{max-height:240px}}
     .heroCaption{
-      margin-top:10px;
-      text-align:center;
+      margin-top:10px;text-align:center;
       font-family:'Bebas Neue';
-      letter-spacing:3px;
-      font-size:26px;
-      font-weight:900;
+      letter-spacing:3px;font-size:26px;font-weight:900;
       text-transform:uppercase;
     }
 
@@ -121,176 +113,189 @@
       border:1px solid var(--border);
     }
     .badge{
-      display:inline-block;
-      background:#111;
-      color:#fff;
-      padding:6px 12px;
-      border-radius:999px;
-      font-weight:900;
+      display:inline-block;background:#111;color:#fff;
+      padding:6px 12px;border-radius:999px;font-weight:900;
     }
     body.dark .badge{background:#0b0e14}
     .muted{color:var(--muted)}
 
-    .mapWrap{
-      margin-top:12px;
-      border-radius:12px;
-      overflow:hidden;
-      border:1px solid var(--border)
-    }
+    .mapWrap{margin-top:12px;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
     iframe{width:100%;height:260px;border:0}
 
     .mapActions{
-      display:flex;
-      justify-content:flex-end;
-      gap:10px;
-      margin-top:10px;
-      flex-wrap:wrap;
+      display:flex;justify-content:flex-end;gap:10px;margin-top:10px;flex-wrap:wrap;
     }
     .btn{
-      border:0;
-      background:var(--btn);
-      color:#fff;
-      padding:12px 14px;
-      border-radius:14px;
-      font-weight:900;
-      cursor:pointer;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
+      border:0;background:var(--btn);color:#fff;
+      padding:12px 14px;border-radius:14px;font-weight:900;
+      cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;
       user-select:none;
     }
-    .btn.ghost{
-      background:transparent;
-      color:var(--text);
-      border:1px solid var(--border);
-    }
+    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
 
-    .nav{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      font-size:14px;
-    }
+    .nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}
     .nav a{color:var(--text);text-decoration:none;font-weight:800}
 
     .fab{
-      position:fixed;
-      right:16px;bottom:16px;
-      width:54px;height:54px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--card);
-      box-shadow:var(--shadow);
-      cursor:pointer;
-      font-size:22px;
+      position:fixed;right:16px;bottom:16px;
+      width:54px;height:54px;border-radius:999px;
+      border:1px solid var(--border);background:var(--card);
+      box-shadow:var(--shadow);cursor:pointer;font-size:22px;
     }
 
     .kit{display:inline-flex;align-items:center;gap:6px}
     .kit svg{width:18px;height:18px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 
-    /* MVP box */
-    .mvpBox{
-      margin-top:12px;
-      padding:12px;
-      border:1px solid var(--border);
-      border-radius:14px;
-      background:rgba(0,0,0,.02);
-    }
-    body.dark .mvpBox{background:rgba(255,255,255,.03)}
-    .mvpTitle{
-      font-weight:900;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .mvpMainRow{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-top:10px;
-    }
-    .mvpAvatar{
-      width:48px;height:48px;border-radius:999px;
-      border:1px solid var(--border);
-      object-fit:cover;
-      background:#000;
-      flex:0 0 auto;
-    }
-    .mvpText{font-weight:900}
-    .mvpSub{color:var(--muted);font-weight:800;font-size:13px;margin-top:2px}
-    .mvpTop3{margin-top:10px}
-
-    .mvpRow{
-      display:flex;align-items:center;justify-content:space-between;
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:8px 10px;
-      background:transparent;
-      margin-top:8px;
-      font-weight:800;
-    }
-    .mvpLeft{display:flex;align-items:center;gap:10px}
-    .medal{
-      width:28px;height:28px;border-radius:999px;
-      display:flex;align-items:center;justify-content:center;
-      border:1px solid var(--border);
-      background:var(--card);
-      font-weight:900;
-    }
-
-    /* ✅ METEO */
-    .weatherBox{
-      margin-top:12px;
-      padding:12px;
-      border:1px solid var(--border);
-      border-radius:14px;
-      background:rgba(0,0,0,.02);
-    }
-    body.dark .weatherBox{background:rgba(255,255,255,.03)}
-    .weatherHead{
-      display:flex;align-items:center;justify-content:space-between;
-      gap:10px;flex-wrap:wrap;font-weight:900;
-    }
-    .weatherBig{font-size:46px;line-height:1;margin-top:8px;text-align:center}
-    .weatherLine{margin-top:8px;font-weight:900;text-align:center}
-    .weatherMini{margin-top:6px;text-align:center;color:var(--muted);font-size:13px;font-weight:700}
-    .alertPill{
-      display:inline-block;border-radius:999px;padding:7px 10px;
-      font-weight:900;border:1px solid var(--border);margin:0;
-    }
-    .alert-ok{ background:var(--okBg); color:var(--okText); border-color:var(--okBd); }
-    .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
-    .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
-
-    /* ✅ Players pills with avatars */
+    /* Players pills */
     .playersWrap{margin-top:6px}
     .playerPill{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--pill);
-      margin:6px 8px 0 0;
-      max-width:100%;
+      display:inline-flex;align-items:center;gap:10px;
+      padding:8px 10px;border-radius:999px;border:1px solid var(--border);
+      background:var(--pill);margin:6px 8px 0 0;max-width:100%;
     }
     .playerAvatar{
-      width:42px;height:42px;border-radius:999px;
-      border:1px solid var(--border);
-      object-fit:cover;
-      background:#000;
-      flex:0 0 auto;
+      width:42px;height:42px;border-radius:999px;border:1px solid var(--border);
+      object-fit:cover;background:#000;flex:0 0 auto;
     }
     .playerTxt{display:flex;flex-direction:column;line-height:1.1;min-width:0}
     .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .glove{display:inline-block;margin-left:6px}
 
-    /* ✅ FORMazioni header (GK VS GK) */
+    /* MVP */
+    .mvpBox{
+      margin-top:12px;padding:12px;border:1px solid var(--border);
+      border-radius:14px;background:rgba(0,0,0,.02);
+    }
+    body.dark .mvpBox{background:rgba(255,255,255,.03)}
+    .mvpTitle{
+      font-weight:900;display:flex;align-items:center;justify-content:space-between;
+      gap:10px;flex-wrap:wrap;
+    }
+    .mvpMainRow{display:flex;align-items:center;gap:10px;margin-top:10px}
+    .mvpAvatar{
+      width:48px;height:48px;border-radius:999px;border:1px solid var(--border);
+      object-fit:cover;background:#000;flex:0 0 auto;
+    }
+    .mvpText{font-weight:900}
+    .mvpSub{color:var(--muted);font-weight:800;font-size:13px;margin-top:2px}
+    .mvpTop3{margin-top:10px}
+    .mvpRow{
+      display:flex;align-items:center;justify-content:space-between;
+      border:1px solid var(--border);border-radius:12px;padding:8px 10px;background:transparent;
+      margin-top:8px;font-weight:800;
+    }
+    .mvpLeft{display:flex;align-items:center;gap:10px}
+    .medal{
+      width:28px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;
+      border:1px solid var(--border);background:var(--card);font-weight:900;
+    }
+
+    /* METEO */
+    .weatherBox{
+      margin-top:12px;padding:12px;border:1px solid var(--border);
+      border-radius:14px;background:rgba(0,0,0,.02);
+    }
+    body.dark .weatherBox{background:rgba(255,255,255,.03)}
+    .weatherHead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:900}
+    .weatherBig{font-size:46px;line-height:1;margin-top:8px;text-align:center}
+    .weatherLine{margin-top:8px;font-weight:900;text-align:center}
+    .weatherMini{margin-top:6px;text-align:center;color:var(--muted);font-size:13px;font-weight:700}
+    .alertPill{display:inline-block;border-radius:999px;padding:7px 10px;font-weight:900;border:1px solid var(--border);margin:0}
+    .alert-ok{ background:var(--okBg); color:var(--okText); border-color:var(--okBd); }
+    .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
+    .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
+
+    /* ✅ RISULTATO BELLO (NO SCOREBOARD BG) */
+    .resultBox{
+      margin-top:12px;
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:linear-gradient(180deg, rgba(0,0,0,.03), rgba(0,0,0,.01));
+      position:relative;
+      overflow:hidden;
+    }
+    body.dark .resultBox{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    }
+    .endedPill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.6);
+      font-weight:1000;
+    }
+    body.dark .endedPill{background:rgba(0,0,0,.25)}
+    .endedPill b{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:20px;
+    }
+
+    .scoreRow{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items:center;
+      gap:12px;
+    }
+    .teamCol{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .teamCol.right{justify-content:flex-end}
+    .teamBadge{
+      width:48px;height:48px;border-radius:14px;
+      border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Bebas Neue';font-size:28px;letter-spacing:2px;
+      color:#111;
+      background:rgba(250,204,21,.35);
+    }
+    .teamBadge.b{background:rgba(239,68,68,.22)}
+    body.dark .teamBadge{color:#e5e7eb}
+    .teamName{
+      font-weight:1000;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      font-size:16px;
+    }
+    .teamGK{
+      font-size:12px;font-weight:900;color:var(--muted);
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      margin-top:2px;
+    }
+    .scoreBig{
+      font-family:'Bebas Neue';
+      font-size:64px;
+      letter-spacing:4px;
+      line-height:1;
+      padding:8px 14px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.6);
+      transform:translateY(12px) scale(.95);
+      opacity:0;
+      animation: popScore 700ms cubic-bezier(.2,.9,.2,1) forwards;
+    }
+    body.dark .scoreBig{background:rgba(0,0,0,.25)}
+    @keyframes popScore{
+      0%{opacity:0;transform:translateY(18px) scale(.9)}
+      70%{opacity:1;transform:translateY(-2px) scale(1.03)}
+      100%{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    .subLine{
+      margin-top:10px;
+      text-align:center;
+      color:var(--muted);
+      font-weight:800;
+      font-size:13px;
+    }
+
+    /* Formazioni header (GK VS GK) */
     .formationsHead{
       margin-top:12px;
       padding:12px;
@@ -307,10 +312,7 @@
       text-transform:uppercase;
       text-align:center;
     }
-    .vsRow{
-      display:flex;align-items:center;justify-content:space-between;
-      gap:10px;flex-wrap:wrap;
-    }
+    .vsRow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
     .gkChip{
       display:flex;align-items:center;gap:10px;
       border:1px solid var(--border);
@@ -323,151 +325,15 @@
     .gkAvatar{
       width:54px;height:54px;border-radius:999px;
       border:1px solid var(--border);
-      object-fit:cover;
-      background:#000;
+      object-fit:cover;background:#000;
     }
     .gkTxt{display:flex;flex-direction:column;line-height:1.1;min-width:0}
     .gkName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .gkNote{font-size:12px;font-weight:900;color:var(--muted)}
     .vsBadge{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:30px;
-      padding:6px 10px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:var(--card);
-      font-weight:900;
-      flex:0 0 auto;
-    }
-
-    /* ✅ glove entrance animation */
-    .glove{
-      display:inline-block;
-      margin-left:6px;
-      transform:translateY(-6px) scale(.9);
-      opacity:0;
-      animation: gloveIn 650ms ease-out forwards;
-    }
-    @keyframes gloveIn{
-      0%{transform:translateY(-10px) scale(.7);opacity:0}
-      55%{transform:translateY(2px) scale(1.12);opacity:1}
-      100%{transform:translateY(0) scale(1);opacity:1}
-    }
-
-    /* =========================================================
-       ✅ RISULTATO PARTITA (NO scoreboard.jpg) + "PARTITA TERMINATA"
-       ========================================================= */
-    .resultWrap{ margin-top:12px; display:none; }
-    .resultCard{
-      border:1px solid var(--border);
-      border-radius:16px;
-      overflow:hidden;
-      background:
-        radial-gradient(900px 340px at 50% -40%, rgba(99,102,241,.22), transparent 60%),
-        radial-gradient(700px 260px at 12% 120%, rgba(34,197,94,.18), transparent 60%),
-        radial-gradient(700px 260px at 88% 120%, rgba(239,68,68,.16), transparent 60%),
-        linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.02));
-    }
-    body.dark .resultCard{
-      background:
-        radial-gradient(900px 340px at 50% -40%, rgba(99,102,241,.18), transparent 60%),
-        radial-gradient(700px 260px at 12% 120%, rgba(34,197,94,.12), transparent 60%),
-        radial-gradient(700px 260px at 88% 120%, rgba(239,68,68,.10), transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-    }
-    .resultInner{
-      padding:14px;
-      display:grid;
-      grid-template-columns: 70px 1fr 70px;
-      align-items:center;
-      gap:10px;
-    }
-    .teamBadge{
-      height:64px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:rgba(0,0,0,.03);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:34px;
-      user-select:none;
-    }
-    body.dark .teamBadge{ background:rgba(255,255,255,.04); }
-
-    .scoreBox{
-      border-radius:16px;
-      border:1px solid var(--border);
-      background:var(--card);
-      padding:14px 12px;
-      text-align:center;
-      box-shadow:0 10px 30px rgba(0,0,0,.10);
-      overflow:hidden;
-    }
-    body.dark .scoreBox{ box-shadow:0 16px 44px rgba(0,0,0,.45); }
-
-    .scoreTop{
-      font-family:'Bebas Neue';
-      letter-spacing:3px;
-      font-size:18px;
-      opacity:.9;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-    }
-    .scoreMain{
-      margin-top:6px;
-      font-weight:900;
-      font-size:56px;
-      line-height:1;
-      letter-spacing:2px;
-      font-variant-numeric: tabular-nums;
-    }
-    .scoreSub{
-      margin-top:6px;
-      font-size:12px;
-      font-weight:900;
-      color:var(--muted);
-      letter-spacing:1px;
-      text-transform:uppercase;
-    }
-
-    .terminatedPill{
-      display:none;
-      margin:0 14px 14px;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:rgba(0,0,0,.06);
-      font-weight:900;
-      text-align:center;
-      letter-spacing:1px;
-      text-transform:uppercase;
-    }
-    body.dark .terminatedPill{ background:rgba(255,255,255,.06); }
-
-    /* animazione ingresso */
-    .revealAnim{ animation: popIn .55s cubic-bezier(.2,.9,.2,1) both; }
-    .scorePulse{ animation: pulse .9s ease-in-out both; }
-    @keyframes popIn{
-      0%{opacity:0; transform:translateY(10px) scale(.97)}
-      60%{opacity:1; transform:translateY(-2px) scale(1.01)}
-      100%{opacity:1; transform:translateY(0) scale(1)}
-    }
-    @keyframes pulse{
-      0%{transform:scale(1)}
-      35%{transform:scale(1.03)}
-      100%{transform:scale(1)}
-    }
-
-    @media(max-width:520px){
-      .resultInner{ grid-template-columns: 62px 1fr 62px; }
-      .teamBadge{ height:58px; font-size:30px; }
-      .scoreMain{ font-size:50px; }
+      font-family:'Bebas Neue';letter-spacing:2px;font-size:30px;
+      padding:6px 10px;border-radius:14px;border:1px solid var(--border);
+      background:var(--card);font-weight:900;flex:0 0 auto;
     }
   </style>
 </head>
@@ -493,25 +359,11 @@
   <!-- PARTITA -->
   <div class="card">
     <div id="status" class="muted">Caricamento…</div>
+
+    <!-- ✅ RISULTATO / PARTITA TERMINATA -->
+    <div id="resultBox" class="resultBox" style="display:none"></div>
+
     <div id="info"></div>
-
-    <!-- ✅ RISULTATO (compare solo se score_a e score_b non sono null) -->
-    <div id="resultWrap" class="resultWrap">
-      <div class="resultCard">
-        <div class="resultInner">
-          <div class="teamBadge">A</div>
-
-          <div id="scoreBox" class="scoreBox">
-            <div class="scoreTop"><span>RISULTATO</span><span>•</span><span>FULL TIME</span></div>
-            <div id="scoreMain" class="scoreMain">-- : --</div>
-            <div class="scoreSub">Quelli della pensione</div>
-          </div>
-
-          <div class="teamBadge">B</div>
-        </div>
-        <div id="terminatedPill" class="terminatedPill">PARTITA TERMINATA</div>
-      </div>
-    </div>
 
     <!-- MVP -->
     <div id="mvpBox" class="mvpBox" style="display:none">
@@ -567,7 +419,7 @@
     <div class="line"><b>Convocati</b></div>
     <div id="called" class="playersWrap muted">—</div>
 
-    <!-- FORMAZIONI HEAD -->
+    <!-- FORMAZIONI HEAD (rimane come prima) -->
     <div id="formationsHead" class="formationsHead" style="display:none">
       <div class="formationsTitle">FORMAZIONI</div>
       <div class="vsRow">
@@ -651,6 +503,8 @@ const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
 const calledEl = document.getElementById("called");
 
+const resultBox = document.getElementById("resultBox");
+
 const mapBox = document.getElementById("mapBox");
 const mapFrame = document.getElementById("mapFrame");
 const mapActions = document.getElementById("mapActions");
@@ -688,12 +542,6 @@ const weatherLine = document.getElementById("weatherLine");
 const weatherMini = document.getElementById("weatherMini");
 const weatherAlert = document.getElementById("weatherAlert");
 
-/* ✅ RISULTATO DOM */
-const resultWrap = document.getElementById("resultWrap");
-const scoreBox = document.getElementById("scoreBox");
-const scoreMain = document.getElementById("scoreMain");
-const terminatedPill = document.getElementById("terminatedPill");
-
 /* MAP */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
 const FIELD_LAT = 40.1239395;
@@ -702,7 +550,6 @@ const FIELD_LNG = 18.1203671;
 /* AVATAR PATH */
 const AVATAR_BASE = "avatars/";
 const DEFAULT_AVATAR = "default.png";
-
 function avatarUrl(filename){
   const f = String(filename || "").trim();
   return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
@@ -744,10 +591,6 @@ function isGK(player){
   const p = String(player?.position||"").toLowerCase();
   return r === "gk" || p.includes("port");
 }
-function gkNameWithGlove(player){
-  const n = player?.name || "";
-  return `${escapeHtml(n)}<span class="glove">🧤</span>`;
-}
 
 /* Stato votazione: APERTA se almeno una colonna è true */
 function isVoteOpen(match){
@@ -758,20 +601,6 @@ function isVoteOpen(match){
 function setupMapLinks(){
   mapLink.href = FIXED_MAP_APP_URL;
   mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
-}
-
-/* ✅ RISULTATO: mostra + animazione */
-function showFinalResult(scoreA, scoreB){
-  resultWrap.style.display = "block";
-  terminatedPill.style.display = "block";
-  scoreMain.textContent = `${scoreA} : ${scoreB}`;
-
-  // animazioni
-  resultWrap.classList.remove("revealAnim");
-  scoreBox.classList.remove("revealAnim","scorePulse");
-  void resultWrap.offsetWidth;
-  resultWrap.classList.add("revealAnim");
-  scoreBox.classList.add("revealAnim","scorePulse");
 }
 
 /* METEO (Open-Meteo) */
@@ -976,6 +805,39 @@ function renderPlayerPill(p){
   `;
 }
 
+/* ✅ Render risultato finale (NO scoreboard background) + GK da convocati (2 e 3) */
+function renderFinalResult({scoreA, scoreB, gkA, gkB}){
+  const gkATxt = gkA ? `🧤 ${gkA.name}` : `🧤 —`;
+  const gkBTxt = gkB ? `🧤 ${gkB.name}` : `🧤 —`;
+
+  resultBox.innerHTML = `
+    <div class="endedPill">🏁 <b>PARTITA TERMINATA</b></div>
+
+    <div class="scoreRow">
+      <div class="teamCol">
+        <div class="teamBadge">A</div>
+        <div style="min-width:0">
+          <div class="teamName">Squadra A</div>
+          <div class="teamGK">${escapeHtml(gkATxt)}</div>
+        </div>
+      </div>
+
+      <div class="scoreBig">${escapeHtml(String(scoreA))}-${escapeHtml(String(scoreB))}</div>
+
+      <div class="teamCol right">
+        <div style="min-width:0;text-align:right">
+          <div class="teamName">Squadra B</div>
+          <div class="teamGK">${escapeHtml(gkBTxt)}</div>
+        </div>
+        <div class="teamBadge b">B</div>
+      </div>
+    </div>
+
+    <div class="subLine">Risultato inserito dalla dashboard</div>
+  `;
+  resultBox.style.display = "block";
+}
+
 async function load(){
   const { data, error } = await client
     .from("matches")
@@ -988,7 +850,6 @@ async function load(){
     statusEl.textContent = "Errore caricamento partita";
     infoEl.innerHTML = `<div class="muted">${escapeHtml(error.message)}</div>`;
     weatherBox.style.display = "none";
-    resultWrap.style.display = "none";
     return;
   }
 
@@ -1000,8 +861,8 @@ async function load(){
     mvpBox.style.display = "none";
     formationsHead.style.display = "none";
     teamsBox.style.display = "none";
+    resultBox.style.display = "none";
     calledEl.textContent = "—";
-    resultWrap.style.display = "none";
     return;
   }
 
@@ -1009,37 +870,13 @@ async function load(){
   statusEl.textContent = "Partita trovata ✅";
 
   const time = String(m.match_time||"").slice(0,5);
-  const hasScore = (m.score_a!=null && m.score_b!=null);
-  const result = hasScore ? `${m.score_a}-${m.score_b}` : "da giocare";
-  const voteOpen = isVoteOpen(m);
+  const hasFinalScore = (m.score_a != null && m.score_b != null);
 
-  // MVP UI
-  mvpBox.style.display = "block";
-  mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
-  mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
-  mvpMain.textContent = "Caricamento…";
-  mvpSub.textContent = "";
-  mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
-  mvpTop3.style.display = "none";
-
+  // INFO base (senza scoreboard, risultato bello separato sopra)
   infoEl.innerHTML = `
     <div class="line"><b>📅 ${escapeHtml(formatDateFull(m.match_date))}</b></div>
-    <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
-    <div class="line kit">${kitSVG("#facc15","#111")} <b>Squadra A:</b> ${escapeHtml(m.keeper_a || "")} <span class="glove">🧤</span></div>
-    <div class="line kit">${kitSVG("#ef4444","#fff")} <b>Squadra B:</b> ${escapeHtml(m.keeper_b || "")} <span class="glove">🧤</span></div>
-    <div class="line"><span class="badge">🏁 ${escapeHtml(result)}</span></div>
+    <div class="line"><b>⏰ ${escapeHtml(time || "21:00")}</b></div>
   `;
-
-  // ✅ Risultato: SOLO se partita terminata (score presenti)
-  if(hasScore){
-    showFinalResult(m.score_a, m.score_b);
-    // ✅ come mi avevi chiesto: se c'è risultato, NASCONDI METEO
-    weatherBox.style.display = "none";
-  }else{
-    resultWrap.style.display = "none";
-    // meteo solo se partita non terminata
-    await loadWeather(m.match_date, m.match_time);
-  }
 
   // Marcatori
   if(m.scorers_text && String(m.scorers_text).trim() !== ""){
@@ -1055,10 +892,11 @@ async function load(){
   mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
   setupMapLinks();
 
-  // Players (convocati + squadre) per avere avatar/role/position
-  const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
-  const teamAIds = Array.isArray(m.team_a) ? m.team_a : [];
-  const teamBIds = Array.isArray(m.team_b) ? m.team_b : [];
+  // IDs
+  const calledIds = Array.isArray(m.called_up) ? m.called_up.map(String) : [];
+  const teamAIds = Array.isArray(m.team_a) ? m.team_a.map(String) : [];
+  const teamBIds = Array.isArray(m.team_b) ? m.team_b.map(String) : [];
+
   const allIds = [...new Set([...calledIds, ...teamAIds, ...teamBIds].map(String))];
 
   let players = [];
@@ -1076,7 +914,10 @@ async function load(){
 
   // Convocati
   if(calledIds.length){
-    const calledPlayers = calledIds.map(id => playersById.get(String(id))).filter(Boolean);
+    const calledPlayers = calledIds
+      .map(id => playersById.get(String(id)))
+      .filter(Boolean);
+
     calledEl.classList.remove("muted");
     calledEl.innerHTML = calledPlayers.map(renderPlayerPill).join("");
   }else{
@@ -1084,10 +925,33 @@ async function load(){
     calledEl.textContent = "—";
   }
 
-  // MVP con avatar
+  // ✅ Portieri automatici dai convocati: 2° e 3° (indice 1 e 2)
+  const gkA = calledIds.length >= 2 ? (playersById.get(String(calledIds[1])) || null) : null;
+  const gkB = calledIds.length >= 3 ? (playersById.get(String(calledIds[2])) || null) : null;
+
+  // ✅ RISULTATO + PARTITA TERMINATA (solo se score presente)
+  if(hasFinalScore){
+    renderFinalResult({ scoreA: m.score_a, scoreB: m.score_b, gkA, gkB });
+    // meteo OFF quando partita terminata
+    weatherBox.style.display = "none";
+  }else{
+    resultBox.style.display = "none";
+    // meteo ON solo se non terminata
+    await loadWeather(m.match_date, m.match_time);
+  }
+
+  // MVP (sempre visibile)
+  const voteOpen = isVoteOpen(m);
+  mvpBox.style.display = "block";
+  mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
+  mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
+  mvpMain.textContent = "Caricamento…";
+  mvpSub.textContent = "";
+  mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
+  mvpTop3.style.display = "none";
   await loadMVP(m.id, playersById);
 
-  // Formazioni + Squadre
+  // Squadre A/B come prima (se presenti)
   const hasTeams = teamAIds.length || teamBIds.length;
   if(hasTeams){
     teamsBox.style.display = "block";
@@ -1103,6 +967,7 @@ async function load(){
     teamAEl.innerHTML = aPlayers.length ? aPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
     teamBEl.innerHTML = bPlayers.length ? bPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
 
+    // Formazioni: come prima (keeper_a/keeper_b o fallback)
     const ka = playersByName.get(normName(m.keeper_a)) || aPlayers.find(isGK) || players.find(isGK);
     const kb = playersByName.get(normName(m.keeper_b)) || bPlayers.find(isGK) || players.find(isGK);
 
@@ -1122,4 +987,4 @@ load();
 </script>
 </body>
 </html>
-```0
+```02026
