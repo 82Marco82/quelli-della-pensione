@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="it">
 <head>
@@ -109,6 +108,37 @@
     .commentTop{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
     .commentMeta{font-size:12px;color:var(--muted);font-weight:800}
     .commentText{margin-top:8px;font-weight:700;white-space:pre-wrap}
+
+    /* Admin toggle (come in foto) */
+    .adminBar{
+      display:none;
+      margin-top:10px;
+      padding:10px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(0,0,0,.02);
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      font-weight:900;
+    }
+    body.dark .adminBar{background:rgba(255,255,255,.03)}
+    .adminBar .mini{font-size:12px;color:var(--muted);font-weight:800}
+    .togglePill{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--pill);
+    }
+    .togglePill button{
+      border:0;cursor:pointer;
+      padding:8px 10px;border-radius:999px;
+      font-weight:900;
+      background:var(--btn);
+      color:#fff;
+    }
+    .togglePill button.off{ background:var(--danger); }
   </style>
 </head>
 
@@ -145,6 +175,18 @@
       <div class="commentsTitle">
         <span>🔥 COMMENTI A CALDO • PARTITA GIOCATA</span>
         <span id="commentsCount" class="pill" style="margin:0">0</span>
+      </div>
+
+      <!-- Admin ON/OFF -->
+      <div id="adminBar" class="adminBar">
+        <div>
+          🛡 Modalità Admin: <span id="adminState">OFF</span>
+          <div class="mini">Se ON puoi eliminare commenti.</div>
+        </div>
+        <div class="togglePill">
+          <span id="adminBadge">OFF</span>
+          <button id="btnToggleAdmin" class="off" type="button">Attiva</button>
+        </div>
       </div>
 
       <div id="commentsMsg" class="msg" style="display:none"></div>
@@ -227,6 +269,12 @@ const commentText = document.getElementById("commentText");
 const btnSend = document.getElementById("btnSend");
 const btnReload = document.getElementById("btnReload");
 
+/* Admin toggle DOM */
+const adminBar = document.getElementById("adminBar");
+const adminState = document.getElementById("adminState");
+const adminBadge = document.getElementById("adminBadge");
+const btnToggleAdmin = document.getElementById("btnToggleAdmin");
+
 /* AVATARS */
 const AVATAR_BASE = "avatars/";
 const DEFAULT_AVATAR = "default.png";
@@ -268,25 +316,58 @@ function renderPlayerPill(p){
   `;
 }
 
-/* SESSION + ADMIN */
+/* SESSION + ADMIN (Strada A) */
 let SESSION = null;
 let IS_ADMIN = false;
+let ADMIN_MODE = false; // toggle ON/OFF
 let CURRENT_MATCH_ID = null;
 
 async function getSession(){
   const { data:{ session } } = await client.auth.getSession();
   return session || null;
 }
-async function isAdmin(userId){
+
+/*
+  ✅ STRADA A: tabella admins con colonna "id" (uuid) = auth.uid()
+  (non user_id)
+*/
+async function checkIsAdmin(userId){
   if(!userId) return false;
   const { data, error } = await client
     .from("admins")
-    .select("user_id")
-    .eq("user_id", userId)
+    .select("id")
+    .eq("id", userId)
     .maybeSingle();
   if(error) return false;
   return !!data;
 }
+
+/* Admin toggle UI */
+function setAdminMode(on){
+  ADMIN_MODE = !!on;
+  localStorage.setItem("qdp_admin_mode_comments", ADMIN_MODE ? "1" : "0");
+
+  adminState.textContent = ADMIN_MODE ? "ON" : "OFF";
+  adminBadge.textContent = ADMIN_MODE ? "ON" : "OFF";
+  btnToggleAdmin.textContent = ADMIN_MODE ? "Disattiva" : "Attiva";
+  btnToggleAdmin.className = ADMIN_MODE ? "" : "off";
+}
+
+function initAdminBar(){
+  if(!IS_ADMIN){
+    adminBar.style.display = "none";
+    ADMIN_MODE = false;
+    return;
+  }
+  adminBar.style.display = "flex";
+  const saved = localStorage.getItem("qdp_admin_mode_comments") === "1";
+  setAdminMode(saved);
+}
+
+btnToggleAdmin.onclick = async ()=>{
+  setAdminMode(!ADMIN_MODE);
+  await loadComments(); // rerender con/senza cestini
+};
 
 /* COMMENTS UI */
 function showMsg(text, kind){
@@ -302,10 +383,16 @@ function shortId(id){
   const s = String(id||"");
   return (s.length <= 12) ? s : (s.slice(0,6) + "…" + s.slice(-4));
 }
+
 function renderComment(c){
   const created = c?.created_at ? new Date(c.created_at).toLocaleString("it-IT") : "";
   const who = c?.user_id ? ("utente " + shortId(c.user_id)) : "utente";
-  const delBtn = IS_ADMIN ? `<button class="btn danger" data-del="${escapeHtml(c.id)}" type="button">🗑 Elimina</button>` : "";
+
+  const canDelete = IS_ADMIN && ADMIN_MODE;
+  const delBtn = canDelete
+    ? `<button class="btn danger" data-del="${escapeHtml(c.id)}" type="button">🗑 Elimina</button>`
+    : "";
+
   return `
     <div class="commentRow">
       <div class="commentTop">
@@ -342,7 +429,8 @@ async function loadComments(){
 
     commentsList.innerHTML = rows.map(renderComment).join("");
 
-    if(IS_ADMIN){
+    // bind delete se attivo
+    if(IS_ADMIN && ADMIN_MODE){
       [...commentsList.querySelectorAll("button[data-del]")].forEach(btn=>{
         btn.onclick = async ()=>{
           const id = btn.getAttribute("data-del");
@@ -353,6 +441,7 @@ async function loadComments(){
           try{
             const { error } = await client.from("match_comments").delete().eq("id", id);
             if(error) throw error;
+
             showMsg("✅ Commento eliminato.", "ok");
             await loadComments();
           }catch(e){
@@ -412,7 +501,8 @@ btnReload.onclick = loadComments;
 /* LOAD MATCH */
 async function load(){
   SESSION = await getSession();
-  IS_ADMIN = await isAdmin(SESSION?.user?.id);
+  IS_ADMIN = await checkIsAdmin(SESSION?.user?.id);
+  initAdminBar();
 
   const { data, error } = await client
     .from("matches")
@@ -484,6 +574,8 @@ async function load(){
   if(played){
     commentsBox.style.display = "block";
 
+    // admin bar solo se admin (già gestito initAdminBar)
+    // login required per scrivere
     if(SESSION?.user?.id){
       authHint.style.display = "none";
       formWrap.style.display = "block";
