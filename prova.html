@@ -164,6 +164,7 @@
       color:var(--text);
       border:1px solid var(--border);
     }
+    .btn:disabled{opacity:.6;cursor:not-allowed}
 
     .nav{
       display:flex;
@@ -189,6 +190,7 @@
     .kit{display:inline-flex;align-items:center;gap:6px}
     .kit svg{width:18px;height:18px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 
+    /* MVP box */
     .mvpBox{
       margin-top:12px;
       padding:12px;
@@ -240,6 +242,7 @@
       font-weight:900;
     }
 
+    /* METEO */
     .weatherBox{
       margin-top:12px;
       padding:12px;
@@ -263,6 +266,7 @@
     .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
     .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
 
+    /* Players pills */
     .playersWrap{margin-top:6px}
     .playerPill{
       display:inline-flex;
@@ -286,6 +290,7 @@
     .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
+    /* Formazioni head (GK vs GK) */
     .formationsHead{
       margin-top:12px;
       padding:12px;
@@ -349,7 +354,7 @@
       100%{transform:translateY(0) scale(1);opacity:1}
     }
 
-    /* ✅ COMMENTI A CALDO */
+    /* COMMENTI */
     .commentsBox{
       margin-top:12px;
       padding:12px;
@@ -359,18 +364,53 @@
     }
     body.dark .commentsBox{background:rgba(255,255,255,.03)}
     .commentsHead{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+      display:flex;align-items:center;justify-content:space-between;
+      gap:10px;flex-wrap:wrap;
+      font-weight:900;
     }
-    .commentsTitle{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:22px;
-      margin:0;
-      text-transform:uppercase;
+    .commentsList{margin-top:10px;display:flex;flex-direction:column;gap:10px}
+    .commentCard{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:10px;
+      background:var(--card);
     }
-    .commentsMini{color:var(--muted);font-size:12px;font-weight:800;margin-top:6px}
-    .cForm{margin-top:10px;display:grid;gap:8px}
-    .cForm input,.cForm textarea{
+    .commentTop{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:10px;
+      font-weight:900;
+    }
+    .commentMeta{color:var(--muted);font-size:12px;font-weight:800}
+    .commentTxt{margin-top:8px;white-space:pre-wrap}
+    .reactionsRow{
+      margin-top:10px;
+      display:flex;align-items:center;justify-content:space-between;
+      gap:10px;flex-wrap:wrap;
+    }
+    .emojiBar{display:flex;gap:8px;flex-wrap:wrap}
+    .emojiBtn{
+      border:1px solid var(--border);
+      background:transparent;
+      color:var(--text);
+      border-radius:999px;
+      padding:7px 10px;
+      font-weight:900;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .emojiBtn:disabled{opacity:.6;cursor:not-allowed}
+    .commentForm{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+    @media(min-width:560px){
+      .commentForm{grid-template-columns: 180px 1fr auto}
+    }
+    input, textarea{
       width:100%;
       padding:12px;
       border-radius:12px;
@@ -380,48 +420,20 @@
       outline:none;
       font-family:Inter;
     }
-    .cForm textarea{min-height:88px;resize:vertical}
-    .cActions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px}
-
-    .cList{margin-top:10px;display:grid;gap:10px}
-    .cItem{
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:10px;
-      background:var(--card);
-    }
-    .cTop{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-      font-weight:900;
-    }
-    .cMeta{color:var(--muted);font-weight:800;font-size:12px;margin-top:2px}
-    .cText{margin-top:8px;font-weight:800;white-space:pre-wrap}
-    .rxRow{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
-    .rxBtn{
-      display:inline-flex;align-items:center;gap:6px;
-      border:1px solid var(--border);
-      background:transparent;
-      color:var(--text);
-      padding:8px 10px;
-      border-radius:999px;
-      font-weight:900;
-      cursor:pointer;
-    }
-    .rxBtn:disabled{opacity:.6;cursor:not-allowed}
+    textarea{min-height:44px;resize:vertical}
+    .miniErr{margin-top:8px;color:var(--muted);font-weight:800;font-size:12px}
   </style>
 </head>
 
 <body>
 <div class="wrap">
 
-  <!-- HEADER -->
   <div class="header">
     <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
     <h1>Quelli della pensione</h1>
     <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
   </div>
 
-  <!-- HERO -->
   <div class="card">
     <div class="heroImgWrap">
       <img src="foto.jpg" alt="Quelli della pensione">
@@ -429,12 +441,10 @@
     <div class="heroCaption">OGNI MALEDETTO GIOVEDÌ</div>
   </div>
 
-  <!-- PARTITA -->
   <div class="card">
     <div id="status" class="muted">Caricamento…</div>
     <div id="info"></div>
 
-    <!-- MVP -->
     <div id="mvpBox" class="mvpBox" style="display:none">
       <div class="mvpTitle">
         <div id="mvpTitle">🏆 MVP</div>
@@ -452,14 +462,8 @@
       <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
     </div>
 
-    <!-- MAPPA -->
     <div id="mapBox" class="mapWrap" style="display:none">
-      <iframe
-        id="mapFrame"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        src="https://www.google.com/maps?q=40.1239395,18.1203671&z=18&output=embed">
-      </iframe>
+      <iframe id="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
 
     <div id="mapActions" class="mapActions" style="display:none">
@@ -467,7 +471,6 @@
       <a id="mapOpen" class="btn ghost" href="#" target="_blank" rel="noopener">🗺 Apri su Maps</a>
     </div>
 
-    <!-- METEO -->
     <div id="weatherBox" class="weatherBox" style="display:none">
       <div class="weatherHead">
         <div>🌤 Meteo partita</div>
@@ -478,39 +481,14 @@
       <div id="weatherMini" class="weatherMini"></div>
     </div>
 
-    <!-- MARCATORI -->
     <div id="scorersBox" style="display:none;margin-top:12px">
       <div class="line"><b>⚽ Marcatori</b></div>
       <div id="scorersText" class="muted"></div>
     </div>
 
-    <!-- ✅ COMMENTI A CALDO (solo quando c’è risultato) -->
-    <div id="commentsBox" class="commentsBox" style="display:none">
-      <div class="commentsHead">
-        <h3 class="commentsTitle">COMMENTI “A CALDO” • PARTITA GIOCATA</h3>
-        <span id="commentsCount" class="pill" style="margin:0">0</span>
-      </div>
-      <div class="commentsMini">
-        Goliardia e sfottò ✅ — niente flame 🙏 (si può reagire con emoji).
-      </div>
-
-      <div class="cForm">
-        <input id="cNick" type="text" maxlength="24" placeholder="Nome (facoltativo) es. Peppe">
-        <textarea id="cText" maxlength="420" placeholder="Scrivi un commento…"></textarea>
-        <div class="cActions">
-          <button id="btnSendComment" class="btn" type="button">💬 Pubblica</button>
-        </div>
-        <div id="cMsg" class="muted" style="font-weight:900"></div>
-      </div>
-
-      <div id="cList" class="cList"></div>
-    </div>
-
-    <!-- CONVOCATI -->
     <div class="line"><b>Convocati</b></div>
     <div id="called" class="playersWrap muted">—</div>
 
-    <!-- FORMAZIONI HEAD -->
     <div id="formationsHead" class="formationsHead" style="display:none">
       <div class="formationsTitle">FORMAZIONI</div>
       <div class="vsRow">
@@ -534,7 +512,6 @@
       </div>
     </div>
 
-    <!-- TEAMS -->
     <div id="teamsBox" style="display:none;margin-top:12px">
       <div class="line kit"><span id="tAIcon"></span><b>Squadra A</b></div>
       <div id="teamA" class="playersWrap muted"></div>
@@ -542,11 +519,29 @@
       <div class="line kit" style="margin-top:10px"><span id="tBIcon"></span><b>Squadra B</b></div>
       <div id="teamB" class="playersWrap muted"></div>
     </div>
+
+    <!-- COMMENTI A CALDO (solo a risultato inserito) -->
+    <div id="commentsBox" class="commentsBox" style="display:none">
+      <div class="commentsHead">
+        <div>🔥 COMMENTI “A CALDO” • PARTITA GIOCATA</div>
+        <span id="commentsCount" class="pill" style="margin:0">—</span>
+      </div>
+
+      <div id="commentsList" class="commentsList">
+        <div class="muted">Caricamento commenti…</div>
+      </div>
+
+      <div class="commentForm">
+        <input id="cAuthor" type="text" maxlength="30" placeholder="Il tuo nome (facoltativo)">
+        <textarea id="cText" maxlength="280" placeholder="Scrivi un commento... (max 280)"></textarea>
+        <button id="btnSendComment" class="btn" type="button">📨 Invia</button>
+      </div>
+      <div id="commentErr" class="miniErr"></div>
+    </div>
   </div>
 
-  <!-- NAV -->
+  <!-- NAV (stesso stile index, senza Storico) -->
   <div class="card nav muted">
-    <a href="storico.html">📚 Storico</a>
     <a href="marcatori.html">⚽ Marcatori</a>
     <a href="mvp.html">🏆 Vota MVP</a>
     <a href="foto.html">📸 Foto</a>
@@ -633,12 +628,12 @@ const weatherAlert = document.getElementById("weatherAlert");
 
 /* COMMENTI DOM */
 const commentsBox = document.getElementById("commentsBox");
+const commentsList = document.getElementById("commentsList");
 const commentsCount = document.getElementById("commentsCount");
-const cNick = document.getElementById("cNick");
+const cAuthor = document.getElementById("cAuthor");
 const cText = document.getElementById("cText");
 const btnSendComment = document.getElementById("btnSendComment");
-const cList = document.getElementById("cList");
-const cMsg = document.getElementById("cMsg");
+const commentErr = document.getElementById("commentErr");
 
 /* MAP */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
@@ -648,7 +643,6 @@ const FIELD_LNG = 18.1203671;
 /* AVATAR PATH */
 const AVATAR_BASE = "avatars/";
 const DEFAULT_AVATAR = "default.png";
-
 function avatarUrl(filename){
   const f = String(filename || "").trim();
   return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
@@ -697,19 +691,11 @@ function setupMapLinks(){
   mapLink.href = FIXED_MAP_APP_URL;
   mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
 }
-function safeTimeAgo(ts){
+function fmtTime(ts){
   try{
     const d = new Date(ts);
-    const now = Date.now();
-    const diff = Math.max(0, now - d.getTime());
-    const m = Math.floor(diff/60000);
-    if(m < 1) return "ora";
-    if(m < 60) return `${m} min fa`;
-    const h = Math.floor(m/60);
-    if(h < 24) return `${h}h fa`;
-    const gg = Math.floor(h/24);
-    return `${gg}g fa`;
-  }catch(e){ return ""; }
+    return d.toLocaleString("it-IT",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+  }catch(e){ return String(ts||""); }
 }
 
 /* METEO (Open-Meteo) */
@@ -858,7 +844,12 @@ async function loadMVP(matchId, playersById){
     const rows = [...counts.entries()]
       .map(([id,c])=>{
         const p = playersById.get(String(id));
-        return { id, name: p?.name || id, avatar: p?.avatar || DEFAULT_AVATAR, votes: c };
+        return {
+          id,
+          name: p?.name || id,
+          avatar: p?.avatar || DEFAULT_AVATAR,
+          votes: c
+        };
       })
       .sort((a,b)=> b.votes - a.votes || String(a.name).localeCompare(String(b.name),"it"));
 
@@ -915,141 +906,138 @@ function renderPlayerPill(p){
   `;
 }
 
-/* ✅ COMMENTI A CALDO + REAZIONI */
-const REACTIONS = ["👍","😂","😡","🔥","👏"];
-let CURRENT_MATCH_ID = null;
+/* COMMENTI + REAZIONI */
+const EMOJIS = ["👍","😂","😡","🔥","👏"];
 
-function setCMsg(t){ cMsg.textContent = t || ""; }
-
-async function postComment(){
-  if(!CURRENT_MATCH_ID) return;
-  const nickname = (cNick.value || "").trim().slice(0,24) || "Anonimo";
-  const content = (cText.value || "").trim().slice(0,420);
-  if(!content) return setCMsg("Scrivi qualcosa prima di pubblicare.");
-
-  btnSendComment.disabled = true;
-  setCMsg("Invio…");
-
-  try{
-    const { error } = await client
-      .from("match_comments")
-      .insert([{ match_id: CURRENT_MATCH_ID, nickname, content }]);
-
-    if(error) throw error;
-
-    cText.value = "";
-    setCMsg("✅ Pubblicato!");
-    await loadComments(CURRENT_MATCH_ID);
-
-  }catch(e){
-    console.error(e);
-    setCMsg("❌ Errore invio commento.");
-  }finally{
-    btnSendComment.disabled = false;
-    setTimeout(()=>setCMsg(""), 2000);
-  }
-}
-btnSendComment.onclick = postComment;
-
-async function addReaction(commentId, emoji, btnEl){
-  if(!commentId) return;
-  if(!REACTIONS.includes(emoji)) return;
-
-  btnEl.disabled = true;
-  try{
-    const { error } = await client
-      .from("match_comment_reactions")
-      .insert([{ comment_id: commentId, emoji }]);
-    if(error) throw error;
-
-    await loadComments(CURRENT_MATCH_ID);
-
-  }catch(e){
-    console.error(e);
-  }finally{
-    btnEl.disabled = false;
-  }
-}
-
-function renderReactionButtons(commentId, counts){
-  return REACTIONS.map(em=>{
-    const n = counts.get(em) || 0;
-    return `<button class="rxBtn" type="button" data-cid="${escapeHtml(commentId)}" data-emo="${escapeHtml(em)}">${em} <span>${n}</span></button>`;
+function commentCardHTML(c, reactionsByComment){
+  const rmap = reactionsByComment.get(String(c.id)) || new Map();
+  const btns = EMOJIS.map(e=>{
+    const n = rmap.get(e) || 0;
+    return `<button class="emojiBtn" type="button" data-cid="${escapeHtml(c.id)}" data-emoji="${escapeHtml(e)}">${escapeHtml(e)} <span>${n}</span></button>`;
   }).join("");
+
+  const author = (c.author && String(c.author).trim()) ? String(c.author).trim() : "Anonimo";
+  return `
+    <div class="commentCard">
+      <div class="commentTop">
+        <div>${escapeHtml(author)}</div>
+        <div class="commentMeta">${escapeHtml(fmtTime(c.created_at))}</div>
+      </div>
+      <div class="commentTxt">${escapeHtml(c.text || "")}</div>
+      <div class="reactionsRow">
+        <div class="emojiBar">${btns}</div>
+      </div>
+    </div>
+  `;
 }
 
 async function loadComments(matchId){
-  if(!matchId) return;
+  commentErr.textContent = "";
+  commentsList.innerHTML = `<div class="muted">Caricamento commenti…</div>`;
+  commentsCount.textContent = "—";
 
-  // commenti
-  const { data: comments, error } = await client
-    .from("match_comments")
-    .select("id,match_id,nickname,content,created_at")
-    .eq("match_id", matchId)
-    .order("created_at", { ascending:false })
-    .limit(80);
+  try{
+    const { data: comments, error } = await client
+      .from("match_comments")
+      .select("id,match_id,author,text,created_at")
+      .eq("match_id", matchId)
+      .order("created_at",{ascending:false})
+      .limit(200);
 
-  if(error){
-    console.error(error);
-    cList.innerHTML = `<div class="muted">Errore caricamento commenti.</div>`;
-    commentsCount.textContent = "—";
-    return;
-  }
+    if(error) throw error;
 
-  const ids = (comments||[]).map(c=>c.id);
-  let reactions = [];
-  if(ids.length){
-    const r = await client
-      .from("match_comment_reactions")
-      .select("comment_id,emoji")
-      .in("comment_id", ids);
-    if(!r.error) reactions = r.data || [];
-  }
+    const ids = (comments||[]).map(x=>x.id);
+    const reactionsByComment = new Map();
 
-  // mappa conteggi per commento
-  const byComment = new Map();
-  reactions.forEach(x=>{
-    const cid = String(x.comment_id);
-    const em = String(x.emoji);
-    if(!byComment.has(cid)) byComment.set(cid, new Map());
-    const m = byComment.get(cid);
-    m.set(em, (m.get(em)||0) + 1);
-  });
+    if(ids.length){
+      const { data: reacts, error: re } = await client
+        .from("match_comment_reactions")
+        .select("comment_id,emoji")
+        .in("comment_id", ids)
+        .limit(5000);
 
-  commentsCount.textContent = String((comments||[]).length);
+      if(!re){
+        (reacts||[]).forEach(r=>{
+          const cid = String(r.comment_id);
+          const em = String(r.emoji);
+          if(!reactionsByComment.has(cid)) reactionsByComment.set(cid, new Map());
+          const m = reactionsByComment.get(cid);
+          m.set(em, (m.get(em)||0) + 1);
+        });
+      }
+    }
 
-  if(!comments?.length){
-    cList.innerHTML = `<div class="muted">Nessun commento. Rompete il ghiaccio 😄</div>`;
-    return;
-  }
+    commentsCount.textContent = `💬 ${comments?.length || 0}`;
+    if(!comments || !comments.length){
+      commentsList.innerHTML = `<div class="muted">Nessun commento ancora. Apri tu le danze 😄</div>`;
+      return;
+    }
 
-  cList.innerHTML = comments.map(c=>{
-    const rx = byComment.get(String(c.id)) || new Map();
-    return `
-      <div class="cItem">
-        <div class="cTop">
-          <div>${escapeHtml(c.nickname || "Anonimo")}</div>
-          <div class="pill" style="margin:0">${escapeHtml(safeTimeAgo(c.created_at))}</div>
-        </div>
-        <div class="cText">${escapeHtml(c.content || "")}</div>
-        <div class="rxRow">
-          ${renderReactionButtons(c.id, rx)}
-        </div>
-      </div>
-    `;
-  }).join("");
+    commentsList.innerHTML = comments.map(c => commentCardHTML(c, reactionsByComment)).join("");
 
-  // bind click reazioni
-  [...cList.querySelectorAll(".rxBtn")].forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const cid = btn.getAttribute("data-cid");
-      const emo = btn.getAttribute("data-emo");
-      addReaction(cid, emo, btn);
+    // bind reaction buttons
+    [...commentsList.querySelectorAll(".emojiBtn")].forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        const cid = btn.getAttribute("data-cid");
+        const emoji = btn.getAttribute("data-emoji");
+        if(!cid || !emoji) return;
+
+        btn.disabled = true;
+        commentErr.textContent = "";
+
+        try{
+          const { error: insErr } = await client
+            .from("match_comment_reactions")
+            .insert([{ comment_id: cid, emoji }]);
+
+          if(insErr) throw insErr;
+
+          // refresh (semplice ma robusto)
+          await loadComments(matchId);
+        }catch(e){
+          console.error("Errore reazione:", e);
+          commentErr.textContent = `Errore reazione: ${e?.message || e}`;
+        }finally{
+          btn.disabled = false;
+        }
+      });
     });
-  });
+
+  }catch(e){
+    console.error("Errore commenti:", e);
+    commentsList.innerHTML = `<div class="muted">Errore caricamento commenti: ${escapeHtml(e?.message || String(e))}</div>`;
+    commentsCount.textContent = "—";
+  }
 }
 
-/* MAIN LOAD */
+async function sendComment(matchId){
+  const author = String(cAuthor.value||"").trim().slice(0,30);
+  const text = String(cText.value||"").trim().slice(0,280);
+
+  commentErr.textContent = "";
+  if(!text){
+    commentErr.textContent = "Scrivi qualcosa prima di inviare 🙂";
+    return;
+  }
+
+  btnSendComment.disabled = true;
+
+  try{
+    const payload = { match_id: matchId, author: (author || null), text };
+    const { error } = await client.from("match_comments").insert([payload]);
+    if(error) throw error;
+
+    cText.value = "";
+    await loadComments(matchId);
+  }catch(e){
+    console.error("Errore invio:", e);
+    commentErr.textContent = `Errore invio commento: ${e?.message || e}`;
+  }finally{
+    btnSendComment.disabled = false;
+  }
+}
+
+/* LOAD MAIN */
 async function load(){
   const { data, error } = await client
     .from("matches")
@@ -1079,8 +1067,6 @@ async function load(){
   }
 
   const m = data[0];
-  CURRENT_MATCH_ID = m.id;
-
   statusEl.textContent = "Partita trovata ✅";
 
   const time = String(m.match_time||"").slice(0,5);
@@ -1113,14 +1099,6 @@ async function load(){
     scorersBox.style.display="none";
   }
 
-  // ✅ Commenti a caldo SOLO se c’è risultato
-  if(hasResult){
-    commentsBox.style.display = "block";
-    await loadComments(m.id);
-  }else{
-    commentsBox.style.display = "none";
-  }
-
   // MAPPA
   mapBox.style.display = "block";
   mapActions.style.display = "flex";
@@ -1130,10 +1108,11 @@ async function load(){
   // METEO
   await loadWeather(m.match_date, m.match_time);
 
-  // players (convocati + squadre) per avatar/role/position
+  // Players query (avatar/role/position)
   const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
   const teamAIds = Array.isArray(m.team_a) ? m.team_a : [];
   const teamBIds = Array.isArray(m.team_b) ? m.team_b : [];
+
   const allIds = [...new Set([...calledIds, ...teamAIds, ...teamBIds].map(String))];
 
   let players = [];
@@ -1142,6 +1121,7 @@ async function load(){
       .from("players")
       .select("id,name,role,position,avatar")
       .in("id", allIds);
+
     if(!pe) players = p || [];
   }
 
@@ -1158,10 +1138,10 @@ async function load(){
     calledEl.textContent = "—";
   }
 
-  // MVP con avatar
+  // MVP
   await loadMVP(m.id, playersById);
 
-  // Formazioni + squadre
+  // Formazioni + Squadre
   const hasTeams = teamAIds.length || teamBIds.length;
   if(hasTeams){
     teamsBox.style.display = "block";
@@ -1177,6 +1157,7 @@ async function load(){
     teamAEl.innerHTML = aPlayers.length ? aPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
     teamBEl.innerHTML = bPlayers.length ? bPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
 
+    // GK vs GK
     const ka = playersByName.get(normName(m.keeper_a)) || aPlayers.find(isGK) || players.find(isGK);
     const kb = playersByName.get(normName(m.keeper_b)) || bPlayers.find(isGK) || players.find(isGK);
 
@@ -1186,9 +1167,25 @@ async function load(){
 
     gkAName.innerHTML = ka ? (escapeHtml(ka.name) + `<span class="glove">🧤</span>`) : "—";
     gkBName.innerHTML = kb ? (escapeHtml(kb.name) + `<span class="glove">🧤</span>`) : "—";
+
   }else{
     formationsHead.style.display = "none";
     teamsBox.style.display = "none";
+  }
+
+  // COMMENTI A CALDO: solo se risultato presente
+  if(hasResult){
+    commentsBox.style.display = "block";
+    await loadComments(m.id);
+
+    btnSendComment.onclick = () => sendComment(m.id);
+    cText.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter" && (e.ctrlKey || e.metaKey)){
+        btnSendComment.click();
+      }
+    });
+  }else{
+    commentsBox.style.display = "none";
   }
 }
 
