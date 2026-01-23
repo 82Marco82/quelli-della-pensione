@@ -290,7 +290,7 @@
     .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-    /* Formazioni header */
+    /* FORMAZIONI header (GK VS GK) */
     .formationsHead{
       margin-top:12px;
       padding:12px;
@@ -341,6 +341,7 @@
       flex:0 0 auto;
     }
 
+    /* glove entrance animation */
     .glove{
       display:inline-block;
       margin-left:6px;
@@ -354,148 +355,64 @@
       100%{transform:translateY(0) scale(1);opacity:1}
     }
 
-    /* ==================================================
-       ✅ SCOREBOARD (immagine + overlay pulito e allineato)
-       Metti: scoreboard.jpg nella root (stessa cartella)
-       ================================================== */
-    .scoreCard{ padding:0; overflow:hidden; margin-top:12px; }
-    .scoreboardStage{
-      position:relative;
-      border-radius:16px;
-      overflow:hidden;
-      border:1px solid var(--border);
-      background:#000;
-      aspect-ratio: 16 / 9;
-    }
-    .scoreboardStage img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .sbOverlay{
-      position:absolute;
-      inset:0;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      padding:14px;
-      pointer-events:none;
-    }
-
-    .sbTopRow{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-    }
-    .sbCompetition{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:18px;
-      padding:6px 12px;
-      border-radius:999px;
-      background:rgba(0,0,0,.55);
+    /* ✅ SCORE CARD (NO scoreboard.jpg) */
+    .scoreCard{
+      margin-top:14px;
+      padding:18px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#111827,#1f2933);
       color:#fff;
-      border:1px solid rgba(255,255,255,.18);
-      backdrop-filter: blur(4px);
-    }
-
-    .sbMidRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:0 8px 10px 8px;
-    }
-
-    .sbPlate{
-      min-width:92px;
       text-align:center;
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:28px;
-      padding:8px 12px;
-      border-radius:14px;
-      background:rgba(0,0,0,.55);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.18);
-      backdrop-filter: blur(4px);
+      animation: scoreIn .6s ease-out;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 10px 24px rgba(0,0,0,.18);
     }
-
-    .sbScorePlate{
-      flex:1;
+    @keyframes scoreIn{
+      from{opacity:0; transform:translateY(18px) scale(.96)}
+      to{opacity:1; transform:none}
+    }
+    .scoreTeams{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:18px;
+    }
+    .teamTag{
+      font-size:22px;
+      font-weight:900;
+      background:rgba(255,255,255,.10);
+      padding:10px 16px;
+      border-radius:14px;
+      min-width:54px;
+      text-align:center;
+    }
+    .scoreVal{
+      font-family:'Bebas Neue';
+      font-size:64px;
+      letter-spacing:4px;
+      line-height:1;
+    }
+    .scoreMeta{
+      margin-top:10px;
       display:flex;
       justify-content:center;
-      align-items:center;
-      gap:14px;
-      padding:10px 14px;
-      border-radius:16px;
-      background:rgba(0,0,0,.55);
-      border:1px solid rgba(255,255,255,.18);
-      backdrop-filter: blur(4px);
+      gap:12px;
+      flex-wrap:wrap;
     }
-    .sbDigits{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:60px;
-      color:#dbeafe;
-      text-shadow: 0 6px 18px rgba(0,0,0,.55);
-      line-height:1;
+    .minutesPill{
+      background:rgba(0,0,0,.25);
+      padding:7px 12px;
+      border-radius:999px;
+      font-weight:800;
+      border:1px solid rgba(255,255,255,.12);
     }
-    .sbColon{
-      font-family:'Bebas Neue';
-      font-size:54px;
-      color:#fff;
-      opacity:.9;
-      line-height:1;
-    }
-
-    .sbBottomRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .sbTag{
+    .finishedPill{
+      background:#b91c1c;
+      padding:7px 14px;
+      border-radius:999px;
       font-weight:900;
-      font-size:13px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(0,0,0,.55);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.18);
-      backdrop-filter: blur(4px);
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-    .sbFT{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:18px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(220,38,38,.8);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.18);
-      backdrop-filter: blur(4px);
-      display:none;
-    }
-
-    /* Animazione elegante uscita/ingresso risultato */
-    .reveal{
-      animation: sbIn 520ms cubic-bezier(.2,.9,.2,1) both;
-    }
-    @keyframes sbIn{
-      0%{ transform: translateY(10px) scale(.98); opacity:0; }
-      100%{ transform: translateY(0) scale(1); opacity:1; }
-    }
-
-    @media(max-width:520px){
-      .sbDigits{font-size:46px}
-      .sbPlate{font-size:24px; min-width:74px}
-      .sbCompetition{font-size:16px}
+      letter-spacing:1px;
+      border:1px solid rgba(255,255,255,.12);
     }
   </style>
 </head>
@@ -523,32 +440,16 @@
     <div id="status" class="muted">Caricamento…</div>
     <div id="info"></div>
 
-    <!-- ✅ SCOREBOARD (visibile solo a fine partita) -->
-    <div id="scoreCard" class="card scoreCard" style="display:none">
-      <div id="scoreStage" class="scoreboardStage">
-        <img src="scoreboard.jpg" alt="Scoreboard">
-        <div class="sbOverlay">
-          <div class="sbTopRow">
-            <div class="sbCompetition">QDP</div>
-          </div>
-
-          <div class="sbMidRow">
-            <div class="sbPlate">A</div>
-
-            <div class="sbScorePlate">
-              <div id="sbA" class="sbDigits">0</div>
-              <div class="sbColon">:</div>
-              <div id="sbB" class="sbDigits">0</div>
-            </div>
-
-            <div class="sbPlate">B</div>
-          </div>
-
-          <div class="sbBottomRow">
-            <div class="sbTag">⏱ 60'</div>
-            <div id="sbFT" class="sbFT">PARTITA TERMINATA</div>
-          </div>
-        </div>
+    <!-- ✅ SCORECARD (mostrata SOLO se partita terminata) -->
+    <div id="scoreCard" class="scoreCard" style="display:none">
+      <div class="scoreTeams">
+        <span class="teamTag">A</span>
+        <span id="scoreVal" class="scoreVal">– : –</span>
+        <span class="teamTag">B</span>
+      </div>
+      <div class="scoreMeta">
+        <span id="scoreMinutes" class="minutesPill">⏱ 60'</span>
+        <span class="finishedPill">PARTITA TERMINATA</span>
       </div>
     </div>
 
@@ -585,7 +486,7 @@
       <a id="mapOpen" class="btn ghost" href="#" target="_blank" rel="noopener">🗺 Apri su Maps</a>
     </div>
 
-    <!-- METEO -->
+    <!-- METEO (mostrato SOLO se partita NON terminata) -->
     <div id="weatherBox" class="weatherBox" style="display:none">
       <div class="weatherHead">
         <div>🌤 Meteo partita</div>
@@ -720,19 +621,17 @@ const mvpMain = document.getElementById("mvpMain");
 const mvpSub = document.getElementById("mvpSub");
 const mvpTop3 = document.getElementById("mvpTop3");
 
+/* SCORE DOM */
+const scoreCard = document.getElementById("scoreCard");
+const scoreVal = document.getElementById("scoreVal");
+const scoreMinutes = document.getElementById("scoreMinutes");
+
 /* METEO DOM */
 const weatherBox = document.getElementById("weatherBox");
 const weatherBig = document.getElementById("weatherBig");
 const weatherLine = document.getElementById("weatherLine");
 const weatherMini = document.getElementById("weatherMini");
 const weatherAlert = document.getElementById("weatherAlert");
-
-/* ✅ SCOREBOARD DOM */
-const scoreCard = document.getElementById("scoreCard");
-const scoreStage = document.getElementById("scoreStage");
-const sbA = document.getElementById("sbA");
-const sbB = document.getElementById("sbB");
-const sbFT = document.getElementById("sbFT");
 
 /* MAP */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
@@ -784,10 +683,8 @@ function isGK(player){
   const p = String(player?.position||"").toLowerCase();
   return r === "gk" || p.includes("port");
 }
-function gkNameWithGlove(player){
-  const n = player?.name || "";
-  return `${escapeHtml(n)}<span class="glove">🧤</span>`;
-}
+
+/* Stato votazione: APERTA se almeno una colonna è true */
 function isVoteOpen(match){
   return (match?.vote_open === true) || (match?.voting_open === true);
 }
@@ -796,22 +693,6 @@ function isVoteOpen(match){
 function setupMapLinks(){
   mapLink.href = FIXED_MAP_APP_URL;
   mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
-}
-
-/* ✅ SCOREBOARD helpers */
-function showScoreboard(a,b){
-  scoreCard.style.display = "block";
-  scoreStage.classList.remove("reveal");
-  void scoreStage.offsetWidth;
-  scoreStage.classList.add("reveal");
-
-  sbA.textContent = String(a ?? 0);
-  sbB.textContent = String(b ?? 0);
-  sbFT.style.display = "inline-flex";
-}
-function hideScoreboard(){
-  scoreCard.style.display = "none";
-  sbFT.style.display = "none";
 }
 
 /* METEO (Open-Meteo) */
@@ -960,7 +841,12 @@ async function loadMVP(matchId, playersById){
     const rows = [...counts.entries()]
       .map(([id,c])=>{
         const p = playersById.get(String(id));
-        return { id, name: p?.name || id, avatar: p?.avatar || DEFAULT_AVATAR, votes: c };
+        return {
+          id,
+          name: p?.name || id,
+          avatar: p?.avatar || DEFAULT_AVATAR,
+          votes: c
+        };
       })
       .sort((a,b)=> b.votes - a.votes || String(a.name).localeCompare(String(b.name),"it"));
 
@@ -1029,14 +915,14 @@ async function load(){
     statusEl.textContent = "Errore caricamento partita";
     infoEl.innerHTML = `<div class="muted">${escapeHtml(error.message)}</div>`;
     weatherBox.style.display = "none";
-    hideScoreboard();
+    scoreCard.style.display = "none";
     return;
   }
 
   if(!data || !data.length){
     statusEl.textContent = "Nessuna partita creata";
     weatherBox.style.display = "none";
-    hideScoreboard();
+    scoreCard.style.display = "none";
     mapBox.style.display = "none";
     mapActions.style.display = "none";
     mvpBox.style.display = "none";
@@ -1050,8 +936,7 @@ async function load(){
   statusEl.textContent = "Partita trovata ✅";
 
   const time = String(m.match_time||"").slice(0,5);
-  const hasResult = (m.score_a!=null && m.score_b!=null);
-  const resultTxt = hasResult ? `${m.score_a}-${m.score_b}` : "da giocare";
+  const isFinished = (m.score_a !== null && m.score_b !== null);
   const voteOpen = isVoteOpen(m);
 
   // MVP UI
@@ -1063,14 +948,25 @@ async function load(){
   mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
   mvpTop3.style.display = "none";
 
-  // INFO: mantengo i tuoi keeper, ma il risultato lo gestisco elegante
+  // INFO (badge risultato semplice resta, ma senza grafica brutta)
   infoEl.innerHTML = `
     <div class="line"><b>📅 ${escapeHtml(formatDateFull(m.match_date))}</b></div>
     <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
     <div class="line kit">${kitSVG("#facc15","#111")} <b>Squadra A:</b> ${escapeHtml(m.keeper_a || "")} <span class="glove">🧤</span></div>
     <div class="line kit">${kitSVG("#ef4444","#fff")} <b>Squadra B:</b> ${escapeHtml(m.keeper_b || "")} <span class="glove">🧤</span></div>
-    <div class="line"><span class="badge">🏁 ${escapeHtml(resultTxt)}</span></div>
+    <div class="line"><span class="badge">🏁 ${escapeHtml(isFinished ? (m.score_a + "-" + m.score_b) : "da giocare")}</span></div>
   `;
+
+  // ✅ SCORE CARD SOLO SE TERMINATA
+  if(isFinished){
+    scoreCard.style.display = "block";
+    scoreVal.textContent = `${m.score_a} : ${m.score_b}`;
+    scoreMinutes.textContent = "⏱ 60'";
+    weatherBox.style.display = "none";
+  }else{
+    scoreCard.style.display = "none";
+    await loadWeather(m.match_date, m.match_time);
+  }
 
   // Marcatori
   if(m.scorers_text && String(m.scorers_text).trim() !== ""){
@@ -1086,16 +982,7 @@ async function load(){
   mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
   setupMapLinks();
 
-  // ✅ METEO: lo carico SOLO se NON c'è risultato
-  if(hasResult){
-    weatherBox.style.display = "none";
-    showScoreboard(m.score_a, m.score_b);
-  }else{
-    hideScoreboard();
-    await loadWeather(m.match_date, m.match_time);
-  }
-
-  // Carica players (convocati + squadre)
+  // Carica players (convocati + squadre) per avere avatar/role/position
   const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
   const teamAIds = Array.isArray(m.team_a) ? m.team_a : [];
   const teamBIds = Array.isArray(m.team_b) ? m.team_b : [];
@@ -1105,63 +992,4 @@ async function load(){
   let players = [];
   if(allIds.length){
     const { data:p, error:pe } = await client
-      .from("players")
-      .select("id,name,role,position,avatar")
-      .in("id", allIds);
-
-    if(!pe) players = p || [];
-  }
-
-  const playersById = new Map(players.map(p=>[String(p.id), p]));
-  const playersByName = new Map(players.map(p=>[normName(p.name), p]));
-
-  // Convocati
-  if(calledIds.length){
-    const calledPlayers = calledIds.map(id => playersById.get(String(id))).filter(Boolean);
-    calledEl.classList.remove("muted");
-    calledEl.innerHTML = calledPlayers.map(renderPlayerPill).join("");
-  }else{
-    calledEl.classList.add("muted");
-    calledEl.textContent = "—";
-  }
-
-  // MVP con avatar
-  await loadMVP(m.id, playersById);
-
-  // Formazioni + Squadre
-  const hasTeams = teamAIds.length || teamBIds.length;
-  if(hasTeams){
-    teamsBox.style.display = "block";
-    tAIcon.innerHTML = kitSVG("#facc15","#111");
-    tBIcon.innerHTML = kitSVG("#ef4444","#fff");
-
-    const aPlayers = teamAIds.map(id=>playersById.get(String(id))).filter(Boolean);
-    const bPlayers = teamBIds.map(id=>playersById.get(String(id))).filter(Boolean);
-
-    teamAEl.classList.remove("muted");
-    teamBEl.classList.remove("muted");
-
-    teamAEl.innerHTML = aPlayers.length ? aPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
-    teamBEl.innerHTML = bPlayers.length ? bPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
-
-    const ka = playersByName.get(normName(m.keeper_a)) || aPlayers.find(isGK) || players.find(isGK);
-    const kb = playersByName.get(normName(m.keeper_b)) || bPlayers.find(isGK) || players.find(isGK);
-
-    formationsHead.style.display = "block";
-    gkAAvatar.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
-    gkBAvatar.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
-
-    gkAName.innerHTML = ka ? (escapeHtml(ka.name) + `<span class="glove">🧤</span>`) : "—";
-    gkBName.innerHTML = kb ? (escapeHtml(kb.name) + `<span class="glove">🧤</span>`) : "—";
-
-  }else{
-    formationsHead.style.display = "none";
-    teamsBox.style.display = "none";
-  }
-}
-
-load();
-</script>
-</body>
-  </html>
-  2026
+      .from
