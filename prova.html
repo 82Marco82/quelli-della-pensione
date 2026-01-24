@@ -228,10 +228,12 @@
       background:var(--pill);
       font-weight:900;
     }
+
+    /* ✅ QUI IL FIX: sempre centrato e senza uscire fuori */
     .resultMid{
       margin-top:12px;
       display:grid;
-      grid-template-columns:110px 1fr 110px;
+      grid-template-columns:1fr minmax(150px, 1.2fr) 1fr;
       gap:10px;
       align-items:center;
     }
@@ -239,12 +241,15 @@
       display:flex;
       align-items:center;
       justify-content:center;
+      min-width:0;
     }
     .resultAvatar{
       width:78px;height:78px;border-radius:999px;
       border:1px solid var(--border);
       object-fit:cover;
       background:#000;
+      display:block;
+      max-width:100%;
     }
     .resultScoreWrap{
       text-align:center;
@@ -252,6 +257,7 @@
       border-radius:16px;
       background:var(--card);
       padding:14px 10px;
+      min-width:0;
     }
     .resultScore{
       font-family:'Bebas Neue';
@@ -259,6 +265,7 @@
       line-height:1;
       letter-spacing:2px;
       font-weight:900;
+      white-space:nowrap;
     }
     .resultLabel{
       margin-top:6px;
@@ -268,7 +275,7 @@
       text-transform:uppercase;
     }
     @media(max-width:420px){
-      .resultMid{grid-template-columns:90px 1fr 90px}
+      .resultMid{grid-template-columns:1fr minmax(130px, 1.2fr) 1fr}
       .resultAvatar{width:64px;height:64px}
       .resultScore{font-size:60px}
     }
@@ -590,9 +597,6 @@
 
 <button id="themeToggle" class="fab">🌙</button>
 
-<!-- 🔊 Audio fischio finale -->
-<audio id="finalWhistle" src="final-whistle-1.mp3" preload="auto"></audio>
-
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
@@ -674,9 +678,6 @@ const weatherLine = document.getElementById("weatherLine");
 const weatherMini = document.getElementById("weatherMini");
 const weatherAlert = document.getElementById("weatherAlert");
 
-/* AUDIO */
-const finalWhistle = document.getElementById("finalWhistle");
-
 /* MAP */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
 const FIELD_LAT = 40.1239395;
@@ -685,7 +686,6 @@ const FIELD_LNG = 18.1203671;
 /* AVATAR PATH */
 const AVATAR_BASE = "avatars/";
 const DEFAULT_AVATAR = "default.png";
-
 function avatarUrl(filename){
   const f = String(filename || "").trim();
   return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
@@ -729,32 +729,6 @@ function isGK(player){
 }
 function isVoteOpen(match){
   return (match?.vote_open === true) || (match?.voting_open === true);
-}
-
-/* ✅ Fischio: una sola volta per quel match+risultato */
-function playFinalWhistleOnce(matchId, scoreA, scoreB){
-  const key = `qdp_whistle_last`;
-  const value = `${matchId}:${scoreA}-${scoreB}`;
-  if(localStorage.getItem(key) === value) return;
-  localStorage.setItem(key, value);
-
-  if(!finalWhistle) return;
-
-  try{
-    finalWhistle.currentTime = 0;
-    const p = finalWhistle.play();
-    if(p && typeof p.catch === "function"){
-      p.catch(() => {
-        const once = () => {
-          document.removeEventListener("click", once);
-          document.removeEventListener("touchstart", once);
-          try{ finalWhistle.currentTime = 0; finalWhistle.play().catch(()=>{}); }catch(e){}
-        };
-        document.addEventListener("click", once, {once:true});
-        document.addEventListener("touchstart", once, {once:true, passive:true});
-      });
-    }
-  }catch(e){}
 }
 
 /* ✅ Trova portiere SOLO dentro la squadra */
@@ -936,195 +910,3 @@ async function loadMVP(matchId, playersById){
       mvpAvatar.src = avatarUrl(tops[0].avatar);
       mvpMain.textContent = `Parità: ${tops.map(t=>t.name).join(", ")}`;
       mvpSub.textContent = `${topVotes} voto/i`;
-    }
-
-    const top3 = rows.slice(0,3);
-    mvpTop3.innerHTML = top3.map((r,i)=>`
-      <div class="mvpRow">
-        <div class="mvpLeft">
-          <div class="medal">${escapeHtml(medal(i))}</div>
-          <img class="mvpAvatar" style="width:36px;height:36px" src="${escapeHtml(avatarUrl(r.avatar))}" alt="">
-          <div>${escapeHtml(r.name)}</div>
-        </div>
-        <div>${r.votes}</div>
-      </div>
-    `).join("");
-    mvpTop3.style.display = "block";
-
-  }catch(e){
-    console.error(e);
-    mvpMain.textContent = "Errore MVP";
-    mvpSub.textContent = "";
-    mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
-    mvpTop3.style.display = "none";
-  }
-}
-
-/* Render player pill */
-function renderPlayerPill(p){
-  const gk = isGK(p);
-  const nameHtml = gk ? (escapeHtml(p.name) + `<span class="glove">🧤</span>`) : escapeHtml(p.name);
-  const pos = String(p.position||"").trim();
-  const posHtml = pos ? escapeHtml(pos) : "—";
-  return `
-    <span class="playerPill">
-      <img class="playerAvatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt="">
-      <span class="playerTxt">
-        <span class="playerName">${nameHtml}</span>
-        <span class="playerPos">${posHtml}</span>
-      </span>
-    </span>
-  `;
-}
-
-async function load(){
-  const { data, error } = await client
-    .from("matches")
-    .select("*")
-    .order("match_date",{ascending:false})
-    .order("match_time",{ascending:false})
-    .limit(1);
-
-  if(error){
-    statusEl.textContent = "Errore caricamento partita";
-    infoEl.innerHTML = `<div class="muted">${escapeHtml(error.message)}</div>`;
-    weatherBox.style.display = "none";
-    return;
-  }
-
-  if(!data || !data.length){
-    statusEl.textContent = "Nessuna partita creata";
-    weatherBox.style.display = "none";
-    mapBox.style.display = "none";
-    mapActions.style.display = "none";
-    mvpBox.style.display = "none";
-    formationsHead.style.display = "none";
-    teamsBox.style.display = "none";
-    calledEl.textContent = "—";
-    return;
-  }
-
-  const m = data[0];
-  statusEl.textContent = "Partita trovata ✅";
-
-  const time = String(m.match_time||"").slice(0,5);
-  const matchEnded = (m.score_a !== null && m.score_a !== undefined) && (m.score_b !== null && m.score_b !== undefined);
-  const result = matchEnded ? `${m.score_a}-${m.score_b}` : null;
-  const voteOpen = isVoteOpen(m);
-
-  // info base (solo data+ora)
-  infoEl.innerHTML = `
-    <div class="line"><b>📅 ${escapeHtml(formatDateFull(m.match_date))}</b></div>
-    <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
-  `;
-
-  // MVP UI
-  mvpBox.style.display = "block";
-  mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
-  mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
-  mvpMain.textContent = "Caricamento…";
-  mvpSub.textContent = "";
-  mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
-  mvpTop3.style.display = "none";
-
-  // Marcatori
-  if(m.scorers_text && String(m.scorers_text).trim() !== ""){
-    scorersBox.style.display="block";
-    scorersText.innerHTML = escapeHtml(m.scorers_text).replaceAll("\n","<br>");
-  }else{
-    scorersBox.style.display="none";
-  }
-
-  // Mappa
-  mapBox.style.display = "block";
-  mapActions.style.display = "flex";
-  mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
-  setupMapLinks();
-
-  // IDs
-  const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
-  const teamAIds = Array.isArray(m.team_a) ? m.team_a : [];
-  const teamBIds = Array.isArray(m.team_b) ? m.team_b : [];
-  const allIds = [...new Set([...calledIds, ...teamAIds, ...teamBIds].map(String))];
-
-  // Players
-  let players = [];
-  if(allIds.length){
-    const { data:p, error:pe } = await client
-      .from("players")
-      .select("id,name,role,position,avatar")
-      .in("id", allIds);
-    if(!pe) players = p || [];
-  }
-  const playersById = new Map(players.map(p=>[String(p.id), p]));
-
-  const aPlayers = teamAIds.map(id=>playersById.get(String(id))).filter(Boolean);
-  const bPlayers = teamBIds.map(id=>playersById.get(String(id))).filter(Boolean);
-
-  // Portieri (SOLO per squadra)
-  const ka = findKeeperForTeam(aPlayers, m.keeper_a);
-  const kb = findKeeperForTeam(bPlayers, m.keeper_b);
-
-  // ✅ Risultato box come foto
-  if(matchEnded){
-    resultBox.style.display = "block";
-    resultTimeEl.textContent = time || "—";
-    resultScoreEl.textContent = result || "—";
-    resultAvatarA.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
-    resultAvatarB.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
-
-    // nascondi meteo + convocati
-    weatherBox.style.display = "none";
-    calledEl.style.display = "none";
-    calledTitleEl.style.display = "none";
-
-    // fischio
-    playFinalWhistleOnce(m.id, m.score_a, m.score_b);
-  }else{
-    resultBox.style.display = "none";
-    calledEl.style.display = "block";
-    calledTitleEl.style.display = "block";
-    await loadWeather(m.match_date, m.match_time);
-
-    // convocati solo se non finita
-    if(calledIds.length){
-      const calledPlayers = calledIds.map(id => playersById.get(String(id))).filter(Boolean);
-      calledEl.classList.remove("muted");
-      calledEl.innerHTML = calledPlayers.map(renderPlayerPill).join("");
-    }else{
-      calledEl.classList.add("muted");
-      calledEl.textContent = "—";
-    }
-  }
-
-  // MVP
-  await loadMVP(m.id, playersById);
-
-  // Squadre + formazioni
-  const hasTeams = teamAIds.length || teamBIds.length;
-  if(hasTeams){
-    teamsBox.style.display = "block";
-    tAIcon.innerHTML = kitSVG("#facc15","#111");
-    tBIcon.innerHTML = kitSVG("#ef4444","#fff");
-
-    teamAEl.classList.remove("muted");
-    teamBEl.classList.remove("muted");
-
-    teamAEl.innerHTML = aPlayers.length ? aPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
-    teamBEl.innerHTML = bPlayers.length ? bPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
-
-    formationsHead.style.display = "block";
-    gkAAvatar.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
-    gkBAvatar.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
-    gkAName.innerHTML = ka ? (escapeHtml(ka.name) + `<span class="glove">🧤</span>`) : "—";
-    gkBName.innerHTML = kb ? (escapeHtml(kb.name) + `<span class="glove">🧤</span>`) : "—";
-  }else{
-    formationsHead.style.display = "none";
-    teamsBox.style.display = "none";
-  }
-}
-
-load();
-</script>
-</body>
-</html>
