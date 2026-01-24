@@ -62,7 +62,7 @@
 
     .header{text-align:center}
 
-    /* LOGO */
+    /* ✅ LOGO "MONETA" */
     .logo{
       width:80px;height:80px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
@@ -242,7 +242,7 @@
       font-weight:900;
     }
 
-    /* METEO */
+    /* ✅ METEO */
     .weatherBox{
       margin-top:12px;
       padding:12px;
@@ -266,7 +266,7 @@
     .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
     .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
 
-    /* Players pills with avatars */
+    /* ✅ Players pills with avatars */
     .playersWrap{margin-top:6px}
     .playerPill{
       display:inline-flex;
@@ -290,7 +290,7 @@
     .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-    /* FORMazioni header (GK VS GK) */
+    /* ✅ FORMazioni header (GK VS GK) */
     .formationsHead{
       margin-top:12px;
       padding:12px;
@@ -341,7 +341,7 @@
       flex:0 0 auto;
     }
 
-    /* glove entrance animation */
+    /* ✅ glove entrance animation */
     .glove{
       display:inline-block;
       margin-left:6px;
@@ -353,124 +353,6 @@
       0%{transform:translateY(-10px) scale(.7);opacity:0}
       55%{transform:translateY(2px) scale(1.12);opacity:1}
       100%{transform:translateY(0) scale(1);opacity:1}
-    }
-
-    /* ✅ RISULTATO BELLO (senza scoreboard bg) */
-    .resultBox{
-      margin-top:12px;
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:12px;
-      background:linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,0));
-      overflow:hidden;
-      display:none;
-    }
-    body.dark .resultBox{
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0));
-    }
-    .resultTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .finalPill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-weight:900;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--card);
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      text-transform:uppercase;
-      font-size:18px;
-    }
-    .resultGrid{
-      margin-top:10px;
-      display:grid;
-      grid-template-columns:1fr auto 1fr;
-      gap:10px;
-      align-items:center;
-    }
-    .teamCard{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:10px;
-      background:var(--card);
-      min-width:0;
-    }
-    .teamCard.right{
-      justify-content:flex-end;
-      text-align:right;
-      flex-direction:row-reverse;
-    }
-    .teamName{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:22px;
-      line-height:1;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      text-transform:uppercase;
-    }
-    .teamSub{
-      margin-top:4px;
-      color:var(--muted);
-      font-weight:800;
-      font-size:12px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .keeperAvatar{
-      width:56px;height:56px;border-radius:999px;
-      border:1px solid var(--border);
-      object-fit:cover;
-      background:#000;
-      flex:0 0 auto;
-    }
-    .scoreBig{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      padding:10px 12px;
-      border-radius:16px;
-      border:1px solid var(--border);
-      background:var(--card);
-      min-width:120px;
-    }
-    .scoreNums{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:52px;
-      line-height:1;
-    }
-    .scoreLabel{
-      font-weight:900;
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:1px;
-      text-transform:uppercase;
-    }
-
-    /* animazione ingresso */
-    .popIn{
-      animation: popIn .55s ease-out both;
-    }
-    @keyframes popIn{
-      0%{transform:translateY(10px) scale(.96); opacity:0}
-      70%{transform:translateY(-2px) scale(1.01); opacity:1}
-      100%{transform:translateY(0) scale(1); opacity:1}
     }
   </style>
 </head>
@@ -497,37 +379,6 @@
   <div class="card">
     <div id="status" class="muted">Caricamento…</div>
     <div id="info"></div>
-
-    <!-- ✅ RISULTATO (nuovo) -->
-    <div id="resultBox" class="resultBox">
-      <div class="resultTop">
-        <div class="finalPill">🏁 PARTITA TERMINATA</div>
-        <div class="pill" style="margin:0">⏱ <span id="resultTime">—</span></div>
-      </div>
-
-      <div id="resultGrid" class="resultGrid">
-        <div class="teamCard">
-          <img id="keeperAAvatar2" class="keeperAvatar" src="avatars/default.png" alt="Portiere A">
-          <div style="min-width:0">
-            <div class="teamName">Squadra A</div>
-            <div id="keeperAName2" class="teamSub">Portiere: —</div>
-          </div>
-        </div>
-
-        <div class="scoreBig">
-          <div id="scoreNums" class="scoreNums">—</div>
-          <div class="scoreLabel">RISULTATO</div>
-        </div>
-
-        <div class="teamCard right">
-          <img id="keeperBAvatar2" class="keeperAvatar" src="avatars/default.png" alt="Portiere B">
-          <div style="min-width:0">
-            <div class="teamName">Squadra B</div>
-            <div id="keeperBName2" class="teamSub">Portiere: —</div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- MVP -->
     <div id="mvpBox" class="mvpBox" style="display:none">
@@ -703,16 +554,6 @@ const weatherBig = document.getElementById("weatherBig");
 const weatherLine = document.getElementById("weatherLine");
 const weatherMini = document.getElementById("weatherMini");
 const weatherAlert = document.getElementById("weatherAlert");
-
-/* ✅ RISULTATO DOM */
-const resultBox = document.getElementById("resultBox");
-const resultGrid = document.getElementById("resultGrid");
-const resultTime = document.getElementById("resultTime");
-const scoreNums = document.getElementById("scoreNums");
-const keeperAAvatar2 = document.getElementById("keeperAAvatar2");
-const keeperBAvatar2 = document.getElementById("keeperBAvatar2");
-const keeperAName2 = document.getElementById("keeperAName2");
-const keeperBName2 = document.getElementById("keeperBName2");
 
 /* MAP */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
@@ -984,34 +825,6 @@ function renderPlayerPill(p){
   `;
 }
 
-/* ✅ Fischio finale (file opzionale) */
-async function playFinalWhistleOnce(matchId){
-  try{
-    const key = "qdp_whistle_" + String(matchId);
-    if(localStorage.getItem(key) === "1") return;
-
-    const a = new Audio("final-whistle.mp3"); // metti questo file nella cartella del sito
-    a.volume = 0.9;
-    await a.play();
-
-    localStorage.setItem(key, "1");
-  }catch(e){
-    // se il browser blocca autoplay o file mancante, non rompiamo niente
-  }
-}
-
-/* ✅ Scelta portieri corretta (nome match -> players; fallback: 2 GK dai convocati) */
-function pickKeeperByNameOrFallback(keeperName, playersByName, calledPlayers, fallbackIndex){
-  const byName = playersByName.get(normName(keeperName || ""));
-  if(byName) return byName;
-
-  const gks = (calledPlayers || []).filter(isGK);
-  if(gks.length >= 1){
-    return gks[Math.min(fallbackIndex, gks.length - 1)];
-  }
-  return null;
-}
-
 async function load(){
   const { data, error } = await client
     .from("matches")
@@ -1024,7 +837,6 @@ async function load(){
     statusEl.textContent = "Errore caricamento partita";
     infoEl.innerHTML = `<div class="muted">${escapeHtml(error.message)}</div>`;
     weatherBox.style.display = "none";
-    resultBox.style.display = "none";
     return;
   }
 
@@ -1036,7 +848,6 @@ async function load(){
     mvpBox.style.display = "none";
     formationsHead.style.display = "none";
     teamsBox.style.display = "none";
-    resultBox.style.display = "none";
     calledEl.textContent = "—";
     return;
   }
@@ -1045,15 +856,27 @@ async function load(){
   statusEl.textContent = "Partita trovata ✅";
 
   const time = String(m.match_time||"").slice(0,5);
-  const hasResult = (m.score_a != null && m.score_b != null);
+  const result = (m.score_a!=null && m.score_b!=null) ? `${m.score_a}-${m.score_b}` : "da giocare";
+  const voteOpen = isVoteOpen(m);
 
-  /* info base (senza badge risultato vecchio) */
+  // MVP UI
+  mvpBox.style.display = "block";
+  mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
+  mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
+  mvpMain.textContent = "Caricamento…";
+  mvpSub.textContent = "";
+  mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
+  mvpTop3.style.display = "none";
+
   infoEl.innerHTML = `
     <div class="line"><b>📅 ${escapeHtml(formatDateFull(m.match_date))}</b></div>
     <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
+    <div class="line kit">${kitSVG("#facc15","#111")} <b>Squadra A:</b> ${escapeHtml(m.keeper_a || "")} <span class="glove">🧤</span></div>
+    <div class="line kit">${kitSVG("#ef4444","#fff")} <b>Squadra B:</b> ${escapeHtml(m.keeper_b || "")} <span class="glove">🧤</span></div>
+    <div class="line"><span class="badge">🏁 ${escapeHtml(result)}</span></div>
   `;
 
-  /* Marcatori */
+  // Marcatori
   if(m.scorers_text && String(m.scorers_text).trim() !== ""){
     scorersBox.style.display="block";
     scorersText.innerHTML = escapeHtml(m.scorers_text).replaceAll("\n","<br>");
@@ -1061,13 +884,16 @@ async function load(){
     scorersBox.style.display="none";
   }
 
-  /* MAPPA */
+  // MAPPA
   mapBox.style.display = "block";
   mapActions.style.display = "flex";
   mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
   setupMapLinks();
 
-  /* Carica players (convocati + squadre) per avere avatar/role/position */
+  // METEO (campo Aradeo)
+  await loadWeather(m.match_date, m.match_time);
+
+  // Carica players (convocati + squadre) per avere avatar/role/position
   const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
   const teamAIds = Array.isArray(m.team_a) ? m.team_a : [];
   const teamBIds = Array.isArray(m.team_b) ? m.team_b : [];
@@ -1087,12 +913,12 @@ async function load(){
   const playersById = new Map(players.map(p=>[String(p.id), p]));
   const playersByName = new Map(players.map(p=>[normName(p.name), p]));
 
-  const calledPlayers = calledIds
-    .map(id => playersById.get(String(id)))
-    .filter(Boolean);
+  // Convocati (avatar + pos sotto + guanti solo GK)
+  if(calledIds.length){
+    const calledPlayers = calledIds
+      .map(id => playersById.get(String(id)))
+      .filter(Boolean);
 
-  /* Convocati */
-  if(calledPlayers.length){
     calledEl.classList.remove("muted");
     calledEl.innerHTML = calledPlayers.map(renderPlayerPill).join("");
   }else{
@@ -1100,52 +926,10 @@ async function load(){
     calledEl.textContent = "—";
   }
 
-  /* MVP UI */
-  const voteOpen = isVoteOpen(m);
-  mvpBox.style.display = "block";
-  mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
-  mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
-  mvpMain.textContent = "Caricamento…";
-  mvpSub.textContent = "";
-  mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
-  mvpTop3.style.display = "none";
+  // MVP con avatar
   await loadMVP(m.id, playersById);
 
-  /* ✅ Risultato + portieri */
-  if(hasResult){
-    // nascondo meteo se partita terminata
-    weatherBox.style.display = "none";
-
-    // portieri corretti
-    const keeperA = pickKeeperByNameOrFallback(m.keeper_a, playersByName, calledPlayers, 0);
-    const keeperB = pickKeeperByNameOrFallback(m.keeper_b, playersByName, calledPlayers, 1);
-
-    keeperAAvatar2.src = avatarUrl(keeperA?.avatar || DEFAULT_AVATAR);
-    keeperBAvatar2.src = avatarUrl(keeperB?.avatar || DEFAULT_AVATAR);
-
-    keeperAName2.textContent = "Portiere: " + (keeperA?.name || (m.keeper_a || "—"));
-    keeperBName2.textContent = "Portiere: " + (keeperB?.name || (m.keeper_b || "—"));
-
-    scoreNums.textContent = `${m.score_a}-${m.score_b}`;
-    resultTime.textContent = time || "—";
-
-    resultBox.style.display = "block";
-
-    // animazione
-    resultBox.classList.remove("popIn");
-    void resultBox.offsetWidth;
-    resultBox.classList.add("popIn");
-
-    // suono fischio
-    playFinalWhistleOnce(m.id);
-  }else{
-    resultBox.style.display = "none";
-
-    // meteo SOLO se non terminata
-    await loadWeather(m.match_date, m.match_time);
-  }
-
-  /* Formazioni + Squadre (come tuo originale) */
+  // Formazioni + Squadre
   const hasTeams = teamAIds.length || teamBIds.length;
   if(hasTeams){
     teamsBox.style.display = "block";
@@ -1161,16 +945,32 @@ async function load(){
     teamAEl.innerHTML = aPlayers.length ? aPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
     teamBEl.innerHTML = bPlayers.length ? bPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
 
-    // GK vs GK: prendo dal nome inserito in match keeper_a / keeper_b (fallback come prima)
-    const ka = pickKeeperByNameOrFallback(m.keeper_a, playersByName, calledPlayers, 0) || aPlayers.find(isGK) || players.find(isGK);
-    const kb = pickKeeperByNameOrFallback(m.keeper_b, playersByName, calledPlayers, 1) || bPlayers.find(isGK) || players.find(isGK);
+    /**
+     * ✅ FIX PORTIERI (NO PIÙ SCAMBI / NO FALLBACK GLOBALI)
+     * - Prende ESATTAMENTE i portieri scritti in match.keeper_a e match.keeper_b
+     * - Se uno dei due non esiste in players -> mostra "—" con avatar default
+     */
+    const ka = playersByName.get(normName(m.keeper_a)) || null;
+    const kb = playersByName.get(normName(m.keeper_b)) || null;
 
     formationsHead.style.display = "block";
-    gkAAvatar.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
-    gkBAvatar.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
 
-    gkAName.innerHTML = ka ? (escapeHtml(ka.name) + `<span class="glove">🧤</span>`) : "—";
-    gkBName.innerHTML = kb ? (escapeHtml(kb.name) + `<span class="glove">🧤</span>`) : "—";
+    if(ka){
+      gkAAvatar.src = avatarUrl(ka.avatar);
+      gkAName.innerHTML = escapeHtml(ka.name) + `<span class="glove">🧤</span>`;
+    }else{
+      gkAAvatar.src = avatarUrl(DEFAULT_AVATAR);
+      gkAName.textContent = "—";
+    }
+
+    if(kb){
+      gkBAvatar.src = avatarUrl(kb.avatar);
+      gkBName.innerHTML = escapeHtml(kb.name) + `<span class="glove">🧤</span>`;
+    }else{
+      gkBAvatar.src = avatarUrl(DEFAULT_AVATAR);
+      gkBName.textContent = "—";
+    }
+
   }else{
     formationsHead.style.display = "none";
     teamsBox.style.display = "none";
@@ -1181,4 +981,3 @@ load();
 </script>
 </body>
 </html>
-MARCO
