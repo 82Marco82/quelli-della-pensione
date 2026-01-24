@@ -487,7 +487,7 @@
 
     .weatherHead{
 
-      display:flex;align-items:center;justify-content:flex-start;
+      display:flex;align-items:center;justify-content:space-between;
 
       gap:10px;flex-wrap:wrap;font-weight:900;
 
@@ -830,7 +830,7 @@
 
     <!-- CONVOCATI -->
 
-    <div id="calledTitle" class="line"><b>Convocati</b></div>
+    <div class="line"><b>Convocati</b></div>
 
     <div id="called" class="playersWrap muted">—</div>
 
@@ -923,11 +923,6 @@
 <button id="themeToggle" class="fab">🌙</button>
 
 
-<!-- 🔊 Audio fischio finale -->
-
-<audio id="finalWhistle" src="final-whistle-1.mp3" preload="auto"></audio>
-
-
 <script src="config.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -993,8 +988,6 @@ const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
 
 const calledEl = document.getElementById("called");
-
-const calledTitleEl = document.getElementById("calledTitle");
 
 
 const mapBox = document.getElementById("mapBox");
@@ -1063,13 +1056,6 @@ const weatherLine = document.getElementById("weatherLine");
 const weatherMini = document.getElementById("weatherMini");
 
 const weatherAlert = document.getElementById("weatherAlert");
-
-
-/* AUDIO */
-
-const finalWhistle = document.getElementById("finalWhistle");
-
-window.__whistlePlayed = window.__whistlePlayed || false;
 
 
 /* MAP */
@@ -1153,6 +1139,12 @@ function medal(i){
 
 }
 
+function normName(s){
+
+  return String(s||"").trim().toLowerCase().replace(/\s+/g," ");
+
+}
+
 function isGK(player){
 
   const r = String(player?.role||"").toLowerCase();
@@ -1163,8 +1155,16 @@ function isGK(player){
 
 }
 
+function gkNameWithGlove(player){
 
-/* Stato votazione */
+  const n = player?.name || "";
+
+  return `${escapeHtml(n)}<span class="glove">🧤</span>`;
+
+}
+
+
+/* Stato votazione: APERTA se almeno una colonna è true */
 
 function isVoteOpen(match){
 
@@ -1293,243 +1293,154 @@ async function loadWeather(matchDateISO, matchTimeStr){
 
   try{
 
-      const hhmm = String(matchTimeStr||"21:00").slice(0,5);
+    const hhmm = String(matchTimeStr||"21:00").slice(0,5);
 
-      const target = `${matchDateISO}T${hhmm}`;
-
-
-      const url =
-
-        "https://api.open-meteo.com/v1/forecast" +
-
-        `?latitude=${encodeURIComponent(FIELD_LAT)}` +
-
-        `&longitude=${encodeURIComponent(FIELD_LNG)}` +
-
-        "&hourly=temperature_2m,precipitation_probability,windspeed_10m,weathercode" +
-
-        "&timezone=Europe%2FRome";
+    const target = `${matchDateISO}T${hhmm}`;
 
 
-      const res = await fetch(url, {cache:"no-store"});
+    const url =
 
-      if(!res.ok) throw new Error("Meteo non disponibile");
+      "https://api.open-meteo.com/v1/forecast" +
 
-      const j = await res.json();
+      `?latitude=${encodeURIComponent(FIELD_LAT)}` +
 
+      `&longitude=${encodeURIComponent(FIELD_LNG)}` +
 
-      const times = j?.hourly?.time || [];
+      "&hourly=temperature_2m,precipitation_probability,windspeed_10m,weathercode" +
 
-      if(!times.length) throw new Error("Dati meteo vuoti");
-
-
-      let bestIdx = 0;
-
-      let bestDiff = Infinity;
-
-      const targetMs = new Date(target).getTime();
+      "&timezone=Europe%2FRome";
 
 
-      for(let i=0;i<times.length;i++){
+    const res = await fetch(url, {cache:"no-store"});
 
-        const ms = new Date(times[i]).getTime();
+    if(!res.ok) throw new Error("Meteo non disponibile");
 
-        const diff = Math.abs(ms - targetMs);
+    const j = await res.json();
 
-        if(diff < bestDiff){
 
-          bestDiff = diff;
+    const times = j?.hourly?.time || [];
 
-          bestIdx = i;
+    if(!times.length) throw new Error("Dati meteo vuoti");
 
-        }
+
+    let bestIdx = 0;
+
+    let bestDiff = Infinity;
+
+    const targetMs = new Date(target).getTime();
+
+
+    for(let i=0;i<times.length;i++){
+
+      const ms = new Date(times[i]).getTime();
+
+      const diff = Math.abs(ms - targetMs);
+
+      if(diff < bestDiff){
+
+        bestDiff = diff;
+
+        bestIdx = i;
 
       }
-
-
-      const temp = j.hourly.temperature_2m?.[bestIdx];
-
-      const pp = j.hourly.precipitation_probability?.[bestIdx];
-
-      const wind = j.hourly.windspeed_10m?.[bestIdx];
-
-      const code = j.hourly.weathercode?.[bestIdx];
-
-
-      const emoji = wxEmojiFromCode(code);
-
-      const desc = wxTextFromCode(code);
-
-      const lvl = riskLevel({code, precipProb: pp, wind, temp});
-
-
-      if(lvl === "ok"){
-
-        setWeatherAlert("ok","✅ OK");
-
-        weatherLine.textContent = `Condizioni buone per giocare. ${emoji} ${desc}`;
-
-      }else if(lvl === "warn"){
-
-        setWeatherAlert("warn","⚠️ ATTENZIONE");
-
-        weatherLine.textContent = `${emoji} ${desc} • Occhio alle condizioni`;
-
-      }else{
-
-        setWeatherAlert("risk","⛔ RISCHIO PARTITA");
-
-        weatherLine.textContent = `${emoji} ${desc} • Possibile partita a rischio`;
-
-      }
-
-
-      weatherBig.textContent = emoji;
-
-      weatherMini.textContent = `🌡 ${Math.round(temp)}°C  •  💧 ${pp}%  •  💨 ${Math.round(wind)} km/h  •  ⏰ ${hhmm}`;
-
-    }catch(e){
-
-      console.error(e);
-
-      weatherBox.style.display = "block";
-
-      weatherBig.textContent = "🌦️";
-
-      setWeatherAlert("warn","⚠️ METEO");
-
-      weatherLine.textContent = "Meteo non disponibile al momento.";
-
-      weatherMini.textContent = "";
 
     }
 
+
+    const temp = j.hourly.temperature_2m?.[bestIdx];
+
+    const pp = j.hourly.precipitation_probability?.[bestIdx];
+
+    const wind = j.hourly.windspeed_10m?.[bestIdx];
+
+    const code = j.hourly.weathercode?.[bestIdx];
+
+
+    const emoji = wxEmojiFromCode(code);
+
+    const desc = wxTextFromCode(code);
+
+    const lvl = riskLevel({code, precipProb: pp, wind, temp});
+
+
+    if(lvl === "ok"){
+
+      setWeatherAlert("ok","✅ OK");
+
+      weatherLine.textContent = `Condizioni buone per giocare. ${emoji} ${desc}`;
+
+    }else if(lvl === "warn"){
+
+      setWeatherAlert("warn","⚠️ ATTENZIONE");
+
+      weatherLine.textContent = `${emoji} ${desc} • Occhio alle condizioni`;
+
+    }else{
+
+      setWeatherAlert("risk","⛔ RISCHIO PARTITA");
+
+      weatherLine.textContent = `${emoji} ${desc} • Possibile partita a rischio`;
+
+    }
+
+
+    weatherBig.textContent = emoji;
+
+    weatherMini.textContent = `🌡 ${Math.round(temp)}°C  •  💧 ${pp}%  •  💨 ${Math.round(wind)} km/h  •  ⏰ ${hhmm}`;
+
+  }catch(e){
+
+    console.error(e);
+
+    weatherBox.style.display = "block";
+
+    weatherBig.textContent = "🌦️";
+
+    setWeatherAlert("warn","⚠️ METEO");
+
+    weatherLine.textContent = "Meteo non disponibile al momento.";
+
+    weatherMini.textContent = "";
+
   }
 
+}
 
-  /* MVP */
 
-  async function loadMVP(matchId, playersById){
+/* MVP */
 
-    try{
+async function loadMVP(matchId, playersById){
 
-      const { data: votes, error } = await client
+  try{
 
-        .from("mvp_votes")
+    const { data: votes, error } = await client
 
-        .select("voted_player")
+      .from("mvp_votes")
 
-        .eq("match_id", matchId);
+      .select("voted_player")
 
+      .eq("match_id", matchId);
 
-      if(error) throw error;
 
+    if(error) throw error;
 
-      const counts = new Map();
 
-      (votes||[]).forEach(v=>{
+    const counts = new Map();
 
-        const id = String(v.voted_player || "");
+    (votes||[]).forEach(v=>{
 
-        if(!id) return;
+      const id = String(v.voted_player || "");
 
-        counts.set(id, (counts.get(id)||0) + 1);
+      if(!id) return;
 
-      });
+      counts.set(id, (counts.get(id)||0) + 1);
 
+    });
 
-      if(counts.size === 0){
 
-        mvpMain.textContent = "Nessun voto ancora.";
+    if(counts.size === 0){
 
-        mvpSub.textContent = "";
-
-        mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
-
-        mvpTop3.style.display = "none";
-
-        return;
-
-      }
-
-
-      const rows = [...counts.entries()]
-
-        .map(([id,c])=>{
-
-          const p = playersById.get(String(id));
-
-          return {
-
-            id,
-
-            name: p?.name || id,
-
-            avatar: p?.avatar || DEFAULT_AVATAR,
-
-            votes: c
-
-          };
-
-        })
-
-        .sort((a,b)=> b.votes - a.votes || String(a.name).localeCompare(String(b.name),"it"));
-
-
-      const topVotes = rows[0].votes;
-
-      const tops = rows.filter(r=>r.votes===topVotes);
-
-
-      if(tops.length === 1){
-
-        mvpAvatar.src = avatarUrl(tops[0].avatar);
-
-        mvpMain.textContent = `${tops[0].name}`;
-
-        mvpSub.textContent = `${topVotes} voto/i`;
-
-      }else{
-
-        mvpAvatar.src = avatarUrl(tops[0].avatar);
-
-        mvpMain.textContent = `Parità: ${tops.map(t=>t.name).join(", ")}`;
-
-        mvpSub.textContent = `${topVotes} voto/i`;
-
-      }
-
-
-      const top3 = rows.slice(0,3);
-
-      mvpTop3.innerHTML = top3.map((r,i)=>`
-
-        <div class="mvpRow">
-
-          <div class="mvpLeft">
-
-            <div class="medal">${escapeHtml(medal(i))}</div>
-
-            <img class="mvpAvatar" style="width:36px;height:36px" src="${escapeHtml(avatarUrl(r.avatar))}" alt="">
-
-            <div>${escapeHtml(r.name)}</div>
-
-          </div>
-
-          <div>${r.votes}</div>
-
-        </div>
-
-      `).join("");
-
-      mvpTop3.style.display = "block";
-
-
-    }catch(e){
-
-      console.error(e);
-
-      mvpMain.textContent = "Errore MVP";
+      mvpMain.textContent = "Nessun voto ancora.";
 
       mvpSub.textContent = "";
 
@@ -1537,182 +1448,90 @@ async function loadWeather(matchDateISO, matchTimeStr){
 
       mvpTop3.style.display = "none";
 
-    }
-
-  }
-
-
-  /* Render player pill */
-
-  function renderPlayerPill(p){
-
-    const gk = isGK(p);
-
-    const nameHtml = gk ? (escapeHtml(p.name) + `<span class="glove">🧤</span>`) : escapeHtml(p.name);
-
-    const pos = String(p.position||"").trim();
-
-    const posHtml = pos ? escapeHtml(pos) : "—";
-
-
-    return `
-
-      <span class="playerPill">
-
-        <img class="playerAvatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt="">
-
-        <span class="playerTxt">
-
-          <span class="playerName">${nameHtml}</span>
-
-          <span class="playerPos">${posHtml}</span>
-
-        </span>
-
-      </span>
-
-    `;
-
-  }
-
-
-  /* 🔊 Fischio finale: prova play + fallback su primo tap */
-
-  function playFinalWhistleOnce(){
-
-    if(window.__whistlePlayed) return;
-
-    window.__whistlePlayed = true;
-
-
-    try{
-
-      finalWhistle.currentTime = 0;
-
-      const p = finalWhistle.play();
-
-      if(p && typeof p.catch === "function"){
-
-        p.catch(()=>{
-
-          // fallback: parte al primo tap/click
-
-          const once = () => {
-
-            finalWhistle.currentTime = 0;
-
-            finalWhistle.play().catch(()=>{});
-
-            window.removeEventListener("pointerdown", once);
-
-            window.removeEventListener("click", once);
-
-            window.removeEventListener("touchstart", once);
-
-          };
-
-          window.addEventListener("pointerdown", once, {once:true});
-
-          window.addEventListener("click", once, {once:true});
-
-          window.addEventListener("touchstart", once, {once:true, passive:true});
-
-        });
-
-      }
-
-    }catch(e){
-
-      console.warn("Audio bloccato", e);
-
-    }
-
-  }
-
-
-  async function load(){
-
-    const { data, error } = await client
-
-      .from("matches")
-
-      .select("id,match_date,match_time,venue,keeper_a,keeper_b,score_a,score_b,called_up,team_a,team_b,scorers_text,vote_open,voting_open")
-
-      .order("match_date",{ascending:false})
-
-      .order("match_time",{ascending:false})
-
-      .limit(1);
-
-
-    if(error){
-
-      statusEl.textContent = "Errore caricamento partita";
-
-      infoEl.innerHTML = `<div class="muted">${escapeHtml(error.message)}</div>`;
-
-      weatherBox.style.display = "none";
-
       return;
 
     }
 
 
-    if(!data || !data.length){
+    const rows = [...counts.entries()]
 
-      statusEl.textContent = "Nessuna partita creata";
+      .map(([id,c])=>{
 
-      weatherBox.style.display = "none";
+        const p = playersById.get(String(id));
 
-      mapBox.style.display = "none";
+        return {
 
-      mapActions.style.display = "none";
+          id,
 
-      mvpBox.style.display = "none";
+          name: p?.name || id,
 
-      formationsHead.style.display = "none";
+          avatar: p?.avatar || DEFAULT_AVATAR,
 
-      teamsBox.style.display = "none";
+          votes: c
 
-      calledEl.textContent = "—";
+        };
 
-      return;
+      })
+
+      .sort((a,b)=> b.votes - a.votes || String(a.name).localeCompare(String(b.name),"it"));
+
+
+    const topVotes = rows[0].votes;
+
+    const tops = rows.filter(r=>r.votes===topVotes);
+
+
+    if(tops.length === 1){
+
+      mvpAvatar.src = avatarUrl(tops[0].avatar);
+
+      mvpMain.textContent = `${tops[0].name}`;
+
+      mvpSub.textContent = `${topVotes} voto/i`;
+
+    }else{
+
+      // parità: avatar del primo ma testo parità
+
+      mvpAvatar.src = avatarUrl(tops[0].avatar);
+
+      mvpMain.textContent = `Parità: ${tops.map(t=>t.name).join(", ")}`;
+
+      mvpSub.textContent = `${topVotes} voto/i`;
 
     }
 
 
-    const m = data[0];
+    const top3 = rows.slice(0,3);
 
-    statusEl.textContent = "Partita trovata ✅";
+    mvpTop3.innerHTML = top3.map((r,i)=>`
+
+      <div class="mvpRow">
+
+        <div class="mvpLeft">
+
+          <div class="medal">${escapeHtml(medal(i))}</div>
+
+          <img class="mvpAvatar" style="width:36px;height:36px" src="${escapeHtml(avatarUrl(r.avatar))}" alt="">
+
+          <div>${escapeHtml(r.name)}</div>
+
+        </div>
+
+        <div>${r.votes}</div>
+
+      </div>
+
+    `).join("");
+
+    mvpTop3.style.display = "block";
 
 
-    const time = String(m.match_time||"").slice(0,5);
+  }catch(e){
 
-    const hasResult = (m.score_a != null && m.score_b != null);
+    console.error(e);
 
-    const result = hasResult ? `${m.score_a}-${m.score_b}` : "da giocare";
-
-    const voteOpen = isVoteOpen(m);
-
-
-    // 🔊 se c'è un risultato: fischio una sola volta
-
-    if(hasResult){
-
-      playFinalWhistleOnce();
-
-    }
-
-
-    // MVP UI
-
-    mvpBox.style.display = "block";
-
-    mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
-
-    mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
-
-    mvpMain.textContent = "Caricamento…";
+    mvpMain.textContent = "Errore MVP";
 
     mvpSub.textContent = "";
 
@@ -1720,203 +1539,419 @@ async function loadWeather(matchDateISO, matchTimeStr){
 
     mvpTop3.style.display = "none";
 
+  }
 
-    infoEl.innerHTML = `
+}
 
-      <div class="line"><b>📅 ${escapeHtml(formatDateFull(m.match_date))}</b></div>
 
-      <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
+/* Render player pill */
 
-      <div class="line kit">${kitSVG("#facc15","#111")} <b>Squadra A:</b> ${escapeHtml(m.keeper_a || "")} <span class="glove">🧤</span></div>
+function renderPlayerPill(p){
 
-      <div class="line kit">${kitSVG("#ef4444","#fff")} <b>Squadra B:</b> ${escapeHtml(m.keeper_b || "")} <span class="glove">🧤</span></div>
+  const gk = isGK(p);
 
-      <div class="line"><span class="badge">🏁 ${escapeHtml(result)}</span></div>
+  const nameHtml = gk ? (escapeHtml(p.name) + `<span class="glove">🧤</span>`) : escapeHtml(p.name);
 
-    `;
+  const pos = String(p.position||"").trim();
 
+  const posHtml = pos ? escapeHtml(pos) : "—";
 
-    // Marcatori
 
-    if(m.scorers_text && String(m.scorers_text).trim() !== ""){
+  return `
 
-      scorersBox.style.display="block";
+    <span class="playerPill">
 
-      scorersText.innerHTML = escapeHtml(m.scorers_text).replaceAll("\n","<br>");
+      <img class="playerAvatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt="">
 
-    }else{
+      <span class="playerTxt">
 
-      scorersBox.style.display="none";
+        <span class="playerName">${nameHtml}</span>
 
-    }
+        <span class="playerPos">${posHtml}</span>
 
+      </span>
 
-    // MAPPA
+    </span>
 
-    mapBox.style.display = "block";
+  `;
 
-    mapActions.style.display = "flex";
+}
 
-    mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
+function handleMatchEnded(m) {
 
-    setupMapLinks();
+  // ❌ Nascondo meteo
 
+  if (weatherBox) weatherBox.style.display = "none";
 
-    // ✅ Se c'è risultato: via METEO e CONVOCATI
 
-    if(hasResult){
+  // ❌ Nascondo convocati
 
-      weatherBox.style.display = "none";
+  if (calledEl) calledEl.style.display = "none";
 
-      calledEl.style.display = "none";
+  if (calledTitleEl) calledTitleEl.style.display = "none";
 
-      if(calledTitleEl) calledTitleEl.style.display = "none";
 
-    }else{
+  // ✅ Mostro formazioni e squadre
 
-      // METEO (solo se non c'è risultato)
+  if (formationsHead) formationsHead.style.display = "block";
 
-      await loadWeather(m.match_date, m.match_time);
+  if (teamsBox) teamsBox.style.display = "block";
 
-      calledEl.style.display = "block";
 
-      if(calledTitleEl) calledTitleEl.style.display = "block";
+  // 🔊 Fischio finale (una sola volta)
 
-    }
+  if (!window.__whistlePlayed) {
 
+    window.__whistlePlayed = true;
 
-    // Carica players (convocati + squadre) per avere avatar/role/position
+    try {
 
-    const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
+      finalWhistle.currentTime = 0;
 
-    const teamAIds = Array.isArray(m.team_a) ? m.team_a : [];
+      finalWhistle.play().catch(()=>{});
 
-    const teamBIds = Array.isArray(m.team_b) ? m.team_b : [];
+    } catch(e){}
 
+  }
 
-    // se c'è risultato NON ci servono i convocati, ma li lasciamo comunque per sicurezza
+}
 
-    const allIds = [...new Set([...calledIds, ...teamAIds, ...teamBIds].map(String))];
 
+  // Stato partita
 
-    let players = [];
+  statusEl.textContent = "🏁 PARTITA TERMINATA";
 
-    if(allIds.length){
+}
 
-      const { data:p, error:pe } = await client
+async function load(){
 
-        .from("players")
+  const { data, error } = await client
 
-        .select("id,name,role,position,avatar")
+    .from("matches")
 
-        .in("id", allIds);
+    .select("id,match_date,match_time,venue,keeper_a,keeper_b,score_a,score_b,called_up,team_a,team_b,scorers_text,vote_open,voting_open")
 
+    .order("match_date",{ascending:false})
 
-      if(!pe) players = p || [];
+    .order("match_time",{ascending:false})
 
-    }
+    .limit(1);
 
 
-    const playersById = new Map(players.map(p=>[String(p.id), p]));
+  if(error){
 
+    statusEl.textContent = "Errore caricamento partita";
 
-    // Convocati (solo se non c'è risultato)
+    infoEl.innerHTML = `<div class="muted">${escapeHtml(error.message)}</div>`;
 
-    if(!hasResult){
+    weatherBox.style.display = "none";
 
-      if(calledIds.length){
-
-        const calledPlayers = calledIds
-
-          .map(id => playersById.get(String(id)))
-
-          .filter(Boolean);
-
-
-        calledEl.classList.remove("muted");
-
-        calledEl.innerHTML = calledPlayers.map(renderPlayerPill).join("");
-
-      }else{
-
-        calledEl.classList.add("muted");
-
-        calledEl.textContent = "—";
-
-      }
-
-    }
-
-
-    // MVP con avatar
-
-    await loadMVP(m.id, playersById);
-
-
-    // Formazioni + Squadre
-
-    const hasTeams = teamAIds.length || teamBIds.length;
-
-    if(hasTeams){
-
-      teamsBox.style.display = "block";
-
-      tAIcon.innerHTML = kitSVG("#facc15","#111");
-
-      tBIcon.innerHTML = kitSVG("#ef4444","#fff");
-
-
-      const aPlayers = teamAIds.map(id=>playersById.get(String(id))).filter(Boolean);
-
-      const bPlayers = teamBIds.map(id=>playersById.get(String(id))).filter(Boolean);
-
-
-      teamAEl.classList.remove("muted");
-
-      teamBEl.classList.remove("muted");
-
-
-      teamAEl.innerHTML = aPlayers.length ? aPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
-
-      teamBEl.innerHTML = bPlayers.length ? bPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
-
-
-      // ✅ PORTIERI: A SOLO da team_a, B SOLO da team_b (così non si invertano mai)
-
-      const ka = aPlayers.find(isGK) || aPlayers[0] || null;
-
-      const kb = bPlayers.find(isGK) || bPlayers[0] || null;
-
-
-      formationsHead.style.display = "block";
-
-      gkAAvatar.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
-
-      gkBAvatar.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
-
-
-      gkAName.innerHTML = ka ? (escapeHtml(ka.name) + `<span class="glove">🧤</span>`) : "—";
-
-      gkBName.innerHTML = kb ? (escapeHtml(kb.name) + `<span class="glove">🧤</span>`) : "—";
-
-
-    }else{
-
-      formationsHead.style.display = "none";
-
-      teamsBox.style.display = "none";
-
-    }
+    return;
 
   }
 
 
-  load();
+  if(!data || !data.length){
+
+    statusEl.textContent = "Nessuna partita creata";
+
+    weatherBox.style.display = "none";
+
+    mapBox.style.display = "none";
+
+    mapActions.style.display = "none";
+
+    mvpBox.style.display = "none";
+
+    formationsHead.style.display = "none";
+
+    teamsBox.style.display = "none";
+
+    calledEl.textContent = "—";
+
+    return;
+
+  }
+
+
+  const m = data[0];
+
+statusEl.textContent = "Partita trovata ✅";
+
+
+// ✅ Se esiste il risultato → partita terminata (nascondi meteo+convocati + fischio)
+
+if (m.score_a !== null && m.score_b !== null) {
+
+  handleMatchEnded(m);
+
+}
+
+
+  const time = String(m.match_time||"").slice(0,5);
+
+  const result = (m.score_a!=null && m.score_b!=null) ? `${m.score_a}-${m.score_b}` : "da giocare";
+
+  const voteOpen = isVoteOpen(m);
+
+
+  // MVP UI
+
+  mvpBox.style.display = "block";
+
+  mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
+
+  mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
+
+  mvpMain.textContent = "Caricamento…";
+
+  mvpSub.textContent = "";
+
+  mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
+
+  mvpTop3.style.display = "none";
+
+
+  infoEl.innerHTML = `
+
+    <div class="line"><b>📅 ${escapeHtml(formatDateFull(m.match_date))}</b></div>
+
+    <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
+
+    <div class="line kit">${kitSVG("#facc15","#111")} <b>Squadra A:</b> ${escapeHtml(m.keeper_a || "")} <span class="glove">🧤</span></div>
+
+    <div class="line kit">${kitSVG("#ef4444","#fff")} <b>Squadra B:</b> ${escapeHtml(m.keeper_b || "")} <span class="glove">🧤</span></div>
+
+    <div class="line"><span class="badge">🏁 ${escapeHtml(result)}</span></div>
+
+  `;
+
+
+  // Marcatori
+
+  if(m.scorers_text && String(m.scorers_text).trim() !== ""){
+
+    scorersBox.style.display="block";
+
+    scorersText.innerHTML = escapeHtml(m.scorers_text).replaceAll("\n","<br>");
+
+  }else{
+
+    scorersBox.style.display="none";
+
+  }
+
+
+  // MAPPA
+
+  mapBox.style.display = "block";
+
+  mapActions.style.display = "flex";
+
+  mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
+
+  setupMapLinks();
+
+
+  // METEO (campo Aradeo)
+
+  await loadWeather(m.match_date, m.match_time);
+
+
+  // Carica players (convocati + squadre) per avere avatar/role/position
+
+  const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
+
+  const teamAIds = Array.isArray(m.team_a) ? m.team_a : [];
+
+  const teamBIds = Array.isArray(m.team_b) ? m.team_b : [];
+
+
+  const allIds = [...new Set([...calledIds, ...teamAIds, ...teamBIds].map(String))];
+
+
+  let players = [];
+
+  if(allIds.length){
+
+    const { data:p, error:pe } = await client
+
+      .from("players")
+
+      .select("id,name,role,position,avatar")
+
+      .in("id", allIds);
+
+
+    if(!pe) players = p || [];
+
+  }
+
+
+  const playersById = new Map(players.map(p=>[String(p.id), p]));
+
+  const playersByName = new Map(players.map(p=>[normName(p.name), p]));
+
+
+  // Convocati (avatar + pos sotto + guanti solo GK)
+
+  if(calledIds.length){
+
+    const calledPlayers = calledIds
+
+      .map(id => playersById.get(String(id)))
+
+      .filter(Boolean);
+
+
+    calledEl.classList.remove("muted");
+
+    calledEl.innerHTML = calledPlayers.map(renderPlayerPill).join("");
+
+  }else{
+
+    calledEl.classList.add("muted");
+
+    calledEl.textContent = "—";
+
+  }
+
+
+  // MVP con avatar
+
+  await loadMVP(m.id, playersById);
+
+
+  // Formazioni + Squadre
+
+  const hasTeams = teamAIds.length || teamBIds.length;
+
+  if(hasTeams){
+
+    teamsBox.style.display = "block";
+
+    tAIcon.innerHTML = kitSVG("#facc15","#111");
+
+    tBIcon.innerHTML = kitSVG("#ef4444","#fff");
+
+
+    const aPlayers = teamAIds.map(id=>playersById.get(String(id))).filter(Boolean);
+
+    const bPlayers = teamBIds.map(id=>playersById.get(String(id))).filter(Boolean);
+
+
+handleMatchEnded(m, aPlayers, bPlayers);
+
+    teamAEl.classList.remove("muted");
+
+    teamBEl.classList.remove("muted");
+
+
+    teamAEl.innerHTML = aPlayers.length ? aPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
+
+    teamBEl.innerHTML = bPlayers.length ? bPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
+
+
+    // FORMATIONS HEAD: GK vs GK (prendo dal nome inserito in match keeper_a / keeper_b)
+
+    const ka = playersByName.get(normName(m.keeper_a)) || aPlayers.find(isGK) || players.find(isGK);
+
+    const kb = playersByName.get(normName(m.keeper_b)) || bPlayers.find(isGK) || players.find(isGK);
+
+
+    formationsHead.style.display = "block";
+
+    gkAAvatar.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
+
+    gkBAvatar.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
+
+
+    gkAName.innerHTML = ka ? (escapeHtml(ka.name) + `<span class="glove">🧤</span>`) : "—";
+
+    gkBName.innerHTML = kb ? (escapeHtml(kb.name) + `<span class="glove">🧤</span>`) : "—";
+
+
+  }else{
+
+    formationsHead.style.display = "none";
+
+    teamsBox.style.display = "none";
+
+  }
+
+}
+
+/* ===============================
+
+   FIX RISULTATO PARTITA
+
+   =============================== */
+
+
+function handleMatchEnded(match, teamAPlayers, teamBPlayers){
+
+  const hasResult = match.score_a !== null && match.score_b !== null;
+
+
+  if(!hasResult) return;
+
+
+  // ❌ Nascondo meteo e convocati
+
+  if(weatherBox) weatherBox.style.display = "none";
+
+  if(calledEl) calledEl.style.display = "none";
+
+  if(calledTitleEl) calledTitleEl.style.display = "none";
+
+
+  // 🔊 Fischio finale UNA SOLA VOLTA
+
+  if(!window.__whistlePlayed){
+
+    try{
+
+      finalWhistle.volume = 0.9;
+
+      finalWhistle.play().catch(()=>{});
+
+      window.__whistlePlayed = true;
+
+    }catch(e){}
+
+  }
+
+
+  // 🧤 PORTIERI CORRETTI (NON INVERTITI)
+
+  const gkA = teamAPlayers.find(p => isGK(p));
+
+  const gkB = teamBPlayers.find(p => isGK(p));
+
+
+  if(gkA){
+
+    gkAAvatar.src = avatarUrl(gkA.avatar);
+
+    gkAName.innerHTML = escapeHtml(gkA.name) + ' <span class="glove">🧤</span>';
+
+  }
+
+
+  if(gkB){
+
+    gkBAvatar.src = avatarUrl(gkB.avatar);
+
+    gkBName.innerHTML = escapeHtml(gkB.name) + ' <span class="glove">🧤</span>';
+
+  }
+
+}
+
+load();
 
 </script>
 
 </body>
 
 </html>
-
-```02026
