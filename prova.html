@@ -207,9 +207,26 @@
     .kit{display:inline-flex;align-items:center;gap:6px}
     .kit svg{width:18px;height:18px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 
-    /* RISULTATO */
-    .resultBox{
+    /* ✅ BLOCCO "TITOLO + CONTENUTO" stile FORMAZIONI (lo riuso per RISULTATO) */
+    .formationsHead{
       margin-top:12px;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:rgba(0,0,0,.02);
+    }
+    body.dark .formationsHead{background:rgba(255,255,255,.03)}
+    .formationsTitle{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:26px;
+      margin:0 0 10px 0;
+      text-transform:uppercase;
+      text-align:center;
+    }
+
+    /* RISULTATO (contenuto) */
+    .resultBox{
       border:1px solid var(--border);
       border-radius:16px;
       padding:12px;
@@ -284,13 +301,6 @@
       line-height:1;
       letter-spacing:2px;
       font-weight:900;
-    }
-    .resultLabel{
-      margin-top:6px;
-      font-weight:900;
-      letter-spacing:2px;
-      color:var(--muted);
-      text-transform:uppercase;
     }
     @media(max-width:420px){
       .resultAvatarWrap{width:90px;flex-basis:90px}
@@ -400,23 +410,7 @@
     .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-    /* Formazioni header */
-    .formationsHead{
-      margin-top:12px;
-      padding:12px;
-      border:1px solid var(--border);
-      border-radius:16px;
-      background:rgba(0,0,0,.02);
-    }
-    body.dark .formationsHead{background:rgba(255,255,255,.03)}
-    .formationsTitle{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:26px;
-      margin:0 0 10px 0;
-      text-transform:uppercase;
-      text-align:center;
-    }
+    /* Formazioni header (GK VS GK) */
     .vsRow{
       display:flex;align-items:center;justify-content:space-between;
       gap:10px;flex-wrap:wrap;
@@ -552,6 +546,23 @@
       white-space:pre-wrap;
       word-break:break-word;
     }
+
+    /* ✅ Admin delete button */
+    .commentAdminActions{display:flex;align-items:center;gap:8px}
+    .iconBtn{
+      border:1px solid var(--border);
+      background:var(--card);
+      color:var(--text);
+      width:38px;height:38px;
+      border-radius:12px;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      box-shadow:none;
+    }
+    .iconBtn:active{transform:scale(.98)}
   </style>
 </head>
 <body>
@@ -573,22 +584,25 @@
     <div id="status" class="muted">Caricamento…</div>
     <div id="info"></div>
 
-    <!-- RISULTATO -->
-    <div id="resultBox" class="resultBox" style="display:none">
-      <div class="resultTop">
-        <div class="resultPill">🏁 PARTITA TERMINATA</div>
-        <div class="resultTimePill">⏱ <span id="resultTime">—</span></div>
-      </div>
-      <div class="resultMid">
-        <div class="resultAvatarWrap">
-          <img id="resultAvatarA" class="resultAvatar" src="avatars/default.png" alt="A">
+    <!-- ✅ RISULTATO: titolo stile FORMAZIONI -->
+    <div id="resultHead" class="formationsHead" style="display:none">
+      <div class="formationsTitle">RISULTATO</div>
+
+      <div id="resultBox" class="resultBox">
+        <div class="resultTop">
+          <div class="resultPill">🏁 PARTITA TERMINATA</div>
+          <div class="resultTimePill">⏱ <span id="resultTime">—</span></div>
         </div>
-        <div class="resultScoreWrap">
-          <div id="resultScore" class="resultScore">—</div>
-          <div class="resultLabel">RISULTATO</div>
-        </div>
-        <div class="resultAvatarWrap">
-          <img id="resultAvatarB" class="resultAvatar" src="avatars/default.png" alt="B">
+        <div class="resultMid">
+          <div class="resultAvatarWrap">
+            <img id="resultAvatarA" class="resultAvatar" src="avatars/default.png" alt="A">
+          </div>
+          <div class="resultScoreWrap">
+            <div id="resultScore" class="resultScore">—</div>
+          </div>
+          <div class="resultAvatarWrap">
+            <img id="resultAvatarB" class="resultAvatar" src="avatars/default.png" alt="B">
+          </div>
         </div>
       </div>
     </div>
@@ -751,7 +765,8 @@ const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
 
-const resultBox = document.getElementById("resultBox");
+/* RISULTATO DOM */
+const resultHead = document.getElementById("resultHead");
 const resultTimeEl = document.getElementById("resultTime");
 const resultScoreEl = document.getElementById("resultScore");
 const resultAvatarA = document.getElementById("resultAvatarA");
@@ -905,15 +920,27 @@ function timeAgo(ts){
   }catch(e){ return ""; }
 }
 
+/* ✅ ADMIN state (se sei loggato come in admin.html/foto.html) */
+let isAdmin = false;
+async function refreshAdminState(){
+  try{
+    const { data } = await client.auth.getSession();
+    isAdmin = !!data?.session;
+  }catch(e){
+    isAdmin = false;
+  }
+}
+
 /* COMMENTS state */
 let currentMatchId = null;
 let commentsChannel = null;
 
-/* Render comment (SENZA LIKE) */
+/* Render comment (con delete se admin) */
 function renderCommentItem(c){
   const when = timeAgo(c.created_at);
   const txt = escapeHtml(c.text || "");
   const displayName = (c.name && String(c.name).trim()) ? String(c.name).trim() : "Anonimo";
+  const delBtn = isAdmin ? `<button class="iconBtn" type="button" data-del="${escapeHtml(c.id)}" title="Elimina commento">🗑️</button>` : "";
   return `
     <div class="commentItem" data-id="${escapeHtml(c.id)}">
       <div class="commentTop">
@@ -922,6 +949,7 @@ function renderCommentItem(c){
           <span>•</span>
           <span>${escapeHtml(when)}</span>
         </div>
+        <div class="commentAdminActions">${delBtn}</div>
       </div>
       <div class="commentBubble">${txt}</div>
     </div>
@@ -953,6 +981,33 @@ async function loadComments(matchId){
   commentsList.innerHTML = comments.map(renderCommentItem).join("");
 }
 
+/* ✅ Delete comment (solo admin loggato) */
+async function deleteCommentById(id){
+  if(!isAdmin) return;
+  const ok = confirm("Eliminare questo commento?");
+  if(!ok) return;
+
+  try{
+    const { error } = await client
+      .from("match_comments")
+      .delete()
+      .eq("id", id);
+
+    if(error) throw error;
+  }catch(e){
+    console.error(e);
+    alert("Errore eliminazione commento (controlla permessi/RLS).");
+  }
+}
+
+/* Event delegation delete */
+commentsList.addEventListener("click", (ev)=>{
+  const btn = ev.target?.closest?.("[data-del]");
+  if(!btn) return;
+  const id = btn.getAttribute("data-del");
+  if(id) deleteCommentById(id);
+});
+
 /* Subscribe realtime (SOLO match_comments) */
 function subscribeComments(matchId){
   try{
@@ -966,7 +1021,10 @@ function subscribeComments(matchId){
     .channel(`qdp-comments-${matchId}`)
     .on('postgres_changes',
       { event: '*', schema: 'public', table: 'match_comments', filter: `match_id=eq.${matchId}` },
-      async () => { await loadComments(matchId); }
+      async () => {
+        await refreshAdminState();
+        await loadComments(matchId);
+      }
     )
     .subscribe();
 }
@@ -999,6 +1057,7 @@ async function submitComment(matchId){
 
     if(error) throw error;
     commentInput.value = "";
+    await refreshAdminState();
     await loadComments(matchId);
   }catch(e){
     console.error(e);
@@ -1157,8 +1216,7 @@ async function loadMVP(matchId, playersById){
     const rows = [...counts.entries()]
       .map(([id,c])=>{
         const p = playersById.get(String(id));
-        return { id, name: p?.name || id, avatar: p?.avatar || DEFAULT_AVATAR,
-          votes:c };
+        return { id, name: p?.name || id, avatar: p?.avatar || DEFAULT_AVATAR, votes:c };
       })
       .sort((a,b)=> b.votes - a.votes || String(a.name).localeCompare(String(b.name),"it"));
 
@@ -1215,6 +1273,8 @@ function renderPlayerPill(p){
 
 /* MAIN LOAD */
 async function load(){
+  await refreshAdminState();
+
   const { data, error } = await client
     .from("matches")
     .select("*")
@@ -1230,6 +1290,7 @@ async function load(){
     mapBox.style.display = "none";
     mapActions.style.display = "none";
     mvpBox.style.display = "none";
+    resultHead.style.display = "none";
     return;
   }
 
@@ -1240,6 +1301,7 @@ async function load(){
     mapBox.style.display = "none";
     mapActions.style.display = "none";
     mvpBox.style.display = "none";
+    resultHead.style.display = "none";
     formationsHead.style.display = "none";
     teamsBox.style.display = "none";
     calledEl.textContent = "—";
@@ -1268,12 +1330,14 @@ async function load(){
     scorersBox.style.display="none";
   }
 
-  // Mappa + titolo
-  fieldTitleEl.style.display = "block";
-  mapBox.style.display = "block";
-  mapActions.style.display = "flex";
-  mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
-  setupMapLinks();
+  // ✅ Mappa + titolo (default: visibile SOLO se match NON terminato)
+  fieldTitleEl.style.display = matchEnded ? "none" : "block";
+  mapBox.style.display = matchEnded ? "none" : "block";
+  mapActions.style.display = matchEnded ? "none" : "flex";
+  if(!matchEnded){
+    mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
+    setupMapLinks();
+  }
 
   // Players ids
   const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
@@ -1299,7 +1363,8 @@ async function load(){
   const kb = findKeeperForTeam(bPlayers, m.keeper_b);
 
   if(matchEnded){
-    resultBox.style.display = "block";
+    // ✅ RISULTATO: mostra header stile FORMAZIONI
+    resultHead.style.display = "block";
     resultTimeEl.textContent = time || "—";
     resultScoreEl.textContent = result || "—";
     resultAvatarA.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
@@ -1313,10 +1378,11 @@ async function load(){
     // commenti
     currentMatchId = String(m.id);
     commentsWrap.style.display = "block";
+    await refreshAdminState();
     await loadComments(currentMatchId);
     subscribeComments(currentMatchId);
   }else{
-    resultBox.style.display = "none";
+    resultHead.style.display = "none";
     commentsWrap.style.display = "none";
     currentMatchId = null;
 
@@ -1384,4 +1450,5 @@ load();
 </script>
 </body>
 </html>
-```0vediamo    
+
+definitivo???
