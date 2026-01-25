@@ -441,6 +441,14 @@
     }
 
     /* ✅ COMMENTI A CALDO */
+    .commentsWrap{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(0,0,0,.02);
+    }
+    body.dark .commentsWrap{background:rgba(255,255,255,.03)}
     .commentsTitle{
       font-family:'Bebas Neue';
       letter-spacing:2px;
@@ -473,7 +481,6 @@
     }
     .commentActions{
       display:flex;
-      known:0;
       gap:10px;
       justify-content:flex-end;
       flex-wrap:wrap;
@@ -532,9 +539,7 @@
       gap:6px;
       user-select:none;
     }
-    .likeBtn.liked{
-      background:var(--pill);
-    }
+    .likeBtn.liked{ background:var(--pill); }
   </style>
 </head>
 <body>
@@ -557,31 +562,47 @@
   <!-- PARTITA -->
   <div class="card">
     <div id="status" class="muted">Caricamento…</div>
-
-    <!-- INFO BASE (data + ora) -->
     <div id="info"></div>
 
-    <!-- ✅ RISULTATO "COME FOTO" -->
+    <!-- RISULTATO -->
     <div id="resultBox" class="resultBox" style="display:none">
       <div class="resultTop">
         <div class="resultPill">🏁 PARTITA TERMINATA</div>
         <div class="resultTimePill">⏱ <span id="resultTime">—</span></div>
       </div>
-
       <div class="resultMid">
         <div class="resultAvatarWrap">
           <img id="resultAvatarA" class="resultAvatar" src="avatars/default.png" alt="A">
         </div>
-
         <div class="resultScoreWrap">
           <div id="resultScore" class="resultScore">—</div>
           <div class="resultLabel">RISULTATO</div>
         </div>
-
         <div class="resultAvatarWrap">
           <img id="resultAvatarB" class="resultAvatar" src="avatars/default.png" alt="B">
         </div>
       </div>
+    </div>
+
+    <!-- ✅ COMMENTI A CALDO SUBITO DOPO RISULTATO -->
+    <div id="commentsWrap" class="commentsWrap" style="display:none">
+      <div class="commentsTitle">COMMENTI A CALDO</div>
+      <div class="muted" style="text-align:center;font-weight:800">
+        Commenta anche senza registrazione (nome facoltativo).
+      </div>
+
+      <div class="commentForm">
+        <input id="commentName" class="inputLike" type="text" maxlength="24" placeholder="Nome (facoltativo)">
+        <textarea id="commentInput" class="inputLike commentTextarea" maxlength="240" placeholder="Scrivi un commento..."></textarea>
+
+        <div class="commentActions">
+          <button id="commentSend" class="btn" type="button">📨 Invia</button>
+        </div>
+
+        <div id="commentError" class="commentError"></div>
+      </div>
+
+      <div id="commentsList" class="commentList"></div>
     </div>
 
     <!-- MVP -->
@@ -604,12 +625,8 @@
 
     <!-- MAPPA -->
     <div id="mapBox" class="mapWrap" style="display:none">
-      <iframe
-        id="mapFrame"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        src="https://www.google.com/maps?q=40.1239395,18.1203671&z=18&output=embed">
-      </iframe>
+      <iframe id="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=40.1239395,18.1203671&z=18&output=embed"></iframe>
     </div>
 
     <div id="mapActions" class="mapActions" style="display:none">
@@ -670,29 +687,6 @@
       <div class="line kit" style="margin-top:10px"><span id="tBIcon"></span><b>Squadra B</b></div>
       <div id="teamB" class="playersWrap muted"></div>
     </div>
-
-    <!-- ✅ COMMENTI A CALDO (solo a partita finita) -->
-    <div id="commentsCard" class="card" style="display:none;margin:12px 0 0;">
-      <div class="commentsTitle">COMMENTI A CALDO</div>
-
-      <div class="muted" style="text-align:center;font-weight:800">
-        Commenta anche senza registrazione (nome facoltativo).
-      </div>
-
-      <div class="commentForm">
-        <input id="commentName" class="inputLike" type="text" maxlength="24" placeholder="Nome (facoltativo)">
-        <textarea id="commentInput" class="inputLike commentTextarea" maxlength="240" placeholder="Scrivi un commento..."></textarea>
-
-        <div class="commentActions">
-          <button id="commentSend" class="btn" type="button">📨 Invia</button>
-        </div>
-
-        <div id="commentError" class="commentError"></div>
-      </div>
-
-      <div id="commentsList" class="commentList"></div>
-    </div>
-
   </div>
 
   <!-- NAV -->
@@ -707,8 +701,6 @@
 </div>
 
 <button id="themeToggle" class="fab">🌙</button>
-
-<!-- 🔊 Audio fischio finale -->
 <audio id="finalWhistle" src="final-whistle-1.mp3" preload="auto"></audio>
 
 <script src="config.js"></script>
@@ -796,7 +788,7 @@ const weatherAlert = document.getElementById("weatherAlert");
 const finalWhistle = document.getElementById("finalWhistle");
 
 /* COMMENTI DOM */
-const commentsCard = document.getElementById("commentsCard");
+const commentsWrap = document.getElementById("commentsWrap");
 const commentName = document.getElementById("commentName");
 const commentInput = document.getElementById("commentInput");
 const commentSend = document.getElementById("commentSend");
@@ -811,7 +803,6 @@ const FIELD_LNG = 18.1203671;
 /* AVATAR PATH */
 const AVATAR_BASE = "avatars/";
 const DEFAULT_AVATAR = "default.png";
-
 function avatarUrl(filename){
   const f = String(filename || "").trim();
   return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
@@ -901,7 +892,269 @@ function setupMapLinks(){
   mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
 }
 
-/* METEO (Open-Meteo) */
+/* ✅ Profanity filter (semplice) */
+const BAD_WORDS = [
+  "cazzo","cazzi","merda","stronzo","stronzi","vaffanculo","vaff","porco","porcodio","dio cane",
+  "minchia","puttana","puttane","troia","bastardo","bastardi","testa di cazzo","coglione","coglioni"
+];
+function censorProfanity(text){
+  let out = String(text||"");
+  for(const w of BAD_WORDS){
+    const escaped = w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`\\b${escaped}\\b`, "gi");
+    out = out.replace(re, (m)=> "*".repeat(Math.min(12, m.length)));
+  }
+  return out;
+}
+
+/* ✅ anon_key per like senza login */
+function getAnonKey(){
+  const k = "qdp_anon_key";
+  let v = localStorage.getItem(k);
+  if(v) return v;
+  v = (crypto && crypto.randomUUID) ? crypto.randomUUID() : (String(Date.now()) + "_" + Math.random().toString(16).slice(2));
+  localStorage.setItem(k, v);
+  return v;
+}
+const ANON_KEY = getAnonKey();
+
+function timeAgo(ts){
+  try{
+    const d = new Date(ts);
+    const diff = Math.floor((Date.now() - d.getTime())/1000);
+    if(diff < 60) return "ora";
+    const m = Math.floor(diff/60);
+    if(m < 60) return `${m} min`;
+    const h = Math.floor(m/60);
+    if(h < 24) return `${h} h`;
+    const days = Math.floor(h/24);
+    return `${days} g`;
+  }catch(e){ return ""; }
+}
+
+/* ✅ COMMENTS state */
+let currentMatchId = null;
+let commentsChannel = null;
+
+/* ✅ Render comment */
+function renderCommentItem(c, liked){
+  const likeCount = Number(c.likes_count ?? c.likes ?? 0);
+  const when = timeAgo(c.created_at);
+  const txt = escapeHtml(c.text || "");
+  const displayName = (c.name && String(c.name).trim()) ? String(c.name).trim() : "Anonimo";
+
+  return `
+    <div class="commentItem" data-id="${escapeHtml(c.id)}">
+      <div class="commentTop">
+        <div class="commentMeta">
+          <span class="pill" style="margin:0">${escapeHtml(displayName)}</span>
+          <span>•</span>
+          <span>${escapeHtml(when)}</span>
+        </div>
+        <button class="likeBtn ${liked ? "liked":""}" type="button">
+          ❤️ <span class="likeCount">${likeCount}</span>
+        </button>
+      </div>
+      <div class="commentBubble">${txt}</div>
+    </div>
+  `;
+}
+
+function bindLikeHandlers(){
+  commentsList.querySelectorAll(".likeBtn").forEach(btn=>{
+    btn.onclick = async (ev)=>{
+      const item = ev.currentTarget.closest(".commentItem");
+      const commentId = item?.dataset?.id;
+      if(!commentId || !currentMatchId) return;
+      await toggleLike(currentMatchId, commentId, ev.currentTarget);
+    };
+  });
+}
+
+/* ✅ Load comments */
+async function loadComments(matchId){
+  commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:800">Caricamento commenti…</div>`;
+
+  const { data: comments, error } = await client
+    .from("match_comments")
+    .select("*")
+    .eq("match_id", matchId)
+    .order("created_at",{ascending:false})
+    .limit(50);
+
+  if(error){
+    console.error(error);
+    commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:900">Errore caricamento commenti</div>`;
+    return;
+  }
+
+  let likedSet = new Set();
+  try{
+    const { data: likes } = await client
+      .from("match_comment_likes")
+      .select("comment_id")
+      .eq("match_id", matchId)
+      .eq("anon_key", ANON_KEY);
+
+    (likes||[]).forEach(r=> likedSet.add(String(r.comment_id)));
+  }catch(e){
+    // ok: se tabella/policy non c'è, nessun liked
+  }
+
+  if(!comments || comments.length === 0){
+    commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:900">Nessun commento ancora. Spacca il ghiaccio 😄</div>`;
+    return;
+  }
+
+  commentsList.innerHTML = comments.map(c => renderCommentItem(c, likedSet.has(String(c.id)))).join("");
+  bindLikeHandlers();
+}
+
+/* ✅ Subscribe realtime */
+function subscribeComments(matchId){
+  // chiudi eventuale canale precedente
+  try{
+    if(commentsChannel){
+      client.removeChannel(commentsChannel);
+      commentsChannel = null;
+    }
+  }catch(e){}
+
+  commentsChannel = client
+    .channel(`qdp-comments-${matchId}`)
+    .on('postgres_changes',
+      { event: '*', schema: 'public', table: 'match_comments', filter: `match_id=eq.${matchId}` },
+      async () => {
+        // reload (semplice e robusto)
+        await loadComments(matchId);
+      }
+    )
+    .on('postgres_changes',
+      { event: '*', schema: 'public', table: 'match_comment_likes', filter: `match_id=eq.${matchId}` },
+      async () => {
+        // aggiorna contatori & stato like live
+        await loadComments(matchId);
+      }
+    )
+    .subscribe();
+}
+
+/* ✅ Like handling */
+async function toggleLike(matchId, commentId, btn){
+  btn.disabled = true;
+
+  const isLiked = btn.classList.contains("liked");
+  const countEl = btn.querySelector(".likeCount");
+  const current = Number(countEl?.textContent || 0);
+
+  // optimistic UI
+  if(isLiked){
+    btn.classList.remove("liked");
+    countEl.textContent = String(Math.max(0, current - 1));
+  }else{
+    btn.classList.add("liked");
+    countEl.textContent = String(current + 1);
+  }
+
+  try{
+    if(!isLiked){
+      const { error: e1 } = await client
+        .from("match_comment_likes")
+        .insert({ match_id: matchId, comment_id: commentId, anon_key: ANON_KEY });
+      if(e1) throw e1;
+      await incrementCommentLikes(commentId, +1);
+    }else{
+      const { error: e2 } = await client
+        .from("match_comment_likes")
+        .delete()
+        .eq("match_id", matchId)
+        .eq("comment_id", commentId)
+        .eq("anon_key", ANON_KEY);
+      if(e2) throw e2;
+      await incrementCommentLikes(commentId, -1);
+    }
+  }catch(e){
+    console.error(e);
+    // rollback UI
+    if(isLiked){
+      btn.classList.add("liked");
+      countEl.textContent = String(current);
+    }else{
+      btn.classList.remove("liked");
+      countEl.textContent = String(current);
+    }
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+async function incrementCommentLikes(commentId, delta){
+  // Prova likes_count, poi likes
+  const { data, error } = await client
+    .from("match_comments")
+    .select("id,likes_count,likes")
+    .eq("id", commentId)
+    .single();
+
+  if(error) throw error;
+
+  const hasLikesCount = data && Object.prototype.hasOwnProperty.call(data, "likes_count");
+  const field = hasLikesCount ? "likes_count" : "likes";
+  const current = Number(data?.[field] ?? 0);
+  const next = Math.max(0, current + delta);
+
+  const { error: e2 } = await client
+    .from("match_comments")
+    .update({ [field]: next })
+    .eq("id", commentId);
+
+  if(e2) throw e2;
+}
+
+/* ✅ Submit comment */
+async function submitComment(matchId){
+  commentError.style.display = "none";
+  commentError.textContent = "";
+
+  const rawText = String(commentInput.value || "").trim();
+  const rawName = String(commentName.value || "").trim();
+
+  if(!rawText){
+    commentError.style.display = "block";
+    commentError.textContent = "Scrivi qualcosa prima di inviare 🙂";
+    return;
+  }
+
+  const cleanText = censorProfanity(rawText).slice(0,240);
+  const cleanName = censorProfanity(rawName).slice(0,24);
+  const finalName = cleanName ? cleanName : "Anonimo";
+
+  commentSend.disabled = true;
+  commentSend.textContent = "⏳ Invio…";
+
+  try{
+    const { error } = await client
+      .from("match_comments")
+      .insert({ match_id: matchId, name: finalName, text: cleanText });
+
+    if(error) throw error;
+    commentInput.value = "";
+    // realtime farà il refresh, ma intanto aggiorniamo subito
+    await loadComments(matchId);
+  }catch(e){
+    console.error(e);
+    commentError.style.display = "block";
+    commentError.textContent = "Errore invio commento.";
+  }finally{
+    commentSend.disabled = false;
+    commentSend.textContent = "📨 Invia";
+  }
+}
+commentSend.addEventListener("click", ()=>{
+  if(currentMatchId) submitComment(currentMatchId);
+});
+
+/* METEO (Open-Meteo) - invariato (omesso qui per brevità, ma lo lasciamo sotto) */
 function wxEmojiFromCode(code){
   const c = Number(code);
   if(c === 0) return "☀️";
@@ -1076,7 +1329,6 @@ async function loadMVP(matchId, playersById){
       </div>
     `).join("");
     mvpTop3.style.display = "block";
-
   }catch(e){
     console.error(e);
     mvpMain.textContent = "Errore MVP";
@@ -1103,274 +1355,6 @@ function renderPlayerPill(p){
   `;
 }
 
-/* ✅ Profanity filter (semplice) */
-const BAD_WORDS = [
-  "cazzo","cazzi","merda","stronzo","stronzi","vaffanculo","vaff","porco","porcodio","dio cane",
-  "minchia","puttana","puttane","troia","bastardo","bastardi","testa di cazzo","coglione","coglioni"
-];
-function censorProfanity(text){
-  let out = String(text||"");
-  for(const w of BAD_WORDS){
-    const escaped = w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const re = new RegExp(`\\b${escaped}\\b`, "gi");
-    out = out.replace(re, (m)=> "*".repeat(Math.min(12, m.length)));
-  }
-  return out;
-}
-
-/* ✅ Comment like local fingerprint */
-function getAnonKey(){
-  const k = "qdp_anon_key";
-  let v = localStorage.getItem(k);
-  if(v) return v;
-  if(crypto && crypto.randomUUID){
-    v = crypto.randomUUID();
-  }else{
-    v = String(Date.now()) + "_" + Math.random().toString(16).slice(2);
-  }
-  localStorage.setItem(k, v);
-  return v;
-}
-const ANON_KEY = getAnonKey();
-
-/* ✅ Time ago */
-function timeAgo(ts){
-  try{
-    const d = new Date(ts);
-    const diff = Math.floor((Date.now() - d.getTime())/1000);
-    if(diff < 60) return "ora";
-    const m = Math.floor(diff/60);
-    if(m < 60) return `${m} min`;
-    const h = Math.floor(m/60);
-    if(h < 24) return `${h} h`;
-    const days = Math.floor(h/24);
-    return `${days} g`;
-  }catch(e){
-    return "";
-  }
-}
-
-/* ✅ COMMENTS (match_comments + match_comment_likes opzionale) */
-async function loadComments(matchId){
-  commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:800">Caricamento commenti…</div>`;
-
-  // carica commenti
-  const { data: comments, error } = await client
-    .from("match_comments")
-    .select("*")
-    .eq("match_id", matchId)
-    .order("created_at",{ascending:false})
-    .limit(50);
-
-  if(error){
-    console.error(error);
-    commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:900">Errore caricamento commenti</div>`;
-    return;
-  }
-
-  // likes per questo anon (se tabella esiste)
-  let likedSet = new Set();
-  try{
-    const { data: likes } = await client
-      .from("match_comment_likes")
-      .select("comment_id")
-      .eq("match_id", matchId)
-      .eq("anon_key", ANON_KEY);
-
-    (likes||[]).forEach(r=> likedSet.add(String(r.comment_id)));
-  }catch(e){
-    // se tabella non esiste o policy, continuiamo senza
-  }
-
-  if(!comments || comments.length === 0){
-    commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:900">Nessun commento ancora. Spacca il ghiaccio 😄</div>`;
-    return;
-  }
-
-  commentsList.innerHTML = comments.map(c => renderCommentItem(c, likedSet.has(String(c.id)))).join("");
-
-  // handler like
-  commentsList.querySelectorAll(".likeBtn").forEach(btn=>{
-    btn.addEventListener("click", async (ev)=>{
-      const item = ev.currentTarget.closest(".commentItem");
-      const commentId = item?.dataset?.id;
-      if(!commentId) return;
-      await toggleLike(matchId, commentId, ev.currentTarget);
-    });
-  });
-}
-
-function renderCommentItem(c, liked){
-  const likeCount = Number(c.likes_count ?? c.likes ?? 0);
-  const when = timeAgo(c.created_at);
-  const txt = escapeHtml(c.text || "");
-  const displayName = (c.name && String(c.name).trim()) ? String(c.name).trim() : "Anonimo";
-
-  return `
-    <div class="commentItem" data-id="${escapeHtml(c.id)}">
-      <div class="commentTop">
-        <div class="commentMeta">
-          <span class="pill" style="margin:0">${escapeHtml(displayName)}</span>
-          <span>•</span>
-          <span>${escapeHtml(when)}</span>
-        </div>
-        <button class="likeBtn ${liked ? "liked":""}" type="button">
-          ❤️ <span class="likeCount">${likeCount}</span>
-        </button>
-      </div>
-      <div class="commentBubble">${txt}</div>
-    </div>
-  `;
-}
-
-/* ✅ Like:
-   - Preferito: tabella match_comment_likes (match_id, comment_id, anon_key)
-   - E increment/decrement su match_comments.likes_count (o likes)
-*/
-async function toggleLike(matchId, commentId, btn){
-  btn.disabled = true;
-
-  const isLiked = btn.classList.contains("liked");
-  const countEl = btn.querySelector(".likeCount");
-  const current = Number(countEl?.textContent || 0);
-
-  // UI optimistic
-  if(isLiked){
-    btn.classList.remove("liked");
-    countEl.textContent = String(Math.max(0, current - 1));
-  }else{
-    btn.classList.add("liked");
-    countEl.textContent = String(current + 1);
-  }
-
-  try{
-    // se tabella like esiste: upsert/delete
-    if(!isLiked){
-      // add like
-      const { error: e1 } = await client
-        .from("match_comment_likes")
-        .insert({ match_id: matchId, comment_id: commentId, anon_key: ANON_KEY });
-      if(e1) throw e1;
-
-      // increment counter (supporta likes_count o likes)
-      await incrementCommentLikes(commentId, +1);
-    }else{
-      // remove like
-      const { error: e2 } = await client
-        .from("match_comment_likes")
-        .delete()
-        .eq("match_id", matchId)
-        .eq("comment_id", commentId)
-        .eq("anon_key", ANON_KEY);
-      if(e2) throw e2;
-
-      await incrementCommentLikes(commentId, -1);
-    }
-  }catch(e){
-    console.error(e);
-    // rollback UI
-    if(isLiked){
-      btn.classList.add("liked");
-      countEl.textContent = String(current);
-    }else{
-      btn.classList.remove("liked");
-      countEl.textContent = String(current);
-    }
-  }finally{
-    btn.disabled = false;
-  }
-}
-
-async function incrementCommentLikes(commentId, delta){
-  // Provo prima likes_count, poi likes
-  // NB: senza RPC non posso fare increment atomico perfetto, ma qui faccio read+update veloce.
-  // Se avete già RPC o trigger, potete sostituire questa funzione.
-  const { data, error } = await client
-    .from("match_comments")
-    .select("id,likes_count,likes")
-    .eq("id", commentId)
-    .limit(1)
-    .maybeSingle?.() ?? await client.from("match_comments").select("id,likes_count,likes").eq("id", commentId).single();
-
-  if(error) throw error;
-
-  const hasLikesCount = data && Object.prototype.hasOwnProperty.call(data, "likes_count");
-  const field = hasLikesCount ? "likes_count" : "likes";
-  const current = Number(data?.[field] ?? 0);
-  const next = Math.max(0, current + delta);
-
-  const { error: e2 } = await client
-    .from("match_comments")
-    .update({ [field]: next })
-    .eq("id", commentId);
-
-  if(e2) throw e2;
-}
-
-/* ✅ Submit comment (nome facoltativo, anonimo) */
-async function submitComment(matchId){
-  commentError.style.display = "none";
-  commentError.textContent = "";
-
-  const rawText = String(commentInput.value || "").trim();
-  const rawName = String(commentName?.value || "").trim();
-
-  if(!rawText){
-    commentError.style.display = "block";
-    commentError.textContent = "Scrivi qualcosa prima di inviare 🙂";
-    return;
-  }
-  if(rawText.length > 240){
-    commentError.style.display = "block";
-    commentError.textContent = "Troppo lungo (max 240 caratteri).";
-    return;
-  }
-
-  const cleanText = censorProfanity(rawText);
-  const cleanName = censorProfanity(rawName).slice(0,24);
-  const finalName = cleanName ? cleanName : "Anonimo";
-
-  commentSend.disabled = true;
-  commentSend.textContent = "⏳ Invio…";
-
-  try{
-    // ⚠️ IMPORTANTISSIMO:
-    // questa insert presuppone colonne: match_id (uuid/int), name (text), text (text)
-    const { error } = await client
-      .from("match_comments")
-      .insert({
-        match_id: matchId,
-        name: finalName,
-        text: cleanText
-      });
-
-    if(error) throw error;
-
-    commentInput.value = "";
-    await loadComments(matchId);
-  }catch(e){
-    console.error(e);
-    commentError.style.display = "block";
-    const msg = String(e?.message || "");
-
-    if(msg.toLowerCase().includes("row-level security") || msg.toLowerCase().includes("rls")){
-      commentError.textContent = "Errore permessi (RLS): abilita INSERT pubblico su match_comments.";
-    }else if(msg.toLowerCase().includes("column") && msg.toLowerCase().includes("does not exist")){
-      commentError.textContent = "Errore DB: manca una colonna (controlla che match_comments abbia name e text).";
-    }else{
-      commentError.textContent = "Errore invio commento.";
-    }
-  }finally{
-    commentSend.disabled = false;
-    commentSend.textContent = "📨 Invia";
-  }
-}
-
-commentSend.addEventListener("click", ()=>{
-  const matchId = commentSend.dataset.matchId;
-  if(matchId) submitComment(matchId);
-});
-
 /* MAIN LOAD */
 async function load(){
   const { data, error } = await client
@@ -1396,7 +1380,7 @@ async function load(){
     formationsHead.style.display = "none";
     teamsBox.style.display = "none";
     calledEl.textContent = "—";
-    commentsCard.style.display = "none";
+    commentsWrap.style.display = "none";
     return;
   }
 
@@ -1408,7 +1392,6 @@ async function load(){
   const result = matchEnded ? `${m.score_a}-${m.score_b}` : null;
   const voteOpen = isVoteOpen(m);
 
-  // info base (solo data+ora)
   infoEl.innerHTML = `
     <div class="line"><b>📅 ${escapeHtml(formatDateFull(m.match_date))}</b></div>
     <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
@@ -1437,7 +1420,7 @@ async function load(){
   mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
   setupMapLinks();
 
-  // IDs
+  // Players ids
   const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
   const teamAIds = Array.isArray(m.team_a) ? m.team_a : [];
   const teamBIds = Array.isArray(m.team_b) ? m.team_b : [];
@@ -1457,11 +1440,9 @@ async function load(){
   const aPlayers = teamAIds.map(id=>playersById.get(String(id))).filter(Boolean);
   const bPlayers = teamBIds.map(id=>playersById.get(String(id))).filter(Boolean);
 
-  // Portieri (SOLO per squadra)
   const ka = findKeeperForTeam(aPlayers, m.keeper_a);
   const kb = findKeeperForTeam(bPlayers, m.keeper_b);
 
-  // ✅ Risultato box come foto
   if(matchEnded){
     resultBox.style.display = "block";
     resultTimeEl.textContent = time || "—";
@@ -1474,21 +1455,30 @@ async function load(){
     calledEl.style.display = "none";
     calledTitleEl.style.display = "none";
 
-    // commenti a caldo (solo fine partita)
-    commentsCard.style.display = "block";
-    commentSend.dataset.matchId = String(m.id);
-    await loadComments(String(m.id));
+    // ✅ mostra commenti subito dopo risultato + realtime
+    currentMatchId = String(m.id);
+    commentsWrap.style.display = "block";
+    await loadComments(currentMatchId);
+    subscribeComments(currentMatchId);
 
-    // fischio
     playFinalWhistleOnce(m.id, m.score_a, m.score_b);
   }else{
     resultBox.style.display = "none";
+    commentsWrap.style.display = "none";
+    currentMatchId = null;
+
+    // chiudi realtime channel se si passa a partita non finita
+    try{
+      if(commentsChannel){
+        client.removeChannel(commentsChannel);
+        commentsChannel = null;
+      }
+    }catch(e){}
+
     calledEl.style.display = "block";
     calledTitleEl.style.display = "block";
-    commentsCard.style.display = "none";
     await loadWeather(m.match_date, m.match_time);
 
-    // convocati solo se non finita
     if(calledIds.length){
       const calledPlayers = calledIds.map(id => playersById.get(String(id))).filter(Boolean);
       calledEl.classList.remove("muted");
@@ -1529,5 +1519,5 @@ async function load(){
 load();
 </script>
 </body>
-</html>
-```0
+  </html>
+  aaaaaaaaaaaa
