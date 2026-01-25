@@ -137,15 +137,6 @@
       font-weight:900;
       border:1px solid var(--border);
     }
-    .badge{
-      display:inline-block;
-      background:#111;
-      color:#fff;
-      padding:6px 12px;
-      border-radius:999px;
-      font-weight:900;
-    }
-    body.dark .badge{background:#0b0e14}
     .muted{color:var(--muted)}
 
     .mapWrap{
@@ -207,7 +198,7 @@
     .kit{display:inline-flex;align-items:center;gap:6px}
     .kit svg{width:18px;height:18px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 
-    /* ✅ BLOCCO "TITOLO + CONTENUTO" stile FORMAZIONI (lo riuso per RISULTATO) */
+    /* BLOCCO TITOLO (stile FORMAZIONI) */
     .formationsHead{
       margin-top:12px;
       padding:12px;
@@ -225,7 +216,7 @@
       text-align:center;
     }
 
-    /* RISULTATO (contenuto) */
+    /* RISULTATO (nuovo layout) */
     .resultBox{
       border:1px solid var(--border);
       border-radius:16px;
@@ -233,6 +224,7 @@
       background:rgba(0,0,0,.02);
     }
     body.dark .resultBox{background:rgba(255,255,255,.03)}
+
     .resultTop{
       display:flex;
       align-items:center;
@@ -263,49 +255,88 @@
       font-weight:900;
     }
 
-    /* FIX avatar portieri: FLEX + colonne fisse */
-    .resultMid{
+    /* riga squadre + avatar */
+    .resultTeamsRow{
       margin-top:12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
+      flex-wrap:wrap;
     }
-    .resultAvatarWrap{
-      width:110px;
+    .teamSide{
       display:flex;
       align-items:center;
-      justify-content:center;
-      flex:0 0 110px;
+      gap:10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:8px 10px;
+      background:var(--card);
+      flex:1 1 240px;
+      min-width:240px;
+      font-weight:900;
     }
-    .resultAvatar{
-      width:78px;height:78px;border-radius:999px;
+    .teamSide.right{
+      justify-content:flex-end;
+      text-align:right;
+    }
+    .teamAvatar{
+      width:46px;height:46px;border-radius:999px;
       border:1px solid var(--border);
       object-fit:cover;
       background:#000;
       display:block;
-      margin:0 auto;
+      flex:0 0 auto;
     }
-    .resultScoreWrap{
-      flex:1 1 auto;
-      text-align:center;
+    .teamName{
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      letter-spacing:1px;
+    }
+    .vsBadge{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:30px;
+      padding:6px 10px;
+      border-radius:14px;
       border:1px solid var(--border);
-      border-radius:16px;
       background:var(--card);
-      padding:14px 10px;
-      min-width:0;
+      font-weight:900;
+      flex:0 0 auto;
     }
-    .resultScore{
+
+    /* riga punteggi incolonnati */
+    .scoresRow{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap:10px;
+      align-items:center;
+    }
+    .scoreCol{
+      border:1px solid var(--border);
+      background:var(--card);
+      border-radius:16px;
+      padding:14px 10px;
+      text-align:center;
+    }
+    .scoreNum{
       font-family:'Bebas Neue';
       font-size:72px;
       line-height:1;
       letter-spacing:2px;
       font-weight:900;
     }
+    .dash{
+      font-family:'Bebas Neue';
+      font-size:60px;
+      font-weight:900;
+      opacity:.6;
+      padding:0 4px;
+    }
     @media(max-width:420px){
-      .resultAvatarWrap{width:90px;flex-basis:90px}
-      .resultAvatar{width:64px;height:64px}
-      .resultScore{font-size:60px}
+      .scoreNum{font-size:60px}
+      .dash{font-size:48px}
+      .teamSide{min-width:0}
     }
 
     /* MVP box */
@@ -342,7 +373,6 @@
     .mvpText{font-weight:900}
     .mvpSub{color:var(--muted);font-weight:800;font-size:13px;margin-top:2px}
     .mvpTop3{margin-top:10px}
-
     .mvpRow{
       display:flex;align-items:center;justify-content:space-between;
       border:1px solid var(--border);
@@ -434,7 +464,7 @@
     .gkTxt{display:flex;flex-direction:column;line-height:1.1;min-width:0}
     .gkName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .gkNote{font-size:12px;font-weight:900;color:var(--muted)}
-    .vsBadge{
+    .vsBadge2{
       font-family:'Bebas Neue';
       letter-spacing:2px;
       font-size:30px;
@@ -547,7 +577,7 @@
       word-break:break-word;
     }
 
-    /* ✅ Admin delete button */
+    /* Admin */
     .commentAdminActions{display:flex;align-items:center;gap:8px}
     .iconBtn{
       border:1px solid var(--border);
@@ -563,6 +593,43 @@
       box-shadow:none;
     }
     .iconBtn:active{transform:scale(.98)}
+    .adminBadge{
+      display:none;
+      border:1px solid var(--border);
+      background:var(--card);
+      border-radius:999px;
+      padding:6px 10px;
+      font-weight:900;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+    }
+
+    /* TOAST */
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%) translateY(20px);
+      opacity:0;
+      pointer-events:none;
+      background:var(--card);
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:900;
+      box-shadow:var(--shadow);
+      transition:.18s ease;
+      z-index:9999;
+      max-width:min(92vw,520px);
+      text-align:center;
+    }
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+    .toast.ok{ border-color: var(--okBd); }
+    .toast.err{ border-color: var(--riskBd); }
   </style>
 </head>
 <body>
@@ -584,7 +651,7 @@
     <div id="status" class="muted">Caricamento…</div>
     <div id="info"></div>
 
-    <!-- ✅ RISULTATO: titolo stile FORMAZIONI -->
+    <!-- RISULTATO -->
     <div id="resultHead" class="formationsHead" style="display:none">
       <div class="formationsTitle">RISULTATO</div>
 
@@ -593,15 +660,30 @@
           <div class="resultPill">🏁 PARTITA TERMINATA</div>
           <div class="resultTimePill">⏱ <span id="resultTime">—</span></div>
         </div>
-        <div class="resultMid">
-          <div class="resultAvatarWrap">
-            <img id="resultAvatarA" class="resultAvatar" src="avatars/default.png" alt="A">
+
+        <!-- NUOVO: SQUADRA A VS SQUADRA B con avatar -->
+        <div class="resultTeamsRow">
+          <div class="teamSide">
+            <img id="resultAvatarA" class="teamAvatar" src="avatars/default.png" alt="A">
+            <div id="teamLabelA" class="teamName">SQUADRA A</div>
           </div>
-          <div class="resultScoreWrap">
-            <div id="resultScore" class="resultScore">—</div>
+
+          <div class="vsBadge">VS</div>
+
+          <div class="teamSide right">
+            <div id="teamLabelB" class="teamName">SQUADRA B</div>
+            <img id="resultAvatarB" class="teamAvatar" src="avatars/default.png" alt="B">
           </div>
-          <div class="resultAvatarWrap">
-            <img id="resultAvatarB" class="resultAvatar" src="avatars/default.png" alt="B">
+        </div>
+
+        <!-- NUOVO: punteggi incolonnati -->
+        <div class="scoresRow">
+          <div class="scoreCol">
+            <div id="scoreA" class="scoreNum">—</div>
+          </div>
+          <div class="dash">-</div>
+          <div class="scoreCol">
+            <div id="scoreB" class="scoreNum">—</div>
           </div>
         </div>
       </div>
@@ -610,7 +692,12 @@
     <!-- COMMENTI -->
     <div id="commentsWrap" class="commentsWrap" style="display:none">
       <div class="commentsTitle">COMMENTI A CALDO</div>
-      <div class="muted" style="text-align:center;font-weight:800">
+
+      <div style="display:flex;justify-content:center;margin-top:-2px">
+        <span id="adminBadge" class="adminBadge">🔐 ADMIN</span>
+      </div>
+
+      <div class="muted" style="text-align:center;font-weight:800;margin-top:8px">
         Commenta anche senza registrazione (nome facoltativo).
       </div>
 
@@ -628,7 +715,7 @@
       <div id="commentsList" class="commentList"></div>
     </div>
 
-    <!-- MVP (solo se votazione aperta) -->
+    <!-- MVP -->
     <div id="mvpBox" class="mvpBox" style="display:none">
       <div class="mvpTitle">
         <div id="mvpTitle">🏆 MVP (provvisorio)</div>
@@ -696,7 +783,7 @@
           </div>
         </div>
 
-        <div class="vsBadge">VS</div>
+        <div class="vsBadge2">VS</div>
 
         <div class="gkChip" style="justify-content:flex-end;text-align:right">
           <div class="gkTxt" style="align-items:flex-end">
@@ -727,6 +814,8 @@
     <a href="admin.html">🔐 Admin</a>
   </div>
 </div>
+
+<div id="toast" class="toast">—</div>
 
 <button id="themeToggle" class="fab">🌙</button>
 
@@ -761,6 +850,16 @@ if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
 }
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+/* TOAST */
+const toastEl = document.getElementById("toast");
+let toastTimer = null;
+function showToast(msg, type="ok"){
+  toastEl.textContent = msg;
+  toastEl.className = "toast show " + (type==="err" ? "err" : "ok");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> toastEl.className = "toast", 1600);
+}
+
 /* DOM */
 const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
@@ -768,9 +867,12 @@ const infoEl = document.getElementById("info");
 /* RISULTATO DOM */
 const resultHead = document.getElementById("resultHead");
 const resultTimeEl = document.getElementById("resultTime");
-const resultScoreEl = document.getElementById("resultScore");
 const resultAvatarA = document.getElementById("resultAvatarA");
 const resultAvatarB = document.getElementById("resultAvatarB");
+const scoreAEl = document.getElementById("scoreA");
+const scoreBEl = document.getElementById("scoreB");
+const teamLabelA = document.getElementById("teamLabelA");
+const teamLabelB = document.getElementById("teamLabelB");
 
 const calledEl = document.getElementById("called");
 const calledTitleEl = document.getElementById("calledTitle");
@@ -820,6 +922,7 @@ const commentInput = document.getElementById("commentInput");
 const commentSend = document.getElementById("commentSend");
 const commentError = document.getElementById("commentError");
 const commentsList = document.getElementById("commentsList");
+const adminBadge = document.getElementById("adminBadge");
 
 /* MAP */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
@@ -901,6 +1004,7 @@ function censorProfanity(text){
   let out = String(text||"");
   for(const w of BAD_WORDS){
     const escaped = w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // NOTE: qui resta "semplice": se uno scrive c@zz0 non lo prende (ok per un filtro leggero)
     const re = new RegExp(`\\b${escaped}\\b`, "gi");
     out = out.replace(re, (m)=> "*".repeat(Math.min(12, m.length)));
   }
@@ -929,6 +1033,10 @@ async function refreshAdminState(){
   }catch(e){
     isAdmin = false;
   }
+  // badge visibile SOLO a te (se loggato)
+  if(adminBadge){
+    adminBadge.style.display = isAdmin ? "inline-flex" : "none";
+  }
 }
 
 /* COMMENTS state */
@@ -940,7 +1048,9 @@ function renderCommentItem(c){
   const when = timeAgo(c.created_at);
   const txt = escapeHtml(c.text || "");
   const displayName = (c.name && String(c.name).trim()) ? String(c.name).trim() : "Anonimo";
-  const delBtn = isAdmin ? `<button class="iconBtn" type="button" data-del="${escapeHtml(c.id)}" title="Elimina commento">🗑️</button>` : "";
+  const delBtn = isAdmin
+    ? `<button class="iconBtn" type="button" data-del="${escapeHtml(c.id)}" title="Elimina commento">🗑️</button>`
+    : "";
   return `
     <div class="commentItem" data-id="${escapeHtml(c.id)}">
       <div class="commentTop">
@@ -981,11 +1091,16 @@ async function loadComments(matchId){
   commentsList.innerHTML = comments.map(renderCommentItem).join("");
 }
 
-/* ✅ Delete comment (solo admin loggato) */
+/* ✅ Delete comment (solo admin loggato) + refresh automatico immediato */
 async function deleteCommentById(id){
   if(!isAdmin) return;
+
   const ok = confirm("Eliminare questo commento?");
   if(!ok) return;
+
+  // rimozione ottica immediata (così “sembra istantaneo”)
+  const node = commentsList.querySelector(`.commentItem[data-id="${CSS.escape(id)}"]`);
+  if(node) node.style.opacity = "0.35";
 
   try{
     const { error } = await client
@@ -994,9 +1109,19 @@ async function deleteCommentById(id){
       .eq("id", id);
 
     if(error) throw error;
+
+    showToast("✅ Commento eliminato", "ok");
+
+    // ✅ refresh automatico subito dopo DELETE
+    if(currentMatchId){
+      await refreshAdminState();
+      await loadComments(currentMatchId);
+    }
   }catch(e){
     console.error(e);
-    alert("Errore eliminazione commento (controlla permessi/RLS).");
+    showToast("❌ Errore eliminazione (permessi/RLS)", "err");
+    // ripristina opacità se fallisce
+    if(node) node.style.opacity = "1";
   }
 }
 
@@ -1022,6 +1147,7 @@ function subscribeComments(matchId){
     .on('postgres_changes',
       { event: '*', schema: 'public', table: 'match_comments', filter: `match_id=eq.${matchId}` },
       async () => {
+        // quando arriva INSERT/DELETE/UPDATE aggiorna e ri-renderizza (admin compreso)
         await refreshAdminState();
         await loadComments(matchId);
       }
@@ -1056,13 +1182,17 @@ async function submitComment(matchId){
       .insert({ match_id: matchId, name: finalName, text: cleanText });
 
     if(error) throw error;
+
     commentInput.value = "";
+    showToast("✅ Commento inviato", "ok");
+
     await refreshAdminState();
     await loadComments(matchId);
   }catch(e){
     console.error(e);
     commentError.style.display = "block";
     commentError.textContent = "Errore invio commento.";
+    showToast("❌ Errore invio commento", "err");
   }finally{
     commentSend.disabled = false;
     commentSend.textContent = "📨 Invia";
@@ -1313,8 +1443,10 @@ async function load(){
   statusEl.textContent = "Partita trovata ✅";
 
   const time = String(m.match_time||"").slice(0,5);
-  const matchEnded = (m.score_a !== null && m.score_a !== undefined) && (m.score_b !== null && m.score_b !== undefined);
-  const result = matchEnded ? `${m.score_a}-${m.score_b}` : null;
+  const matchEnded =
+    (m.score_a !== null && m.score_a !== undefined) &&
+    (m.score_b !== null && m.score_b !== undefined);
+
   const voteOpen = isVoteOpen(m);
 
   infoEl.innerHTML = `
@@ -1363,12 +1495,20 @@ async function load(){
   const kb = findKeeperForTeam(bPlayers, m.keeper_b);
 
   if(matchEnded){
-    // ✅ RISULTATO: mostra header stile FORMAZIONI
+    // ✅ RISULTATO: nuovo layout richiesto
     resultHead.style.display = "block";
     resultTimeEl.textContent = time || "—";
-    resultScoreEl.textContent = result || "—";
+
     resultAvatarA.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
     resultAvatarB.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
+
+    // etichette fisse come vuoi tu
+    teamLabelA.textContent = "SQUADRA A";
+    teamLabelB.textContent = "SQUADRA B";
+
+    // punteggi separati (incolonnati)
+    scoreAEl.textContent = (m.score_a ?? "—");
+    scoreBEl.textContent = (m.score_b ?? "—");
 
     // nascondi meteo + disponibili
     weatherBox.style.display = "none";
@@ -1450,5 +1590,4 @@ load();
 </script>
 </body>
 </html>
-
-definitivo???
+verifica se funziona
