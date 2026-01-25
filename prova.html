@@ -60,7 +60,7 @@
 
     .header{text-align:center}
 
-    /* ✅ LOGO "MONETA" */
+    /* LOGO "MONETA" */
     .logo{
       width:80px;height:80px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
@@ -108,6 +108,25 @@
       text-transform:uppercase;
     }
 
+    /* Titolo sezione (stile hero) */
+    .sectionCaption{
+      margin-top:10px;
+      text-align:center;
+      font-family:'Bebas Neue';
+      letter-spacing:3px;
+      font-size:24px;
+      font-weight:900;
+      text-transform:uppercase;
+      line-height:1.1;
+    }
+    .sectionCaption .sub{
+      display:block;
+      margin-top:6px;
+      font-size:18px;
+      letter-spacing:2px;
+      opacity:.85;
+    }
+
     .line{margin-top:8px}
     .pill{
       display:inline-block;
@@ -130,7 +149,7 @@
     .muted{color:var(--muted)}
 
     .mapWrap{
-      margin-top:12px;
+      margin-top:10px;
       border-radius:12px;
       overflow:hidden;
       border:1px solid var(--border)
@@ -188,7 +207,7 @@
     .kit{display:inline-flex;align-items:center;gap:6px}
     .kit svg{width:18px;height:18px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 
-    /* ✅ RISULTATO (stile foto) */
+    /* RISULTATO */
     .resultBox{
       margin-top:12px;
       border:1px solid var(--border);
@@ -226,17 +245,21 @@
       background:var(--pill);
       font-weight:900;
     }
+
+    /* FIX avatar portieri: FLEX + colonne fisse */
     .resultMid{
       margin-top:12px;
-      display:grid;
-      grid-template-columns:110px 1fr 110px;
-      gap:10px;
+      display:flex;
       align-items:center;
+      justify-content:space-between;
+      gap:10px;
     }
     .resultAvatarWrap{
+      width:110px;
       display:flex;
       align-items:center;
       justify-content:center;
+      flex:0 0 110px;
     }
     .resultAvatar{
       width:78px;height:78px;border-radius:999px;
@@ -244,13 +267,16 @@
       object-fit:cover;
       background:#000;
       display:block;
+      margin:0 auto;
     }
     .resultScoreWrap{
+      flex:1 1 auto;
       text-align:center;
       border:1px solid var(--border);
       border-radius:16px;
       background:var(--card);
       padding:14px 10px;
+      min-width:0;
     }
     .resultScore{
       font-family:'Bebas Neue';
@@ -267,7 +293,7 @@
       text-transform:uppercase;
     }
     @media(max-width:420px){
-      .resultMid{grid-template-columns:90px 1fr 90px}
+      .resultAvatarWrap{width:90px;flex-basis:90px}
       .resultAvatar{width:64px;height:64px}
       .resultScore{font-size:60px}
     }
@@ -325,7 +351,7 @@
       font-weight:900;
     }
 
-    /* ✅ METEO */
+    /* METEO */
     .weatherBox{
       margin-top:12px;
       padding:12px;
@@ -349,7 +375,7 @@
     .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
     .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
 
-    /* ✅ Players pills with avatars */
+    /* Players pills */
     .playersWrap{margin-top:6px}
     .playerPill{
       display:inline-flex;
@@ -374,7 +400,7 @@
     .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-    /* ✅ FORMazioni header (GK VS GK) */
+    /* Formazioni header */
     .formationsHead{
       margin-top:12px;
       padding:12px;
@@ -426,7 +452,7 @@
       flex:0 0 auto;
     }
 
-    /* ✅ glove entrance animation */
+    /* glove animation */
     .glove{
       display:inline-block;
       margin-left:6px;
@@ -440,7 +466,7 @@
       100%{transform:translateY(0) scale(1);opacity:1}
     }
 
-    /* ✅ COMMENTI A CALDO */
+    /* COMMENTI */
     .commentsWrap{
       margin-top:12px;
       border:1px solid var(--border);
@@ -506,7 +532,7 @@
     body.dark .commentItem{background:rgba(255,255,255,.03)}
     .commentTop{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
@@ -526,32 +552,16 @@
       white-space:pre-wrap;
       word-break:break-word;
     }
-    .likeBtn{
-      border:1px solid var(--border);
-      background:var(--card);
-      color:var(--text);
-      border-radius:999px;
-      padding:8px 10px;
-      cursor:pointer;
-      font-weight:900;
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      user-select:none;
-    }
-    .likeBtn.liked{ background:var(--pill); }
   </style>
 </head>
 <body>
 <div class="wrap">
-  <!-- HEADER -->
   <div class="header">
     <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
     <h1>Quelli della pensione</h1>
     <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
   </div>
 
-  <!-- HERO -->
   <div class="card">
     <div class="heroImgWrap">
       <img src="foto.jpg" alt="Quelli della pensione">
@@ -559,7 +569,6 @@
     <div class="heroCaption">OGNI MALEDETTO GIOVEDÌ</div>
   </div>
 
-  <!-- PARTITA -->
   <div class="card">
     <div id="status" class="muted">Caricamento…</div>
     <div id="info"></div>
@@ -584,7 +593,7 @@
       </div>
     </div>
 
-    <!-- ✅ COMMENTI A CALDO SUBITO DOPO RISULTATO -->
+    <!-- COMMENTI -->
     <div id="commentsWrap" class="commentsWrap" style="display:none">
       <div class="commentsTitle">COMMENTI A CALDO</div>
       <div class="muted" style="text-align:center;font-weight:800">
@@ -605,10 +614,10 @@
       <div id="commentsList" class="commentList"></div>
     </div>
 
-    <!-- MVP -->
+    <!-- MVP (solo se votazione aperta) -->
     <div id="mvpBox" class="mvpBox" style="display:none">
       <div class="mvpTitle">
-        <div id="mvpTitle">🏆 MVP</div>
+        <div id="mvpTitle">🏆 MVP (provvisorio)</div>
         <div id="mvpStatePill" class="pill" style="margin:0"></div>
       </div>
 
@@ -621,6 +630,12 @@
       </div>
 
       <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
+    </div>
+
+    <!-- TITOLO MAPPA -->
+    <div id="fieldTitle" class="sectionCaption" style="display:none">
+      CAMPO DA GIOCO
+      <span class="sub">CALCIO A 6 ARADEO</span>
     </div>
 
     <!-- MAPPA -->
@@ -651,11 +666,11 @@
       <div id="scorersText" class="muted"></div>
     </div>
 
-    <!-- CONVOCATI -->
-    <div id="calledTitle" class="line"><b>Convocati</b></div>
+    <!-- DISPONIBILI -->
+    <div id="calledTitle" class="line"><b>DISPONIBILI PER LA PARTITA</b></div>
     <div id="called" class="playersWrap muted">—</div>
 
-    <!-- FORMAZIONI HEAD -->
+    <!-- FORMAZIONI -->
     <div id="formationsHead" class="formationsHead" style="display:none">
       <div class="formationsTitle">FORMAZIONI</div>
       <div class="vsRow">
@@ -679,7 +694,7 @@
       </div>
     </div>
 
-    <!-- TEAMS -->
+    <!-- SQUADRE -->
     <div id="teamsBox" style="display:none;margin-top:12px">
       <div class="line kit"><span id="tAIcon"></span><b>Squadra A</b></div>
       <div id="teamA" class="playersWrap muted"></div>
@@ -689,7 +704,6 @@
     </div>
   </div>
 
-  <!-- NAV -->
   <div class="card nav muted">
     <a href="storico.html">📚 Storico</a>
     <a href="marcatori.html">⚽ Marcatori</a>
@@ -701,7 +715,6 @@
 </div>
 
 <button id="themeToggle" class="fab">🌙</button>
-<audio id="finalWhistle" src="final-whistle-1.mp3" preload="auto"></audio>
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -747,6 +760,7 @@ const resultAvatarB = document.getElementById("resultAvatarB");
 const calledEl = document.getElementById("called");
 const calledTitleEl = document.getElementById("calledTitle");
 
+const fieldTitleEl = document.getElementById("fieldTitle");
 const mapBox = document.getElementById("mapBox");
 const mapFrame = document.getElementById("mapFrame");
 const mapActions = document.getElementById("mapActions");
@@ -783,9 +797,6 @@ const weatherBig = document.getElementById("weatherBig");
 const weatherLine = document.getElementById("weatherLine");
 const weatherMini = document.getElementById("weatherMini");
 const weatherAlert = document.getElementById("weatherAlert");
-
-/* AUDIO */
-const finalWhistle = document.getElementById("finalWhistle");
 
 /* COMMENTI DOM */
 const commentsWrap = document.getElementById("commentsWrap");
@@ -848,33 +859,7 @@ function isVoteOpen(match){
   return (match?.vote_open === true) || (match?.voting_open === true);
 }
 
-/* ✅ Fischio: una sola volta per quel match+risultato */
-function playFinalWhistleOnce(matchId, scoreA, scoreB){
-  const key = `qdp_whistle_last`;
-  const value = `${matchId}:${scoreA}-${scoreB}`;
-  if(localStorage.getItem(key) === value) return;
-  localStorage.setItem(key, value);
-
-  if(!finalWhistle) return;
-
-  try{
-    finalWhistle.currentTime = 0;
-    const p = finalWhistle.play();
-    if(p && typeof p.catch === "function"){
-      p.catch(() => {
-        const once = () => {
-          document.removeEventListener("click", once);
-          document.removeEventListener("touchstart", once);
-          try{ finalWhistle.currentTime = 0; finalWhistle.play().catch(()=>{}); }catch(e){}
-        };
-        document.addEventListener("click", once, {once:true});
-        document.addEventListener("touchstart", once, {once:true, passive:true});
-      });
-    }
-  }catch(e){}
-}
-
-/* ✅ Trova portiere SOLO dentro la squadra */
+/* Trova portiere SOLO dentro la squadra */
 function findKeeperForTeam(teamPlayers, keeperName){
   const kName = normName(keeperName || "");
   if(kName){
@@ -892,7 +877,7 @@ function setupMapLinks(){
   mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
 }
 
-/* ✅ Profanity filter (semplice) */
+/* Profanity filter (semplice) */
 const BAD_WORDS = [
   "cazzo","cazzi","merda","stronzo","stronzi","vaffanculo","vaff","porco","porcodio","dio cane",
   "minchia","puttana","puttane","troia","bastardo","bastardi","testa di cazzo","coglione","coglioni"
@@ -906,18 +891,6 @@ function censorProfanity(text){
   }
   return out;
 }
-
-/* ✅ anon_key per like senza login */
-function getAnonKey(){
-  const k = "qdp_anon_key";
-  let v = localStorage.getItem(k);
-  if(v) return v;
-  v = (crypto && crypto.randomUUID) ? crypto.randomUUID() : (String(Date.now()) + "_" + Math.random().toString(16).slice(2));
-  localStorage.setItem(k, v);
-  return v;
-}
-const ANON_KEY = getAnonKey();
-
 function timeAgo(ts){
   try{
     const d = new Date(ts);
@@ -932,17 +905,15 @@ function timeAgo(ts){
   }catch(e){ return ""; }
 }
 
-/* ✅ COMMENTS state */
+/* COMMENTS state */
 let currentMatchId = null;
 let commentsChannel = null;
 
-/* ✅ Render comment */
-function renderCommentItem(c, liked){
-  const likeCount = Number(c.likes_count ?? c.likes ?? 0);
+/* Render comment (SENZA LIKE) */
+function renderCommentItem(c){
   const when = timeAgo(c.created_at);
   const txt = escapeHtml(c.text || "");
   const displayName = (c.name && String(c.name).trim()) ? String(c.name).trim() : "Anonimo";
-
   return `
     <div class="commentItem" data-id="${escapeHtml(c.id)}">
       <div class="commentTop">
@@ -951,27 +922,13 @@ function renderCommentItem(c, liked){
           <span>•</span>
           <span>${escapeHtml(when)}</span>
         </div>
-        <button class="likeBtn ${liked ? "liked":""}" type="button">
-          ❤️ <span class="likeCount">${likeCount}</span>
-        </button>
       </div>
       <div class="commentBubble">${txt}</div>
     </div>
   `;
 }
 
-function bindLikeHandlers(){
-  commentsList.querySelectorAll(".likeBtn").forEach(btn=>{
-    btn.onclick = async (ev)=>{
-      const item = ev.currentTarget.closest(".commentItem");
-      const commentId = item?.dataset?.id;
-      if(!commentId || !currentMatchId) return;
-      await toggleLike(currentMatchId, commentId, ev.currentTarget);
-    };
-  });
-}
-
-/* ✅ Load comments */
+/* Load comments */
 async function loadComments(matchId){
   commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:800">Caricamento commenti…</div>`;
 
@@ -988,31 +945,16 @@ async function loadComments(matchId){
     return;
   }
 
-  let likedSet = new Set();
-  try{
-    const { data: likes } = await client
-      .from("match_comment_likes")
-      .select("comment_id")
-      .eq("match_id", matchId)
-      .eq("anon_key", ANON_KEY);
-
-    (likes||[]).forEach(r=> likedSet.add(String(r.comment_id)));
-  }catch(e){
-    // ok: se tabella/policy non c'è, nessun liked
-  }
-
   if(!comments || comments.length === 0){
     commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:900">Nessun commento ancora. Spacca il ghiaccio 😄</div>`;
     return;
   }
 
-  commentsList.innerHTML = comments.map(c => renderCommentItem(c, likedSet.has(String(c.id)))).join("");
-  bindLikeHandlers();
+  commentsList.innerHTML = comments.map(renderCommentItem).join("");
 }
 
-/* ✅ Subscribe realtime */
+/* Subscribe realtime (SOLO match_comments) */
 function subscribeComments(matchId){
-  // chiudi eventuale canale precedente
   try{
     if(commentsChannel){
       client.removeChannel(commentsChannel);
@@ -1024,94 +966,12 @@ function subscribeComments(matchId){
     .channel(`qdp-comments-${matchId}`)
     .on('postgres_changes',
       { event: '*', schema: 'public', table: 'match_comments', filter: `match_id=eq.${matchId}` },
-      async () => {
-        // reload (semplice e robusto)
-        await loadComments(matchId);
-      }
-    )
-    .on('postgres_changes',
-      { event: '*', schema: 'public', table: 'match_comment_likes', filter: `match_id=eq.${matchId}` },
-      async () => {
-        // aggiorna contatori & stato like live
-        await loadComments(matchId);
-      }
+      async () => { await loadComments(matchId); }
     )
     .subscribe();
 }
 
-/* ✅ Like handling */
-async function toggleLike(matchId, commentId, btn){
-  btn.disabled = true;
-
-  const isLiked = btn.classList.contains("liked");
-  const countEl = btn.querySelector(".likeCount");
-  const current = Number(countEl?.textContent || 0);
-
-  // optimistic UI
-  if(isLiked){
-    btn.classList.remove("liked");
-    countEl.textContent = String(Math.max(0, current - 1));
-  }else{
-    btn.classList.add("liked");
-    countEl.textContent = String(current + 1);
-  }
-
-  try{
-    if(!isLiked){
-      const { error: e1 } = await client
-        .from("match_comment_likes")
-        .insert({ match_id: matchId, comment_id: commentId, anon_key: ANON_KEY });
-      if(e1) throw e1;
-      await incrementCommentLikes(commentId, +1);
-    }else{
-      const { error: e2 } = await client
-        .from("match_comment_likes")
-        .delete()
-        .eq("match_id", matchId)
-        .eq("comment_id", commentId)
-        .eq("anon_key", ANON_KEY);
-      if(e2) throw e2;
-      await incrementCommentLikes(commentId, -1);
-    }
-  }catch(e){
-    console.error(e);
-    // rollback UI
-    if(isLiked){
-      btn.classList.add("liked");
-      countEl.textContent = String(current);
-    }else{
-      btn.classList.remove("liked");
-      countEl.textContent = String(current);
-    }
-  }finally{
-    btn.disabled = false;
-  }
-}
-
-async function incrementCommentLikes(commentId, delta){
-  // Prova likes_count, poi likes
-  const { data, error } = await client
-    .from("match_comments")
-    .select("id,likes_count,likes")
-    .eq("id", commentId)
-    .single();
-
-  if(error) throw error;
-
-  const hasLikesCount = data && Object.prototype.hasOwnProperty.call(data, "likes_count");
-  const field = hasLikesCount ? "likes_count" : "likes";
-  const current = Number(data?.[field] ?? 0);
-  const next = Math.max(0, current + delta);
-
-  const { error: e2 } = await client
-    .from("match_comments")
-    .update({ [field]: next })
-    .eq("id", commentId);
-
-  if(e2) throw e2;
-}
-
-/* ✅ Submit comment */
+/* Submit comment */
 async function submitComment(matchId){
   commentError.style.display = "none";
   commentError.textContent = "";
@@ -1139,7 +999,6 @@ async function submitComment(matchId){
 
     if(error) throw error;
     commentInput.value = "";
-    // realtime farà il refresh, ma intanto aggiorniamo subito
     await loadComments(matchId);
   }catch(e){
     console.error(e);
@@ -1150,9 +1009,7 @@ async function submitComment(matchId){
     commentSend.textContent = "📨 Invia";
   }
 }
-commentSend.addEventListener("click", ()=>{
-  if(currentMatchId) submitComment(currentMatchId);
-});
+commentSend.addEventListener("click", ()=>{ if(currentMatchId) submitComment(currentMatchId); });
 
 /* METEO (Open-Meteo) */
 function wxEmojiFromCode(code){
@@ -1272,7 +1129,7 @@ async function loadWeather(matchDateISO, matchTimeStr){
   }
 }
 
-/* MVP */
+/* MVP (solo se votazione aperta) */
 async function loadMVP(matchId, playersById){
   try{
     const { data: votes, error } = await client
@@ -1300,7 +1157,8 @@ async function loadMVP(matchId, playersById){
     const rows = [...counts.entries()]
       .map(([id,c])=>{
         const p = playersById.get(String(id));
-        return { id, name: p?.name || id, avatar: p?.avatar || DEFAULT_AVATAR, votes:c };
+        return { id, name: p?.name || id, avatar: p?.avatar || DEFAULT_AVATAR,
+          votes:c };
       })
       .sort((a,b)=> b.votes - a.votes || String(a.name).localeCompare(String(b.name),"it"));
 
@@ -1368,12 +1226,17 @@ async function load(){
     statusEl.textContent = "Errore caricamento partita";
     infoEl.innerHTML = `<div class="muted">${escapeHtml(error.message)}</div>`;
     weatherBox.style.display = "none";
+    fieldTitleEl.style.display = "none";
+    mapBox.style.display = "none";
+    mapActions.style.display = "none";
+    mvpBox.style.display = "none";
     return;
   }
 
   if(!data || !data.length){
     statusEl.textContent = "Nessuna partita creata";
     weatherBox.style.display = "none";
+    fieldTitleEl.style.display = "none";
     mapBox.style.display = "none";
     mapActions.style.display = "none";
     mvpBox.style.display = "none";
@@ -1397,15 +1260,6 @@ async function load(){
     <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
   `;
 
-  // MVP UI
-  mvpBox.style.display = "block";
-  mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
-  mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
-  mvpMain.textContent = "Caricamento…";
-  mvpSub.textContent = "";
-  mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
-  mvpTop3.style.display = "none";
-
   // Marcatori
   if(m.scorers_text && String(m.scorers_text).trim() !== ""){
     scorersBox.style.display="block";
@@ -1414,7 +1268,8 @@ async function load(){
     scorersBox.style.display="none";
   }
 
-  // Mappa
+  // Mappa + titolo
+  fieldTitleEl.style.display = "block";
   mapBox.style.display = "block";
   mapActions.style.display = "flex";
   mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
@@ -1450,18 +1305,16 @@ async function load(){
     resultAvatarA.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
     resultAvatarB.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
 
-    // nascondi meteo + convocati
+    // nascondi meteo + disponibili
     weatherBox.style.display = "none";
     calledEl.style.display = "none";
     calledTitleEl.style.display = "none";
 
-    // ✅ mostra commenti subito dopo risultato + realtime
+    // commenti
     currentMatchId = String(m.id);
     commentsWrap.style.display = "block";
     await loadComments(currentMatchId);
     subscribeComments(currentMatchId);
-
-    playFinalWhistleOnce(m.id, m.score_a, m.score_b);
   }else{
     resultBox.style.display = "none";
     commentsWrap.style.display = "none";
@@ -1489,8 +1342,19 @@ async function load(){
     }
   }
 
-  // MVP
-  await loadMVP(m.id, playersById);
+  // ✅ MVP: mostrato SOLO se votazione aperta
+  if(voteOpen){
+    mvpBox.style.display = "block";
+    mvpTitle.textContent = "🏆 MVP (provvisorio)";
+    mvpStatePill.textContent = "🟢 Votazione aperta";
+    mvpMain.textContent = "Caricamento…";
+    mvpSub.textContent = "";
+    mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
+    mvpTop3.style.display = "none";
+    await loadMVP(m.id, playersById);
+  }else{
+    mvpBox.style.display = "none";
+  }
 
   // Squadre + formazioni
   const hasTeams = teamAIds.length || teamBIds.length;
@@ -1520,4 +1384,4 @@ load();
 </script>
 </body>
 </html>
-```02026
+```0vediamo    
