@@ -4,9 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quelli della pensione</title>
-
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-
   <style>
     :root{
       --bg:#f4f6f8;
@@ -235,19 +233,15 @@
       gap:10px;
       align-items:center;
     }
-    /* ✅ avatar centrati */
     .resultAvatarWrap{
       display:flex;
       align-items:center;
       justify-content:center;
-      width:100%;
-      height:100%;
     }
     .resultAvatar{
       width:78px;height:78px;border-radius:999px;
       border:1px solid var(--border);
       object-fit:cover;
-      object-position:center;
       background:#000;
       display:block;
     }
@@ -307,6 +301,7 @@
       object-fit:cover;
       background:#000;
       flex:0 0 auto;
+      display:block;
     }
     .mvpText{font-weight:900}
     .mvpSub{color:var(--muted);font-weight:800;font-size:13px;margin-top:2px}
@@ -371,7 +366,6 @@
       width:42px;height:42px;border-radius:999px;
       border:1px solid var(--border);
       object-fit:cover;
-      object-position:center;
       background:#000;
       flex:0 0 auto;
       display:block;
@@ -414,7 +408,6 @@
       width:54px;height:54px;border-radius:999px;
       border:1px solid var(--border);
       object-fit:cover;
-      object-position:center;
       background:#000;
       display:block;
     }
@@ -448,95 +441,104 @@
     }
 
     /* ✅ COMMENTI A CALDO */
-    .commentsHead{
-      display:flex;align-items:center;justify-content:space-between;
-      gap:10px;flex-wrap:wrap;
-      margin-bottom:10px;
-    }
     .commentsTitle{
       font-family:'Bebas Neue';
       letter-spacing:2px;
       font-size:26px;
-      margin:0;
+      margin:0 0 10px 0;
       text-transform:uppercase;
+      text-align:center;
     }
-    .commentsSmall{color:var(--muted);font-weight:800;font-size:13px}
     .commentForm{
-      border:1px solid var(--border);
-      background:rgba(0,0,0,.02);
-      border-radius:14px;
-      padding:10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:10px;
     }
-    body.dark .commentForm{background:rgba(255,255,255,.03)}
-    .commentTextarea{
+    .inputLike{
       width:100%;
-      min-height:74px;
-      resize:vertical;
       border:1px solid var(--border);
       border-radius:12px;
       padding:10px;
       background:var(--card);
       color:var(--text);
-      font-weight:700;
+      font-weight:800;
       outline:none;
+    }
+    .commentTextarea{
+      min-height:84px;
+      resize:none;
+      line-height:1.35;
+      font-weight:700;
     }
     .commentActions{
       display:flex;
+      known:0;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+    .commentError{
+      display:none;
+      margin-top:6px;
+      background:var(--riskBg);
+      color:var(--riskText);
+      border:1px solid var(--riskBd);
+      border-radius:12px;
+      padding:10px;
+      font-weight:900;
+    }
+    .commentList{margin-top:12px}
+    .commentItem{
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.02);
+      border-radius:14px;
+      padding:10px;
+      margin-top:10px;
+    }
+    body.dark .commentItem{background:rgba(255,255,255,.03)}
+    .commentTop{
+      display:flex;
+      align-items:center;
       justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
-      margin-top:10px;
-      align-items:center;
-    }
-    .commentHint{color:var(--muted);font-size:12px;font-weight:800}
-    .commentsList{margin-top:12px}
-    .commentItem{
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:10px;
-      background:transparent;
-      margin-top:10px;
-    }
-    .commentTop{
-      display:flex;align-items:center;justify-content:space-between;
-      gap:10px;flex-wrap:wrap;
-      margin-bottom:6px;
     }
     .commentMeta{
-      display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+      display:flex;
+      align-items:center;
+      gap:8px;
       color:var(--muted);
-      font-weight:800;
-      font-size:12px;
+      font-weight:900;
+      font-size:13px;
+      flex-wrap:wrap;
     }
     .commentBubble{
+      margin-top:8px;
       font-weight:800;
-      line-height:1.35;
       white-space:pre-wrap;
       word-break:break-word;
     }
     .likeBtn{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
       border:1px solid var(--border);
       background:var(--card);
       color:var(--text);
       border-radius:999px;
-      padding:7px 10px;
+      padding:8px 10px;
       cursor:pointer;
       font-weight:900;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
       user-select:none;
     }
     .likeBtn.liked{
       background:var(--pill);
     }
-    .likeBtn:disabled{opacity:.6;cursor:not-allowed}
   </style>
 </head>
-
 <body>
 <div class="wrap">
-
   <!-- HEADER -->
   <div class="header">
     <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
@@ -580,28 +582,6 @@
           <img id="resultAvatarB" class="resultAvatar" src="avatars/default.png" alt="B">
         </div>
       </div>
-    </div>
-
-    <!-- 🔥 COMMENTI A CALDO (solo a fine partita) -->
-    <div id="commentsCard" class="card" style="display:none;margin-top:12px">
-      <div class="commentsHead">
-        <div>
-          <div class="commentsTitle">💬 COMMENTI A CALDO</div>
-          <div class="commentsSmall">Anonimi • filtro parolacce • like ai commenti</div>
-        </div>
-        <span id="commentsCount" class="pill" style="margin:0">0</span>
-      </div>
-
-      <div class="commentForm">
-        <textarea id="commentInput" class="commentTextarea" maxlength="240" placeholder="Scrivi un commento (anonimo)..." ></textarea>
-        <div class="commentActions">
-          <div class="commentHint">Max 240 caratteri • le parolacce vengono censurate</div>
-          <button id="commentSend" class="btn">📨 Invia</button>
-        </div>
-        <div id="commentError" class="muted" style="margin-top:8px;display:none"></div>
-      </div>
-
-      <div id="commentsList" class="commentsList"></div>
     </div>
 
     <!-- MVP -->
@@ -691,6 +671,28 @@
       <div id="teamB" class="playersWrap muted"></div>
     </div>
 
+    <!-- ✅ COMMENTI A CALDO (solo a partita finita) -->
+    <div id="commentsCard" class="card" style="display:none;margin:12px 0 0;">
+      <div class="commentsTitle">COMMENTI A CALDO</div>
+
+      <div class="muted" style="text-align:center;font-weight:800">
+        Commenta anche senza registrazione (nome facoltativo).
+      </div>
+
+      <div class="commentForm">
+        <input id="commentName" class="inputLike" type="text" maxlength="24" placeholder="Nome (facoltativo)">
+        <textarea id="commentInput" class="inputLike commentTextarea" maxlength="240" placeholder="Scrivi un commento..."></textarea>
+
+        <div class="commentActions">
+          <button id="commentSend" class="btn" type="button">📨 Invia</button>
+        </div>
+
+        <div id="commentError" class="commentError"></div>
+      </div>
+
+      <div id="commentsList" class="commentList"></div>
+    </div>
+
   </div>
 
   <!-- NAV -->
@@ -702,7 +704,6 @@
     <a href="componenti.html">👥 Componenti</a>
     <a href="admin.html">🔐 Admin</a>
   </div>
-
 </div>
 
 <button id="themeToggle" class="fab">🌙</button>
@@ -796,11 +797,11 @@ const finalWhistle = document.getElementById("finalWhistle");
 
 /* COMMENTI DOM */
 const commentsCard = document.getElementById("commentsCard");
-const commentsList = document.getElementById("commentsList");
-const commentsCount = document.getElementById("commentsCount");
+const commentName = document.getElementById("commentName");
 const commentInput = document.getElementById("commentInput");
 const commentSend = document.getElementById("commentSend");
 const commentError = document.getElementById("commentError");
+const commentsList = document.getElementById("commentsList");
 
 /* MAP */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
@@ -1102,90 +1103,118 @@ function renderPlayerPill(p){
   `;
 }
 
-/* =========================================================
-   🔥 COMMENTI A CALDO (match_comments) + filtro + like
-   ========================================================= */
-
-/* UUID anonimo (uno per dispositivo) */
-function getAnonId(){
-  const k = "qdp_anon_id";
-  let v = localStorage.getItem(k);
-  if(v) return v;
-  // uuid v4 semplice
-  v = (crypto?.randomUUID ? crypto.randomUUID() :
-      "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c=>{
-        const r = (Math.random()*16)|0, vv = c==="x" ? r : (r&0x3)|0x8;
-        return vv.toString(16);
-      })
-  );
-  localStorage.setItem(k, v);
-  return v;
-}
-
-/* Filtro parolacce (base) */
+/* ✅ Profanity filter (semplice) */
 const BAD_WORDS = [
-  "cazzo","cazzi","cazz","merda","stronzo","stronzi","puttana","puttane","vaffanculo","fuck","fanculo",
-  "troia","bastardo","bastardi","minchia","porco","porca","porcodio","dio cane","diocane","madonna","cristo"
+  "cazzo","cazzi","merda","stronzo","stronzi","vaffanculo","vaff","porco","porcodio","dio cane",
+  "minchia","puttana","puttane","troia","bastardo","bastardi","testa di cazzo","coglione","coglioni"
 ];
 function censorProfanity(text){
-  const t = String(text || "");
-  if(!t.trim()) return "";
-  // sostituisce parole intere + varianti con separatori
-  let out = t;
+  let out = String(text||"");
   for(const w of BAD_WORDS){
-    const safe = w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const re = new RegExp(`\\b${safe}\\b`, "gi");
-    out = out.replace(re, (m)=> "*".repeat(Math.max(3, m.length)));
+    const escaped = w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`\\b${escaped}\\b`, "gi");
+    out = out.replace(re, (m)=> "*".repeat(Math.min(12, m.length)));
   }
   return out;
 }
 
-/* Like storage:
-   - se avete già tabella "match_comment_likes" (comment_id, match_id, anon_id) => usa quella
-   - altrimenti fallback: update campo "likes" su match_comments (se esiste)
-*/
-async function hasLikeTable(){
-  // non possiamo introspezionare schema: proviamo una select "limit 1"
-  const { error } = await client.from("match_comment_likes").select("id").limit(1);
-  return !error;
+/* ✅ Comment like local fingerprint */
+function getAnonKey(){
+  const k = "qdp_anon_key";
+  let v = localStorage.getItem(k);
+  if(v) return v;
+  if(crypto && crypto.randomUUID){
+    v = crypto.randomUUID();
+  }else{
+    v = String(Date.now()) + "_" + Math.random().toString(16).slice(2);
+  }
+  localStorage.setItem(k, v);
+  return v;
 }
+const ANON_KEY = getAnonKey();
 
-let LIKE_TABLE_OK = null;
-async function ensureLikeMode(){
-  if(LIKE_TABLE_OK !== null) return LIKE_TABLE_OK;
-  LIKE_TABLE_OK = await hasLikeTable();
-  return LIKE_TABLE_OK;
-}
-
-function timeAgo(iso){
+/* ✅ Time ago */
+function timeAgo(ts){
   try{
-    const d = new Date(iso);
-    const diff = Date.now() - d.getTime();
-    const m = Math.floor(diff/60000);
-    if(m < 1) return "adesso";
-    if(m < 60) return `${m} min fa`;
+    const d = new Date(ts);
+    const diff = Math.floor((Date.now() - d.getTime())/1000);
+    if(diff < 60) return "ora";
+    const m = Math.floor(diff/60);
+    if(m < 60) return `${m} min`;
     const h = Math.floor(m/60);
-    if(h < 24) return `${h} h fa`;
-    const g = Math.floor(h/24);
-    return `${g} g fa`;
+    if(h < 24) return `${h} h`;
+    const days = Math.floor(h/24);
+    return `${days} g`;
   }catch(e){
     return "";
   }
+}
+
+/* ✅ COMMENTS (match_comments + match_comment_likes opzionale) */
+async function loadComments(matchId){
+  commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:800">Caricamento commenti…</div>`;
+
+  // carica commenti
+  const { data: comments, error } = await client
+    .from("match_comments")
+    .select("*")
+    .eq("match_id", matchId)
+    .order("created_at",{ascending:false})
+    .limit(50);
+
+  if(error){
+    console.error(error);
+    commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:900">Errore caricamento commenti</div>`;
+    return;
+  }
+
+  // likes per questo anon (se tabella esiste)
+  let likedSet = new Set();
+  try{
+    const { data: likes } = await client
+      .from("match_comment_likes")
+      .select("comment_id")
+      .eq("match_id", matchId)
+      .eq("anon_key", ANON_KEY);
+
+    (likes||[]).forEach(r=> likedSet.add(String(r.comment_id)));
+  }catch(e){
+    // se tabella non esiste o policy, continuiamo senza
+  }
+
+  if(!comments || comments.length === 0){
+    commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:900">Nessun commento ancora. Spacca il ghiaccio 😄</div>`;
+    return;
+  }
+
+  commentsList.innerHTML = comments.map(c => renderCommentItem(c, likedSet.has(String(c.id)))).join("");
+
+  // handler like
+  commentsList.querySelectorAll(".likeBtn").forEach(btn=>{
+    btn.addEventListener("click", async (ev)=>{
+      const item = ev.currentTarget.closest(".commentItem");
+      const commentId = item?.dataset?.id;
+      if(!commentId) return;
+      await toggleLike(matchId, commentId, ev.currentTarget);
+    });
+  });
 }
 
 function renderCommentItem(c, liked){
   const likeCount = Number(c.likes_count ?? c.likes ?? 0);
   const when = timeAgo(c.created_at);
   const txt = escapeHtml(c.text || "");
+  const displayName = (c.name && String(c.name).trim()) ? String(c.name).trim() : "Anonimo";
+
   return `
     <div class="commentItem" data-id="${escapeHtml(c.id)}">
       <div class="commentTop">
         <div class="commentMeta">
-          <span class="pill" style="margin:0">Anonimo</span>
+          <span class="pill" style="margin:0">${escapeHtml(displayName)}</span>
           <span>•</span>
           <span>${escapeHtml(when)}</span>
         </div>
-        <button class="likeBtn ${liked ? "liked":""}" data-like="1">
+        <button class="likeBtn ${liked ? "liked":""}" type="button">
           ❤️ <span class="likeCount">${likeCount}</span>
         </button>
       </div>
@@ -1194,86 +1223,125 @@ function renderCommentItem(c, liked){
   `;
 }
 
-/* Carica commenti + like */
-async function loadComments(matchId){
-  const anonId = getAnonId();
+/* ✅ Like:
+   - Preferito: tabella match_comment_likes (match_id, comment_id, anon_key)
+   - E increment/decrement su match_comments.likes_count (o likes)
+*/
+async function toggleLike(matchId, commentId, btn){
+  btn.disabled = true;
 
-  // 1) commenti
-  const { data: comments, error } = await client
-    .from("match_comments")
-    .select("*")
-    .eq("match_id", matchId)
-    .order("created_at", {ascending:false})
-    .limit(200);
+  const isLiked = btn.classList.contains("liked");
+  const countEl = btn.querySelector(".likeCount");
+  const current = Number(countEl?.textContent || 0);
 
-  if(error){
-    console.error(error);
-    commentsCount.textContent = "0";
-    commentsList.innerHTML = `<div class="muted">Errore caricamento commenti</div>`;
-    return;
+  // UI optimistic
+  if(isLiked){
+    btn.classList.remove("liked");
+    countEl.textContent = String(Math.max(0, current - 1));
+  }else{
+    btn.classList.add("liked");
+    countEl.textContent = String(current + 1);
   }
 
-  const arr = comments || [];
-  commentsCount.textContent = String(arr.length);
+  try{
+    // se tabella like esiste: upsert/delete
+    if(!isLiked){
+      // add like
+      const { error: e1 } = await client
+        .from("match_comment_likes")
+        .insert({ match_id: matchId, comment_id: commentId, anon_key: ANON_KEY });
+      if(e1) throw e1;
 
-  // 2) like miei (se tabella likes esiste)
-  let myLikes = new Set();
-  if(await ensureLikeMode()){
-    const { data: likes } = await client
-      .from("match_comment_likes")
-      .select("comment_id")
-      .eq("match_id", matchId)
-      .eq("anon_id", anonId);
+      // increment counter (supporta likes_count o likes)
+      await incrementCommentLikes(commentId, +1);
+    }else{
+      // remove like
+      const { error: e2 } = await client
+        .from("match_comment_likes")
+        .delete()
+        .eq("match_id", matchId)
+        .eq("comment_id", commentId)
+        .eq("anon_key", ANON_KEY);
+      if(e2) throw e2;
 
-    (likes||[]).forEach(r=> myLikes.add(String(r.comment_id)));
-  } else {
-    // fallback: salva localmente i like
-    const k = `qdp_local_likes_${matchId}`;
-    try{
-      const raw = JSON.parse(localStorage.getItem(k) || "[]");
-      raw.forEach(id=> myLikes.add(String(id)));
-    }catch(e){}
+      await incrementCommentLikes(commentId, -1);
+    }
+  }catch(e){
+    console.error(e);
+    // rollback UI
+    if(isLiked){
+      btn.classList.add("liked");
+      countEl.textContent = String(current);
+    }else{
+      btn.classList.remove("liked");
+      countEl.textContent = String(current);
+    }
+  }finally{
+    btn.disabled = false;
   }
-
-  // 3) render
-  if(!arr.length){
-    commentsList.innerHTML = `<div class="muted" style="margin-top:10px">Nessun commento. Sii il primo 😈</div>`;
-    return;
-  }
-
-  commentsList.innerHTML = arr.map(c => renderCommentItem(c, myLikes.has(String(c.id)))).join("");
 }
 
-/* Inserisci commento */
+async function incrementCommentLikes(commentId, delta){
+  // Provo prima likes_count, poi likes
+  // NB: senza RPC non posso fare increment atomico perfetto, ma qui faccio read+update veloce.
+  // Se avete già RPC o trigger, potete sostituire questa funzione.
+  const { data, error } = await client
+    .from("match_comments")
+    .select("id,likes_count,likes")
+    .eq("id", commentId)
+    .limit(1)
+    .maybeSingle?.() ?? await client.from("match_comments").select("id,likes_count,likes").eq("id", commentId).single();
+
+  if(error) throw error;
+
+  const hasLikesCount = data && Object.prototype.hasOwnProperty.call(data, "likes_count");
+  const field = hasLikesCount ? "likes_count" : "likes";
+  const current = Number(data?.[field] ?? 0);
+  const next = Math.max(0, current + delta);
+
+  const { error: e2 } = await client
+    .from("match_comments")
+    .update({ [field]: next })
+    .eq("id", commentId);
+
+  if(e2) throw e2;
+}
+
+/* ✅ Submit comment (nome facoltativo, anonimo) */
 async function submitComment(matchId){
   commentError.style.display = "none";
   commentError.textContent = "";
 
-  const raw = String(commentInput.value || "").trim();
-  if(!raw){
+  const rawText = String(commentInput.value || "").trim();
+  const rawName = String(commentName?.value || "").trim();
+
+  if(!rawText){
     commentError.style.display = "block";
     commentError.textContent = "Scrivi qualcosa prima di inviare 🙂";
     return;
   }
-  if(raw.length > 240){
+  if(rawText.length > 240){
     commentError.style.display = "block";
     commentError.textContent = "Troppo lungo (max 240 caratteri).";
     return;
   }
 
-  const clean = censorProfanity(raw);
-  const anonId = getAnonId();
+  const cleanText = censorProfanity(rawText);
+  const cleanName = censorProfanity(rawName).slice(0,24);
+  const finalName = cleanName ? cleanName : "Anonimo";
 
   commentSend.disabled = true;
   commentSend.textContent = "⏳ Invio…";
 
   try{
+    // ⚠️ IMPORTANTISSIMO:
+    // questa insert presuppone colonne: match_id (uuid/int), name (text), text (text)
     const { error } = await client
       .from("match_comments")
       .insert({
         match_id: matchId,
-        text: clean,
-        anon_id: anonId
+        name: finalName,
+        text: cleanText
       });
 
     if(error) throw error;
@@ -1283,116 +1351,27 @@ async function submitComment(matchId){
   }catch(e){
     console.error(e);
     commentError.style.display = "block";
-    commentError.textContent = "Errore invio commento.";
+    const msg = String(e?.message || "");
+
+    if(msg.toLowerCase().includes("row-level security") || msg.toLowerCase().includes("rls")){
+      commentError.textContent = "Errore permessi (RLS): abilita INSERT pubblico su match_comments.";
+    }else if(msg.toLowerCase().includes("column") && msg.toLowerCase().includes("does not exist")){
+      commentError.textContent = "Errore DB: manca una colonna (controlla che match_comments abbia name e text).";
+    }else{
+      commentError.textContent = "Errore invio commento.";
+    }
   }finally{
     commentSend.disabled = false;
     commentSend.textContent = "📨 Invia";
   }
 }
 
-/* Toggle like */
-async function toggleLike(matchId, commentId, btn){
-  const anonId = getAnonId();
-  btn.disabled = true;
+commentSend.addEventListener("click", ()=>{
+  const matchId = commentSend.dataset.matchId;
+  if(matchId) submitComment(matchId);
+});
 
-  try{
-    const usingLikeTable = await ensureLikeMode();
-
-    if(usingLikeTable){
-      // check esistenza like
-      const { data: existing, error: selErr } = await client
-        .from("match_comment_likes")
-        .select("id")
-        .eq("match_id", matchId)
-        .eq("comment_id", commentId)
-        .eq("anon_id", anonId)
-        .limit(1);
-
-      if(selErr) throw selErr;
-
-      const liked = (existing && existing.length);
-      if(liked){
-        // unlike
-        const { error: delErr } = await client
-          .from("match_comment_likes")
-          .delete()
-          .eq("match_id", matchId)
-          .eq("comment_id", commentId)
-          .eq("anon_id", anonId);
-        if(delErr) throw delErr;
-
-        // aggiorna contatore su commento (se avete view/trigger ok, altrimenti proviamo fallback)
-      }else{
-        const { error: insErr } = await client
-          .from("match_comment_likes")
-          .insert({ match_id: matchId, comment_id: commentId, anon_id: anonId });
-        if(insErr) throw insErr;
-      }
-
-      // ricarica commenti per contatori corretti
-      await loadComments(matchId);
-      return;
-    }
-
-    // fallback: update campo "likes" in match_comments + salva localmente
-    const k = `qdp_local_likes_${matchId}`;
-    let local = [];
-    try{ local = JSON.parse(localStorage.getItem(k) || "[]"); }catch(e){ local = []; }
-
-    const has = local.includes(commentId);
-    // leggi count attuale dal DOM
-    const countEl = btn.querySelector(".likeCount");
-    let n = Number(countEl?.textContent || "0");
-
-    if(has){
-      local = local.filter(x=>x!==commentId);
-      n = Math.max(0, n-1);
-    }else{
-      local.push(commentId);
-      n = n+1;
-    }
-    localStorage.setItem(k, JSON.stringify(local));
-    countEl.textContent = String(n);
-    btn.classList.toggle("liked", !has);
-
-    // prova anche a scrivere sul db se esiste colonna likes
-    try{
-      await client.from("match_comments").update({ likes: n }).eq("id", commentId);
-    }catch(e){}
-  }catch(e){
-    console.error(e);
-  }finally{
-    btn.disabled = false;
-  }
-}
-
-/* Realtime (nuovi commenti) */
-let commentsChannel = null;
-function subscribeComments(matchId){
-  try{
-    if(commentsChannel){
-      client.removeChannel(commentsChannel);
-      commentsChannel = null;
-    }
-    commentsChannel = client.channel("qdp-comments-"+matchId);
-
-    commentsChannel
-      .on("postgres_changes",
-        { event: "*", schema: "public", table: "match_comments", filter: `match_id=eq.${matchId}` },
-        async () => { await loadComments(matchId); }
-      )
-      .on("postgres_changes",
-        { event: "*", schema: "public", table: "match_comment_likes", filter: `match_id=eq.${matchId}` },
-        async () => { await loadComments(matchId); }
-      )
-      .subscribe();
-  }catch(e){
-    // se non esiste tabella likes, ignora
-  }
-}
-
-/* ========================================================= */
-
+/* MAIN LOAD */
 async function load(){
   const { data, error } = await client
     .from("matches")
@@ -1495,19 +1474,18 @@ async function load(){
     calledEl.style.display = "none";
     calledTitleEl.style.display = "none";
 
+    // commenti a caldo (solo fine partita)
+    commentsCard.style.display = "block";
+    commentSend.dataset.matchId = String(m.id);
+    await loadComments(String(m.id));
+
     // fischio
     playFinalWhistleOnce(m.id, m.score_a, m.score_b);
-
-    // 🔥 mostra commenti a caldo
-    commentsCard.style.display = "block";
-    await loadComments(m.id);
-    subscribeComments(m.id);
-
   }else{
     resultBox.style.display = "none";
-    commentsCard.style.display = "none";
     calledEl.style.display = "block";
     calledTitleEl.style.display = "block";
+    commentsCard.style.display = "none";
     await loadWeather(m.match_date, m.match_time);
 
     // convocati solo se non finita
@@ -1548,30 +1526,8 @@ async function load(){
   }
 }
 
-/* Eventi commenti */
-commentSend.addEventListener("click", async ()=>{
-  // match id corrente: lo prendiamo dal canale o ricarichiamo l’ultimo match
-  const { data } = await client.from("matches").select("id").order("match_date",{ascending:false}).order("match_time",{ascending:false}).limit(1);
-  const matchId = data?.[0]?.id;
-  if(matchId) await submitComment(matchId);
-});
-
-commentsList.addEventListener("click", async (e)=>{
-  const btn = e.target.closest("button.likeBtn");
-  if(!btn) return;
-  const item = e.target.closest(".commentItem");
-  const commentId = item?.getAttribute("data-id");
-  if(!commentId) return;
-
-  const { data } = await client.from("matches").select("id").order("match_date",{ascending:false}).order("match_time",{ascending:false}).limit(1);
-  const matchId = data?.[0]?.id;
-  if(!matchId) return;
-
-  await toggleLike(matchId, commentId, btn);
-});
-
 load();
 </script>
 </body>
-  </html>
-  jansann
+</html>
+```0
