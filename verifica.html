@@ -60,6 +60,7 @@
 
     .header{text-align:center}
 
+    /* ✅ LOGO "MONETA" */
     .logo{
       width:80px;height:80px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
@@ -117,6 +118,15 @@
       font-weight:900;
       border:1px solid var(--border);
     }
+    .badge{
+      display:inline-block;
+      background:#111;
+      color:#fff;
+      padding:6px 12px;
+      border-radius:999px;
+      font-weight:900;
+    }
+    body.dark .badge{background:#0b0e14}
     .muted{color:var(--muted)}
 
     .mapWrap{
@@ -178,6 +188,7 @@
     .kit{display:inline-flex;align-items:center;gap:6px}
     .kit svg{width:18px;height:18px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 
+    /* ✅ RISULTATO (stile foto) */
     .resultBox{
       margin-top:12px;
       border:1px solid var(--border);
@@ -222,7 +233,11 @@
       gap:10px;
       align-items:center;
     }
-    .resultAvatarWrap{display:flex;align-items:center;justify-content:center;}
+    .resultAvatarWrap{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
     .resultAvatar{
       width:78px;height:78px;border-radius:999px;
       border:1px solid var(--border);
@@ -257,6 +272,7 @@
       .resultScore{font-size:60px}
     }
 
+    /* MVP box */
     .mvpBox{
       margin-top:12px;
       padding:12px;
@@ -273,7 +289,12 @@
       gap:10px;
       flex-wrap:wrap;
     }
-    .mvpMainRow{display:flex;align-items:center;gap:10px;margin-top:10px;}
+    .mvpMainRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top:10px;
+    }
     .mvpAvatar{
       width:48px;height:48px;border-radius:999px;
       border:1px solid var(--border);
@@ -285,6 +306,7 @@
     .mvpText{font-weight:900}
     .mvpSub{color:var(--muted);font-weight:800;font-size:13px;margin-top:2px}
     .mvpTop3{margin-top:10px}
+
     .mvpRow{
       display:flex;align-items:center;justify-content:space-between;
       border:1px solid var(--border);
@@ -303,6 +325,7 @@
       font-weight:900;
     }
 
+    /* ✅ METEO */
     .weatherBox{
       margin-top:12px;
       padding:12px;
@@ -326,6 +349,7 @@
     .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
     .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
 
+    /* ✅ Players pills with avatars */
     .playersWrap{margin-top:6px}
     .playerPill{
       display:inline-flex;
@@ -350,6 +374,7 @@
     .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
+    /* ✅ FORMazioni header (GK VS GK) */
     .formationsHead{
       margin-top:12px;
       padding:12px;
@@ -366,7 +391,10 @@
       text-transform:uppercase;
       text-align:center;
     }
-    .vsRow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+    .vsRow{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:10px;flex-wrap:wrap;
+    }
     .gkChip{
       display:flex;align-items:center;gap:10px;
       border:1px solid var(--border);
@@ -397,6 +425,8 @@
       font-weight:900;
       flex:0 0 auto;
     }
+
+    /* ✅ glove entrance animation */
     .glove{
       display:inline-block;
       margin-left:6px;
@@ -410,6 +440,7 @@
       100%{transform:translateY(0) scale(1);opacity:1}
     }
 
+    /* ✅ COMMENTI A CALDO */
     .commentsWrap{
       margin-top:12px;
       border:1px solid var(--border);
@@ -426,7 +457,12 @@
       text-transform:uppercase;
       text-align:center;
     }
-    .commentForm{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
+    .commentForm{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:10px;
+    }
     .inputLike{
       width:100%;
       border:1px solid var(--border);
@@ -437,8 +473,18 @@
       font-weight:800;
       outline:none;
     }
-    .commentTextarea{min-height:84px;resize:none;line-height:1.35;font-weight:700;}
-    .commentActions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;}
+    .commentTextarea{
+      min-height:84px;
+      resize:none;
+      line-height:1.35;
+      font-weight:700;
+    }
+    .commentActions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
     .commentError{
       display:none;
       margin-top:6px;
@@ -460,7 +506,7 @@
     body.dark .commentItem{background:rgba(255,255,255,.03)}
     .commentTop{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
@@ -480,16 +526,20 @@
       white-space:pre-wrap;
       word-break:break-word;
     }
+
+    /* ❌ LIKE RIMOSSI: niente .likeBtn */
   </style>
 </head>
 <body>
 <div class="wrap">
+  <!-- HEADER -->
   <div class="header">
     <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
     <h1>Quelli della pensione</h1>
     <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
   </div>
 
+  <!-- HERO -->
   <div class="card">
     <div class="heroImgWrap">
       <img src="foto.jpg" alt="Quelli della pensione">
@@ -497,10 +547,12 @@
     <div class="heroCaption">OGNI MALEDETTO GIOVEDÌ</div>
   </div>
 
+  <!-- PARTITA -->
   <div class="card">
     <div id="status" class="muted">Caricamento…</div>
     <div id="info"></div>
 
+    <!-- RISULTATO -->
     <div id="resultBox" class="resultBox" style="display:none">
       <div class="resultTop">
         <div class="resultPill">🏁 PARTITA TERMINATA</div>
@@ -520,6 +572,7 @@
       </div>
     </div>
 
+    <!-- ✅ COMMENTI A CALDO SUBITO DOPO RISULTATO -->
     <div id="commentsWrap" class="commentsWrap" style="display:none">
       <div class="commentsTitle">COMMENTI A CALDO</div>
       <div class="muted" style="text-align:center;font-weight:800">
@@ -540,6 +593,7 @@
       <div id="commentsList" class="commentList"></div>
     </div>
 
+    <!-- MVP -->
     <div id="mvpBox" class="mvpBox" style="display:none">
       <div class="mvpTitle">
         <div id="mvpTitle">🏆 MVP</div>
@@ -557,6 +611,7 @@
       <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
     </div>
 
+    <!-- MAPPA -->
     <div id="mapBox" class="mapWrap" style="display:none">
       <iframe id="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
         src="https://www.google.com/maps?q=40.1239395,18.1203671&z=18&output=embed"></iframe>
@@ -567,6 +622,7 @@
       <a id="mapOpen" class="btn ghost" href="#" target="_blank" rel="noopener">🗺 Apri su Maps</a>
     </div>
 
+    <!-- METEO -->
     <div id="weatherBox" class="weatherBox" style="display:none">
       <div class="weatherHead">
         <div>🌤 Meteo partita</div>
@@ -577,14 +633,17 @@
       <div id="weatherMini" class="weatherMini"></div>
     </div>
 
+    <!-- MARCATORI -->
     <div id="scorersBox" style="display:none;margin-top:12px">
       <div class="line"><b>⚽ Marcatori</b></div>
       <div id="scorersText" class="muted"></div>
     </div>
 
+    <!-- CONVOCATI -->
     <div id="calledTitle" class="line"><b>Convocati</b></div>
     <div id="called" class="playersWrap muted">—</div>
 
+    <!-- FORMAZIONI HEAD -->
     <div id="formationsHead" class="formationsHead" style="display:none">
       <div class="formationsTitle">FORMAZIONI</div>
       <div class="vsRow">
@@ -608,6 +667,7 @@
       </div>
     </div>
 
+    <!-- TEAMS -->
     <div id="teamsBox" style="display:none;margin-top:12px">
       <div class="line kit"><span id="tAIcon"></span><b>Squadra A</b></div>
       <div id="teamA" class="playersWrap muted"></div>
@@ -617,6 +677,7 @@
     </div>
   </div>
 
+  <!-- NAV -->
   <div class="card nav muted">
     <a href="storico.html">📚 Storico</a>
     <a href="marcatori.html">⚽ Marcatori</a>
@@ -630,38 +691,11 @@
 <button id="themeToggle" class="fab">🌙</button>
 <audio id="finalWhistle" src="final-whistle-1.mp3" preload="auto"></audio>
 
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
 <script>
-/**
- * ✅ UNICO SCRIPT
- * - niente config.js
- * - Supabase caricato dinamicamente
- * - like commenti rimossi completamente
- * - mappa + bottoni nascosti quando la partita è terminata (risultato presente)
- */
-
-/* =========================
-   1) CONFIG SUPABASE (METTI QUI)
-========================= */
-const SUPABASE_URL = "INCOLLA_LA_TUA_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "INCOLLA_LA_TUA_SUPABASE_ANON_KEY";
-
-/* =========================
-   2) CARICA SUPABASE UMD DINAMICAMENTE
-========================= */
-function loadScript(src){
-  return new Promise((resolve, reject)=>{
-    const s = document.createElement("script");
-    s.src = src;
-    s.async = true;
-    s.onload = resolve;
-    s.onerror = () => reject(new Error("Script load failed: " + src));
-    document.head.appendChild(s);
-  });
-}
-
-/* =========================
-   3) THEME
-========================= */
+/* THEME */
 const themeBtn = document.getElementById("themeToggle");
 function setTheme(mode){
   document.body.classList.toggle("dark", mode === "dark");
@@ -671,9 +705,7 @@ function setTheme(mode){
 setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
 themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 
-/* =========================
-   4) LOGO MONETA
-========================= */
+/* LOGO MONETA */
 const logoCoin = document.getElementById("logoCoin");
 function spinLogo(){
   logoCoin.classList.remove("spin");
@@ -683,9 +715,14 @@ function spinLogo(){
 logoCoin.addEventListener("click", spinLogo);
 logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
 
-/* =========================
-   5) DOM
-========================= */
+/* SUPABASE */
+if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+  alert("config.js non caricato o non valido");
+  throw new Error("Missing config");
+}
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* DOM */
 const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
 
@@ -746,23 +783,20 @@ const commentSend = document.getElementById("commentSend");
 const commentError = document.getElementById("commentError");
 const commentsList = document.getElementById("commentsList");
 
-/* =========================
-   6) COSTANTI
-========================= */
+/* MAP */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
 const FIELD_LAT = 40.1239395;
 const FIELD_LNG = 18.1203671;
 
+/* AVATAR PATH */
 const AVATAR_BASE = "avatars/";
 const DEFAULT_AVATAR = "default.png";
-
-/* =========================
-   7) HELPERS
-========================= */
 function avatarUrl(filename){
   const f = String(filename || "").trim();
   return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
 }
+
+/* HELPERS */
 function kitSVG(main, stripe){
   return `
   <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -801,12 +835,8 @@ function isGK(player){
 function isVoteOpen(match){
   return (match?.vote_open === true) || (match?.voting_open === true);
 }
-function setupMapLinks(){
-  mapLink.href = FIXED_MAP_APP_URL;
-  mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
-}
 
-/* Fischio una sola volta */
+/* ✅ Fischio: una sola volta per quel match+risultato */
 function playFinalWhistleOnce(matchId, scoreA, scoreB){
   const key = `qdp_whistle_last`;
   const value = `${matchId}:${scoreA}-${scoreB}`;
@@ -814,6 +844,7 @@ function playFinalWhistleOnce(matchId, scoreA, scoreB){
   localStorage.setItem(key, value);
 
   if(!finalWhistle) return;
+
   try{
     finalWhistle.currentTime = 0;
     const p = finalWhistle.play();
@@ -831,7 +862,7 @@ function playFinalWhistleOnce(matchId, scoreA, scoreB){
   }catch(e){}
 }
 
-/* Portiere solo in squadra */
+/* ✅ Trova portiere SOLO dentro la squadra */
 function findKeeperForTeam(teamPlayers, keeperName){
   const kName = normName(keeperName || "");
   if(kName){
@@ -843,7 +874,13 @@ function findKeeperForTeam(teamPlayers, keeperName){
   return (teamPlayers||[])[0] || null;
 }
 
-/* Profanity */
+/* MAP LINKS */
+function setupMapLinks(){
+  mapLink.href = FIXED_MAP_APP_URL;
+  mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
+}
+
+/* ✅ Profanity filter (semplice) */
 const BAD_WORDS = [
   "cazzo","cazzi","merda","stronzo","stronzi","vaffanculo","vaff","porco","porcodio","dio cane",
   "minchia","puttana","puttane","troia","bastardo","bastardi","testa di cazzo","coglione","coglioni"
@@ -858,7 +895,6 @@ function censorProfanity(text){
   return out;
 }
 
-/* Time ago */
 function timeAgo(ts){
   try{
     const d = new Date(ts);
@@ -873,26 +909,118 @@ function timeAgo(ts){
   }catch(e){ return ""; }
 }
 
-/* Render player pill */
-function renderPlayerPill(p){
-  const gk = isGK(p);
-  const nameHtml = gk ? (escapeHtml(p.name) + `<span class="glove">🧤</span>`) : escapeHtml(p.name);
-  const pos = String(p.position||"").trim();
-  const posHtml = pos ? escapeHtml(pos) : "—";
+/* ✅ COMMENTS state */
+let currentMatchId = null;
+let commentsChannel = null;
+
+/* ✅ Render comment (SENZA LIKE) */
+function renderCommentItem(c){
+  const when = timeAgo(c.created_at);
+  const txt = escapeHtml(c.text || "");
+  const displayName = (c.name && String(c.name).trim()) ? String(c.name).trim() : "Anonimo";
+
   return `
-    <span class="playerPill">
-      <img class="playerAvatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt="">
-      <span class="playerTxt">
-        <span class="playerName">${nameHtml}</span>
-        <span class="playerPos">${posHtml}</span>
-      </span>
-    </span>
+    <div class="commentItem" data-id="${escapeHtml(c.id)}">
+      <div class="commentTop">
+        <div class="commentMeta">
+          <span class="pill" style="margin:0">${escapeHtml(displayName)}</span>
+          <span>•</span>
+          <span>${escapeHtml(when)}</span>
+        </div>
+      </div>
+      <div class="commentBubble">${txt}</div>
+    </div>
   `;
 }
 
-/* =========================
-   8) METEO (Open-Meteo)
-========================= */
+/* ✅ Load comments (SENZA match_comment_likes) */
+async function loadComments(matchId){
+  commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:800">Caricamento commenti…</div>`;
+
+  const { data: comments, error } = await client
+    .from("match_comments")
+    .select("*")
+    .eq("match_id", matchId)
+    .order("created_at",{ascending:false})
+    .limit(50);
+
+  if(error){
+    console.error(error);
+    commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:900">Errore caricamento commenti</div>`;
+    return;
+  }
+
+  if(!comments || comments.length === 0){
+    commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:900">Nessun commento ancora. Spacca il ghiaccio 😄</div>`;
+    return;
+  }
+
+  commentsList.innerHTML = comments.map(renderCommentItem).join("");
+}
+
+/* ✅ Subscribe realtime (SOLO match_comments) */
+function subscribeComments(matchId){
+  try{
+    if(commentsChannel){
+      client.removeChannel(commentsChannel);
+      commentsChannel = null;
+    }
+  }catch(e){}
+
+  commentsChannel = client
+    .channel(`qdp-comments-${matchId}`)
+    .on('postgres_changes',
+      { event: '*', schema: 'public', table: 'match_comments', filter: `match_id=eq.${matchId}` },
+      async () => {
+        await loadComments(matchId);
+      }
+    )
+    .subscribe();
+}
+
+/* ✅ Submit comment */
+async function submitComment(matchId){
+  commentError.style.display = "none";
+  commentError.textContent = "";
+
+  const rawText = String(commentInput.value || "").trim();
+  const rawName = String(commentName.value || "").trim();
+
+  if(!rawText){
+    commentError.style.display = "block";
+    commentError.textContent = "Scrivi qualcosa prima di inviare 🙂";
+    return;
+  }
+
+  const cleanText = censorProfanity(rawText).slice(0,240);
+  const cleanName = censorProfanity(rawName).slice(0,24);
+  const finalName = cleanName ? cleanName : "Anonimo";
+
+  commentSend.disabled = true;
+  commentSend.textContent = "⏳ Invio…";
+
+  try{
+    const { error } = await client
+      .from("match_comments")
+      .insert({ match_id: matchId, name: finalName, text: cleanText });
+
+    if(error) throw error;
+    commentInput.value = "";
+    await loadComments(matchId);
+  }catch(e){
+    console.error(e);
+    commentError.style.display = "block";
+    commentError.textContent = "Errore invio commento.";
+  }finally{
+    commentSend.disabled = false;
+    commentSend.textContent = "📨 Invia";
+  }
+}
+commentSend.addEventListener("click", ()=>{
+  if(currentMatchId) submitComment(currentMatchId);
+});
+
+/* METEO (Open-Meteo) */
 function wxEmojiFromCode(code){
   const c = Number(code);
   if(c === 0) return "☀️";
@@ -1010,120 +1138,7 @@ async function loadWeather(matchDateISO, matchTimeStr){
   }
 }
 
-/* =========================
-   9) COMMENTI (SENZA LIKE)
-========================= */
-let currentMatchId = null;
-let commentsChannel = null;
-let client = null;
-
-function renderCommentItem(c){
-  const when = timeAgo(c.created_at);
-  const txt = escapeHtml(c.text || "");
-  const displayName = (c.name && String(c.name).trim()) ? String(c.name).trim() : "Anonimo";
-
-  return `
-    <div class="commentItem" data-id="${escapeHtml(c.id)}">
-      <div class="commentTop">
-        <div class="commentMeta">
-          <span class="pill" style="margin:0">${escapeHtml(displayName)}</span>
-          <span>•</span>
-          <span>${escapeHtml(when)}</span>
-        </div>
-      </div>
-      <div class="commentBubble">${txt}</div>
-    </div>
-  `;
-}
-
-async function loadComments(matchId){
-  commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:800">Caricamento commenti…</div>`;
-
-  const { data: comments, error } = await client
-    .from("match_comments")
-    .select("id,match_id,name,text,created_at")
-    .eq("match_id", matchId)
-    .order("created_at",{ascending:false})
-    .limit(50);
-
-  if(error){
-    console.error(error);
-    commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:900">Errore caricamento commenti</div>`;
-    return;
-  }
-
-  if(!comments || comments.length === 0){
-    commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:900">Nessun commento ancora. Spacca il ghiaccio 😄</div>`;
-    return;
-  }
-
-  commentsList.innerHTML = comments.map(renderCommentItem).join("");
-}
-
-function subscribeComments(matchId){
-  try{
-    if(commentsChannel){
-      client.removeChannel(commentsChannel);
-      commentsChannel = null;
-    }
-  }catch(e){}
-
-  commentsChannel = client
-    .channel(`qdp-comments-${matchId}`)
-    .on('postgres_changes',
-      { event: '*', schema: 'public', table: 'match_comments', filter: `match_id=eq.${matchId}` },
-      async () => {
-        await loadComments(matchId);
-      }
-    )
-    .subscribe();
-}
-
-async function submitComment(matchId){
-  commentError.style.display = "none";
-  commentError.textContent = "";
-
-  const rawText = String(commentInput.value || "").trim();
-  const rawName = String(commentName.value || "").trim();
-
-  if(!rawText){
-    commentError.style.display = "block";
-    commentError.textContent = "Scrivi qualcosa prima di inviare 🙂";
-    return;
-  }
-
-  const cleanText = censorProfanity(rawText).slice(0,240);
-  const cleanName = censorProfanity(rawName).slice(0,24);
-  const finalName = cleanName ? cleanName : "Anonimo";
-
-  commentSend.disabled = true;
-  commentSend.textContent = "⏳ Invio…";
-
-  try{
-    const { error } = await client
-      .from("match_comments")
-      .insert({ match_id: matchId, name: finalName, text: cleanText });
-
-    if(error) throw error;
-
-    commentInput.value = "";
-    await loadComments(matchId);
-  }catch(e){
-    console.error(e);
-    commentError.style.display = "block";
-    commentError.textContent = "Errore invio commento.";
-  }finally{
-    commentSend.disabled = false;
-    commentSend.textContent = "📨 Invia";
-  }
-}
-commentSend.addEventListener("click", ()=>{
-  if(currentMatchId) submitComment(currentMatchId);
-});
-
-/* =========================
-   10) MVP
-========================= */
+/* MVP */
 async function loadMVP(matchId, playersById){
   try{
     const { data: votes, error } = await client
@@ -1189,12 +1204,25 @@ async function loadMVP(matchId, playersById){
   }
 }
 
-/* =========================
-   11) MAIN LOAD (MATCH)
-   - se matchEnded: mostra risultato + commenti, NASCONDE mappa + bottoni
-   - se non finita: mostra meteo + convocati + mappa + bottoni
-========================= */
-async function loadMatch(){
+/* Render player pill */
+function renderPlayerPill(p){
+  const gk = isGK(p);
+  const nameHtml = gk ? (escapeHtml(p.name) + `<span class="glove">🧤</span>`) : escapeHtml(p.name);
+  const pos = String(p.position||"").trim();
+  const posHtml = pos ? escapeHtml(pos) : "—";
+  return `
+    <span class="playerPill">
+      <img class="playerAvatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt="">
+      <span class="playerTxt">
+        <span class="playerName">${nameHtml}</span>
+        <span class="playerPos">${posHtml}</span>
+      </span>
+    </span>
+  `;
+}
+
+/* MAIN LOAD */
+async function load(){
   const { data, error } = await client
     .from("matches")
     .select("*")
@@ -1219,7 +1247,6 @@ async function loadMatch(){
     teamsBox.style.display = "none";
     calledEl.textContent = "—";
     commentsWrap.style.display = "none";
-    resultBox.style.display = "none";
     return;
   }
 
@@ -1236,7 +1263,7 @@ async function loadMatch(){
     <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
   `;
 
-  // MVP UI sempre visibile (come prima)
+  // MVP UI
   mvpBox.style.display = "block";
   mvpTitle.textContent = voteOpen ? "🏆 MVP (provvisorio)" : "🏆 MVP (finale)";
   mvpStatePill.textContent = voteOpen ? "🟢 Votazione aperta" : "🔴 Votazione chiusa";
@@ -1252,6 +1279,12 @@ async function loadMatch(){
   }else{
     scorersBox.style.display="none";
   }
+
+  // Mappa
+  mapBox.style.display = "block";
+  mapActions.style.display = "flex";
+  mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
+  setupMapLinks();
 
   // Players ids
   const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
@@ -1276,6 +1309,55 @@ async function loadMatch(){
   const ka = findKeeperForTeam(aPlayers, m.keeper_a);
   const kb = findKeeperForTeam(bPlayers, m.keeper_b);
 
+  if(matchEnded){
+    resultBox.style.display = "block";
+    resultTimeEl.textContent = time || "—";
+    resultScoreEl.textContent = result || "—";
+    resultAvatarA.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
+    resultAvatarB.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
+
+    // nascondi meteo + convocati
+    weatherBox.style.display = "none";
+    calledEl.style.display = "none";
+    calledTitleEl.style.display = "none";
+
+    // ✅ mostra commenti subito dopo risultato + realtime (SENZA LIKE)
+    currentMatchId = String(m.id);
+    commentsWrap.style.display = "block";
+    await loadComments(currentMatchId);
+    subscribeComments(currentMatchId);
+
+    playFinalWhistleOnce(m.id, m.score_a, m.score_b);
+  }else{
+    resultBox.style.display = "none";
+    commentsWrap.style.display = "none";
+    currentMatchId = null;
+
+    // chiudi realtime channel se si passa a partita non finita
+    try{
+      if(commentsChannel){
+        client.removeChannel(commentsChannel);
+        commentsChannel = null;
+      }
+    }catch(e){}
+
+    calledEl.style.display = "block";
+    calledTitleEl.style.display = "block";
+    await loadWeather(m.match_date, m.match_time);
+
+    if(calledIds.length){
+      const calledPlayers = calledIds.map(id => playersById.get(String(id))).filter(Boolean);
+      calledEl.classList.remove("muted");
+      calledEl.innerHTML = calledPlayers.map(renderPlayerPill).join("");
+    }else{
+      calledEl.classList.add("muted");
+      calledEl.textContent = "—";
+    }
+  }
+
+  // MVP
+  await loadMVP(m.id, playersById);
+
   // Squadre + formazioni
   const hasTeams = teamAIds.length || teamBIds.length;
   if(hasTeams){
@@ -1298,95 +1380,9 @@ async function loadMatch(){
     formationsHead.style.display = "none";
     teamsBox.style.display = "none";
   }
-
-  if(matchEnded){
-    // ✅ RISULTATO
-    resultBox.style.display = "block";
-    resultTimeEl.textContent = time || "—";
-    resultScoreEl.textContent = result || "—";
-    resultAvatarA.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
-    resultAvatarB.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
-
-    // ✅ NASCONDI: meteo + convocati
-    weatherBox.style.display = "none";
-    calledEl.style.display = "none";
-    calledTitleEl.style.display = "none";
-
-    // ✅ NASCONDI: mappa + bottoni (richiesta)
-    mapBox.style.display = "none";
-    mapActions.style.display = "none";
-
-    // ✅ COMMENTI
-    currentMatchId = String(m.id);
-    commentsWrap.style.display = "block";
-    await loadComments(currentMatchId);
-    subscribeComments(currentMatchId);
-
-    playFinalWhistleOnce(m.id, m.score_a, m.score_b);
-  }else{
-    // ✅ NIENTE RISULTATO
-    resultBox.style.display = "none";
-    commentsWrap.style.display = "none";
-    currentMatchId = null;
-
-    // chiudi realtime commenti se aperto
-    try{
-      if(commentsChannel){
-        client.removeChannel(commentsChannel);
-        commentsChannel = null;
-      }
-    }catch(e){}
-
-    // ✅ MOSTRA: mappa + bottoni
-    mapBox.style.display = "block";
-    mapActions.style.display = "flex";
-    mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
-    setupMapLinks();
-
-    // ✅ MOSTRA: convocati + meteo
-    calledEl.style.display = "block";
-    calledTitleEl.style.display = "block";
-    await loadWeather(m.match_date, m.match_time);
-
-    if(calledIds.length){
-      const calledPlayers = calledIds.map(id => playersById.get(String(id))).filter(Boolean);
-      calledEl.classList.remove("muted");
-      calledEl.innerHTML = calledPlayers.map(renderPlayerPill).join("");
-    }else{
-      calledEl.classList.add("muted");
-      calledEl.textContent = "—";
-    }
-  }
-
-  // MVP
-  await loadMVP(m.id, playersById);
 }
 
-/* =========================
-   12) BOOTSTRAP
-========================= */
-(async function init(){
-  try{
-    if(!SUPABASE_URL || !SUPABASE_ANON_KEY || SUPABASE_URL.includes("INCOLLA") || SUPABASE_ANON_KEY.includes("INCOLLA")){
-      alert("Inserisci SUPABASE_URL e SUPABASE_ANON_KEY nello script.");
-      return;
-    }
-
-    await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js");
-    if(!window.supabase){
-      alert("Supabase non caricato.");
-      return;
-    }
-
-    client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    await loadMatch();
-  }catch(e){
-    console.error(e);
-    statusEl.textContent = "Errore inizializzazione";
-    infoEl.innerHTML = `<div class="muted">${escapeHtml(e.message || String(e))}</div>`;
-  }
-})();
+load();
 </script>
 </body>
-</html>
-```0
+</html> speriamo
