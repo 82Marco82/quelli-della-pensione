@@ -216,7 +216,7 @@
       text-align:center;
     }
 
-    /* ✅ DUELLO PORTIERI (SAFE) */
+    /* ✅ DUELLO PORTIERI */
     .gkPosterWrap{
       margin-top:12px;
       border:1px solid var(--border);
@@ -841,7 +841,6 @@
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-
 <script>
 /* THEME */
 const themeBtn = document.getElementById("themeToggle");
@@ -899,7 +898,6 @@ const teamLabelA = document.getElementById("teamLabelA");
 const teamLabelB = document.getElementById("teamLabelB");
 
 const calledEl = document.getElementById("called");
-const calledTitleEl = document.getElementById/* ...continua da qui... */
 const calledTitleEl = document.getElementById("calledTitle");
 
 const fieldTitleEl = document.getElementById("fieldTitle");
@@ -962,17 +960,6 @@ function avatarUrl(filename){
   return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
 }
 
-/* ✅ IMMAGINI DUELLO PORTIERI (.png)
-   - Metti i file nella root (stessa cartella di index.html)
-   - Esempio: gvsa.png, gvst.png, ecc.
-*/
-const GK_POSTERS = {
-  "gianni|andrea": "gvsa.png",
-  "andrea|gianni": "gvsa.png",
-  "gianni|tonino": "gvst.png",
-  "tonino|gianni": "gvst.png",
-};
-
 /* HELPERS */
 function kitSVG(main, stripe){
   return `
@@ -1023,6 +1010,21 @@ function findKeeperForTeam(teamPlayers, keeperName){
   const byGK = (teamPlayers||[]).find(isGK);
   if(byGK) return byGK;
   return null;
+}
+
+/* ✅ DUELLO PORTIERI: mapping immagini */
+function pickGkPoster(ka, kb){
+  const a = normName(ka?.name || "");
+  const b = normName(kb?.name || "");
+  if(!a || !b) return ""; // nessun poster se manca un nome
+
+  // Gianni vs Andrea => gvsa.jpg
+  if( (a==="gianni" && b==="andrea") || (a==="andrea" && b==="gianni") ) return "gvsa.jpg";
+
+  // Gianni vs Tonino => gvst.jpg
+  if( (a==="gianni" && b==="tonino") || (a==="tonino" && b==="gianni") ) return "gvst.jpg";
+
+  return ""; // non riconosciuta => non mostra nulla
 }
 
 /* MAP LINKS */
@@ -1077,7 +1079,7 @@ async function refreshAdminState(){
 let currentMatchId = null;
 let commentsChannel = null;
 
-/* Render comment (con delete se admin) */
+/* Render comment */
 function renderCommentItem(c){
   const when = timeAgo(c.created_at);
   const txt = escapeHtml(c.text || "");
@@ -1125,7 +1127,7 @@ async function loadComments(matchId){
   commentsList.innerHTML = comments.map(renderCommentItem).join("");
 }
 
-/* Delete comment (solo admin) */
+/* Delete comment */
 async function deleteCommentById(id){
   if(!isAdmin) return;
 
@@ -1164,7 +1166,7 @@ commentsList.addEventListener("click", (ev)=>{
   if(id) deleteCommentById(id);
 });
 
-/* Subscribe realtime (SOLO match_comments) */
+/* Subscribe realtime */
 function subscribeComments(matchId){
   try{
     if(commentsChannel){
@@ -1433,23 +1435,6 @@ function renderPlayerPill(p){
   `;
 }
 
-/* ✅ DUELLO PORTIERI: sceglie immagine in base ai nomi */
-function pickGKPosterName(keeperAName, keeperBName){
-  const a = normName(keeperAName);
-  const b = normName(keeperBName);
-  if(!a || !b) return null;
-  return GK_POSTERS[`${a}|${b}`] || null;
-}
-function showGKPoster(filename){
-  if(!filename){
-    gkPosterWrap.style.display = "none";
-    gkPosterImg.removeAttribute("src");
-    return;
-  }
-  gkPosterImg.src = filename; // file .png in root
-  gkPosterWrap.style.display = "block";
-}
-
 /* MAIN LOAD */
 async function load(){
   await refreshAdminState();
@@ -1545,15 +1530,22 @@ async function load(){
   const ka = findKeeperForTeam(aPlayers, m.keeper_a);
   const kb = findKeeperForTeam(bPlayers, m.keeper_b);
 
-  // ✅ DUELLO PORTIERI: mostrato SOLO se partita terminata e ci sono i portieri
   if(matchEnded){
-    const posterFile = pickGKPosterName(ka?.name, kb?.name);
-    showGKPoster(posterFile);
-  }else{
-    showGKPoster(null);
-  }
+    // ✅ DUELLO PORTIERI (solo a partita finita)
+    const poster = pickGkPoster(ka, kb);
+    if(poster){
+      gkPosterImg.src = poster;        // gvsa.jpg / gvst.jpg (stessa cartella di index.html)
+      gkPosterWrap.style.display = "block";
+      // se l'immagine non esiste/non carica -> nascondi senza errori
+      gkPosterImg.onerror = () => {
+        gkPosterWrap.style.display = "none";
+        gkPosterImg.removeAttribute("src");
+      };
+    }else{
+      gkPosterWrap.style.display = "none";
+      gkPosterImg.removeAttribute("src");
+    }
 
-  if(matchEnded){
     // RISULTATO
     resultHead.style.display = "block";
     resultTimeEl.textContent = time || "—";
@@ -1579,10 +1571,16 @@ async function load(){
     await loadComments(currentMatchId);
     subscribeComments(currentMatchId);
   }else{
+    // partita NON finita
     resultHead.style.display = "none";
     commentsWrap.style.display = "none";
     currentMatchId = null;
 
+    // ✅ nascondi poster
+    gkPosterWrap.style.display = "none";
+    gkPosterImg.removeAttribute("src");
+
+    // chiudi realtime channel se si passa a partita non finita
     try{
       if(commentsChannel){
         client.removeChannel(commentsChannel);
@@ -1645,15 +1643,7 @@ async function load(){
 }
 
 load();
-
-/* ✅ evita “pagina bianca” se una promise va in errore */
-window.addEventListener("unhandledrejection", (e)=>{
-  console.error("Unhandled promise:", e.reason);
-});
-window.addEventListener("error", (e)=>{
-  console.error("JS error:", e.message, e.error);
-});
 </script>
-
 </body>
 </html>
+vediamo
