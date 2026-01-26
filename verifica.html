@@ -48,6 +48,7 @@
       transition:.2s;
     }
     .wrap{max-width:760px;margin:auto;padding:16px}
+
     .card{
       background:var(--card);
       border:1px solid var(--border);
@@ -56,8 +57,10 @@
       box-shadow:var(--shadow);
       margin:12px 0;
     }
+
     .header{text-align:center}
 
+    /* LOGO "MONETA" */
     .logo{
       width:80px;height:80px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
@@ -105,6 +108,7 @@
       text-transform:uppercase;
     }
 
+    /* Titolo sezione (stile hero) */
     .sectionCaption{
       margin-top:10px;
       text-align:center;
@@ -194,6 +198,7 @@
     .kit{display:inline-flex;align-items:center;gap:6px}
     .kit svg{width:18px;height:18px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 
+    /* BLOCCO TITOLO (stile FORMAZIONI) */
     .formationsHead{
       margin-top:12px;
       padding:12px;
@@ -211,7 +216,7 @@
       text-align:center;
     }
 
-    /* ✅ DUELLO PORTIERI */
+    /* ✅ DUELLO PORTIERI (SAFE) */
     .gkPosterWrap{
       margin-top:12px;
       border:1px solid var(--border);
@@ -227,6 +232,7 @@
       object-fit:cover;
     }
 
+    /* RISULTATO (nuovo layout) */
     .resultBox{
       border:1px solid var(--border);
       border-radius:16px;
@@ -265,6 +271,7 @@
       font-weight:900;
     }
 
+    /* riga squadre + avatar */
     .resultTeamsRow{
       margin-top:12px;
       display:flex;
@@ -285,7 +292,10 @@
       min-width:240px;
       font-weight:900;
     }
-    .teamSide.right{justify-content:flex-end;text-align:right}
+    .teamSide.right{
+      justify-content:flex-end;
+      text-align:right;
+    }
     .teamAvatar{
       width:46px;height:46px;border-radius:999px;
       border:1px solid var(--border);
@@ -294,7 +304,10 @@
       display:block;
       flex:0 0 auto;
     }
-    .teamName{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:1px}
+    .teamName{
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      letter-spacing:1px;
+    }
     .vsBadge{
       font-family:'Bebas Neue';
       letter-spacing:2px;
@@ -307,6 +320,7 @@
       flex:0 0 auto;
     }
 
+    /* riga punteggi incolonnati */
     .scoresRow{
       margin-top:12px;
       display:grid;
@@ -341,6 +355,7 @@
       .teamSide{min-width:0}
     }
 
+    /* MVP box */
     .mvpBox{
       margin-top:12px;
       padding:12px;
@@ -357,7 +372,12 @@
       gap:10px;
       flex-wrap:wrap;
     }
-    .mvpMainRow{display:flex;align-items:center;gap:10px;margin-top:10px}
+    .mvpMainRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top:10px;
+    }
     .mvpAvatar{
       width:48px;height:48px;border-radius:999px;
       border:1px solid var(--border);
@@ -387,6 +407,7 @@
       font-weight:900;
     }
 
+    /* METEO */
     .weatherBox{
       margin-top:12px;
       padding:12px;
@@ -410,6 +431,7 @@
     .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
     .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
 
+    /* Players pills */
     .playersWrap{margin-top:6px}
     .playerPill{
       display:inline-flex;
@@ -434,7 +456,11 @@
     .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-    .vsRow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    /* Formazioni header (GK VS GK) */
+    .vsRow{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:10px;flex-wrap:wrap;
+    }
     .gkChip{
       display:flex;align-items:center;gap:10px;
       border:1px solid var(--border);
@@ -466,6 +492,7 @@
       flex:0 0 auto;
     }
 
+    /* glove animation */
     .glove{
       display:inline-block;
       margin-left:6px;
@@ -479,6 +506,7 @@
       100%{transform:translateY(0) scale(1);opacity:1}
     }
 
+    /* COMMENTI */
     .commentsWrap{
       margin-top:12px;
       border:1px solid var(--border);
@@ -495,7 +523,12 @@
       text-transform:uppercase;
       text-align:center;
     }
-    .commentForm{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+    .commentForm{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:10px;
+    }
     .inputLike{
       width:100%;
       border:1px solid var(--border);
@@ -506,8 +539,18 @@
       font-weight:800;
       outline:none;
     }
-    .commentTextarea{min-height:84px;resize:none;line-height:1.35;font-weight:700}
-    .commentActions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+    .commentTextarea{
+      min-height:84px;
+      resize:none;
+      line-height:1.35;
+      font-weight:700;
+    }
+    .commentActions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
     .commentError{
       display:none;
       margin-top:6px;
@@ -527,10 +570,30 @@
       margin-top:10px;
     }
     body.dark .commentItem{background:rgba(255,255,255,.03)}
-    .commentTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
-    .commentMeta{display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:900;font-size:13px;flex-wrap:wrap}
-    .commentBubble{margin-top:8px;font-weight:800;white-space:pre-wrap;word-break:break-word}
+    .commentTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .commentMeta{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color:var(--muted);
+      font-weight:900;
+      font-size:13px;
+      flex-wrap:wrap;
+    }
+    .commentBubble{
+      margin-top:8px;
+      font-weight:800;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
 
+    /* Admin */
     .commentAdminActions{display:flex;align-items:center;gap:8px}
     .iconBtn{
       border:1px solid var(--border);
@@ -557,6 +620,7 @@
       text-transform:uppercase;
     }
 
+    /* TOAST */
     .toast{
       position:fixed;
       left:50%;
@@ -576,11 +640,15 @@
       max-width:min(92vw,520px);
       text-align:center;
     }
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
     .toast.ok{ border-color: var(--okBd); }
     .toast.err{ border-color: var(--riskBd); }
   </style>
 </head>
+
 <body>
 <div class="wrap">
   <div class="header">
@@ -600,7 +668,7 @@
     <div id="status" class="muted">Caricamento…</div>
     <div id="info"></div>
 
-    <!-- ✅ DUELLO PORTIERI (PRIMA DEL RISULTATO) -->
+    <!-- ✅ DUELLO PORTIERI (prima del RISULTATO) -->
     <div id="gkPosterWrap" class="gkPosterWrap" style="display:none">
       <img id="gkPosterImg" src="" alt="Duello portieri">
     </div>
@@ -609,7 +677,7 @@
     <div id="resultHead" class="formationsHead" style="display:none">
       <div class="formationsTitle">RISULTATO</div>
 
-      <div class="resultBox">
+      <div id="resultBox" class="resultBox">
         <div class="resultTop">
           <div class="resultPill">🏁 PARTITA TERMINATA</div>
           <div class="resultTimePill">⏱ <span id="resultTime">—</span></div>
@@ -630,9 +698,13 @@
         </div>
 
         <div class="scoresRow">
-          <div class="scoreCol"><div id="scoreA" class="scoreNum">—</div></div>
+          <div class="scoreCol">
+            <div id="scoreA" class="scoreNum">—</div>
+          </div>
           <div class="dash">-</div>
-          <div class="scoreCol"><div id="scoreB" class="scoreNum">—</div></div>
+          <div class="scoreCol">
+            <div id="scoreB" class="scoreNum">—</div>
+          </div>
         </div>
       </div>
     </div>
@@ -771,9 +843,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
-/* =========================
-   THEME + LOGO
-========================= */
+/* THEME */
 const themeBtn = document.getElementById("themeToggle");
 function setTheme(mode){
   document.body.classList.toggle("dark", mode === "dark");
@@ -783,6 +853,7 @@ function setTheme(mode){
 setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
 themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 
+/* LOGO MONETA */
 const logoCoin = document.getElementById("logoCoin");
 function spinLogo(){
   logoCoin.classList.remove("spin");
@@ -792,18 +863,14 @@ function spinLogo(){
 logoCoin.addEventListener("click", spinLogo);
 logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
 
-/* =========================
-   SUPABASE
-========================= */
+/* SUPABASE */
 if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
   alert("config.js non caricato o non valido");
   throw new Error("Missing config");
 }
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* =========================
-   TOAST
-========================= */
+/* TOAST */
 const toastEl = document.getElementById("toast");
 let toastTimer = null;
 function showToast(msg, type="ok"){
@@ -813,15 +880,15 @@ function showToast(msg, type="ok"){
   toastTimer = setTimeout(()=> toastEl.className = "toast", 1600);
 }
 
-/* =========================
-   DOM
-========================= */
+/* DOM */
 const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
 
+/* ✅ DUELLO PORTIERI DOM */
 const gkPosterWrap = document.getElementById("gkPosterWrap");
 const gkPosterImg  = document.getElementById("gkPosterImg");
 
+/* RISULTATO DOM */
 const resultHead = document.getElementById("resultHead");
 const resultTimeEl = document.getElementById("resultTime");
 const resultAvatarA = document.getElementById("resultAvatarA");
@@ -832,6 +899,7 @@ const teamLabelA = document.getElementById("teamLabelA");
 const teamLabelB = document.getElementById("teamLabelB");
 
 const calledEl = document.getElementById("called");
+const calledTitleEl = document.getElementById/* ...continua da qui... */
 const calledTitleEl = document.getElementById("calledTitle");
 
 const fieldTitleEl = document.getElementById("fieldTitle");
@@ -856,6 +924,7 @@ const gkBAvatar = document.getElementById("gkBAvatar");
 const gkAName = document.getElementById("gkAName");
 const gkBName = document.getElementById("gkBName");
 
+/* MVP DOM */
 const mvpBox = document.getElementById("mvpBox");
 const mvpTitle = document.getElementById("mvpTitle");
 const mvpStatePill = document.getElementById("mvpStatePill");
@@ -864,12 +933,14 @@ const mvpMain = document.getElementById("mvpMain");
 const mvpSub = document.getElementById("mvpSub");
 const mvpTop3 = document.getElementById("mvpTop3");
 
+/* METEO DOM */
 const weatherBox = document.getElementById("weatherBox");
 const weatherBig = document.getElementById("weatherBig");
 const weatherLine = document.getElementById("weatherLine");
 const weatherMini = document.getElementById("weatherMini");
 const weatherAlert = document.getElementById("weatherAlert");
 
+/* COMMENTI DOM */
 const commentsWrap = document.getElementById("commentsWrap");
 const commentName = document.getElementById("commentName");
 const commentInput = document.getElementById("commentInput");
@@ -878,13 +949,12 @@ const commentError = document.getElementById("commentError");
 const commentsList = document.getElementById("commentsList");
 const adminBadge = document.getElementById("adminBadge");
 
-/* =========================
-   CONFIG
-========================= */
+/* MAP */
 const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
 const FIELD_LAT = 40.1239395;
 const FIELD_LNG = 18.1203671;
 
+/* AVATAR PATH */
 const AVATAR_BASE = "avatars/";
 const DEFAULT_AVATAR = "default.png";
 function avatarUrl(filename){
@@ -892,7 +962,10 @@ function avatarUrl(filename){
   return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
 }
 
-/* ✅ IMMAGINI DUELLO PORTIERI (.png) */
+/* ✅ IMMAGINI DUELLO PORTIERI (.png)
+   - Metti i file nella root (stessa cartella di index.html)
+   - Esempio: gvsa.png, gvst.png, ecc.
+*/
 const GK_POSTERS = {
   "gianni|andrea": "gvsa.png",
   "andrea|gianni": "gvsa.png",
@@ -900,22 +973,7 @@ const GK_POSTERS = {
   "tonino|gianni": "gvst.png",
 };
 
-/* =========================
-   HELPERS
-========================= */
-function escapeHtml(s){
-  return String(s ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-function formatDateFull(iso){
-  try{
-    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-  }catch(e){ return String(iso||""); }
-}
+/* HELPERS */
 function kitSVG(main, stripe){
   return `
   <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -924,27 +982,38 @@ function kitSVG(main, stripe){
     <path d="M30 10 H34 V58 H30 Z" fill="${stripe}" opacity="0.85"/>
   </svg>`;
 }
-function medal(i){ return i===0 ? "🥇" : i===1 ? "🥈" : i===2 ? "🥉" : String(i+1); }
-
-function normName(s){ return String(s||"").trim().toLowerCase().replace(/\s+/g," "); }
+function formatDateFull(iso){
+  try{
+    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  }catch(e){ return String(iso||""); }
+}
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function medal(i){
+  if(i===0) return "🥇";
+  if(i===1) return "🥈";
+  if(i===2) return "🥉";
+  return String(i+1);
+}
+function normName(s){
+  return String(s||"").trim().toLowerCase().replace(/\s+/g," ");
+}
 function isGK(player){
   const r = String(player?.role||"").toLowerCase();
   const p = String(player?.position||"").toLowerCase();
   return r === "gk" || p.includes("port");
 }
-function isVoteOpen(match){ return (match?.vote_open === true) || (match?.voting_open === true); }
-
-function findKeeperForTeam(teamPlayers, keeperName){
-  const kName = normName(keeperName || "");
-  if(kName){
-    const byName = (teamPlayers||[]).find(p => normName(s||"").trim().toLowerCase().replace(/\s+/g," "); }
-function isGK(player){
-  const r = String(player?.role||"").toLowerCase();
-  const p = String(player?.position||"").toLowerCase();
-  return r === "gk" || p.includes("port");
+function isVoteOpen(match){
+  return (match?.vote_open === true) || (match?.voting_open === true);
 }
-function isVoteOpen(match){ return (match?.vote_open === true) || (match?.voting_open === true); }
 
+/* ✅ Trova portiere SOLO dentro la squadra */
 function findKeeperForTeam(teamPlayers, keeperName){
   const kName = normName(keeperName || "");
   if(kName){
@@ -954,38 +1023,6 @@ function findKeeperForTeam(teamPlayers, keeperName){
   const byGK = (teamPlayers||[]).find(isGK);
   if(byGK) return byGK;
   return null;
-}
-
-/* ✅ DUELLO PORTIERI: mostra solo se matchEnded e se trova combinazione */
-function updateGKPoster(matchEnded, keeperAName, keeperBName){
-  try{
-    if(!matchEnded){
-      gkPosterWrap.style.display = "none";
-      gkPosterImg.removeAttribute("src");
-      return;
-    }
-    const a = normName(keeperAName);
-    const b = normName(keeperBName);
-    const key = `${a}|${b}`;
-    const file = GK_POSTERS[key];
-
-    if(!file){
-      gkPosterWrap.style.display = "none";
-      gkPosterImg.removeAttribute("src");
-      return;
-    }
-
-    // Imposta src e mostra SOLO se l'immagine esiste/si carica
-    gkPosterImg.onload = () => { gkPosterWrap.style.display = "block"; };
-    gkPosterImg.onerror = () => {
-      gkPosterWrap.style.display = "none";
-      gkPosterImg.removeAttribute("src");
-    };
-    gkPosterImg.src = file; // nella stessa cartella di index.html
-  }catch(e){
-    gkPosterWrap.style.display = "none";
-    gkPosterImg.removeAttribute("src");
-  }
 }
 
 /* MAP LINKS */
@@ -1040,6 +1077,7 @@ async function refreshAdminState(){
 let currentMatchId = null;
 let commentsChannel = null;
 
+/* Render comment (con delete se admin) */
 function renderCommentItem(c){
   const when = timeAgo(c.created_at);
   const txt = escapeHtml(c.text || "");
@@ -1062,6 +1100,7 @@ function renderCommentItem(c){
   `;
 }
 
+/* Load comments */
 async function loadComments(matchId){
   commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:800">Caricamento commenti…</div>`;
 
@@ -1086,6 +1125,7 @@ async function loadComments(matchId){
   commentsList.innerHTML = comments.map(renderCommentItem).join("");
 }
 
+/* Delete comment (solo admin) */
 async function deleteCommentById(id){
   if(!isAdmin) return;
 
@@ -1116,6 +1156,7 @@ async function deleteCommentById(id){
   }
 }
 
+/* Event delegation delete */
 commentsList.addEventListener("click", (ev)=>{
   const btn = ev.target?.closest?.("[data-del]");
   if(!btn) return;
@@ -1123,6 +1164,7 @@ commentsList.addEventListener("click", (ev)=>{
   if(id) deleteCommentById(id);
 });
 
+/* Subscribe realtime (SOLO match_comments) */
 function subscribeComments(matchId){
   try{
     if(commentsChannel){
@@ -1143,6 +1185,7 @@ function subscribeComments(matchId){
     .subscribe();
 }
 
+/* Submit comment */
 async function submitComment(matchId){
   commentError.style.display = "none";
   commentError.textContent = "";
@@ -1307,7 +1350,7 @@ async function loadWeather(matchDateISO, matchTimeStr){
   }
 }
 
-/* MVP */
+/* MVP (solo se votazione aperta) */
 async function loadMVP(matchId, playersById){
   try{
     const { data: votes, error } = await client
@@ -1390,6 +1433,23 @@ function renderPlayerPill(p){
   `;
 }
 
+/* ✅ DUELLO PORTIERI: sceglie immagine in base ai nomi */
+function pickGKPosterName(keeperAName, keeperBName){
+  const a = normName(keeperAName);
+  const b = normName(keeperBName);
+  if(!a || !b) return null;
+  return GK_POSTERS[`${a}|${b}`] || null;
+}
+function showGKPoster(filename){
+  if(!filename){
+    gkPosterWrap.style.display = "none";
+    gkPosterImg.removeAttribute("src");
+    return;
+  }
+  gkPosterImg.src = filename; // file .png in root
+  gkPosterWrap.style.display = "block";
+}
+
 /* MAIN LOAD */
 async function load(){
   await refreshAdminState();
@@ -1453,7 +1513,7 @@ async function load(){
     scorersBox.style.display="none";
   }
 
-  // Mappa (visibile SOLO se match NON terminato)
+  // Mappa + titolo (visibile SOLO se match NON terminato)
   fieldTitleEl.style.display = matchEnded ? "none" : "block";
   mapBox.style.display = matchEnded ? "none" : "block";
   mapActions.style.display = matchEnded ? "none" : "flex";
@@ -1485,10 +1545,13 @@ async function load(){
   const ka = findKeeperForTeam(aPlayers, m.keeper_a);
   const kb = findKeeperForTeam(bPlayers, m.keeper_b);
 
-  // ✅ DUELLO PORTIERI (usa i nomi effettivi dei portieri trovati; fallback a keeper_a/keeper_b)
-  const keeperNameA = ka?.name || m.keeper_a || "";
-  const keeperNameB = kb?.name || m.keeper_b || "";
-  updateGKPoster(matchEnded, keeperNameA, keeperNameB);
+  // ✅ DUELLO PORTIERI: mostrato SOLO se partita terminata e ci sono i portieri
+  if(matchEnded){
+    const posterFile = pickGKPosterName(ka?.name, kb?.name);
+    showGKPoster(posterFile);
+  }else{
+    showGKPoster(null);
+  }
 
   if(matchEnded){
     // RISULTATO
@@ -1520,7 +1583,6 @@ async function load(){
     commentsWrap.style.display = "none";
     currentMatchId = null;
 
-    // chiudi realtime channel se si passa a partita non finita
     try{
       if(commentsChannel){
         client.removeChannel(commentsChannel);
@@ -1583,7 +1645,15 @@ async function load(){
 }
 
 load();
+
+/* ✅ evita “pagina bianca” se una promise va in errore */
+window.addEventListener("unhandledrejection", (e)=>{
+  console.error("Unhandled promise:", e.reason);
+});
+window.addEventListener("error", (e)=>{
+  console.error("JS error:", e.message, e.error);
+});
 </script>
+
 </body>
 </html>
-```0202827227272
