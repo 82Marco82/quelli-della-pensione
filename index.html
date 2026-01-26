@@ -237,6 +237,25 @@
       }
     }
 
+    /* ✅ MVP PARTITA PRECEDENTE (immagine fissa mvpgiornata.jpg) */
+    .prevMvpWrap{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      background: radial-gradient(circle at center, #111 0%, #000 70%);
+    }
+    .prevMvpWrap img{
+      width:100%;
+      display:block;
+      max-height:420px;
+      object-fit:contain;       /* MAI tagliare */
+      object-position:center;
+    }
+    @media (orientation: landscape){
+      .prevMvpWrap img{ max-height:70vh; }
+    }
+
     /* RISULTATO (nuovo layout) */
     .resultBox{
       border:1px solid var(--border);
@@ -796,6 +815,14 @@
     <div id="calledTitle" class="line"><b>DISPONIBILI PER LA PARTITA</b></div>
     <div id="called" class="playersWrap muted">—</div>
 
+    <!-- ✅ MIGLIORE IN CAMPO PARTITA PRECEDENTE (mostrato quando la partita NON è finita) -->
+    <div id="prevMvpHead" class="formationsHead" style="display:none">
+      <div class="formationsTitle">MIGLIORE IN CAMPO PARTITA PRECEDENTE</div>
+      <div class="prevMvpWrap">
+        <img id="prevMvpImg" src="mvpgiornata.jpg" alt="MVP partita precedente">
+      </div>
+    </div>
+
     <!-- FORMAZIONI -->
     <div id="formationsHead" class="formationsHead" style="display:none">
       <div class="formationsTitle">FORMAZIONI</div>
@@ -891,6 +918,10 @@ const infoEl = document.getElementById("info");
 /* ✅ DUELLO PORTIERI DOM */
 const gkPosterWrap = document.getElementById("gkPosterWrap");
 const gkPosterImg  = document.getElementById("gkPosterImg");
+
+/* ✅ MVP PARTITA PRECEDENTE DOM */
+const prevMvpHead = document.getElementById("prevMvpHead");
+const prevMvpImg  = document.getElementById("prevMvpImg");
 
 /* RISULTATO DOM */
 const resultHead = document.getElementById("resultHead");
@@ -1281,6 +1312,8 @@ function riskLevel({code, precipProb, wind, temp}){
 function setWeatherAlert(level, text){
   weatherAlert.className =
     "alertPill " + (level==="ok" ? "alert-ok" : level==="warn" ? "alert-warn" : "alert-risk");
+  weatherAlert.className =
+    "alertPill " + (level==="ok" ? "alert-ok" : level==="warn" ? "alert-warn" : "alert-risk");
   weatherAlert.textContent = text;
 }
 async function loadWeather(matchDateISO, matchTimeStr){
@@ -1405,7 +1438,8 @@ async function loadMVP(matchId, playersById){
     mvpTop3.innerHTML = top3.map((r,i)=>`
       <div class="mvpRow">
         <div class="mvpLeft">
-          <div class="medal">${escapeHtml(medal(i))}</div><img class="mvpAvatar" style="width:36px;height:36px" src="${escapeHtml(avatarUrl(r.avatar))}" alt="">
+          <div class="medal">${escapeHtml(medal(i))}</div>
+          <img class="mvpAvatar" style="width:36px;height:36px" src="${escapeHtml(avatarUrl(r.avatar))}" alt="">
           <div>${escapeHtml(r.name)}</div>
         </div>
         <div>${r.votes}</div>
@@ -1462,6 +1496,7 @@ async function load(){
     mvpBox.style.display = "none";
     resultHead.style.display = "none";
     gkPosterWrap.style.display = "none";
+    if(prevMvpHead) prevMvpHead.style.display = "none";
     return;
   }
 
@@ -1478,6 +1513,7 @@ async function load(){
     calledEl.textContent = "—";
     commentsWrap.style.display = "none";
     gkPosterWrap.style.display = "none";
+    if(prevMvpHead) prevMvpHead.style.display = "none";
     return;
   }
 
@@ -1537,10 +1573,13 @@ async function load(){
   const kb = findKeeperForTeam(bPlayers, m.keeper_b);
 
   if(matchEnded){
+    // ✅ nascondi MVP partita precedente quando la partita è finita
+    if(prevMvpHead) prevMvpHead.style.display = "none";
+
     // ✅ DUELLO PORTIERI (solo a partita finita)
     const poster = pickGkPoster(ka, kb);
     if(poster){
-      gkPosterImg.src = poster;        // gvsa.jpg / gvst.jpg (stessa cartella di index.html)
+      gkPosterImg.src = poster;
       gkPosterWrap.style.display = "block";
       gkPosterImg.onerror = () => {
         gkPosterWrap.style.display = "none";
@@ -1585,6 +1624,17 @@ async function load(){
     gkPosterWrap.style.display = "none";
     gkPosterImg.removeAttribute("src");
 
+    // ✅ mostra MVP partita precedente (immagine fissa)
+    if(prevMvpHead && prevMvpImg){
+      prevMvpHead.style.display = "block";
+      // cache-bust così quando sovrascrivi mvpgiornata.jpg si vede subito l’ultima
+      prevMvpImg.src = `mvpgiornata.jpg?v=${Date.now()}`;
+      prevMvpImg.onerror = () => {
+        prevMvpHead.style.display = "none";
+        prevMvpImg.removeAttribute("src");
+      };
+    }
+
     // chiudi realtime channel se si passa a partita non finita
     try{
       if(commentsChannel){
@@ -1621,7 +1671,6 @@ async function load(){
     await loadMVP(m.id, playersById);
   }else{
     if(matchEnded){
-      // prova a caricare e mostrare il finale SOLO se esistono voti
       mvpBox.style.display = "block";
       mvpTitle.textContent = "🏆 MVP (finale)";
       mvpStatePill.textContent = "🔒 Votazione chiusa";
@@ -1632,7 +1681,6 @@ async function load(){
 
       const totalVotes = await loadMVP(m.id, playersById);
       if(totalVotes <= 0){
-        // nessun voto -> nascondi box
         mvpBox.style.display = "none";
       }
     }else{
@@ -1670,3 +1718,4 @@ load();
 </script>
 </body>
 </html>
+by Marco82
