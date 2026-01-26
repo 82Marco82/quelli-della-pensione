@@ -60,7 +60,6 @@
 
     .header{text-align:center}
 
-    /* LOGO "MONETA" */
     .logo{
       width:80px;height:80px;border-radius:999px;
       background:linear-gradient(135deg,var(--logo1),var(--logo2));
@@ -108,7 +107,6 @@
       text-transform:uppercase;
     }
 
-    /* Titolo sezione (stile hero) */
     .sectionCaption{
       margin-top:10px;
       text-align:center;
@@ -198,7 +196,6 @@
     .kit{display:inline-flex;align-items:center;gap:6px}
     .kit svg{width:18px;height:18px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 
-    /* BLOCCO TITOLO (stile FORMAZIONI) */
     .formationsHead{
       margin-top:12px;
       padding:12px;
@@ -216,7 +213,6 @@
       text-align:center;
     }
 
-    /* ✅ DUELLO PORTIERI (Bande nere + locandina + NO tagli) */
     .gkPosterWrap{
       margin-top:12px;
       border:1px solid var(--border);
@@ -228,16 +224,13 @@
       width:100%;
       display:block;
       max-height:420px;
-      object-fit:contain;       /* MAI tagliare */
+      object-fit:contain;
       object-position:center;
     }
     @media (orientation: landscape){
-      .gkPosterWrap img{
-        max-height:70vh;        /* più spazio in orizzontale */
-      }
+      .gkPosterWrap img{max-height:70vh;}
     }
 
-    /* RISULTATO (nuovo layout) */
     .resultBox{
       border:1px solid var(--border);
       border-radius:16px;
@@ -276,7 +269,6 @@
       font-weight:900;
     }
 
-    /* riga squadre + avatar */
     .resultTeamsRow{
       margin-top:12px;
       display:flex;
@@ -325,7 +317,6 @@
       flex:0 0 auto;
     }
 
-    /* riga punteggi incolonnati */
     .scoresRow{
       margin-top:12px;
       display:grid;
@@ -360,7 +351,6 @@
       .teamSide{min-width:0}
     }
 
-    /* MVP box */
     .mvpBox{
       margin-top:12px;
       padding:12px;
@@ -412,7 +402,6 @@
       font-weight:900;
     }
 
-    /* METEO */
     .weatherBox{
       margin-top:12px;
       padding:12px;
@@ -436,7 +425,6 @@
     .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
     .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
 
-    /* Players pills */
     .playersWrap{margin-top:6px}
     .playerPill{
       display:inline-flex;
@@ -461,7 +449,6 @@
     .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-    /* Formazioni header (GK VS GK) */
     .vsRow{
       display:flex;align-items:center;justify-content:space-between;
       gap:10px;flex-wrap:wrap;
@@ -497,7 +484,6 @@
       flex:0 0 auto;
     }
 
-    /* glove animation */
     .glove{
       display:inline-block;
       margin-left:6px;
@@ -511,7 +497,6 @@
       100%{transform:translateY(0) scale(1);opacity:1}
     }
 
-    /* COMMENTI */
     .commentsWrap{
       margin-top:12px;
       border:1px solid var(--border);
@@ -528,12 +513,7 @@
       text-transform:uppercase;
       text-align:center;
     }
-    .commentForm{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      margin-top:10px;
-    }
+    .commentForm{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
     .inputLike{
       width:100%;
       border:1px solid var(--border);
@@ -544,18 +524,8 @@
       font-weight:800;
       outline:none;
     }
-    .commentTextarea{
-      min-height:84px;
-      resize:none;
-      line-height:1.35;
-      font-weight:700;
-    }
-    .commentActions{
-      display:flex;
-      gap:10px;
-      justify-content:flex-end;
-      flex-wrap:wrap;
-    }
+    .commentTextarea{min-height:84px;resize:none;line-height:1.35;font-weight:700;}
+    .commentActions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;}
     .commentError{
       display:none;
       margin-top:6px;
@@ -575,30 +545,10 @@
       margin-top:10px;
     }
     body.dark .commentItem{background:rgba(255,255,255,.03)}
-    .commentTop{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .commentMeta{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      color:var(--muted);
-      font-weight:900;
-      font-size:13px;
-      flex-wrap:wrap;
-    }
-    .commentBubble{
-      margin-top:8px;
-      font-weight:800;
-      white-space:pre-wrap;
-      word-break:break-word;
-    }
+    .commentTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+    .commentMeta{display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:900;font-size:13px;flex-wrap:wrap;}
+    .commentBubble{margin-top:8px;font-weight:800;white-space:pre-wrap;word-break:break-word;}
 
-    /* Admin */
     .commentAdminActions{display:flex;align-items:center;gap:8px}
     .iconBtn{
       border:1px solid var(--border);
@@ -625,7 +575,6 @@
       text-transform:uppercase;
     }
 
-    /* TOAST */
     .toast{
       position:fixed;
       left:50%;
@@ -645,10 +594,7 @@
       max-width:min(92vw,520px);
       text-align:center;
     }
-    .toast.show{
-      opacity:1;
-      transform:translateX(-50%) translateY(0);
-    }
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
     .toast.ok{ border-color: var(--okBd); }
     .toast.err{ border-color: var(--riskBd); }
   </style>
@@ -681,7 +627,6 @@
     <!-- RISULTATO -->
     <div id="resultHead" class="formationsHead" style="display:none">
       <div class="formationsTitle">RISULTATO</div>
-
       <div id="resultBox" class="resultBox">
         <div class="resultTop">
           <div class="resultPill">🏁 PARTITA TERMINATA</div>
@@ -792,6 +737,15 @@
       <div id="scorersText" class="muted"></div>
     </div>
 
+    <!-- ✅ MIGLIORE IN CAMPO PARTITA PRECEDENTE (solo quando match NON finita) -->
+    <div id="prevMvpTitle" class="sectionCaption" style="display:none">
+      MIGLIORE IN CAMPO
+      <span class="sub">PARTITA PRECEDENTE</span>
+    </div>
+    <div id="prevMvpWrap" class="gkPosterWrap" style="display:none">
+      <img id="prevMvpImg" src="" alt="MVP giornata">
+    </div>
+
     <!-- DISPONIBILI -->
     <div id="calledTitle" class="line"><b>DISPONIBILI PER LA PARTITA</b></div>
     <div id="called" class="playersWrap muted">—</div>
@@ -844,9 +798,14 @@
 <div id="toast" class="toast">—</div>
 <button id="themeToggle" class="fab">🌙</button>
 
-<script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
+/* =========================
+   ✅ CONFIG (file unico)
+   ========================= */
+const SUPABASE_URL = "INSERISCI_LA_TUA_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "INSERISCI_LA_TUA_SUPABASE_ANON_KEY";
+
 /* THEME */
 const themeBtn = document.getElementById("themeToggle");
 function setTheme(mode){
@@ -868,9 +827,9 @@ logoCoin.addEventListener("click", spinLogo);
 logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
 
 /* SUPABASE */
-if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
-  alert("config.js non caricato o non valido");
-  throw new Error("Missing config");
+if(!SUPABASE_URL || !SUPABASE_ANON_KEY || String(SUPABASE_URL).includes("INSERISCI_")){
+  alert("Config Supabase mancante: inserisci SUPABASE_URL e SUPABASE_ANON_KEY nello script.");
+  throw new Error("Missing Supabase config");
 }
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -888,9 +847,14 @@ function showToast(msg, type="ok"){
 const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
 
-/* ✅ DUELLO PORTIERI DOM */
+/* DUELLO PORTIERI DOM */
 const gkPosterWrap = document.getElementById("gkPosterWrap");
 const gkPosterImg  = document.getElementById("gkPosterImg");
+
+/* ✅ MVP PRECEDENTE DOM */
+const prevMvpTitle = document.getElementById("prevMvpTitle");
+const prevMvpWrap  = document.getElementById("prevMvpWrap");
+const prevMvpImg   = document.getElementById("prevMvpImg");
 
 /* RISULTATO DOM */
 const resultHead = document.getElementById("resultHead");
@@ -1022,10 +986,8 @@ function pickGkPoster(ka, kb){
   const a = normName(ka?.name || "");
   const b = normName(kb?.name || "");
   if(!a || !b) return "";
-
   if( (a==="gianni" && b==="andrea") || (a==="andrea" && b==="gianni") ) return "gvsa.jpg";
   if( (a==="gianni" && b==="tonino") || (a==="tonino" && b==="gianni") ) return "gvst.jpg";
-
   return "";
 }
 
@@ -1035,17 +997,30 @@ function setupMapLinks(){
   mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
 }
 
-/* Profanity filter (semplice) */
-const BAD_WORDS = [
-  "cazzo","cazzi","merda","stronzo","stronzi","vaffanculo","vaff","porco","porcodio","dio cane",
-  "minchia","puttana","puttane","troia","bastardo","bastardi","testa di cazzo","coglione","coglioni"
+/* ✅ PROFANITY FILTER (più robusto, senza toccare index ogni volta) */
+const BAD_PATTERNS = [
+  /c+a+z+z+o+/gi,
+  /m+e+r+d+a+/gi,
+  /s+t+r+o+n+z+o+/gi,
+  /s+t+r+o+n+z+i+/gi,
+  /m+i+n+c+h+i+a+/gi,
+  /t+r+o+i+a+/gi,
+  /p+u+t+t+a+n+a+/gi,
+  /b+a+s+t+a+r+d+o+/gi,
+  /c+o+g+l+i+o+n+e+/gi,
+  /c+o+g+l+i+o+n+i+/gi,
+  /v+a+f+f+a+n+c+u+l+o+/gi,
+  /v+a+f+f+/gi,
+  // bestemmie/spaziature: dio cane / porco dio ecc (con separatori)
+  /d+i+o+\s*[\W_]*c+a+n+e+/gi,
+  /p+o+r+c+o+\s*[\W_]*d+i+o+/gi,
+  /p+o+r+c+o+d+i+o+/gi,
+  /t+e+s+t+a+\s*[\W_]*d+i+\s*[\W_]*c+a+z+z+o+/gi
 ];
 function censorProfanity(text){
   let out = String(text||"");
-  for(const w of BAD_WORDS){
-    const escaped = w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const re = new RegExp(`\\b${escaped}\\b`, "gi");
-    out = out.replace(re, (m)=> "*".repeat(Math.min(12, m.length)));
+  for(const re of BAD_PATTERNS){
+    out = out.replace(re, (m)=>"*".repeat(Math.min(12, m.length)));
   }
   return out;
 }
@@ -1061,6 +1036,28 @@ function timeAgo(ts){
     const days = Math.floor(h/24);
     return `${days} g`;
   }catch(e){ return ""; }
+}
+
+/* ✅ MVP PRECEDENTE: mostra solo se esiste la foto */
+function showPrevMvpIfAvailable(show){
+  if(!prevMvpTitle || !prevMvpWrap || !prevMvpImg) return;
+  if(!show){
+    prevMvpTitle.style.display = "none";
+    prevMvpWrap.style.display = "none";
+    prevMvpImg.removeAttribute("src");
+    return;
+  }
+  const src = `mvpgiornata.jpg?v=${Date.now()}`; // anti-cache (tu sovrascrivi il file)
+  prevMvpImg.onload = () => {
+    prevMvpTitle.style.display = "block";
+    prevMvpWrap.style.display = "block";
+  };
+  prevMvpImg.onerror = () => {
+    prevMvpTitle.style.display = "none";
+    prevMvpWrap.style.display = "none";
+    prevMvpImg.removeAttribute("src");
+  };
+  prevMvpImg.src = src;
 }
 
 /* ✅ ADMIN state */
@@ -1354,7 +1351,7 @@ async function loadWeather(matchDateISO, matchTimeStr){
   }
 }
 
-/* ✅ MVP: ritorna anche il totale voti (serve per decidere se mostrare il finale) */
+/* ✅ MVP votes */
 async function loadMVP(matchId, playersById){
   try{
     const { data: votes, error } = await client
@@ -1405,7 +1402,8 @@ async function loadMVP(matchId, playersById){
     mvpTop3.innerHTML = top3.map((r,i)=>`
       <div class="mvpRow">
         <div class="mvpLeft">
-          <div class="medal">${escapeHtml(medal(i))}</div><img class="mvpAvatar" style="width:36px;height:36px" src="${escapeHtml(avatarUrl(r.avatar))}" alt="">
+          <div class="medal">${escapeHtml(medal(i))}</div>
+          <img class="mvpAvatar" style="width:36px;height:36px" src="${escapeHtml(avatarUrl(r.avatar))}" alt="">
           <div>${escapeHtml(r.name)}</div>
         </div>
         <div>${r.votes}</div>
@@ -1462,6 +1460,7 @@ async function load(){
     mvpBox.style.display = "none";
     resultHead.style.display = "none";
     gkPosterWrap.style.display = "none";
+    showPrevMvpIfAvailable(false);
     return;
   }
 
@@ -1478,6 +1477,7 @@ async function load(){
     calledEl.textContent = "—";
     commentsWrap.style.display = "none";
     gkPosterWrap.style.display = "none";
+    showPrevMvpIfAvailable(false);
     return;
   }
 
@@ -1537,10 +1537,13 @@ async function load(){
   const kb = findKeeperForTeam(bPlayers, m.keeper_b);
 
   if(matchEnded){
-    // ✅ DUELLO PORTIERI (solo a partita finita)
+    // ✅ a partita finita NON mostrare MVP precedente (serve solo quando crei nuova partita)
+    showPrevMvpIfAvailable(false);
+
+    // DUELLO PORTIERI
     const poster = pickGkPoster(ka, kb);
     if(poster){
-      gkPosterImg.src = poster;        // gvsa.jpg / gvst.jpg (stessa cartella di index.html)
+      gkPosterImg.src = poster;
       gkPosterWrap.style.display = "block";
       gkPosterImg.onerror = () => {
         gkPosterWrap.style.display = "none";
@@ -1554,13 +1557,10 @@ async function load(){
     // RISULTATO
     resultHead.style.display = "block";
     resultTimeEl.textContent = time || "—";
-
     resultAvatarA.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
     resultAvatarB.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
-
     teamLabelA.textContent = "SQUADRA A";
     teamLabelB.textContent = "SQUADRA B";
-
     scoreAEl.textContent = (m.score_a ?? "—");
     scoreBEl.textContent = (m.score_b ?? "—");
 
@@ -1576,16 +1576,18 @@ async function load(){
     await loadComments(currentMatchId);
     subscribeComments(currentMatchId);
   }else{
-    // partita NON finita
+    // ✅ partita NON finita: mostra MVP precedente (se la foto esiste)
+    showPrevMvpIfAvailable(true);
+
     resultHead.style.display = "none";
     commentsWrap.style.display = "none";
     currentMatchId = null;
 
-    // ✅ nascondi poster
+    // nascondi poster duello
     gkPosterWrap.style.display = "none";
     gkPosterImg.removeAttribute("src");
 
-    // chiudi realtime channel se si passa a partita non finita
+    // chiudi realtime channel
     try{
       if(commentsChannel){
         client.removeChannel(commentsChannel);
@@ -1607,9 +1609,7 @@ async function load(){
     }
   }
 
-  // MVP:
-  // - se votazione aperta: mostra provvisorio
-  // - se votazione chiusa ma partita finita e ci sono voti: mostra FINALE
+  // MVP box (come prima)
   if(voteOpen){
     mvpBox.style.display = "block";
     mvpTitle.textContent = "🏆 MVP (provvisorio)";
@@ -1621,7 +1621,6 @@ async function load(){
     await loadMVP(m.id, playersById);
   }else{
     if(matchEnded){
-      // prova a caricare e mostrare il finale SOLO se esistono voti
       mvpBox.style.display = "block";
       mvpTitle.textContent = "🏆 MVP (finale)";
       mvpStatePill.textContent = "🔒 Votazione chiusa";
@@ -1632,7 +1631,6 @@ async function load(){
 
       const totalVotes = await loadMVP(m.id, playersById);
       if(totalVotes <= 0){
-        // nessun voto -> nascondi box
         mvpBox.style.display = "none";
       }
     }else{
@@ -1654,10 +1652,8 @@ async function load(){
     teamBEl.innerHTML = bPlayers.length ? bPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
 
     formationsHead.style.display = "block";
-
     gkAAvatar.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
     gkBAvatar.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
-
     gkAName.innerHTML = ka ? (escapeHtml(ka.name) + `<span class="glove">🧤</span>`) : "—";
     gkBName.innerHTML = kb ? (escapeHtml(kb.name) + `<span class="glove">🧤</span>`) : "—";
   }else{
@@ -1670,4 +1666,5 @@ load();
 </script>
 </body>
 </html>
-```0Fine26262626226
+
+vediamo
