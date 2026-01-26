@@ -216,6 +216,27 @@
       text-align:center;
     }
 
+    /* ✅ DUELLO PORTIERI (Bande nere + locandina + NO tagli) */
+    .gkPosterWrap{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      background: radial-gradient(circle at center, #111 0%, #000 70%);
+    }
+    .gkPosterWrap img{
+      width:100%;
+      display:block;
+      max-height:420px;
+      object-fit:contain;       /* MAI tagliare */
+      object-position:center;
+    }
+    @media (orientation: landscape){
+      .gkPosterWrap img{
+        max-height:70vh;        /* più spazio in orizzontale */
+      }
+    }
+
     /* RISULTATO (nuovo layout) */
     .resultBox{
       border:1px solid var(--border);
@@ -632,6 +653,7 @@
     .toast.err{ border-color: var(--riskBd); }
   </style>
 </head>
+
 <body>
 <div class="wrap">
   <div class="header">
@@ -651,6 +673,11 @@
     <div id="status" class="muted">Caricamento…</div>
     <div id="info"></div>
 
+    <!-- ✅ DUELLO PORTIERI (prima del RISULTATO) -->
+    <div id="gkPosterWrap" class="gkPosterWrap" style="display:none">
+      <img id="gkPosterImg" src="" alt="Duello portieri">
+    </div>
+
     <!-- RISULTATO -->
     <div id="resultHead" class="formationsHead" style="display:none">
       <div class="formationsTitle">RISULTATO</div>
@@ -661,7 +688,6 @@
           <div class="resultTimePill">⏱ <span id="resultTime">—</span></div>
         </div>
 
-        <!-- NUOVO: SQUADRA A VS SQUADRA B con avatar -->
         <div class="resultTeamsRow">
           <div class="teamSide">
             <img id="resultAvatarA" class="teamAvatar" src="avatars/default.png" alt="A">
@@ -676,7 +702,6 @@
           </div>
         </div>
 
-        <!-- NUOVO: punteggi incolonnati -->
         <div class="scoresRow">
           <div class="scoreCol">
             <div id="scoreA" class="scoreNum">—</div>
@@ -803,6 +828,7 @@
       <div class="line kit" style="margin-top:10px"><span id="tBIcon"></span><b>Squadra B</b></div>
       <div id="teamB" class="playersWrap muted"></div>
     </div>
+
   </div>
 
   <div class="card nav muted">
@@ -816,12 +842,10 @@
 </div>
 
 <div id="toast" class="toast">—</div>
-
 <button id="themeToggle" class="fab">🌙</button>
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-
 <script>
 /* THEME */
 const themeBtn = document.getElementById("themeToggle");
@@ -863,6 +887,10 @@ function showToast(msg, type="ok"){
 /* DOM */
 const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
+
+/* ✅ DUELLO PORTIERI DOM */
+const gkPosterWrap = document.getElementById("gkPosterWrap");
+const gkPosterImg  = document.getElementById("gkPosterImg");
 
 /* RISULTATO DOM */
 const resultHead = document.getElementById("resultHead");
@@ -977,7 +1005,7 @@ function isVoteOpen(match){
   return (match?.vote_open === true) || (match?.voting_open === true);
 }
 
-/* Trova portiere SOLO dentro la squadra */
+/* ✅ Trova portiere SOLO dentro la squadra */
 function findKeeperForTeam(teamPlayers, keeperName){
   const kName = normName(keeperName || "");
   if(kName){
@@ -986,7 +1014,22 @@ function findKeeperForTeam(teamPlayers, keeperName){
   }
   const byGK = (teamPlayers||[]).find(isGK);
   if(byGK) return byGK;
-  return (teamPlayers||[])[0] || null;
+  return null;
+}
+
+/* ✅ DUELLO PORTIERI: mapping immagini */
+function pickGkPoster(ka, kb){
+  const a = normName(ka?.name || "");
+  const b = normName(kb?.name || "");
+  if(!a || !b) return ""; // nessun poster se manca un nome
+
+  // Gianni vs Andrea => gvsa.jpg
+  if( (a==="gianni" && b==="andrea") || (a==="andrea" && b==="gianni") ) return "gvsa.jpg";
+
+  // Gianni vs Tonino => gvst.jpg
+  if( (a==="gianni" && b==="tonino") || (a==="tonino" && b==="gianni") ) return "gvst.jpg";
+
+  return ""; // non riconosciuta => non mostra nulla
 }
 
 /* MAP LINKS */
@@ -1004,7 +1047,6 @@ function censorProfanity(text){
   let out = String(text||"");
   for(const w of BAD_WORDS){
     const escaped = w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    // NOTE: qui resta "semplice": se uno scrive c@zz0 non lo prende (ok per un filtro leggero)
     const re = new RegExp(`\\b${escaped}\\b`, "gi");
     out = out.replace(re, (m)=> "*".repeat(Math.min(12, m.length)));
   }
@@ -1024,7 +1066,7 @@ function timeAgo(ts){
   }catch(e){ return ""; }
 }
 
-/* ✅ ADMIN state (se sei loggato come in admin.html/foto.html) */
+/* ✅ ADMIN state */
 let isAdmin = false;
 async function refreshAdminState(){
   try{
@@ -1033,7 +1075,6 @@ async function refreshAdminState(){
   }catch(e){
     isAdmin = false;
   }
-  // badge visibile SOLO a te (se loggato)
   if(adminBadge){
     adminBadge.style.display = isAdmin ? "inline-flex" : "none";
   }
@@ -1043,7 +1084,7 @@ async function refreshAdminState(){
 let currentMatchId = null;
 let commentsChannel = null;
 
-/* Render comment (con delete se admin) */
+/* Render comment */
 function renderCommentItem(c){
   const when = timeAgo(c.created_at);
   const txt = escapeHtml(c.text || "");
@@ -1091,14 +1132,13 @@ async function loadComments(matchId){
   commentsList.innerHTML = comments.map(renderCommentItem).join("");
 }
 
-/* ✅ Delete comment (solo admin loggato) + refresh automatico immediato */
+/* Delete comment */
 async function deleteCommentById(id){
   if(!isAdmin) return;
 
   const ok = confirm("Eliminare questo commento?");
   if(!ok) return;
 
-  // rimozione ottica immediata (così “sembra istantaneo”)
   const node = commentsList.querySelector(`.commentItem[data-id="${CSS.escape(id)}"]`);
   if(node) node.style.opacity = "0.35";
 
@@ -1112,7 +1152,6 @@ async function deleteCommentById(id){
 
     showToast("✅ Commento eliminato", "ok");
 
-    // ✅ refresh automatico subito dopo DELETE
     if(currentMatchId){
       await refreshAdminState();
       await loadComments(currentMatchId);
@@ -1120,7 +1159,6 @@ async function deleteCommentById(id){
   }catch(e){
     console.error(e);
     showToast("❌ Errore eliminazione (permessi/RLS)", "err");
-    // ripristina opacità se fallisce
     if(node) node.style.opacity = "1";
   }
 }
@@ -1133,7 +1171,7 @@ commentsList.addEventListener("click", (ev)=>{
   if(id) deleteCommentById(id);
 });
 
-/* Subscribe realtime (SOLO match_comments) */
+/* Subscribe realtime */
 function subscribeComments(matchId){
   try{
     if(commentsChannel){
@@ -1147,7 +1185,6 @@ function subscribeComments(matchId){
     .on('postgres_changes',
       { event: '*', schema: 'public', table: 'match_comments', filter: `match_id=eq.${matchId}` },
       async () => {
-        // quando arriva INSERT/DELETE/UPDATE aggiorna e ri-renderizza (admin compreso)
         await refreshAdminState();
         await loadComments(matchId);
       }
@@ -1245,7 +1282,8 @@ function riskLevel({code, precipProb, wind, temp}){
   return "ok";
 }
 function setWeatherAlert(level, text){
-  weatherAlert.className = "alertPill " + (level==="ok" ? "alert-ok" : level==="warn" ? "alert-warn" : "alert-risk");
+  weatherAlert.className =
+    "alertPill " + (level==="ok" ? "alert-ok" : level==="warn" ? "alert-warn" : "alert-risk");
   weatherAlert.textContent = text;
 }
 async function loadWeather(matchDateISO, matchTimeStr){
@@ -1307,7 +1345,8 @@ async function loadWeather(matchDateISO, matchTimeStr){
     }
 
     weatherBig.textContent = emoji;
-    weatherMini.textContent = `🌡 ${Math.round(temp)}°C  •  💧 ${pp}%  •  💨 ${Math.round(wind)} km/h  •  ⏰ ${hhmm}`;
+    weatherMini.textContent =
+      `🌡 ${Math.round(temp)}°C  •  💧 ${pp}%  •  💨 ${Math.round(wind)} km/h  •  ⏰ ${hhmm}`;
   }catch(e){
     console.error(e);
     weatherBox.style.display = "block";
@@ -1421,6 +1460,7 @@ async function load(){
     mapActions.style.display = "none";
     mvpBox.style.display = "none";
     resultHead.style.display = "none";
+    gkPosterWrap.style.display = "none";
     return;
   }
 
@@ -1436,6 +1476,7 @@ async function load(){
     teamsBox.style.display = "none";
     calledEl.textContent = "—";
     commentsWrap.style.display = "none";
+    gkPosterWrap.style.display = "none";
     return;
   }
 
@@ -1462,7 +1503,7 @@ async function load(){
     scorersBox.style.display="none";
   }
 
-  // ✅ Mappa + titolo (default: visibile SOLO se match NON terminato)
+  // Mappa + titolo (visibile SOLO se match NON terminato)
   fieldTitleEl.style.display = matchEnded ? "none" : "block";
   mapBox.style.display = matchEnded ? "none" : "block";
   mapActions.style.display = matchEnded ? "none" : "flex";
@@ -1495,18 +1536,31 @@ async function load(){
   const kb = findKeeperForTeam(bPlayers, m.keeper_b);
 
   if(matchEnded){
-    // ✅ RISULTATO: nuovo layout richiesto
+    // ✅ DUELLO PORTIERI (solo a partita finita)
+    const poster = pickGkPoster(ka, kb);
+    if(poster){
+      gkPosterImg.src = poster;        // gvsa.jpg / gvst.jpg (stessa cartella di index.html)
+      gkPosterWrap.style.display = "block";
+      // se l'immagine non esiste/non carica -> nascondi senza errori
+      gkPosterImg.onerror = () => {
+        gkPosterWrap.style.display = "none";
+        gkPosterImg.removeAttribute("src");
+      };
+    }else{
+      gkPosterWrap.style.display = "none";
+      gkPosterImg.removeAttribute("src");
+    }
+
+    // RISULTATO
     resultHead.style.display = "block";
     resultTimeEl.textContent = time || "—";
 
     resultAvatarA.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
     resultAvatarB.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
 
-    // etichette fisse come vuoi tu
     teamLabelA.textContent = "SQUADRA A";
     teamLabelB.textContent = "SQUADRA B";
 
-    // punteggi separati (incolonnati)
     scoreAEl.textContent = (m.score_a ?? "—");
     scoreBEl.textContent = (m.score_b ?? "—");
 
@@ -1522,9 +1576,14 @@ async function load(){
     await loadComments(currentMatchId);
     subscribeComments(currentMatchId);
   }else{
+    // partita NON finita
     resultHead.style.display = "none";
     commentsWrap.style.display = "none";
     currentMatchId = null;
+
+    // ✅ nascondi poster
+    gkPosterWrap.style.display = "none";
+    gkPosterImg.removeAttribute("src");
 
     // chiudi realtime channel se si passa a partita non finita
     try{
@@ -1548,7 +1607,7 @@ async function load(){
     }
   }
 
-  // ✅ MVP: mostrato SOLO se votazione aperta
+  // MVP: mostrato SOLO se votazione aperta
   if(voteOpen){
     mvpBox.style.display = "block";
     mvpTitle.textContent = "🏆 MVP (provvisorio)";
@@ -1576,8 +1635,10 @@ async function load(){
     teamBEl.innerHTML = bPlayers.length ? bPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
 
     formationsHead.style.display = "block";
+
     gkAAvatar.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
     gkBAvatar.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
+
     gkAName.innerHTML = ka ? (escapeHtml(ka.name) + `<span class="glove">🧤</span>`) : "—";
     gkBName.innerHTML = kb ? (escapeHtml(kb.name) + `<span class="glove">🧤</span>`) : "—";
   }else{
@@ -1590,4 +1651,4 @@ load();
 </script>
 </body>
 </html>
-verifica se funziona
+```0fine26
