@@ -216,20 +216,25 @@
       text-align:center;
     }
 
-    /* ✅ DUELLO PORTIERI */
+    /* ✅ DUELLO PORTIERI (Bande nere + locandina + NO tagli) */
     .gkPosterWrap{
       margin-top:12px;
       border:1px solid var(--border);
       border-radius:16px;
       overflow:hidden;
-      background:rgba(0,0,0,.02);
+      background: radial-gradient(circle at center, #111 0%, #000 70%);
     }
-    body.dark .gkPosterWrap{background:rgba(255,255,255,.03)}
     .gkPosterWrap img{
       width:100%;
       display:block;
       max-height:420px;
-      object-fit:cover;
+      object-fit:contain;       /* MAI tagliare */
+      object-position:center;
+    }
+    @media (orientation: landscape){
+      .gkPosterWrap img{
+        max-height:70vh;        /* più spazio in orizzontale */
+      }
     }
 
     /* RISULTATO (nuovo layout) */
@@ -738,7 +743,7 @@
     <!-- MVP -->
     <div id="mvpBox" class="mvpBox" style="display:none">
       <div class="mvpTitle">
-        <div id="mvpTitle">🏆 MVP (provvisorio)</div>
+        <div id="mvpTitle">🏆 MVP</div>
         <div id="mvpStatePill" class="pill" style="margin:0"></div>
       </div>
 
@@ -1016,15 +1021,12 @@ function findKeeperForTeam(teamPlayers, keeperName){
 function pickGkPoster(ka, kb){
   const a = normName(ka?.name || "");
   const b = normName(kb?.name || "");
-  if(!a || !b) return ""; // nessun poster se manca un nome
+  if(!a || !b) return "";
 
-  // Gianni vs Andrea => gvsa.jpg
   if( (a==="gianni" && b==="andrea") || (a==="andrea" && b==="gianni") ) return "gvsa.jpg";
-
-  // Gianni vs Tonino => gvst.jpg
   if( (a==="gianni" && b==="tonino") || (a==="tonino" && b==="gianni") ) return "gvst.jpg";
 
-  return ""; // non riconosciuta => non mostra nulla
+  return "";
 }
 
 /* MAP LINKS */
@@ -1352,7 +1354,7 @@ async function loadWeather(matchDateISO, matchTimeStr){
   }
 }
 
-/* MVP (solo se votazione aperta) */
+/* ✅ MVP: ritorna anche il totale voti (serve per decidere se mostrare il finale) */
 async function loadMVP(matchId, playersById){
   try{
     const { data: votes, error } = await client
@@ -1361,6 +1363,8 @@ async function loadMVP(matchId, playersById){
       .eq("match_id", matchId);
 
     if(error) throw error;
+
+    const totalVotes = (votes || []).length;
 
     const counts = new Map();
     (votes||[]).forEach(v=>{
@@ -1374,7 +1378,7 @@ async function loadMVP(matchId, playersById){
       mvpSub.textContent = "";
       mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
       mvpTop3.style.display = "none";
-      return;
+      return totalVotes;
     }
 
     const rows = [...counts.entries()]
@@ -1401,20 +1405,22 @@ async function loadMVP(matchId, playersById){
     mvpTop3.innerHTML = top3.map((r,i)=>`
       <div class="mvpRow">
         <div class="mvpLeft">
-          <div class="medal">${escapeHtml(medal(i))}</div>
-          <img class="mvpAvatar" style="width:36px;height:36px" src="${escapeHtml(avatarUrl(r.avatar))}" alt="">
+          <div class="medal">${escapeHtml(medal(i))}</div><img class="mvpAvatar" style="width:36px;height:36px" src="${escapeHtml(avatarUrl(r.avatar))}" alt="">
           <div>${escapeHtml(r.name)}</div>
         </div>
         <div>${r.votes}</div>
       </div>
     `).join("");
     mvpTop3.style.display = "block";
+
+    return totalVotes;
   }catch(e){
     console.error(e);
     mvpMain.textContent = "Errore MVP";
     mvpSub.textContent = "";
     mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
     mvpTop3.style.display = "none";
+    return 0;
   }
 }
 
@@ -1536,7 +1542,6 @@ async function load(){
     if(poster){
       gkPosterImg.src = poster;        // gvsa.jpg / gvst.jpg (stessa cartella di index.html)
       gkPosterWrap.style.display = "block";
-      // se l'immagine non esiste/non carica -> nascondi senza errori
       gkPosterImg.onerror = () => {
         gkPosterWrap.style.display = "none";
         gkPosterImg.removeAttribute("src");
@@ -1602,7 +1607,9 @@ async function load(){
     }
   }
 
-  // MVP: mostrato SOLO se votazione aperta
+  // MVP:
+  // - se votazione aperta: mostra provvisorio
+  // - se votazione chiusa ma partita finita e ci sono voti: mostra FINALE
   if(voteOpen){
     mvpBox.style.display = "block";
     mvpTitle.textContent = "🏆 MVP (provvisorio)";
@@ -1613,7 +1620,24 @@ async function load(){
     mvpTop3.style.display = "none";
     await loadMVP(m.id, playersById);
   }else{
-    mvpBox.style.display = "none";
+    if(matchEnded){
+      // prova a caricare e mostrare il finale SOLO se esistono voti
+      mvpBox.style.display = "block";
+      mvpTitle.textContent = "🏆 MVP (finale)";
+      mvpStatePill.textContent = "🔒 Votazione chiusa";
+      mvpMain.textContent = "Caricamento…";
+      mvpSub.textContent = "";
+      mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
+      mvpTop3.style.display = "none";
+
+      const totalVotes = await loadMVP(m.id, playersById);
+      if(totalVotes <= 0){
+        // nessun voto -> nascondi box
+        mvpBox.style.display = "none";
+      }
+    }else{
+      mvpBox.style.display = "none";
+    }
   }
 
   // Squadre + formazioni
@@ -1646,4 +1670,4 @@ load();
 </script>
 </body>
 </html>
-vediamo
+```0Fine26262626226
