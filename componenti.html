@@ -221,7 +221,7 @@
       <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
       <div class="titleWrap">
         <h1 class="title">COMPONENTI</h1>
-        <div class="subtitle">Rosa • Avatar • Ruoli • Presenze • MVP • Gol</div>
+        <div class="subtitle">Rosa • Avatar • Ruoli • Presenze • MVP • Gol • V/P/S</div>
       </div>
     </div>
 
@@ -348,6 +348,11 @@ function bump(map, id, inc=1){
   if(!k) return;
   map.set(k, (map.get(k)||0) + inc);
 }
+function isMatchEnded(m){
+  const a = m?.score_a, b = m?.score_b;
+  return a !== null && a !== undefined && b !== null && b !== undefined && a !== "" && b !== "";
+}
+function safeArr(v){ return Array.isArray(v) ? v : []; }
 
 /* ===== ADMIN SESSION ===== */
 async function getSession(){
@@ -397,13 +402,17 @@ const appearances = new Map();
 const mvpWins = new Map();
 const goals = new Map();
 
+/* ✅ NUOVO: vittorie/pareggi/sconfitte */
+const wins = new Map();
+const draws = new Map();
+const losses = new Map();
+
 /* scorers parser (tollerante) */
 function parseScorersToGoals(scorersAny){
   const out = new Map();
   const s = scorersAny;
   if(!s) return out;
 
-  // oggetto con items
   if(typeof s === "object" && !Array.isArray(s)){
     if(Array.isArray(s.items)){
       s.items.forEach(it=>{
@@ -413,7 +422,6 @@ function parseScorersToGoals(scorersAny){
       });
       return out;
     }
-    // mappa diretta {"uuid":2}
     Object.keys(s).forEach(k=>{
       const v = Number(s[k]);
       if(Number.isFinite(v) && v>0) bump(out, k, v);
@@ -421,7 +429,6 @@ function parseScorersToGoals(scorersAny){
     return out;
   }
 
-  // array
   if(Array.isArray(s)){
     s.forEach(it=>{
       if(!it) return;
@@ -453,9 +460,14 @@ function renderCard(p){
   const pos = String(p.position || "").trim() || "—";
   const roleLabel = gk ? "PORTIERE" : "GIOCATORE";
 
-  const pres = appearances.get(String(p.id)) || 0;
-  const mvps = mvpWins.get(String(p.id)) || 0;
-  const gol = goals.get(String(p.id)) || 0;
+  const pid = String(p.id);
+  const pres = appearances.get(pid) || 0;
+  const mvps = mvpWins.get(pid) || 0;
+  const gol  = goals.get(pid) || 0;
+
+  const v = wins.get(pid) || 0;
+  const x = draws.get(pid) || 0;
+  const s = losses.get(pid) || 0;
 
   const bio = safeBio(p);
 
@@ -472,6 +484,9 @@ function renderCard(p){
           <span class="tag">🎽 Pres. ${pres}</span>
           <span class="tag">🏆 MVP ${mvps}</span>
           <span class="tag">⚽ Gol ${gol}</span>
+          <span class="tag">✅ V ${v}</span>
+          <span class="tag">➖ P ${x}</span>
+          <span class="tag">❌ S ${s}</span>
         </div>
 
         <div class="pBio">${bio ? escapeHtml(bio) : (adminOn ? "✍️ (clicca per inserire descrizione)" : "—")}</div>
@@ -548,11 +563,12 @@ async function loadPlayers(){
 }
 
 async function loadMatchesForStats(){
+  // ✅ aggiunti team_a/team_b/score_a/score_b per V/P/S
   const { data, error } = await client
     .from(TABLE_MATCHES)
-    .select("id,called_up,scorers")
+    .select("id,match_date,called_up,team_a,team_b,score_a,score_b,scorers")
     .order("match_date", { ascending:false })
-    .limit(400);
+    .limit(600);
 
   if(error) throw error;
   return data || [];
@@ -562,7 +578,7 @@ async function loadVotesForStats(){
   const { data, error } = await client
     .from(TABLE_VOTES)
     .select("match_id,voted_player")
-    .limit(5000);
+    .limit(8000);
 
   if(error) throw error;
   return data || [];
@@ -570,15 +586,39 @@ async function loadVotesForStats(){
 
 function computeStats(matches, votes){
   appearances.clear(); mvpWins.clear(); goals.clear();
+  wins.clear(); draws.clear(); losses.clear();
 
-  // Presenze + Gol
+  // Presenze + Gol + V/P/S
   for(const m of (matches||[])){
+    // presenze = convocati (come prima)
     const called = Array.isArray(m.called_up) ? m.called_up : [];
     called.forEach(pid => bump(appearances, pid, 1));
 
+    // gol
     const gmap = parseScorersToGoals(m.scorers);
     for(const [pid, g] of gmap.entries()){
       bump(goals, pid, g);
+    }
+
+    // ✅ V/P/S (solo se partita finita + squadre presenti)
+    if(isMatchEnded(m)){
+      const sa = Number(m.score_a);
+      const sb = Number(m.score_b);
+      if(Number.isFinite(sa) && Number.isFinite(sb)){
+        const teamA = safeArr(m.team_a).map(String);
+        const teamB = safeArr(m.team_b).map(String);
+
+        if(sa > sb){
+          teamA.forEach(pid => bump(wins, pid, 1));
+          teamB.forEach(pid => bump(losses, pid, 1));
+        }else if(sa < sb){
+          teamA.forEach(pid => bump(losses, pid, 1));
+          teamB.forEach(pid => bump(wins, pid, 1));
+        }else{
+          teamA.forEach(pid => bump(draws, pid, 1));
+          teamB.forEach(pid => bump(draws, pid, 1));
+        }
+      }
     }
   }
 
@@ -622,7 +662,7 @@ async function loadAll(){
     matches = await loadMatchesForStats();
   }catch(e){
     console.error(e);
-    warn.push("⚠️ Non riesco a leggere matches (RLS/permessi): Presenze/Gol = 0");
+    warn.push("⚠️ Non riesco a leggere matches (RLS/permessi): Presenze/Gol/V-P-S = 0");
   }
 
   try{
