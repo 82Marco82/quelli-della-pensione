@@ -141,10 +141,12 @@
     .nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}
     .nav a{color:var(--text);text-decoration:none;font-weight:800}
 
-    .grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:12px}
-    @media(max-width:980px){ .grid{grid-template-columns:repeat(3, 1fr)} }
-    @media(max-width:720px){ .grid{grid-template-columns:repeat(2, 1fr)} }
-    @media(max-width:460px){ .grid{grid-template-columns:1fr} }
+    /* ✅ FIX PC: grid adattiva (non schiaccia le card) */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+      gap:12px;
+    }
 
     .playerCard{
       background:var(--card);
@@ -155,19 +157,26 @@
       cursor:pointer;
       transition:transform .12s ease;
       min-height:110px;
+
+      /* ✅ FIX PC: card stabile (evita sfasamenti con tag) */
       display:flex;
-      gap:12px;
-      align-items:center;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:10px;
     }
     .playerCard:hover{transform:translateY(-1px)}
+
+    /* ✅ FIX PC: avatar centrato e testo full width */
     .avatar{
       width:64px;height:64px;border-radius:999px;
       border:1px solid var(--border);
       object-fit:cover;
       background:#000;
       flex:0 0 auto;
+      margin:0 auto;
     }
-    .pTxt{min-width:0;flex:1}
+    .pTxt{min-width:0;flex:1;width:100%}
+
     .pName{
       font-weight:900;
       font-size:16px;
@@ -175,8 +184,17 @@
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+      width:100%;
+      text-align:center;
     }
-    .pMeta{margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .pMeta{
+      margin-top:8px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+    }
     .tag{
       display:inline-flex;align-items:center;gap:6px;
       padding:6px 10px;border-radius:999px;
@@ -197,6 +215,8 @@
       -webkit-box-orient:vertical;
       overflow:hidden;
       word-break:break-word;
+      width:100%;
+      text-align:center;
     }
     .mini{font-size:12px;color:var(--muted);font-weight:800}
 
@@ -402,7 +422,7 @@ const appearances = new Map();
 const mvpWins = new Map();
 const goals = new Map();
 
-/* ✅ NUOVO: vittorie/pareggi/sconfitte */
+/* ✅ vittorie/pareggi/sconfitte */
 const wins = new Map();
 const draws = new Map();
 const losses = new Map();
@@ -563,7 +583,6 @@ async function loadPlayers(){
 }
 
 async function loadMatchesForStats(){
-  // ✅ aggiunti team_a/team_b/score_a/score_b per V/P/S
   const { data, error } = await client
     .from(TABLE_MATCHES)
     .select("id,match_date,called_up,team_a,team_b,score_a,score_b,scorers")
@@ -588,19 +607,15 @@ function computeStats(matches, votes){
   appearances.clear(); mvpWins.clear(); goals.clear();
   wins.clear(); draws.clear(); losses.clear();
 
-  // Presenze + Gol + V/P/S
   for(const m of (matches||[])){
-    // presenze = convocati (come prima)
     const called = Array.isArray(m.called_up) ? m.called_up : [];
     called.forEach(pid => bump(appearances, pid, 1));
 
-    // gol
     const gmap = parseScorersToGoals(m.scorers);
     for(const [pid, g] of gmap.entries()){
       bump(goals, pid, g);
     }
 
-    // ✅ V/P/S (solo se partita finita + squadre presenti)
     if(isMatchEnded(m)){
       const sa = Number(m.score_a);
       const sb = Number(m.score_b);
@@ -622,7 +637,6 @@ function computeStats(matches, votes){
     }
   }
 
-  // MVP vinti per match (ex-aequo ok)
   const byMatch = new Map();
   for(const v of (votes||[])){
     const mid = String(v.match_id || "");
