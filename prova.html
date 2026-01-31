@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Componenti • Quelli della pensione</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Storico • Quelli della pensione</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
@@ -18,11 +18,10 @@
       --pill:#eeeeee;
       --logo1:#111;
       --logo2:#333;
-      --btn:#111;
-      --ok:#16a34a;
-      --warn:#f59e0b;
-      --bad:#ef4444;
-      --chipBg:rgba(0,0,0,.02);
+      --badge:#111;
+      --chipBg:rgba(0,0,0,.04);
+      --btnBg:#111;
+      --btnText:#fff;
     }
     body.dark{
       --bg:#0f1115;
@@ -34,42 +33,15 @@
       --pill:#222631;
       --logo1:#0b0e14;
       --logo2:#2a3242;
-      --btn:#0b0e14;
-      --chipBg:rgba(255,255,255,.03);
+      --badge:#0b0e14;
+      --chipBg:rgba(255,255,255,.04);
+      --btnBg:#0b0e14;
+      --btnText:#fff;
     }
+
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);transition:.2s}
-    .wrap{max-width:980px;margin:auto;padding:16px}
-
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px; flex-wrap:wrap; margin-bottom:10px;
-    }
-    .brand{display:flex; align-items:center; gap:12px;}
-    .logo{
-      width:70px;height:70px;border-radius:999px;
-      background:linear-gradient(135deg,var(--logo1),var(--logo2));
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;font-family:'Bebas Neue';font-size:32px;letter-spacing:2px;
-      box-shadow:var(--shadow);
-      cursor:pointer; user-select:none;
-      transform-style:preserve-3d; will-change:transform;
-    }
-    .logo.spin{animation:coinSpin 900ms ease-in-out}
-    @keyframes coinSpin{0%{transform:rotateY(0deg)}50%{transform:rotateY(180deg)}100%{transform:rotateY(360deg)}}
-
-    .titleWrap{line-height:1.1}
-    .title{
-      font-family:'Bebas Neue';
-      letter-spacing:2px;
-      font-size:44px;
-      margin:0;
-      text-transform:uppercase;
-    }
-    .subtitle{color:var(--muted);font-size:14px;margin-top:2px}
-
-    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
-    .spacer{flex:1}
+    .wrap{max-width:920px;margin:auto;padding:16px}
 
     .card{
       background:var(--card);
@@ -78,137 +50,202 @@
       padding:14px;
       box-shadow:var(--shadow);
       margin:12px 0;
+      overflow:hidden;
+    }
+
+    .header{text-align:center}
+    .logo{
+      width:74px;height:74px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      margin:auto;
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:30px;
+      letter-spacing:2px;
+    }
+    h1{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:44px;
+      margin:10px 0 0;
+      text-transform:uppercase;
+    }
+    .subtitle{color:var(--muted);font-size:14px}
+
+    .muted{color:var(--muted)}
+    .space{height:10px}
+
+    .badge{
+      display:inline-block;
+      background:var(--badge);
+      color:#fff;
+      padding:6px 12px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:13px;
+      white-space:nowrap;
+    }
+
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+    .pill{
+      display:inline-block;
+      background:var(--pill);
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:6px 10px;
+      font-weight:900;
+      margin:6px 8px 0 0;
+      white-space:nowrap;
+    }
+
+    .mvpLine{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
+      max-width:100%;
+    }
+    .mvpLine .pill{
+      max-width:100%;
+      white-space:normal;
+      overflow-wrap:anywhere;
+      word-break:break-word;
     }
 
     .btn{
-      border:0;
-      background:var(--btn);
-      color:#fff;
-      padding:12px 14px;
-      border-radius:14px;
-      font-weight:900;
+      border:1px solid var(--border);
+      background:var(--btnBg);
+      color:var(--btnText);
+      padding:10px 12px;
+      border-radius:12px;
       cursor:pointer;
-      text-decoration:none;
+      font-weight:900;
       display:inline-flex;
       align-items:center;
       gap:8px;
       user-select:none;
     }
-    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
-    .btn.small{padding:10px 12px;border-radius:12px;font-size:14px}
-    .btn.ok{background:var(--ok)}
-    .btn.warn{background:var(--warn);color:#111}
-
-    .input{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid var(--border);
+    .btn.ghost{
       background:transparent;
       color:var(--text);
-      font-family:inherit;
-      outline:none;
     }
 
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      background:var(--pill);
-      border-radius:999px;
-      padding:8px 12px;
-      font-weight:900;
-      border:1px solid var(--border);
-      white-space:nowrap;
-      max-width:100%;
-    }
-
-    .toast{
+    .details{
+      margin-top:12px;
+      border-top:1px solid var(--border);
+      padding-top:12px;
       display:none;
-      margin-top:10px;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:rgba(22,163,74,.10);
-      color:var(--text);
-      font-weight:800;
-      white-space:pre-wrap;
     }
-    .toast.show{display:block}
-    .toast.bad{background:rgba(239,68,68,.10)}
-    .toast.warn{background:rgba(245,158,11,.12)}
+    .details.open{display:block}
 
-    .nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}
-    .nav a{color:var(--text);text-decoration:none;font-weight:800}
-
-    .grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:12px}
-    @media(max-width:980px){ .grid{grid-template-columns:repeat(3, 1fr)} }
-    @media(max-width:720px){ .grid{grid-template-columns:repeat(2, 1fr)} }
-    @media(max-width:460px){ .grid{grid-template-columns:1fr} }
-
-    .playerCard{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:12px;
-      box-shadow:var(--shadow);
-      cursor:pointer;
-      transition:transform .12s ease;
-      min-height:110px;
-      display:flex;
+    .twoCols{
+      display:grid;
+      grid-template-columns:1fr;
       gap:12px;
-      align-items:center;
     }
-    .playerCard:hover{transform:translateY(-1px)}
-    .avatar{
-      width:64px;height:64px;border-radius:999px;
-      border:1px solid var(--border);
-      object-fit:cover;
-      background:#000;
-      flex:0 0 auto;
-    }
-    .pTxt{min-width:0;flex:1}
-    .pName{
-      font-weight:900;
-      font-size:16px;
-      line-height:1.1;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .pMeta{margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .tag{
-      display:inline-flex;align-items:center;gap:6px;
-      padding:6px 10px;border-radius:999px;
-      border:1px solid var(--border);
+    @media(min-width:860px){ .twoCols{grid-template-columns:1fr 1fr} }
+
+    table{width:100%;border-collapse:separate;border-spacing:0 8px}
+    th{font-size:12px;color:var(--muted);text-align:left;padding:0 6px}
+    td{padding:0 6px;vertical-align:middle}
+
+    .teamTitle{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+    .shirt{width:18px;height:18px;vertical-align:middle;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
+
+    .chipBox{
       background:var(--chipBg);
-      font-weight:900;font-size:12px;color:var(--text);
-      white-space:nowrap;
-    }
-    .tag.gk{border-color:rgba(245,158,11,.45)}
-    .pBio{
-      margin-top:8px;
-      font-size:12px;
-      color:var(--muted);
-      font-weight:800;
-      line-height:1.25;
-      display:-webkit-box;
-      -webkit-line-clamp:2;
-      -webkit-box-orient:vertical;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
       overflow:hidden;
-      word-break:break-word;
     }
-    .mini{font-size:12px;color:var(--muted);font-weight:800}
+
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size:14px;
+    }
+    .nav a{color:var(--text);text-decoration:none;font-weight:800}
+    .nav a:hover{text-decoration:underline}
 
     .fab{
       position:fixed;
       right:16px;bottom:16px;
-      width:54px;height:54px;border-radius:999px;
+      width:54px;height:54px;
+      border-radius:999px;
       border:1px solid var(--border);
       background:var(--card);
       box-shadow:var(--shadow);
       cursor:pointer;
       font-size:22px;
+    }
+
+    /* ✅ Player pills con avatar + ruolo/pos come index */
+    .playersWrap{margin-top:6px}
+    .playerPill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--pill);
+      margin:6px 8px 0 0;
+      max-width:100%;
+    }
+    .playerAvatar{
+      width:42px;height:42px;border-radius:999px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#000;
+      flex:0 0 auto;
+    }
+    .playerTxt{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+    .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    /* ✅ COMMENTI A CALDO (storico) */
+    .commentBox{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+      background:var(--chipBg);
+    }
+    .commentTitle{
+      font-weight:900;
+      margin:0 0 10px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .commentItem2{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:10px;
+      margin-top:10px;
+      background:rgba(0,0,0,.02);
+    }
+    body.dark .commentItem2{ background:rgba(255,255,255,.03); }
+    .commentMeta2{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+      color:var(--muted);
+      font-weight:900;
+      font-size:13px;
+    }
+    .commentBubble2{
+      margin-top:8px;
+      font-weight:800;
+      white-space:pre-wrap;
+      word-break:break-word;
     }
   </style>
 </head>
@@ -216,47 +253,20 @@
 <body>
 <div class="wrap">
 
-  <div class="topbar">
-    <div class="brand">
-      <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
-      <div class="titleWrap">
-        <h1 class="title">COMPONENTI</h1>
-        <div class="subtitle">Rosa • Avatar • Ruoli • Presenze • MVP • Gol • V/P/S</div>
-      </div>
-    </div>
-
-    <div class="row">
-      <a class="btn ghost" href="index.html">⬅️ Home</a>
-      <button id="adminBtn" class="btn small warn" type="button">🔐 Admin: OFF</button>
-    </div>
+  <div class="header">
+    <div class="logo">QDP</div>
+    <h1>Storico</h1>
+    <div class="subtitle">Quelli della pensione</div>
   </div>
 
   <div class="card">
-    <div class="row">
-      <input id="searchInput" class="input" type="text" placeholder="🔎 Cerca giocatore... (nome, ruolo, bio)">
-      <div class="spacer"></div>
-      <div id="countPill" class="pill">👥 0</div>
-      <button id="refreshBtn" class="btn ghost" type="button">🔄 Aggiorna</button>
-    </div>
-
-    <div id="adminHint" class="pill" style="display:none;margin-top:10px;white-space:normal">
-      ✅ Admin attivo (clicca un giocatore per scrivere/modificare descrizione)
-    </div>
-
-    <div id="toast" class="toast"></div>
+    <div id="status" class="muted">Caricamento…</div>
   </div>
 
-  <div class="card">
-    <div class="row">
-      <div style="font-weight:900">👥 Rosa</div>
-      <div class="spacer"></div>
-      <div class="mini">Tip: clicca un giocatore per vedere/modificare la descrizione (solo admin).</div>
-    </div>
-    <div id="grid" class="grid" style="margin-top:12px"></div>
-  </div>
+  <div id="list"></div>
 
   <div class="card nav muted">
-    <a href="storico.html">📚 Storico</a>
+    <a href="index.html">🏠 Home</a>
     <a href="marcatori.html">⚽ Marcatori</a>
     <a href="mvp.html">🏆 Vota MVP</a>
     <a href="foto.html">📸 Foto</a>
@@ -272,58 +282,36 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
-/* ===== THEME ===== */
-const themeBtn = document.getElementById("themeToggle");
+/* THEME */
 function setTheme(mode){
   document.body.classList.toggle("dark", mode === "dark");
-  themeBtn.textContent = (mode === "dark") ? "☀️" : "🌙";
+  document.getElementById("themeToggle").textContent = mode === "dark" ? "☀️" : "🌙";
   localStorage.setItem("qdp_theme", mode);
 }
 setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
-themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+document.getElementById("themeToggle").onclick = () => {
+  setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+};
 
-/* LOGO MONETA */
-const logoCoin = document.getElementById("logoCoin");
-function spinLogo(){
-  logoCoin.classList.remove("spin");
-  void logoCoin.offsetWidth;
-  logoCoin.classList.add("spin");
-}
-logoCoin.addEventListener("click", spinLogo);
-logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
-
-/* ===== SUPABASE ===== */
+/* SUPABASE */
 if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
-  alert("config.js non caricato o non valido");
+  document.getElementById("status").textContent = "Errore: config.js non caricato";
   throw new Error("Missing config");
 }
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ===== DOM ===== */
-const adminBtn = document.getElementById("adminBtn");
-const adminHint = document.getElementById("adminHint");
-const toast = document.getElementById("toast");
-const refreshBtn = document.getElementById("refreshBtn");
-const grid = document.getElementById("grid");
-const countPill = document.getElementById("countPill");
-const searchInput = document.getElementById("searchInput");
+const statusEl = document.getElementById("status");
+const listEl = document.getElementById("list");
 
-/* ===== CONFIG ===== */
-const TABLE_PLAYERS = "players";
-const TABLE_MATCHES = "matches";
-const TABLE_VOTES = "mvp_votes";
+/* AVATAR PATH (come index) */
 const AVATAR_BASE = "avatars/";
 const DEFAULT_AVATAR = "default.png";
-
-/* ===== HELPERS ===== */
-function showToast(msg, type="ok"){
-  toast.classList.remove("show","bad","warn");
-  if(type==="bad") toast.classList.add("bad");
-  if(type==="warn") toast.classList.add("warn");
-  toast.textContent = msg;
-  toast.classList.add("show");
-  setTimeout(()=>toast.classList.remove("show"), 2600);
+function avatarUrl(filename){
+  const f = String(filename || "").trim();
+  return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
 }
+
+/* HELPERS */
 function escapeHtml(s){
   return String(s ?? "")
     .replaceAll("&","&amp;")
@@ -332,358 +320,332 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-function norm(s){ return String(s||"").trim().toLowerCase().replace(/\s+/g," "); }
-function avatarUrl(filename){
-  const f = String(filename || "").trim();
-  return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
+function formatDateFull(iso){
+  if(!iso) return "";
+  const d = new Date(iso);
+  return d.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 }
-function safeBio(p){ return (p?.bio ?? p?.note ?? p?.description ?? "").toString().trim(); }
+function formatTimeHHMM(t){
+  return t ? String(t).slice(0,5) : "";
+}
+function shirtSVG(color){
+  return `
+    <svg class="shirt" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 10 L28 6 H36 L44 10 L56 18 L50 30 L44 26 V58 H20 V26 L14 30 L8 18 Z"
+        fill="${color}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
+    </svg>`;
+}
+function resultBadge(m){
+  if(m.score_a != null && m.score_b != null) return `🏁 ${m.score_a}-${m.score_b}`;
+  return `🏁 da giocare`;
+}
 function isGK(p){
-  const r = String(p?.role||"").toLowerCase();
-  const pos = String(p?.position||"").toLowerCase();
-  return r === "gk" || pos.includes("port");
+  // nel tuo DB usi GK / FIELD (ma supporto anche varianti)
+  const r = String(p?.role || "").toUpperCase();
+  const pos = String(p?.position || "").toLowerCase();
+  return r === "GK" || r === "G" || pos.includes("port");
 }
-function bump(map, id, inc=1){
-  const k = String(id||"");
-  if(!k) return;
-  map.set(k, (map.get(k)||0) + inc);
-}
-function isMatchEnded(m){
-  const a = m?.score_a, b = m?.score_b;
-  return a !== null && a !== undefined && b !== null && b !== undefined && a !== "" && b !== "";
-}
-function safeArr(v){ return Array.isArray(v) ? v : []; }
-
-/* ===== ADMIN SESSION ===== */
-async function getSession(){
-  const { data } = await client.auth.getSession();
-  return data?.session || null;
-}
-function isAdminSession(session){ return !!(session && session.user); }
-
-let adminOn = false;
-async function refreshAdminUI(){
-  const session = await getSession();
-  adminOn = isAdminSession(session);
-  adminBtn.textContent = adminOn ? "🔐 Admin: ON" : "🔐 Admin: OFF";
-  adminBtn.classList.toggle("warn", !adminOn);
-  adminBtn.classList.toggle("ok", adminOn);
-  adminHint.style.display = adminOn ? "inline-flex" : "none";
-  return adminOn;
-}
-
-adminBtn.onclick = async () => {
-  const session = await getSession();
-  if(isAdminSession(session)){
-    await client.auth.signOut();
-    showToast("Admin disattivato.", "warn");
-    await refreshAdminUI();
-    await loadAll();
-    return;
-  }
-  const email = prompt("Email admin:");
-  if(!email) return;
-  const password = prompt("Password admin:");
-  if(!password) return;
-
-  const { error } = await client.auth.signInWithPassword({ email, password });
-  if(error){
-    console.error(error);
-    showToast("Login fallito.", "bad");
-    return;
-  }
-  showToast("Admin attivo ✅");
-  await refreshAdminUI();
-  await loadAll();
-};
-
-/* ===== STATS MAPS ===== */
-const appearances = new Map();
-const mvpWins = new Map();
-const goals = new Map();
-
-/* ✅ NUOVO: vittorie/pareggi/sconfitte */
-const wins = new Map();
-const draws = new Map();
-const losses = new Map();
-
-/* scorers parser (tollerante) */
-function parseScorersToGoals(scorersAny){
-  const out = new Map();
-  const s = scorersAny;
-  if(!s) return out;
-
-  if(typeof s === "object" && !Array.isArray(s)){
-    if(Array.isArray(s.items)){
-      s.items.forEach(it=>{
-        const pid = it.player_id || it.player || it.id;
-        const g = Number(it.goals ?? it.g ?? it.goal ?? it.count ?? 0);
-        if(pid && Number.isFinite(g) && g>0) bump(out, pid, g);
-      });
-      return out;
-    }
-    Object.keys(s).forEach(k=>{
-      const v = Number(s[k]);
-      if(Number.isFinite(v) && v>0) bump(out, k, v);
-    });
-    return out;
-  }
-
-  if(Array.isArray(s)){
-    s.forEach(it=>{
-      if(!it) return;
-      if(typeof it === "string"){
-        const parts = it.split(":");
-        if(parts.length===2){
-          const pid = parts[0].trim();
-          const g = Number(parts[1]);
-          if(pid && Number.isFinite(g) && g>0) bump(out, pid, g);
-        }
-        return;
-      }
-      const pid = it.player_id || it.player || it.id;
-      const g = Number(it.goals ?? it.g ?? it.goal ?? it.count ?? 0);
-      if(pid && Number.isFinite(g) && g>0) bump(out, pid, g);
-    });
-    return out;
-  }
-
-  return out;
-}
-
-/* ===== DATA ===== */
-let ALL = [];
-
-function renderCard(p){
-  const gk = isGK(p);
-  const nameHtml = gk ? `${escapeHtml(p.name||"")} <span title="Portiere">🧤</span>` : escapeHtml(p.name||"");
-  const pos = String(p.position || "").trim() || "—";
-  const roleLabel = gk ? "PORTIERE" : "GIOCATORE";
-
-  const pid = String(p.id);
-  const pres = appearances.get(pid) || 0;
-  const mvps = mvpWins.get(pid) || 0;
-  const gol  = goals.get(pid) || 0;
-
-  const v = wins.get(pid) || 0;
-  const x = draws.get(pid) || 0;
-  const s = losses.get(pid) || 0;
-
-  const bio = safeBio(p);
+function renderPlayerPill(p){
+  const nameHtml = isGK(p) ? (escapeHtml(p.name) + ` <span title="Portiere">🧤</span>`) : escapeHtml(p.name);
+  const pos = String(p.position || "").trim();
+  const posHtml = pos ? escapeHtml(pos) : "—";
 
   return `
-    <div class="playerCard" data-id="${escapeHtml(p.id)}" title="${adminOn ? "Clicca per modificare descrizione" : "Clicca per vedere descrizione"}">
-      <img class="avatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt="avatar"
+    <span class="playerPill">
+      <img class="playerAvatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt=""
            onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
-      <div class="pTxt">
-        <div class="pName">${nameHtml}</div>
-
-        <div class="pMeta">
-          <span class="tag ${gk ? "gk" : ""}">${gk ? "🧤 " : ""}${roleLabel}</span>
-          <span class="tag">📌 ${escapeHtml(pos)}</span>
-          <span class="tag">🎽 Pres. ${pres}</span>
-          <span class="tag">🏆 MVP ${mvps}</span>
-          <span class="tag">⚽ Gol ${gol}</span>
-          <span class="tag">✅ V ${v}</span>
-          <span class="tag">➖ P ${x}</span>
-          <span class="tag">❌ S ${s}</span>
-        </div>
-
-        <div class="pBio">${bio ? escapeHtml(bio) : (adminOn ? "✍️ (clicca per inserire descrizione)" : "—")}</div>
-      </div>
-    </div>
+      <span class="playerTxt">
+        <span class="playerName">${nameHtml}</span>
+        <span class="playerPos">${posHtml}</span>
+      </span>
+    </span>
   `;
 }
 
-function applyFilter(){
-  const q = norm(searchInput.value);
-  const list = q
-    ? ALL.filter(p => norm(p.name).includes(q) || norm(p.position).includes(q) || norm(p.role).includes(q) || norm(safeBio(p)).includes(q))
-    : ALL.slice();
-
-  countPill.textContent = `👥 ${list.length}`;
-  grid.innerHTML = list.map(renderCard).join("") || `<div class="mini muted">Nessun giocatore.</div>`;
-
-  [...grid.querySelectorAll(".playerCard")].forEach(card=>{
-    card.onclick = () => onCardClick(card.getAttribute("data-id"));
-  });
+/* timeAgo (come index) */
+function timeAgo(ts){
+  try{
+    const d = new Date(ts);
+    const diff = Math.floor((Date.now() - d.getTime())/1000);
+    if(diff < 60) return "ora";
+    const m = Math.floor(diff/60);
+    if(m < 60) return `${m} min`;
+    const h = Math.floor(m/60);
+    if(h < 24) return `${h} h`;
+    const days = Math.floor(h/24);
+    return `${days} g`;
+  }catch(e){ return ""; }
 }
 
-async function onCardClick(playerId){
-  const p = ALL.find(x => String(x.id) === String(playerId));
-  if(!p) return;
+/* MVP helpers */
+function computeMvpLine(votes, playersById, isOpen){
+  if(!votes || !votes.length) return null;
 
-  const bio = safeBio(p);
+  const counts = new Map();
+  for(const v of votes){
+    const id = String(v.voted_player || "");
+    if(!id) continue;
+    counts.set(id, (counts.get(id) || 0) + 1);
+  }
+  const entries = [...counts.entries()].sort((a,b)=>b[1]-a[1]);
+  if(!entries.length) return null;
 
-  if(adminOn){
-    const next = prompt(
-      `Descrizione per ${p.name} (max 180 caratteri)\n\n⚠️ Serve colonna "bio" (text) in tabella players.`,
-      bio
-    );
-    if(next === null) return;
+  const top = entries[0][1];
+  const leaders = entries.filter(e=>e[1]===top).map(e=>e[0]);
+  const leaderNames = leaders.map(id => playersById.get(String(id))?.name || id);
 
-    const clean = String(next||"").trim().slice(0,180);
+  const label = isOpen ? "provvisorio" : "finale";
 
-    const { error } = await client
-      .from(TABLE_PLAYERS)
-      .update({ bio: clean })
-      .eq("id", p.id);
+  if(leaders.length === 1){
+    return `🏆 MVP (${label}): ${leaderNames[0]} • voti: ${top}`;
+  }
+  return `🏆 MVP (${label}): Parità: ${leaderNames.join(", ")} • voti: ${top}`;
+}
 
-    if(error){
-      console.error(error);
-      showToast("Errore salvataggio: manca colonna 'bio' o policy UPDATE.", "bad");
+async function load(){
+  try{
+    // ✅ carico players completi (serve per avatar/role/position)
+    const { data: players, error: eP } = await client
+      .from("players")
+      .select("id,name,avatar,role,position");
+    if(eP) throw eP;
+
+    const playersById = new Map((players||[]).map(p=>[String(p.id), p]));
+
+    // ✅ carico matches
+    const { data: matches, error: eM } = await client
+      .from("matches")
+      .select("id,match_date,match_time,venue,keeper_a,keeper_b,score_a,score_b,called_up,team_a,team_b,scorers,vote_open,voting_open")
+      .order("match_date",{ascending:false})
+      .order("match_time",{ascending:false})
+      .limit(200);
+    if(eM) throw eM;
+
+    if(!matches || !matches.length){
+      statusEl.textContent = "Nessuna partita nello storico";
+      listEl.innerHTML = "";
       return;
     }
 
-    showToast("Descrizione salvata ✅");
-    await loadAll();
-    return;
-  }
+    const matchIds = matches.map(m => m.id);
 
-  alert(`${p.name}\n\n${bio ? bio : "Nessuna descrizione."}`);
-}
+    // ✅ carico voti MVP per tutte le partite
+    const { data: votes, error: eV } = await client
+      .from("mvp_votes")
+      .select("match_id,voted_player")
+      .in("match_id", matchIds);
+    if(eV) throw eV;
 
-/* ===== LOAD ===== */
-async function loadPlayers(){
-  const { data, error } = await client
-    .from(TABLE_PLAYERS)
-    .select("*")
-    .order("name", { ascending:true });
+    const votesByMatch = new Map();
+    (votes||[]).forEach(v=>{
+      const k = String(v.match_id);
+      if(!votesByMatch.has(k)) votesByMatch.set(k, []);
+      votesByMatch.get(k).push(v);
+    });
 
-  if(error) throw error;
-
-  ALL = (data || []).map(p=>({
-    id: p.id,
-    name: p.name || "",
-    role: p.role || "",
-    position: p.position || "",
-    avatar: p.avatar || p.avatar_file || p.avatar_url || DEFAULT_AVATAR,
-    bio: p.bio ?? p.note ?? p.description ?? ""
-  }));
-}
-
-async function loadMatchesForStats(){
-  // ✅ aggiunti team_a/team_b/score_a/score_b per V/P/S
-  const { data, error } = await client
-    .from(TABLE_MATCHES)
-    .select("id,match_date,called_up,team_a,team_b,score_a,score_b,scorers")
-    .order("match_date", { ascending:false })
-    .limit(600);
-
-  if(error) throw error;
-  return data || [];
-}
-
-async function loadVotesForStats(){
-  const { data, error } = await client
-    .from(TABLE_VOTES)
-    .select("match_id,voted_player")
-    .limit(8000);
-
-  if(error) throw error;
-  return data || [];
-}
-
-function computeStats(matches, votes){
-  appearances.clear(); mvpWins.clear(); goals.clear();
-  wins.clear(); draws.clear(); losses.clear();
-
-  // Presenze + Gol + V/P/S
-  for(const m of (matches||[])){
-    // presenze = convocati (come prima)
-    const called = Array.isArray(m.called_up) ? m.called_up : [];
-    called.forEach(pid => bump(appearances, pid, 1));
-
-    // gol
-    const gmap = parseScorersToGoals(m.scorers);
-    for(const [pid, g] of gmap.entries()){
-      bump(goals, pid, g);
+    // ✅ carico commenti a caldo per tutte le partite
+    const { data: comments, error: eC } = await client
+      .from("match_comments")
+      .select("match_id,name,text,created_at")
+      .in("match_id", matchIds)
+      .order("created_at",{ascending:false})
+      .limit(5000);
+    // Se la tabella non esiste o RLS blocca, non spacco lo storico: mostro senza commenti.
+    const commentsByMatch = new Map();
+    if(!eC){
+      (comments||[]).forEach(c=>{
+        const k = String(c.match_id);
+        if(!commentsByMatch.has(k)) commentsByMatch.set(k, []);
+        commentsByMatch.get(k).push(c);
+      });
     }
 
-    // ✅ V/P/S (solo se partita finita + squadre presenti)
-    if(isMatchEnded(m)){
-      const sa = Number(m.score_a);
-      const sb = Number(m.score_b);
-      if(Number.isFinite(sa) && Number.isFinite(sb)){
-        const teamA = safeArr(m.team_a).map(String);
-        const teamB = safeArr(m.team_b).map(String);
+    statusEl.textContent = `Partite: ${matches.length}`;
 
-        if(sa > sb){
-          teamA.forEach(pid => bump(wins, pid, 1));
-          teamB.forEach(pid => bump(losses, pid, 1));
-        }else if(sa < sb){
-          teamA.forEach(pid => bump(losses, pid, 1));
-          teamB.forEach(pid => bump(wins, pid, 1));
-        }else{
-          teamA.forEach(pid => bump(draws, pid, 1));
-          teamB.forEach(pid => bump(draws, pid, 1));
-        }
+    listEl.innerHTML = matches.map(m => {
+      const dateFull = formatDateFull(m.match_date);
+      const time = formatTimeHHMM(m.match_time);
+      const venue = escapeHtml(m.venue || "");
+
+      const keepA = escapeHtml(m.keeper_a || "—");
+      const keepB = escapeHtml(m.keeper_b || "—");
+
+      const calledIds = Array.isArray(m.called_up) ? m.called_up.map(String) : [];
+      const teamAIds  = Array.isArray(m.team_a) ? m.team_a.map(String) : [];
+      const teamBIds  = Array.isArray(m.team_b) ? m.team_b.map(String) : [];
+
+      const calledPlayers = calledIds.map(id => playersById.get(id)).filter(Boolean);
+      const teamAPlayers  = teamAIds.map(id => playersById.get(id)).filter(Boolean);
+      const teamBPlayers  = teamBIds.map(id => playersById.get(id)).filter(Boolean);
+
+      const sc = m.scorers || {};
+      const ta = Array.isArray(sc.team_a) ? sc.team_a : [];
+      const tb = Array.isArray(sc.team_b) ? sc.team_b : [];
+
+      const renderScTable = (arr) => {
+        if(!arr.length) return `<div class="muted">Nessun marcatore inserito</div>`;
+        const rows = arr
+          .slice()
+          .sort((a,b)=>Number(b.goals||0)-Number(a.goals||0))
+          .map(x=>{
+            const pid = String(x.player_id || "");
+            const nm = playersById.get(pid)?.name || pid || "-";
+            return `<tr>
+              <td><span class="pill">${escapeHtml(nm)}</span></td>
+              <td><b>${escapeHtml(x.goals)}</b></td>
+            </tr>`;
+          }).join("");
+        return `<table>
+          <thead><tr><th>Giocatore</th><th style="width:70px">Gol</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+      };
+
+      const renderPlayersWrap = (arr) => {
+        if(!arr.length) return `<div class="muted">—</div>`;
+        return `<div class="playersWrap">${arr.map(renderPlayerPill).join("")}</div>`;
+      };
+
+      const detailsId = `det_${m.id}`;
+
+      const isOpen = (m.vote_open === true) || (m.voting_open === true);
+      const mvpLine = computeMvpLine(votesByMatch.get(String(m.id)) || [], playersById, isOpen);
+      const mvpHtml = mvpLine ? `<div class="mvpLine"><span class="pill">${escapeHtml(mvpLine)}</span></div>` : ``;
+
+      // ✅ COMMENTI A CALDO (in dettagli)
+      const cm = commentsByMatch.get(String(m.id)) || [];
+      const commentsCount = cm.length;
+
+      let commentsHtml = `
+        <div class="commentBox">
+          <div class="commentTitle">
+            <span>💬 Commenti a caldo</span>
+            <span class="pill" style="margin:0">🗨️ ${commentsCount}</span>
+          </div>
+          <div class="muted" style="font-weight:800">Nessun commento per questa partita.</div>
+        </div>
+      `;
+
+      if(commentsCount){
+        commentsHtml = `
+          <div class="commentBox">
+            <div class="commentTitle">
+              <span>💬 Commenti a caldo</span>
+              <span class="pill" style="margin:0">🗨️ ${commentsCount}</span>
+            </div>
+
+            ${cm.slice(0,20).map(c=>{
+              const displayName = (c.name && String(c.name).trim()) ? String(c.name).trim() : "Anonimo";
+              return `
+                <div class="commentItem2">
+                  <div class="commentMeta2">
+                    <span class="pill" style="margin:0">${escapeHtml(displayName)}</span>
+                    <span>•</span>
+                    <span>${escapeHtml(timeAgo(c.created_at))}</span>
+                  </div>
+                  <div class="commentBubble2">${escapeHtml(c.text || "")}</div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        `;
       }
-    }
-  }
 
-  // MVP vinti per match (ex-aequo ok)
-  const byMatch = new Map();
-  for(const v of (votes||[])){
-    const mid = String(v.match_id || "");
-    const pid = String(v.voted_player || "");
-    if(!mid || !pid) continue;
-    if(!byMatch.has(mid)) byMatch.set(mid, new Map());
-    const mm = byMatch.get(mid);
-    mm.set(pid, (mm.get(pid)||0) + 1);
-  }
+      // Se la tabella commenti non è accessibile (RLS o non esiste), nascondo il box
+      if(eC){
+        commentsHtml = ``;
+      }
 
-  for(const mm of byMatch.values()){
-    let best = 0;
-    for(const c of mm.values()) best = Math.max(best, c);
-    if(best <= 0) continue;
-    for(const [pid, c] of mm.entries()){
-      if(c === best) bump(mvpWins, pid, 1);
+      return `
+        <div class="card">
+          <div class="row" style="justify-content:space-between">
+            <div style="min-width:0">
+              <div><b>📅 ${escapeHtml(dateFull)} • ⏰ ${escapeHtml(time)}</b></div>
+              <div class="muted" style="margin-top:6px">📍 ${venue}</div>
+              <div class="row" style="margin-top:10px">
+                <span class="badge">${escapeHtml(resultBadge(m))}</span>
+                <span class="pill">🟨 ${keepA}</span>
+                <span class="pill">🟥 ${keepB}</span>
+              </div>
+              ${mvpHtml}
+            </div>
+            <div>
+              <button class="btn ghost" data-target="${detailsId}">Dettagli ▾</button>
+            </div>
+          </div>
+
+          <div class="details" id="${detailsId}">
+            <div class="chipBox">
+              <div style="font-weight:900">Convocati</div>
+              <div style="margin-top:8px">
+                ${renderPlayersWrap(calledPlayers)}
+              </div>
+            </div>
+
+            <div class="space"></div>
+
+            <div class="twoCols">
+              <div class="chipBox">
+                <div class="teamTitle">${shirtSVG("#facc15")} <b>Formazione Squadra A</b></div>
+                ${renderPlayersWrap(teamAPlayers)}
+              </div>
+              <div class="chipBox">
+                <div class="teamTitle">${shirtSVG("#ef4444")} <b>Formazione Squadra B</b></div>
+                ${renderPlayersWrap(teamBPlayers)}
+              </div>
+            </div>
+
+            <div class="space"></div>
+
+            <div class="twoCols">
+              <div class="chipBox">
+                <div class="teamTitle">${shirtSVG("#facc15")} <b>Marcatori Squadra A</b></div>
+                ${renderScTable(ta)}
+              </div>
+              <div class="chipBox">
+                <div class="teamTitle">${shirtSVG("#ef4444")} <b>Marcatori Squadra B</b></div>
+                ${renderScTable(tb)}
+              </div>
+            </div>
+
+            ${commentsHtml ? `<div class="space"></div>${commentsHtml}` : ``}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    // ACCORDION
+    const buttons = [...document.querySelectorAll("button[data-target]")];
+    buttons.forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const id = btn.getAttribute("data-target");
+        const box = document.getElementById(id);
+        const open = box.classList.contains("open");
+
+        document.querySelectorAll(".details.open").forEach(d => d.classList.remove("open"));
+        buttons.forEach(b => b.textContent = "Dettagli ▾");
+
+        if(!open){
+          box.classList.add("open");
+          btn.textContent = "Dettagli ▴";
+        }
+      });
+    });
+
+    // Se la tabella commenti non è accessibile, avviso in console (non blocco la UI)
+    if(eC){
+      console.warn("match_comments non accessibile (tabella mancante o RLS): commenti non mostrati nello storico.", eC);
     }
+
+  }catch(err){
+    console.error(err);
+    statusEl.textContent = "Errore caricamento storico";
+    listEl.innerHTML = `<div class="card"><div class="muted">${escapeHtml(err.message || String(err))}</div></div>`;
   }
 }
 
-async function loadAll(){
-  await refreshAdminUI();
-  grid.innerHTML = `<div class="mini muted">Carico…</div>`;
-
-  try{
-    await loadPlayers();
-  }catch(e){
-    console.error(e);
-    grid.innerHTML = `<div class="mini muted">Errore caricamento players: ${escapeHtml(e.message || String(e))}</div>`;
-    return;
-  }
-
-  let matches = [], votes = [];
-  let warn = [];
-
-  try{
-    matches = await loadMatchesForStats();
-  }catch(e){
-    console.error(e);
-    warn.push("⚠️ Non riesco a leggere matches (RLS/permessi): Presenze/Gol/V-P-S = 0");
-  }
-
-  try{
-    votes = await loadVotesForStats();
-  }catch(e){
-    console.error(e);
-    warn.push("⚠️ Non riesco a leggere mvp_votes (RLS/permessi): MVP = 0");
-  }
-
-  computeStats(matches, votes);
-
-  if(warn.length) showToast(warn.join("\n"), "warn");
-
-  applyFilter();
-}
-
-refreshBtn.onclick = () => loadAll();
-searchInput.oninput = () => applyFilter();
-
-/* INIT */
-loadAll();
+load();
 </script>
 </body>
 </html>
+```0
