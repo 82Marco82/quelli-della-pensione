@@ -229,7 +229,7 @@
       width:100%;
       display:block;
       max-height:420px;
-      object-fit:contain;
+      object-fit:contain;       /* MAI tagliare */
       object-position:center;
     }
     @media (orientation: landscape){
@@ -248,7 +248,7 @@
       width:100%;
       display:block;
       max-height:420px;
-      object-fit:contain;
+      object-fit:contain;       /* MAI tagliare */
       object-position:center;
     }
     @media (orientation: landscape){
@@ -428,6 +428,51 @@
       border:1px solid var(--border);
       background:var(--card);
       font-weight:900;
+    }
+
+    /* ✅ MVP FINALE (mvpsmall.png + scritta automatica) */
+    .mvpFinalWrap{
+      margin-top:10px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      background: radial-gradient(circle at center, #111 0%, #000 70%);
+    }
+    .mvpFinalWrap img{
+      width:100%;
+      display:block;
+      max-height:360px;
+      object-fit:contain; /* mai tagliare */
+      object-position:center;
+    }
+    .mvpFinalCaption{
+      text-align:center;
+      padding:10px 10px 12px;
+      border-top:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.35);
+    }
+    .mvpFinalCaption .big{
+      font-family:'Bebas Neue';
+      font-size:34px;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      color:#fff;
+      text-shadow:0 10px 26px rgba(0,0,0,.55);
+    }
+    .mvpFinalCaption .big .gold{
+      color:#facc15;
+      text-shadow:
+        0 0 14px rgba(250,204,21,.35),
+        0 10px 28px rgba(0,0,0,.55);
+    }
+    .mvpFinalCaption .sub{
+      margin-top:4px;
+      font-weight:900;
+      font-size:12px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      opacity:.9;
+      color:#fff;
     }
 
     /* METEO */
@@ -672,8 +717,7 @@
 
     /* ==========================================================
        ✅ CTA LATERALE: "Vota il tuo MVP"
-       - compare SOLO quando votazione aperta (e partita finita)
-       - resta finché l’admin chiude vote_open
+       - compare SOLO quando votazione aperta + partita finita
        ========================================================== */
     .mvpCta{
       position:fixed;
@@ -754,6 +798,7 @@
       .mvpCta{ right:10px; }
       .mvpCta a{ min-width:170px; padding:10px 10px; }
     }
+
   </style>
 </head>
 
@@ -850,15 +895,30 @@
         <div id="mvpStatePill" class="pill" style="margin:0"></div>
       </div>
 
-      <div class="mvpMainRow">
-        <img id="mvpAvatar" class="mvpAvatar" src="avatars/default.png" alt="mvp">
-        <div>
-          <div id="mvpMain" class="mvpText">Caricamento…</div>
-          <div id="mvpSub" class="mvpSub"></div>
+      <!-- ✅ modalità provvisoria (come prima) -->
+      <div id="mvpLiveWrap">
+        <div class="mvpMainRow">
+          <img id="mvpAvatar" class="mvpAvatar" src="avatars/default.png" alt="mvp">
+          <div>
+            <div id="mvpMain" class="mvpText">Caricamento…</div>
+            <div id="mvpSub" class="mvpSub"></div>
+          </div>
+        </div>
+
+        <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
+      </div>
+
+      <!-- ✅ modalità FINALE: immagine mvpsmall.png + scritta automatica -->
+      <div id="mvpFinalPoster" style="display:none">
+        <div class="mvpFinalWrap">
+          <img id="mvpSmallImg" src="mvpsmall.png" alt="MVP Finale">
+          <div class="mvpFinalCaption">
+            <div id="mvpSmallCaption" class="big">MVP • <span class="gold">—</span></div>
+            <div id="mvpSmallSub" class="sub">QUELLI DELLA PENSIONE</div>
+          </div>
         </div>
       </div>
 
-      <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
     </div>
 
     <!-- TITOLO MAPPA -->
@@ -952,7 +1012,7 @@
   </div>
 </div>
 
-<!-- ✅ CTA LATERALE MVP (NUOVO) -->
+<!-- ✅ CTA LATERALE MVP -->
 <div id="mvpCta" class="mvpCta" aria-hidden="true">
   <a href="mvp.html" title="Vai a votare l'MVP">
     <span class="dot" aria-hidden="true"></span>
@@ -1007,7 +1067,7 @@ function showToast(msg, type="ok"){
   toastTimer = setTimeout(()=> toastEl.className = "toast", 1600);
 }
 
-/* ✅ CTA MVP (NUOVO) */
+/* ✅ CTA MVP */
 const mvpCtaEl = document.getElementById("mvpCta");
 function setMvpCtaVisible(visible){
   if(!mvpCtaEl) return;
@@ -1070,6 +1130,13 @@ const mvpAvatar = document.getElementById("mvpAvatar");
 const mvpMain = document.getElementById("mvpMain");
 const mvpSub = document.getElementById("mvpSub");
 const mvpTop3 = document.getElementById("mvpTop3");
+const mvpLiveWrap = document.getElementById("mvpLiveWrap");
+
+/* ✅ MVP finale poster */
+const mvpFinalPoster = document.getElementById("mvpFinalPoster");
+const mvpSmallImg = document.getElementById("mvpSmallImg");
+const mvpSmallCaption = document.getElementById("mvpSmallCaption");
+const mvpSmallSub = document.getElementById("mvpSmallSub");
 
 /* METEO DOM */
 const weatherBox = document.getElementById("weatherBox");
@@ -1271,7 +1338,7 @@ async function deleteCommentById(id){
   const ok = confirm("Eliminare questo commento?");
   if(!ok) return;
 
-  const node = commentsList.querySelector(\`.commentItem[data-id="\${CSS.escape(id)}"]\`);
+  const node = commentsList.querySelector(`.commentItem[data-id="${CSS.escape(id)}"]`);
   if(node) node.style.opacity = "0.35";
 
   try{
@@ -1313,9 +1380,9 @@ function subscribeComments(matchId){
   }catch(e){}
 
   commentsChannel = client
-    .channel(\`qdp-comments-\${matchId}\`)
+    .channel(`qdp-comments-${matchId}`)
     .on('postgres_changes',
-      { event: '*', schema: 'public', table: 'match_comments', filter: \`match_id=eq.\${matchId}\` },
+      { event: '*', schema: 'public', table: 'match_comments', filter: `match_id=eq.${matchId}` },
       async () => {
         await refreshAdminState();
         await loadComments(matchId);
@@ -1489,7 +1556,7 @@ async function loadWeather(matchDateISO, matchTimeStr){
   }
 }
 
-/* ✅ MVP: ritorna anche il totale voti (serve per decidere se mostrare il finale) */
+/* ✅ MVP: ritorna info per caption finale */
 async function loadMVP(matchId, playersById){
   try{
     const { data: votes, error } = await client
@@ -1513,7 +1580,7 @@ async function loadMVP(matchId, playersById){
       mvpSub.textContent = "";
       mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
       mvpTop3.style.display = "none";
-      return totalVotes;
+      return { totalVotes, topNames: [], topVotes: 0 };
     }
 
     const rows = [...counts.entries()]
@@ -1525,7 +1592,9 @@ async function loadMVP(matchId, playersById){
 
     const topVotes = rows[0].votes;
     const tops = rows.filter(r=>r.votes===topVotes);
+    const topNames = tops.map(t=>t.name);
 
+    // UI "live" (provvisorio)
     if(tops.length === 1){
       mvpAvatar.src = avatarUrl(tops[0].avatar);
       mvpMain.textContent = `${tops[0].name}`;
@@ -1549,14 +1618,14 @@ async function loadMVP(matchId, playersById){
     `).join("");
     mvpTop3.style.display = "block";
 
-    return totalVotes;
+    return { totalVotes, topNames, topVotes };
   }catch(e){
     console.error(e);
     mvpMain.textContent = "Errore MVP";
     mvpSub.textContent = "";
     mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
     mvpTop3.style.display = "none";
-    return 0;
+    return { totalVotes: 0, topNames: [], topVotes: 0 };
   }
 }
 
@@ -1598,7 +1667,7 @@ async function load(){
     mvpBox.style.display = "none";
     resultHead.style.display = "none";
     gkPosterWrap.style.display = "none";
-    setMvpCtaVisible(false); /* ✅ */
+    setMvpCtaVisible(false);
     if(prevMvpHead) prevMvpHead.style.display = "none";
     return;
   }
@@ -1616,7 +1685,7 @@ async function load(){
     calledEl.textContent = "—";
     commentsWrap.style.display = "none";
     gkPosterWrap.style.display = "none";
-    setMvpCtaVisible(false); /* ✅ */
+    setMvpCtaVisible(false);
     if(prevMvpHead) prevMvpHead.style.display = "none";
     return;
   }
@@ -1631,7 +1700,7 @@ async function load(){
 
   const voteOpen = isVoteOpen(m);
 
-  /* ✅ CTA: SOLO a partita finita + votazione aperta */
+  // ✅ CTA: SOLO partita finita + votazione aperta
   setMvpCtaVisible(!!(matchEnded && voteOpen));
 
   infoEl.innerHTML = `
@@ -1680,8 +1749,10 @@ async function load(){
   const kb = findKeeperForTeam(bPlayers, m.keeper_b);
 
   if(matchEnded){
+    // ✅ nascondi MVP partita precedente quando la partita è finita
     if(prevMvpHead) prevMvpHead.style.display = "none";
 
+    // ✅ DUELLO PORTIERI (solo a partita finita)
     const poster = pickGkPoster(ka, kb);
     if(poster){
       gkPosterImg.src = poster;
@@ -1695,6 +1766,7 @@ async function load(){
       gkPosterImg.removeAttribute("src");
     }
 
+    // RISULTATO
     resultHead.style.display = "block";
     resultTimeEl.textContent = time || "—";
 
@@ -1707,23 +1779,28 @@ async function load(){
     scoreAEl.textContent = (m.score_a ?? "—");
     scoreBEl.textContent = (m.score_b ?? "—");
 
+    // nascondi meteo + disponibili
     weatherBox.style.display = "none";
     calledEl.style.display = "none";
     calledTitleEl.style.display = "none";
 
+    // commenti
     currentMatchId = String(m.id);
     commentsWrap.style.display = "block";
     await refreshAdminState();
     await loadComments(currentMatchId);
     subscribeComments(currentMatchId);
   }else{
+    // partita NON finita
     resultHead.style.display = "none";
     commentsWrap.style.display = "none";
     currentMatchId = null;
 
+    // ✅ nascondi poster
     gkPosterWrap.style.display = "none";
     gkPosterImg.removeAttribute("src");
 
+    // ✅ mostra MVP partita precedente (immagine fissa)
     if(prevMvpHead && prevMvpImg){
       prevMvpHead.style.display = "block";
       prevMvpImg.src = `mvpgiornata.jpg?v=${Date.now()}`;
@@ -1733,6 +1810,7 @@ async function load(){
       };
     }
 
+    // chiudi realtime channel se si passa a partita non finita
     try{
       if(commentsChannel){
         client.removeChannel(commentsChannel);
@@ -1754,28 +1832,51 @@ async function load(){
     }
   }
 
-  // MVP box (come prima)
+  // MVP:
+  // - se votazione aperta: mostra provvisorio + TOP3
+  // - se votazione chiusa e partita finita: mostra mvpsmall.png + caption automatica
   if(voteOpen){
     mvpBox.style.display = "block";
+    mvpLiveWrap.style.display = "block";
+    mvpFinalPoster.style.display = "none";
+
     mvpTitle.textContent = "🏆 MVP (provvisorio)";
     mvpStatePill.textContent = "🟢 Votazione aperta";
     mvpMain.textContent = "Caricamento…";
     mvpSub.textContent = "";
     mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
     mvpTop3.style.display = "none";
+
     await loadMVP(m.id, playersById);
   }else{
     if(matchEnded){
       mvpBox.style.display = "block";
+      mvpLiveWrap.style.display = "none";
+      mvpFinalPoster.style.display = "block";
+
       mvpTitle.textContent = "🏆 MVP (finale)";
       mvpStatePill.textContent = "🔒 Votazione chiusa";
-      mvpMain.textContent = "Caricamento…";
-      mvpSub.textContent = "";
-      mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
-      mvpTop3.style.display = "none";
 
-      const totalVotes = await loadMVP(m.id, playersById);
-      if(totalVotes <= 0){
+      // Carica e ricava nome MVP
+      const info = await loadMVP(m.id, playersById);
+
+      // ✅ immagine mvpsmall.png sempre aggiornata (tu la sovrascrivi)
+      mvpSmallImg.src = `mvpsmall.png?v=${Date.now()}`;
+      mvpSmallImg.onerror = () => {
+        // se manca, nascondo solo il poster
+        mvpFinalPoster.style.display = "none";
+      };
+
+      // ✅ caption automatica
+      let label = "—";
+      if(info?.topNames?.length === 1) label = info.topNames[0];
+      else if(info?.topNames?.length > 1) label = info.topNames.join(" / ");
+
+      mvpSmallCaption.innerHTML = `MVP • <span class="gold">${escapeHtml(label)}</span>`;
+      mvpSmallSub.textContent = "QUELLI DELLA PENSIONE";
+
+      // Se non ci sono voti, nascondo il box MVP (come prima)
+      if((info?.totalVotes || 0) <= 0){
         mvpBox.style.display = "none";
       }
     }else{
@@ -1813,4 +1914,4 @@ load();
 </script>
 </body>
 </html>
-dndjsjsjsj
+<!-- by Marco82 -->
