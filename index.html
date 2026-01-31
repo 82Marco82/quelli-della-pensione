@@ -816,6 +816,170 @@
         max-width:240px; /* ✅ più spazio anche su mobile */
       }
     }
+
+    /* ==========================================================
+       🎮 MICRO-ANIMAZIONI "FIFA VIBES" (SAFE)
+       ========================================================== */
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+    }
+
+    /* (1) Entrata card + titoli */
+    body:not(.loaded) .card,
+    body:not(.loaded) .header,
+    body:not(.loaded) .nav{
+      opacity:0;
+      transform: translateY(10px);
+    }
+    body.loaded .header{ animation: fadeUp .55s ease-out both; }
+    body.loaded .card{ animation: cardIn .55s cubic-bezier(.2,.8,.2,1) both; }
+    body.loaded .card:nth-of-type(2){ animation-delay:.06s; }
+    body.loaded .card:nth-of-type(3){ animation-delay:.10s; }
+    body.loaded .card:nth-of-type(4){ animation-delay:.14s; }
+
+    h1{ transform-origin:center; }
+    body.loaded h1{ animation: titlePop .65s cubic-bezier(.2,1,.2,1) both; }
+
+    .heroCaption, .formationsTitle, .calledTitleCenter, .commentsTitle{ transform-origin:center; }
+    body.loaded .heroCaption,
+    body.loaded .formationsTitle,
+    body.loaded .calledTitleCenter,
+    body.loaded .commentsTitle{
+      animation: captionIn .55s ease-out both;
+    }
+
+    @keyframes fadeUp{ from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
+    @keyframes cardIn{
+      0%{opacity:0; transform:translateY(14px) scale(.985)}
+      60%{opacity:1; transform:translateY(0) scale(1.004)}
+      100%{opacity:1; transform:translateY(0) scale(1)}
+    }
+    @keyframes titlePop{
+      0%{opacity:0; transform:translateY(10px) scale(.98)}
+      70%{opacity:1; transform:translateY(0) scale(1.015)}
+      100%{opacity:1; transform:translateY(0) scale(1)}
+    }
+    @keyframes captionIn{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)} }
+
+    /* ticker shine sul pill risultato */
+    .resultPill{ position:relative; overflow:hidden; }
+    .resultPill::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.18) 45%, transparent 70%);
+      transform: translateX(-120%);
+      opacity:.85;
+      pointer-events:none;
+    }
+    body.loaded .resultPill::after{ animation: tickerShine 2.2s ease-in-out infinite; }
+    @keyframes tickerShine{
+      0%{transform:translateX(-120%); opacity:0}
+      30%{opacity:.85}
+      60%{opacity:.85}
+      100%{transform:translateX(120%); opacity:0}
+    }
+
+    /* coin kick più fisico */
+    .logo{ transform: translateZ(0); }
+    .logo.coinKick{ animation: coinKick .62s cubic-bezier(.2,1,.2,1); }
+    @keyframes coinKick{
+      0%{transform:rotateY(0deg) scale(1)}
+      35%{transform:rotateY(210deg) scale(1.06)}
+      70%{transform:rotateY(340deg) scale(.985)}
+      100%{transform:rotateY(360deg) scale(1)}
+    }
+
+    /* GK entrance + VS pop */
+    .formationsHead.gkIn .gkChip:first-child{
+      animation: slideInLeft .55s cubic-bezier(.2,.9,.2,1) both;
+    }
+    .formationsHead.gkIn .gkChip:last-child{
+      animation: slideInRight .55s cubic-bezier(.2,.9,.2,1) both;
+    }
+    .formationsHead.gkIn .vsBadge2{
+      animation: vsPop .5s cubic-bezier(.2,1,.2,1) both;
+      animation-delay:.08s;
+    }
+    @keyframes slideInLeft{ from{opacity:0; transform:translateX(-14px) scale(.99)} to{opacity:1; transform:translateX(0) scale(1)} }
+    @keyframes slideInRight{ from{opacity:0; transform:translateX(14px) scale(.99)} to{opacity:1; transform:translateX(0) scale(1)} }
+    @keyframes vsPop{
+      0%{opacity:0; transform:scale(.92)}
+      70%{opacity:1; transform:scale(1.06)}
+      100%{opacity:1; transform:scale(1)}
+    }
+
+    /* (3) pop punteggio */
+    .scoreNum.pop{ animation: scorePop .45s cubic-bezier(.2,1,.2,1); }
+    @keyframes scorePop{
+      0%{transform:scale(.88); opacity:.2}
+      65%{transform:scale(1.10); opacity:1}
+      100%{transform:scale(1); opacity:1}
+    }
+
+    /* crowd pulse sul resultBox */
+    .resultBox.crowd{ position:relative; overflow:hidden; }
+    .resultBox.crowd::before{
+      content:"";
+      position:absolute;
+      inset:-60% -60%;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.12), transparent 55%),
+        radial-gradient(circle at 70% 40%, rgba(255,255,255,.08), transparent 60%),
+        radial-gradient(circle at 45% 75%, rgba(255,255,255,.10), transparent 55%);
+      transform: translateZ(0);
+      opacity:0;
+      pointer-events:none;
+    }
+    body.loaded .resultBox.crowd::before{ animation: crowdPulse 3.2s ease-in-out infinite; }
+    @keyframes crowdPulse{
+      0%{opacity:0; transform:scale(1) rotate(0deg)}
+      40%{opacity:.55; transform:scale(1.02) rotate(2deg)}
+      70%{opacity:.35; transform:scale(1.01) rotate(-1deg)}
+      100%{opacity:0; transform:scale(1) rotate(0deg)}
+    }
+
+    /* (7) meteo pulse + shimmer while loading */
+    .weatherBox.pulsing{ animation: wxPulse 1.25s ease-in-out infinite; }
+    @keyframes wxPulse{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-1px)} }
+    .weatherBox.loading{ position:relative; overflow:hidden; }
+    .weatherBox.loading::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.10) 45%, transparent 70%);
+      transform: translateX(-120%);
+      pointer-events:none;
+      animation: tickerShine 1.4s ease-in-out infinite;
+    }
+
+    /* (5) spotlight MVP finale */
+    .mvpFinalWrap.spotlight{ position:relative; overflow:hidden; }
+    .mvpFinalWrap.spotlight::before{
+      content:"";
+      position:absolute;
+      inset:-60% -60%;
+      background:radial-gradient(circle at 50% 40%, rgba(250,204,21,.20), transparent 55%);
+      pointer-events:none;
+      opacity:0;
+    }
+    .mvpFinalWrap.spotlight::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.16) 45%, transparent 70%);
+      transform: translateX(-120%);
+      opacity:0;
+      pointer-events:none;
+    }
+    body.loaded .mvpFinalWrap.spotlight::before{ animation: spotGlow 2.6s ease-in-out infinite; }
+    body.loaded .mvpFinalWrap.spotlight::after{ animation: tickerShine 2.4s ease-in-out infinite; }
+    @keyframes spotGlow{
+      0%{opacity:0; transform:scale(1)}
+      45%{opacity:.85; transform:scale(1.02)}
+      100%{opacity:0; transform:scale(1)}
+    }
   </style>
 </head>
 
@@ -1053,14 +1217,19 @@ function setTheme(mode){
   localStorage.setItem("qdp_theme", mode);
 }
 setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
+/* ✅ page enter */
+requestAnimationFrame(()=> document.body.classList.add("loaded"));
+
 themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 
 /* LOGO MONETA */
 const logoCoin = document.getElementById("logoCoin");
 function spinLogo(){
-  logoCoin.classList.remove("spin");
+  // nuova animazione "kick" + fallback rimuovendo anche spin
+  logoCoin.classList.remove("spin","coinKick");
   void logoCoin.offsetWidth;
-  logoCoin.classList.add("spin");
+  logoCoin.classList.add("coinKick");
+  setTimeout(()=> logoCoin.classList.remove("coinKick"), 700);
 }
 logoCoin.addEventListener("click", spinLogo);
 logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
@@ -1190,6 +1359,7 @@ const scoreAEl = document.getElementById("scoreA");
 const scoreBEl = document.getElementById("scoreB");
 const teamLabelA = document.getElementById("teamLabelA");
 const teamLabelB = document.getElementById("teamLabelB");
+const resultBoxEl = document.getElementById("resultBox");
 
 const calledEl = document.getElementById("called");
 const calledTitleEl = document.getElementById("calledTitle");
@@ -1586,6 +1756,9 @@ async function loadWeather(matchDateISO, matchTimeStr){
   weatherMini.textContent = "";
   setWeatherAlert("warn","ATTENDI…");
 
+  /* ✅ pulse + shimmer mentre carica */
+  weatherBox.classList.add("pulsing","loading");
+
   try{
     const hhmm = String(matchTimeStr||"21:00").slice(0,5);
     const target = `${matchDateISO}T${hhmm}`;
@@ -1640,6 +1813,9 @@ async function loadWeather(matchDateISO, matchTimeStr){
     weatherBig.textContent = emoji;
     weatherMini.textContent =
       `🌡 ${Math.round(temp)}°C  •  💧 ${pp}%  •  💨 ${Math.round(wind)} km/h  •  ⏰ ${hhmm}`;
+
+    /* ✅ stop loading */
+    weatherBox.classList.remove("pulsing","loading");
   }catch(e){
     console.error(e);
     weatherBox.style.display = "block";
@@ -1647,6 +1823,9 @@ async function loadWeather(matchDateISO, matchTimeStr){
     setWeatherAlert("warn","⚠️ METEO");
     weatherLine.textContent = "Meteo non disponibile al momento.";
     weatherMini.textContent = "";
+
+    /* ✅ stop loading */
+    weatherBox.classList.remove("pulsing","loading");
   }
 }
 
@@ -1877,6 +2056,12 @@ async function load(){
     scoreAEl.textContent = (m.score_a ?? "—");
     scoreBEl.textContent = (m.score_b ?? "—");
 
+    /* ✅ (3) pop punteggio + crowd pulse */
+    scoreAEl.classList.remove("pop"); scoreBEl.classList.remove("pop");
+    void scoreAEl.offsetWidth;
+    scoreAEl.classList.add("pop"); scoreBEl.classList.add("pop");
+    if(resultBoxEl) resultBoxEl.classList.add("crowd");
+
     weatherBox.style.display = "none";
     calledEl.style.display = "none";
     calledTitleEl.style.display = "none";
@@ -1890,6 +2075,8 @@ async function load(){
     resultHead.style.display = "none";
     commentsWrap.style.display = "none";
     currentMatchId = null;
+
+    if(resultBoxEl) resultBoxEl.classList.remove("crowd");
 
     gkPosterWrap.style.display = "none";
     gkPosterImg.removeAttribute("src");
@@ -1959,11 +2146,17 @@ async function load(){
       mvpSmallCaption.innerHTML = `MVP • <span class="gold">${escapeHtml(label)}</span>`;
       mvpSmallSub.textContent = "QUELLI DELLA PENSIONE";
 
+      /* ✅ (5) spotlight MVP finale */
+      const wrap = document.querySelector(".mvpFinalWrap");
+      if(wrap) wrap.classList.add("spotlight");
+
       if((info?.totalVotes || 0) <= 0){
         mvpBox.style.display = "none";
       }
     }else{
       mvpBox.style.display = "none";
+      const wrap = document.querySelector(".mvpFinalWrap");
+      if(wrap) wrap.classList.remove("spotlight");
     }
   }
 
@@ -1987,6 +2180,11 @@ async function load(){
 
     gkAName.innerHTML = ka ? (escapeHtml(ka.name) + `<span class="glove">🧤</span>`) : "—";
     gkBName.innerHTML = kb ? (escapeHtml(kb.name) + `<span class="glove">🧤</span>`) : "—";
+
+    /* ✅ (GK) entrata sincronizzata */
+    formationsHead.classList.remove("gkIn");
+    void formationsHead.offsetWidth;
+    formationsHead.classList.add("gkIn");
   }else{
     formationsHead.style.display = "none";
     teamsBox.style.display = "none";
