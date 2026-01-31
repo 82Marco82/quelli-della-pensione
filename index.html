@@ -217,6 +217,16 @@
       text-align:center;
     }
 
+    /* ✅ DISPONIBILI titolo centrato come FORMAZIONI */
+    .calledTitleCenter{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:26px;
+      margin:16px 0 10px 0;
+      text-transform:uppercase;
+      text-align:center;
+    }
+
     /* ✅ DUELLO PORTIERI (Bande nere + locandina + NO tagli) */
     .gkPosterWrap{
       margin-top:12px;
@@ -716,9 +726,7 @@
     .toast.err{ border-color: var(--riskBd); }
 
     /* ==========================================================
-       ✅ CTA LATERALE: "Vota il tuo MVP"
-       - compare SOLO quando votazione aperta + partita finita
-       - e SOLO se l'utente NON ha già votato (localStorage)
+       ✅ CTA LATERALE: "Vota il tuo MVP" (FIX TRONCAMENTO)
        ========================================================== */
     .mvpCta{
       position:fixed;
@@ -740,7 +748,7 @@
       border-radius:999px;
       padding:10px 12px;
       min-width:190px;
-      max-width:220px;
+      max-width:260px; /* ✅ più spazio */
       cursor:pointer;
       user-select:none;
       animation: mvpPulse 1.4s ease-in-out infinite;
@@ -757,22 +765,27 @@
       animation: mvpWiggle 2.8s ease-in-out infinite;
     }
     .mvpCta .txt{min-width:0}
+
+    /* ✅ TESTO: niente tronco, va a capo se serve */
     .mvpCta .t1{
       font-weight:900;
       letter-spacing:.6px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      white-space:normal;
+      overflow:visible;
+      text-overflow:clip;
+      line-height:1.12;
     }
     .mvpCta .t2{
       margin-top:2px;
       font-weight:800;
       font-size:12px;
       opacity:.85;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      white-space:normal;
+      overflow:visible;
+      text-overflow:clip;
+      line-height:1.2;
     }
+
     .mvpCta .dot{
       width:10px;height:10px;border-radius:999px;
       background:#22c55e;
@@ -797,7 +810,11 @@
     }
     @media(max-width:420px){
       .mvpCta{ right:10px; }
-      .mvpCta a{ min-width:170px; padding:10px 10px; }
+      .mvpCta a{
+        min-width:170px;
+        padding:10px 10px;
+        max-width:240px; /* ✅ più spazio anche su mobile */
+      }
     }
   </style>
 </head>
@@ -918,7 +935,6 @@
           </div>
         </div>
       </div>
-
     </div>
 
     <!-- TITOLO MAPPA -->
@@ -956,7 +972,7 @@
     </div>
 
     <!-- DISPONIBILI -->
-    <div id="calledTitle" class="line"><b>DISPONIBILI PER LA PARTITA</b></div>
+    <div id="calledTitle" class="calledTitleCenter">DISPONIBILI PER LA PARTITA</div>
     <div id="called" class="playersWrap muted">—</div>
 
     <!-- ✅ MIGLIORE IN CAMPO PARTITA PRECEDENTE (mostrato quando la partita NON è finita) -->
@@ -999,7 +1015,6 @@
       <div class="line kit" style="margin-top:10px"><span id="tBIcon"></span><b>Squadra B</b></div>
       <div id="teamB" class="playersWrap muted"></div>
     </div>
-
   </div>
 
   <div class="card nav muted">
@@ -1067,6 +1082,21 @@ function showToast(msg, type="ok"){
   toastTimer = setTimeout(()=> toastEl.className = "toast", 1600);
 }
 
+/* ✅ voter_id (stesso di mvp.html) */
+function getOrCreateVoterId(){
+  const key = "qdp_voter_id";
+  let v = localStorage.getItem(key);
+  if(!v){
+    v = (crypto?.randomUUID ? crypto.randomUUID() :
+      "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{
+        const r=Math.random()*16|0, vv=c==="x"?r:(r&0x3|0x8); return vv.toString(16);
+      })
+    );
+    localStorage.setItem(key, v);
+  }
+  return v;
+}
+
 /* ✅ CTA MVP */
 const mvpCtaEl = document.getElementById("mvpCta");
 function setMvpCtaVisible(visible){
@@ -1075,25 +1105,69 @@ function setMvpCtaVisible(visible){
   mvpCtaEl.setAttribute("aria-hidden", visible ? "false" : "true");
 }
 
-/* ✅ "ha già votato?" (localStorage per match) */
-const MVP_VOTED_KEY_PREFIX = "qdp_mvp_voted_";
-function mvpVotedKey(matchId){ return MVP_VOTED_KEY_PREFIX + String(matchId); }
-function hasUserVoted(matchId){
-  try{ return localStorage.getItem(mvpVotedKey(matchId)) === "1"; }
-  catch(e){ return false; }
+/* ✅ CTA MODE (vote / voted8s / off) */
+const mvpCtaLink = mvpCtaEl ? mvpCtaEl.querySelector("a") : null;
+const mvpCtaT1   = mvpCtaEl ? mvpCtaEl.querySelector(".t1") : null;
+const mvpCtaT2   = mvpCtaEl ? mvpCtaEl.querySelector(".t2") : null;
+const mvpCtaDot  = mvpCtaEl ? mvpCtaEl.querySelector(".dot") : null;
+
+const MVP_CTA_ORIG = {
+  href: mvpCtaLink ? mvpCtaLink.getAttribute("href") : "mvp.html",
+  t1: mvpCtaT1 ? mvpCtaT1.textContent : "Vota il tuo MVP",
+  t2: mvpCtaT2 ? mvpCtaT2.textContent : "Votazione aperta"
+};
+
+let mvpCtaTimer = null;
+
+function setMvpCtaMode(mode){
+  if(!mvpCtaEl || !mvpCtaLink || !mvpCtaT1 || !mvpCtaT2) return;
+
+  clearTimeout(mvpCtaTimer);
+  mvpCtaTimer = null;
+
+  if(mode === "vote"){
+    mvpCtaT1.textContent = MVP_CTA_ORIG.t1;
+    mvpCtaT2.textContent = MVP_CTA_ORIG.t2;
+    mvpCtaLink.setAttribute("href", MVP_CTA_ORIG.href);
+    mvpCtaLink.style.pointerEvents = "auto";
+    mvpCtaLink.style.opacity = "1";
+    if(mvpCtaDot) mvpCtaDot.style.background = "#22c55e";
+    setMvpCtaVisible(true);
+    return;
+  }
+
+  if(mode === "voted8s"){
+    mvpCtaT1.textContent = "✅ Hai già votato";
+    mvpCtaT2.textContent = "Grazie! 🙌";
+    mvpCtaLink.removeAttribute("href");
+    mvpCtaLink.style.pointerEvents = "none";
+    mvpCtaLink.style.opacity = "0.95";
+    if(mvpCtaDot) mvpCtaDot.style.background = "#22c55e";
+    setMvpCtaVisible(true);
+
+    mvpCtaTimer = setTimeout(()=> setMvpCtaVisible(false), 8000);
+    return;
+  }
+
+  setMvpCtaVisible(false);
 }
 
-/* Se vota in un'altra scheda, nascondi CTA al volo */
-window.addEventListener("storage", (ev)=>{
-  if(!ev || !ev.key) return;
-  if(ev.key.startsWith(MVP_VOTED_KEY_PREFIX)){
-    // ricalcolo rapido: se è stato segnato un voto, nascondi la CTA
-    try{
-      const anyVoted = ev.newValue === "1";
-      if(anyVoted) setMvpCtaVisible(false);
-    }catch(e){}
+/* ✅ check voto su Supabase */
+async function hasAlreadyVoted(matchId){
+  try{
+    const voterId = getOrCreateVoterId();
+    const { data, error } = await client
+      .from("mvp_votes")
+      .select("id")
+      .eq("match_id", matchId)
+      .eq("voter_id", voterId)
+      .limit(1);
+    if(error) return false;
+    return !!(data && data.length);
+  }catch(e){
+    return false;
   }
-});
+}
 
 /* DOM */
 const statusEl = document.getElementById("status");
@@ -1614,7 +1688,6 @@ async function loadMVP(matchId, playersById){
     const tops = rows.filter(r=>r.votes===topVotes);
     const topNames = tops.map(t=>t.name);
 
-    // UI "live" (provvisorio)
     if(tops.length === 1){
       mvpAvatar.src = avatarUrl(tops[0].avatar);
       mvpMain.textContent = `${tops[0].name}`;
@@ -1687,7 +1760,7 @@ async function load(){
     mvpBox.style.display = "none";
     resultHead.style.display = "none";
     gkPosterWrap.style.display = "none";
-    setMvpCtaVisible(false);
+    setMvpCtaMode("off");
     if(prevMvpHead) prevMvpHead.style.display = "none";
     return;
   }
@@ -1705,7 +1778,7 @@ async function load(){
     calledEl.textContent = "—";
     commentsWrap.style.display = "none";
     gkPosterWrap.style.display = "none";
-    setMvpCtaVisible(false);
+    setMvpCtaMode("off");
     if(prevMvpHead) prevMvpHead.style.display = "none";
     return;
   }
@@ -1722,9 +1795,14 @@ async function load(){
 
   // ✅ CTA:
   // - SOLO partita finita + votazione aperta
-  // - e SOLO se questo utente NON ha già votato
-  const alreadyVoted = hasUserVoted(m.id);
-  setMvpCtaVisible(!!(matchEnded && voteOpen && !alreadyVoted));
+  // - se ha già votato: banner 8s e poi sparisce
+  if(matchEnded && voteOpen){
+    const already = await hasAlreadyVoted(m.id);
+    if(already) setMvpCtaMode("voted8s");
+    else setMvpCtaMode("vote");
+  }else{
+    setMvpCtaMode("off");
+  }
 
   infoEl.innerHTML = `
     <div class="line"><b>📅 ${escapeHtml(formatDateFull(m.match_date))}</b></div>
@@ -1846,6 +1924,7 @@ async function load(){
     }
   }
 
+  // MVP:
   if(voteOpen){
     mvpBox.style.display = "block";
     mvpLiveWrap.style.display = "block";
@@ -1888,6 +1967,7 @@ async function load(){
     }
   }
 
+  // Squadre + formazioni
   const hasTeams = teamAIds.length || teamBIds.length;
   if(hasTeams){
     teamsBox.style.display = "block";
