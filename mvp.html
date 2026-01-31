@@ -387,6 +387,17 @@ function getOrCreateVoterId(){
   }
   return v;
 }
+
+/* ✅ LOCALSTORAGE "HA GIÀ VOTATO" (per far sparire CTA in index) */
+const MVP_VOTED_KEY_PREFIX = "qdp_mvp_voted_";
+function mvpVotedKey(matchId){ return MVP_VOTED_KEY_PREFIX + String(matchId); }
+function setVotedForMatch(matchId){
+  try{ localStorage.setItem(mvpVotedKey(matchId), "1"); }catch(e){}
+}
+function hasVotedForMatch(matchId){
+  try{ return localStorage.getItem(mvpVotedKey(matchId)) === "1"; }catch(e){ return false; }
+}
+
 function medal(i){
   if(i===0) return "🥇";
   if(i===1) return "🥈";
@@ -511,7 +522,6 @@ async function loadCalledPlayers(){
 
   if(error) throw error;
 
-  // Ordine alfabetico (se preferisci ordine convocati, dimmelo e lo cambio)
   CALLED_PLAYERS = (players || [])
     .slice()
     .sort((a,b)=>String(a.name).localeCompare(String(b.name),"it"));
@@ -519,7 +529,7 @@ async function loadCalledPlayers(){
   renderDropdown();
   ddName.textContent = "Scegli un giocatore…";
   ddPos.textContent = "—";
-  ddBtn.disabled = !OPEN_FLAG && false; // dd si può aprire anche se votazione chiusa (solo per vedere)
+
   ddBtn.disabled = false;
 
   // voto abilitato solo se aperta e selezione fatta
@@ -577,6 +587,11 @@ function renderDropdown(){
 async function enforceAlreadyVoted(){
   if(!CURRENT_MATCH) return;
 
+  // ✅ se già marcato in localStorage, disabilita subito (poi conferma DB)
+  if(hasVotedForMatch(CURRENT_MATCH.id)){
+    btnVote.disabled = true;
+  }
+
   const voterId = getOrCreateVoterId();
   const { data: already, error } = await client
     .from("mvp_votes")
@@ -588,6 +603,9 @@ async function enforceAlreadyVoted(){
   if(error) return;
 
   if(already && already.length){
+    // ✅ segna anche su localStorage (serve per index.html CTA)
+    setVotedForMatch(CURRENT_MATCH.id);
+
     const vp = already[0].voted_player;
     const p = CALLED_PLAYERS.find(x=>String(x.id)===String(vp));
     const name = p ? `${p.name}${isGK(p) ? " 🧤" : ""}` : "già votato";
@@ -781,6 +799,9 @@ btnVote.addEventListener("click", async ()=>{
   if(error){
     const emsg = String(error.message || "");
     if(emsg.toLowerCase().includes("duplicate") || emsg.toLowerCase().includes("unique")){
+      // ✅ anche in caso di duplicate, marca localStorage così index nasconde CTA
+      setVotedForMatch(CURRENT_MATCH.id);
+
       setMsg("Hai già votato per questa partita ✅", "ok");
     } else {
       setMsg("Errore voto: " + emsg, "err");
@@ -789,6 +810,9 @@ btnVote.addEventListener("click", async ()=>{
     await fullRefresh(chosen);
     return;
   }
+
+  // ✅ VOTO OK -> marca localStorage per match (serve a index)
+  setVotedForMatch(CURRENT_MATCH.id);
 
   const p = CALLED_PLAYERS.find(x=>String(x.id)===String(chosen));
   const name = p ? `${p.name}${isGK(p) ? " 🧤" : ""}` : "";
