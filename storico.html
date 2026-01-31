@@ -206,6 +206,47 @@
     .playerTxt{display:flex;flex-direction:column;line-height:1.1;min-width:0}
     .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    /* ✅ COMMENTI A CALDO (storico) */
+    .commentBox{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+      background:var(--chipBg);
+    }
+    .commentTitle{
+      font-weight:900;
+      margin:0 0 10px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .commentItem2{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:10px;
+      margin-top:10px;
+      background:rgba(0,0,0,.02);
+    }
+    body.dark .commentItem2{ background:rgba(255,255,255,.03); }
+    .commentMeta2{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+      color:var(--muted);
+      font-weight:900;
+      font-size:13px;
+    }
+    .commentBubble2{
+      margin-top:8px;
+      font-weight:800;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
   </style>
 </head>
 
@@ -311,13 +352,29 @@ function renderPlayerPill(p){
 
   return `
     <span class="playerPill">
-      <img class="playerAvatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt="">
+      <img class="playerAvatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt=""
+           onerror="this.onerror=null;this.src='${escapeHtml(avatarUrl(DEFAULT_AVATAR))}'">
       <span class="playerTxt">
         <span class="playerName">${nameHtml}</span>
         <span class="playerPos">${posHtml}</span>
       </span>
     </span>
   `;
+}
+
+/* timeAgo (come index) */
+function timeAgo(ts){
+  try{
+    const d = new Date(ts);
+    const diff = Math.floor((Date.now() - d.getTime())/1000);
+    if(diff < 60) return "ora";
+    const m = Math.floor(diff/60);
+    if(m < 60) return `${m} min`;
+    const h = Math.floor(m/60);
+    if(h < 24) return `${h} h`;
+    const days = Math.floor(h/24);
+    return `${days} g`;
+  }catch(e){ return ""; }
 }
 
 /* MVP helpers */
@@ -370,8 +427,9 @@ async function load(){
       return;
     }
 
-    // ✅ carico voti MVP per tutte le partite
     const matchIds = matches.map(m => m.id);
+
+    // ✅ carico voti MVP per tutte le partite
     const { data: votes, error: eV } = await client
       .from("mvp_votes")
       .select("match_id,voted_player")
@@ -384,6 +442,23 @@ async function load(){
       if(!votesByMatch.has(k)) votesByMatch.set(k, []);
       votesByMatch.get(k).push(v);
     });
+
+    // ✅ carico commenti a caldo per tutte le partite
+    const { data: comments, error: eC } = await client
+      .from("match_comments")
+      .select("match_id,name,text,created_at")
+      .in("match_id", matchIds)
+      .order("created_at",{ascending:false})
+      .limit(5000);
+    // Se la tabella non esiste o RLS blocca, non spacco lo storico: mostro senza commenti.
+    const commentsByMatch = new Map();
+    if(!eC){
+      (comments||[]).forEach(c=>{
+        const k = String(c.match_id);
+        if(!commentsByMatch.has(k)) commentsByMatch.set(k, []);
+        commentsByMatch.get(k).push(c);
+      });
+    }
 
     statusEl.textContent = `Partite: ${matches.length}`;
 
@@ -437,6 +512,50 @@ async function load(){
       const mvpLine = computeMvpLine(votesByMatch.get(String(m.id)) || [], playersById, isOpen);
       const mvpHtml = mvpLine ? `<div class="mvpLine"><span class="pill">${escapeHtml(mvpLine)}</span></div>` : ``;
 
+      // ✅ COMMENTI A CALDO (in dettagli)
+      const cm = commentsByMatch.get(String(m.id)) || [];
+      const commentsCount = cm.length;
+
+      let commentsHtml = `
+        <div class="commentBox">
+          <div class="commentTitle">
+            <span>💬 Commenti a caldo</span>
+            <span class="pill" style="margin:0">🗨️ ${commentsCount}</span>
+          </div>
+          <div class="muted" style="font-weight:800">Nessun commento per questa partita.</div>
+        </div>
+      `;
+
+      if(commentsCount){
+        commentsHtml = `
+          <div class="commentBox">
+            <div class="commentTitle">
+              <span>💬 Commenti a caldo</span>
+              <span class="pill" style="margin:0">🗨️ ${commentsCount}</span>
+            </div>
+
+            ${cm.slice(0,20).map(c=>{
+              const displayName = (c.name && String(c.name).trim()) ? String(c.name).trim() : "Anonimo";
+              return `
+                <div class="commentItem2">
+                  <div class="commentMeta2">
+                    <span class="pill" style="margin:0">${escapeHtml(displayName)}</span>
+                    <span>•</span>
+                    <span>${escapeHtml(timeAgo(c.created_at))}</span>
+                  </div>
+                  <div class="commentBubble2">${escapeHtml(c.text || "")}</div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        `;
+      }
+
+      // Se la tabella commenti non è accessibile (RLS o non esiste), nascondo il box
+      if(eC){
+        commentsHtml = ``;
+      }
+
       return `
         <div class="card">
           <div class="row" style="justify-content:space-between">
@@ -488,6 +607,8 @@ async function load(){
                 ${renderScTable(tb)}
               </div>
             </div>
+
+            ${commentsHtml ? `<div class="space"></div>${commentsHtml}` : ``}
           </div>
         </div>
       `;
@@ -510,6 +631,11 @@ async function load(){
         }
       });
     });
+
+    // Se la tabella commenti non è accessibile, avviso in console (non blocco la UI)
+    if(eC){
+      console.warn("match_comments non accessibile (tabella mancante o RLS): commenti non mostrati nello storico.", eC);
+    }
 
   }catch(err){
     console.error(err);
