@@ -1308,22 +1308,42 @@ function spinLogo(){
 logoCoin.addEventListener("click", spinLogo);
 logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
 
-/* ✅ PROTAGONISTI: random + presidente al centro */
+/* ✅ PROTAGONISTI: random + presidente (avatars/12p.png) evidenziato */
 (() => {
   const row = document.getElementById("avatarsRow");
   if(!row) return;
 
   const imgs = Array.from(row.querySelectorAll("img"));
 
+  // shuffle
   for(let i = imgs.length - 1; i > 0; i--){
     const j = Math.floor(Math.random() * (i + 1));
     [imgs[i], imgs[j]] = [imgs[j], imgs[i]];
   }
   imgs.forEach(i => row.appendChild(i));
 
-  const mid = Math.floor(imgs.length / 2);
-  const pres = imgs[mid];
-  if(pres){
+  // trova il presidente (12p.png) e mettilo al centro + evidenzia
+  const isPresident = (img) => {
+    const src = (img.getAttribute("src") || "").toLowerCase();
+    return src.endsWith("/12p.png") || src.endsWith("12p.png");
+  };
+
+  const presIdx = imgs.findIndex(isPresident);
+
+  if(presIdx !== -1){
+    const mid = Math.floor(imgs.length / 2);
+    const pres = imgs[presIdx];
+
+    // sposta al centro (DOM)
+    const current = Array.from(row.querySelectorAll("img"));
+    const ref = current[mid] || null;
+    if(ref && pres !== ref){
+      row.insertBefore(pres, ref);
+    }else if(!ref){
+      row.appendChild(pres);
+    }
+
+    // evidenzia SOLO lui
     pres.style.transform = "scale(1.25)";
     pres.style.borderColor = "gold";
     pres.style.boxShadow = "0 0 18px rgba(255,215,0,.75)";
