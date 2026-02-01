@@ -306,7 +306,21 @@
       display:flex;
       align-items:center;
       justify-content:center;
+      gap:8px;
+      user-select:none;
+      white-space:nowrap;
     }
+    /* ✅ MODIFICA: testo accanto a ⬇️ */
+    .lb__dl{
+      width:auto;
+      padding:0 14px;
+      font-size:12px;
+      letter-spacing:.4px;
+    }
+    .lb__dl_text{
+      font-weight:900;
+    }
+
     .lb__nav{
       position:absolute;
       top:50%; transform:translateY(-50%);
@@ -378,6 +392,9 @@
     @media(max-width:520px){
       .lb__nav{ display:none; }
       .lb__figure{ height:84vh; }
+      /* opzionale: su mobile puoi tenere il testo, se vuoi nasconderlo:
+         .lb__dl_text{display:none;} .lb__dl{padding:0;width:44px;}
+      */
     }
   </style>
 </head>
@@ -476,7 +493,10 @@
 
       <!-- ✅ AZIONI TOP (Scarica + Chiudi) -->
       <div class="lb__actions">
-        <button id="lbDownload" class="lb__dl" type="button" aria-label="Scarica foto" title="Scarica">⬇️</button>
+        <!-- ✅ MODIFICA: testo accanto a ⬇️ -->
+        <button id="lbDownload" class="lb__dl" type="button" aria-label="Scarica immagine" title="Scarica immagine">
+          ⬇️ <span class="lb__dl_text">SCARICA IMMAGINE</span>
+        </button>
         <button class="lb__close" type="button" aria-label="Chiudi" data-lb-close title="Chiudi">✕</button>
       </div>
     </div>
@@ -742,12 +762,11 @@ async function downloadCurrentPhoto(){
     if(!url) return showToast("Link non disponibile.", "bad");
 
     lbDownload.disabled = true;
-    lbDownload.textContent = "⏳";
+    lbDownload.innerHTML = "⏳";
 
     const ext = guessExt(url);
     const filename = `QDP_foto_${lbIndex+1}.${ext}`;
 
-    // prova download via fetch->blob (può fallire per CORS)
     const res = await fetch(url, { mode:"cors", cache:"no-store" });
     if(!res.ok) throw new Error("Fetch failed");
     const blob = await res.blob();
@@ -764,13 +783,12 @@ async function downloadCurrentPhoto(){
     showToast("Download avviato ✅");
   }catch(e){
     console.warn("download fallback:", e);
-    // fallback: apri immagine in nuova scheda
     const url = lbList?.[lbIndex]?.src || "";
     if(url) window.open(url, "_blank", "noopener");
     showToast("Apro la foto: salva da lì ✅", "warn");
   }finally{
     lbDownload.disabled = false;
-    lbDownload.textContent = "⬇️";
+    lbDownload.innerHTML = `⬇️ <span class="lb__dl_text">SCARICA IMMAGINE</span>`;
   }
 }
 lbDownload.addEventListener("click", downloadCurrentPhoto);
@@ -1142,77 +1160,8 @@ async function deleteComment(commentId){
   }
 }
 
-/* LOAD PHOTOS */
-async function loadTop30(){
-  try{
-    topIds = new Set();
-    topPhotosCount = 0;
-
-    const since = new Date(Date.now() - 30*24*3600*1000).toISOString();
-
-    const { data, error } = await client
-      .from(TABLE_PHOTOS)
-      .select("id,created_at,path,file_path,caption,likes")
-      .gte("created_at", since)
-      .order("likes", { ascending:false })
-      .order("created_at", { ascending:false })
-      .limit(6);
-
-    if(error) throw error;
-
-    const rows = data || [];
-    topPhotosCount = rows.length;
-    rows.forEach(p => topIds.add(String(p.id)));
-
-    if(rows.length === 0){
-      topBox.style.display = "none";
-      topMini.textContent = "";
-      return;
-    }
-    topBox.style.display = "block";
-    topMini.textContent = `Mostro ${rows.length} foto`;
-
-    topGrid.innerHTML = rows.map(p => renderPhotoCard(p, true)).join("");
-    await wireCardEvents(topGrid, rows);
-  }catch(e){
-    console.warn("top30 error", e);
-    topIds = new Set();
-    topPhotosCount = 0;
-    topBox.style.display = "none";
-    topMini.textContent = "";
-  }
-}
-
-async function loadGallery(){
-  const sort = sortSelect.value;
-  const orderByLikes = (sort === "likes");
-
-  const { data, error } = await client
-    .from(TABLE_PHOTOS)
-    .select("id,created_at,path,file_path,caption,likes")
-    .order(orderByLikes ? "likes" : "created_at", { ascending:false })
-    .order("created_at", { ascending:false })
-    .limit(60);
-
-  if(error){
-    console.error(error);
-    grid.innerHTML = `<div class="muted">Errore caricamento foto.</div>`;
-    totalPhotosCount = 0;
-    cachedPhotos = [];
-    updateCountPill();
-    return;
-  }
-
-  const all = data || [];
-  totalPhotosCount = all.length;
-
-  cachedPhotos = all.filter(p => !topIds.has(String(p.id)));
-
-  updateCountPill();
-
-  grid.innerHTML = cachedPhotos.map(p => renderPhotoCard(p, false)).join("");
-  await wireCardEvents(grid, cachedPhotos);
-}
+/* LOAD PHOTOS (versione completa in loadAll) */
+async function loadGallery(){}
 
 /* ✅ Costruisce lista lightbox (Top + Gallery) senza duplicati */
 function rebuildLightboxList(topRows, galleryRows){
@@ -1445,6 +1394,13 @@ async function loadAll(){
 
   updateCountPill();
 }
+
+refreshBtn.onclick = async () => {
+  showToast("Aggiorno…");
+  await loadAll();
+};
+
+sortSelect.onchange = () => loadAll();
 
 loadAll();
 </script>
