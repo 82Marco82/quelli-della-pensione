@@ -1,0 +1,2285 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quelli della pensione</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --pill:#eeeeee;
+      --logo1:#111;
+      --logo2:#333;
+      --btn:#111;
+
+      --okBg:#dcfce7; --okText:#166534; --okBd:rgba(34,197,94,.35);
+      --warnBg:#fff7ed; --warnText:#9a3412; --warnBd:rgba(249,115,22,.35);
+      --riskBg:#ffe4e6; --riskText:#9f1239; --riskBd:rgba(244,63,94,.35);
+    }
+    body.dark{
+      --bg:#0f1115;
+      --card:#171a21;
+      --text:#e5e7eb;
+      --muted:#a1a1aa;
+      --border:#2a2f3a;
+      --shadow:0 10px 28px rgba(0,0,0,.45);
+      --pill:#222631;
+      --logo1:#0b0e14;
+      --logo2:#2a3242;
+      --btn:#0b0e14;
+
+      --okBg:rgba(34,197,94,.15); --okText:#86efac; --okBd:rgba(34,197,94,.35);
+      --warnBg:rgba(249,115,22,.14); --warnText:#fdba74; --warnBd:rgba(249,115,22,.35);
+      --riskBg:rgba(244,63,94,.16); --riskText:#fda4af; --riskBd:rgba(244,63,94,.35);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui;
+      background:var(--bg);
+      color:var(--text);
+      transition:.2s;
+    }
+    .wrap{max-width:760px;margin:auto;padding:16px}
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      margin:12px 0;
+    }
+
+    .header{text-align:center}
+
+    /* LOGO "MONETA" */
+    .logo{
+      width:80px;height:80px;border-radius:999px;
+      background:linear-gradient(135deg,var(--logo1),var(--logo2));
+      margin:auto;
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-family:'Bebas Neue';font-size:34px;
+      letter-spacing:2px;
+      cursor:pointer;
+      transform-style:preserve-3d;
+      will-change:transform;
+    }
+    .logo.spin{ animation: coinSpin 900ms ease-in-out; }
+    @keyframes coinSpin{
+      0%{transform:rotateY(0deg)}
+      50%{transform:rotateY(180deg)}
+      100%{transform:rotateY(360deg)}
+    }
+
+    h1{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:48px;
+      margin:10px 0 0;
+      text-transform:uppercase;
+    }
+    .subtitle{color:var(--muted);font-size:14px}
+
+    /* ==========================================================
+       ✅ HERO FOTO: NO SCHIACCIA, NO TAGLIA (foto.jpg)
+       ========================================================== */
+    .heroImgWrap{
+      border-radius:16px;
+      overflow:hidden;
+      background: radial-gradient(circle at center, #111 0%, #000 70%);
+      border:1px solid var(--border);
+    }
+    .heroImgWrap img{
+      width:100%;
+      height:auto;            /* ✅ mantiene proporzioni */
+      display:block;
+      object-fit:contain;     /* ✅ non taglia mai */
+      object-position:center;
+      max-height:none;        /* ✅ niente limiti che creano crop */
+      background:transparent;
+    }
+    /* se la foto è molto alta, su mobile evitiamo che diventi infinita */
+    @media(max-width:600px){
+      .heroImgWrap img{ max-height:70vh; }
+    }
+
+    .heroCaption{
+      margin-top:10px;
+      text-align:center;
+      font-family:'Bebas Neue';
+      letter-spacing:3px;
+      font-size:26px;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+
+    /* ================================
+       👥 PROTAGONISTI (INDEX)
+       ================================ */
+    .protagonisti{
+      margin-top: 14px;
+      text-align: center;
+    }
+    .protagonisti-title{
+      font-family: 'Bebas Neue';
+      letter-spacing: 3px;
+      font-size: 22px;
+      margin-bottom: 10px;
+      opacity: .9;
+      text-transform:uppercase;
+    }
+    .avatars-row{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .avatars-row img{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      object-fit:cover;
+      border:2px solid #fff;
+      box-shadow:0 4px 12px rgba(0,0,0,.35);
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .avatars-row img:hover{
+      transform:scale(1.15);
+      box-shadow:0 6px 18px rgba(0,0,0,.45);
+    }
+
+    /* Titolo sezione (stile hero) */
+    .sectionCaption{
+      margin-top:10px;
+      text-align:center;
+      font-family:'Bebas Neue';
+      letter-spacing:3px;
+      font-size:24px;
+      font-weight:900;
+      text-transform:uppercase;
+      line-height:1.1;
+    }
+    .sectionCaption .sub{
+      display:block;
+      margin-top:6px;
+      font-size:18px;
+      letter-spacing:2px;
+      opacity:.85;
+    }
+
+    .line{margin-top:8px}
+    .pill{
+      display:inline-block;
+      background:var(--pill);
+      border-radius:999px;
+      padding:6px 10px;
+      margin:4px 6px 0 0;
+      font-weight:900;
+      border:1px solid var(--border);
+    }
+    .muted{color:var(--muted)}
+
+    .mapWrap{
+      margin-top:10px;
+      border-radius:12px;
+      overflow:hidden;
+      border:1px solid var(--border)
+    }
+    iframe{width:100%;height:260px;border:0}
+
+    .mapActions{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      margin-top:10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      border:0;
+      background:var(--btn);
+      color:#fff;
+      padding:12px 14px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+    }
+    .btn.ghost{
+      background:transparent;
+      color:var(--text);
+      border:1px solid var(--border);
+    }
+
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size:14px;
+    }
+    .nav a{color:var(--text);text-decoration:none;font-weight:800}
+
+    .fab{
+      position:fixed;
+      right:16px;bottom:16px;
+      width:54px;height:54px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      font-size:22px;
+      z-index:40;
+    }
+
+    .kit{display:inline-flex;align-items:center;gap:6px}
+    .kit svg{width:18px;height:18px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+
+    /* BLOCCO TITOLO (stile FORMAZIONI) */
+    .formationsHead{
+      margin-top:12px;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:rgba(0,0,0,.02);
+    }
+    body.dark .formationsHead{background:rgba(255,255,255,.03)}
+    .formationsTitle{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:26px;
+      margin:0 0 10px 0;
+      text-transform:uppercase;
+      text-align:center;
+    }
+
+    /* ✅ DISPONIBILI titolo centrato come FORMAZIONI */
+    .calledTitleCenter{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:26px;
+      margin:16px 0 10px 0;
+      text-transform:uppercase;
+      text-align:center;
+    }
+
+    /* ✅ DUELLO PORTIERI (Bande nere + locandina + NO tagli) */
+    .gkPosterWrap{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      background: radial-gradient(circle at center, #111 0%, #000 70%);
+    }
+    .gkPosterWrap img{
+      width:100%;
+      display:block;
+      max-height:420px;
+      object-fit:contain;
+      object-position:center;
+    }
+    @media (orientation: landscape){
+      .gkPosterWrap img{ max-height:70vh; }
+    }
+
+    /* ✅ MVP PARTITA PRECEDENTE (immagine fissa mvpgiornata.jpg) */
+    .prevMvpWrap{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      background: radial-gradient(circle at center, #111 0%, #000 70%);
+    }
+    .prevMvpWrap img{
+      width:100%;
+      display:block;
+      max-height:420px;
+      object-fit:contain;
+      object-position:center;
+    }
+    @media (orientation: landscape){
+      .prevMvpWrap img{ max-height:70vh; }
+    }
+
+    /* RISULTATO (nuovo layout) */
+    .resultBox{
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(0,0,0,.02);
+    }
+    body.dark .resultBox{background:rgba(255,255,255,.03)}
+
+    .resultTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .resultPill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      font-weight:900;
+      letter-spacing:.5px;
+      text-transform:uppercase;
+    }
+    .resultTimePill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--pill);
+      font-weight:900;
+    }
+
+    /* riga squadre + avatar */
+    .resultTeamsRow{
+      margin-top:12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .teamSide{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:8px 10px;
+      background:var(--card);
+      flex:1 1 240px;
+      min-width:240px;
+      font-weight:900;
+    }
+    .teamSide.right{
+      justify-content:flex-end;
+      text-align:right;
+    }
+    .teamAvatar{
+      width:46px;height:46px;border-radius:999px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#000;
+      display:block;
+      flex:0 0 auto;
+    }
+    .teamName{
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      letter-spacing:1px;
+    }
+    .vsBadge{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:30px;
+      padding:6px 10px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--card);
+      font-weight:900;
+      flex:0 0 auto;
+    }
+
+    /* riga punteggi incolonnati */
+    .scoresRow{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap:10px;
+      align-items:center;
+    }
+    .scoreCol{
+      border:1px solid var(--border);
+      background:var(--card);
+      border-radius:16px;
+      padding:14px 10px;
+      text-align:center;
+    }
+    .scoreNum{
+      font-family:'Bebas Neue';
+      font-size:72px;
+      line-height:1;
+      letter-spacing:2px;
+      font-weight:900;
+    }
+    .dash{
+      font-family:'Bebas Neue';
+      font-size:60px;
+      font-weight:900;
+      opacity:.6;
+      padding:0 4px;
+    }
+    @media(max-width:420px){
+      .scoreNum{font-size:60px}
+      .dash{font-size:48px}
+      .teamSide{min-width:0}
+    }
+
+    /* MVP box */
+    .mvpBox{
+      margin-top:12px;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(0,0,0,.02);
+    }
+    body.dark .mvpBox{background:rgba(255,255,255,.03)}
+    .mvpTitle{
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .mvpMainRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top:10px;
+    }
+    .mvpAvatar{
+      width:48px;height:48px;border-radius:999px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#000;
+      flex:0 0 auto;
+      display:block;
+    }
+    .mvpText{font-weight:900}
+    .mvpSub{color:var(--muted);font-weight:800;font-size:13px;margin-top:2px}
+    .mvpTop3{margin-top:10px}
+    .mvpRow{
+      display:flex;align-items:center;justify-content:space-between;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:8px 10px;
+      background:transparent;
+      margin-top:8px;
+      font-weight:800;
+    }
+    .mvpLeft{display:flex;align-items:center;gap:10px}
+    .medal{
+      width:28px;height:28px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      border:1px solid var(--border);
+      background:var(--card);
+      font-weight:900;
+    }
+
+    /* ✅ MVP FINALE (mvpsmall.png + scritta automatica) */
+    .mvpFinalWrap{
+      margin-top:10px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      background: radial-gradient(circle at center, #111 0%, #000 70%);
+    }
+    .mvpFinalWrap img{
+      width:100%;
+      display:block;
+      max-height:360px;
+      object-fit:contain;
+      object-position:center;
+    }
+    .mvpFinalCaption{
+      text-align:center;
+      padding:10px 10px 12px;
+      border-top:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.35);
+    }
+    .mvpFinalCaption .big{
+      font-family:'Bebas Neue';
+      font-size:34px;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      color:#fff;
+      text-shadow:0 10px 26px rgba(0,0,0,.55);
+    }
+    .mvpFinalCaption .big .gold{
+      color:#facc15;
+      text-shadow:
+        0 0 14px rgba(250,204,21,.35),
+        0 10px 28px rgba(0,0,0,.55);
+    }
+    .mvpFinalCaption .sub{
+      margin-top:4px;
+      font-weight:900;
+      font-size:12px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      opacity:.9;
+      color:#fff;
+    }
+
+    /* METEO */
+    .weatherBox{
+      margin-top:12px;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(0,0,0,.02);
+    }
+    body.dark .weatherBox{background:rgba(255,255,255,.03)}
+    .weatherHead{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:10px;flex-wrap:wrap;font-weight:900;
+    }
+    .weatherBig{font-size:46px;line-height:1;margin-top:8px;text-align:center}
+    .weatherLine{margin-top:8px;font-weight:900;text-align:center}
+    .weatherMini{margin-top:6px;text-align:center;color:var(--muted);font-size:13px;font-weight:700}
+    .alertPill{
+      display:inline-block;border-radius:999px;padding:7px 10px;
+      font-weight:900;border:1px solid var(--border);margin:0;
+    }
+    .alert-ok{ background:var(--okBg); color:var(--okText); border-color:var(--okBd); }
+    .alert-warn{ background:var(--warnBg); color:var(--warnText); border-color:var(--warnBd); }
+    .alert-risk{ background:var(--riskBg); color:var(--riskText); border-color:var(--riskBd); }
+
+    /* Players pills */
+    .playersWrap{margin-top:6px}
+    .playerPill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--pill);
+      margin:6px 8px 0 0;
+      max-width:100%;
+    }
+    .playerAvatar{
+      width:42px;height:42px;border-radius:999px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#000;
+      flex:0 0 auto;
+      display:block;
+    }
+    .playerTxt{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+    .playerName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .playerPos{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    /* Formazioni header (GK VS GK) */
+    .vsRow{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:10px;flex-wrap:wrap;
+    }
+    .gkChip{
+      display:flex;align-items:center;gap:10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:8px 10px;
+      background:var(--card);
+      flex:1 1 240px;
+      min-width:240px;
+    }
+    .gkAvatar{
+      width:54px;height:54px;border-radius:999px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#000;
+      display:block;
+    }
+    .gkTxt{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+    .gkName{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .gkNote{font-size:12px;font-weight:900;color:var(--muted)}
+    .vsBadge2{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:30px;
+      padding:6px 10px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--card);
+      font-weight:900;
+      flex:0 0 auto;
+    }
+
+    /* glove animation */
+    .glove{
+      display:inline-block;
+      margin-left:6px;
+      transform:translateY(-6px) scale(.9);
+      opacity:0;
+      animation: gloveIn 650ms ease-out forwards;
+    }
+    @keyframes gloveIn{
+      0%{transform:translateY(-10px) scale(.7);opacity:0}
+      55%{transform:translateY(2px) scale(1.12);opacity:1}
+      100%{transform:translateY(0) scale(1);opacity:1}
+    }
+
+    /* COMMENTI */
+    .commentsWrap{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(0,0,0,.02);
+    }
+    body.dark .commentsWrap{background:rgba(255,255,255,.03)}
+    .commentsTitle{
+      font-family:'Bebas Neue';
+      letter-spacing:2px;
+      font-size:26px;
+      margin:0 0 10px 0;
+      text-transform:uppercase;
+      text-align:center;
+    }
+    .commentForm{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:10px;
+    }
+    .inputLike{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px;
+      background:var(--card);
+      color:var(--text);
+      font-weight:800;
+      outline:none;
+    }
+    .commentTextarea{
+      min-height:84px;
+      resize:none;
+      line-height:1.35;
+      font-weight:700;
+    }
+    .commentActions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+    .commentError{
+      display:none;
+      margin-top:6px;
+      background:var(--riskBg);
+      color:var(--riskText);
+      border:1px solid var(--riskBd);
+      border-radius:12px;
+      padding:10px;
+      font-weight:900;
+    }
+    .commentList{margin-top:12px}
+    .commentItem{
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.02);
+      border-radius:14px;
+      padding:10px;
+      margin-top:10px;
+    }
+    body.dark .commentItem{background:rgba(255,255,255,.03)}
+    .commentTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .commentMeta{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color:var(--muted);
+      font-weight:900;
+      font-size:13px;
+      flex-wrap:wrap;
+    }
+    .commentBubble{
+      margin-top:8px;
+      font-weight:800;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    /* Admin */
+    .commentAdminActions{display:flex;align-items:center;gap:8px}
+    .iconBtn{
+      border:1px solid var(--border);
+      background:var(--card);
+      color:var(--text);
+      width:38px;height:38px;
+      border-radius:12px;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      box-shadow:none;
+    }
+    .iconBtn:active{transform:scale(.98)}
+    .adminBadge{
+      display:none;
+      border:1px solid var(--border);
+      background:var(--card);
+      border-radius:999px;
+      padding:6px 10px;
+      font-weight:900;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+    }
+
+    /* TOAST */
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%) translateY(20px);
+      opacity:0;
+      pointer-events:none;
+      background:var(--card);
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:900;
+      box-shadow:var(--shadow);
+      transition:.18s ease;
+      z-index:9999;
+      max-width:min(92vw,520px);
+      text-align:center;
+    }
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+    .toast.ok{ border-color: var(--okBd); }
+    .toast.err{ border-color: var(--riskBd); }
+
+    /* ==========================================================
+       ✅ CTA LATERALE: "Vota il tuo MVP" (FIX TRONCAMENTO)
+       ========================================================== */
+    .mvpCta{
+      position:fixed;
+      right:12px;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:60;
+      display:none;
+    }
+    .mvpCta a{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      color:#fff;
+      background:linear-gradient(135deg,#111,#2b2b2b);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 14px 30px rgba(0,0,0,.35);
+      border-radius:999px;
+      padding:10px 12px;
+      min-width:190px;
+      max-width:260px; /* ✅ più spazio */
+      cursor:pointer;
+      user-select:none;
+      animation: mvpPulse 1.4s ease-in-out infinite;
+    }
+    body.dark .mvpCta a{
+      background:linear-gradient(135deg,#0b0e14,#2a3242);
+    }
+    .mvpCta .ico{
+      width:42px;height:42px;border-radius:999px;
+      background:rgba(255,255,255,.12);
+      display:flex;align-items:center;justify-content:center;
+      font-size:20px;
+      flex:0 0 auto;
+      animation: mvpWiggle 2.8s ease-in-out infinite;
+    }
+    .mvpCta .txt{min-width:0}
+
+    /* ✅ TESTO: niente tronco, va a capo se serve */
+    .mvpCta .t1{
+      font-weight:900;
+      letter-spacing:.6px;
+      white-space:normal;
+      overflow:visible;
+      text-overflow:clip;
+      line-height:1.12;
+    }
+    .mvpCta .t2{
+      margin-top:2px;
+      font-weight:800;
+      font-size:12px;
+      opacity:.85;
+      white-space:normal;
+      overflow:visible;
+      text-overflow:clip;
+      line-height:1.2;
+    }
+
+    .mvpCta .dot{
+      width:10px;height:10px;border-radius:999px;
+      background:#22c55e;
+      box-shadow:0 0 0 0 rgba(34,197,94,.55);
+      animation: mvpDot 1.2s ease-in-out infinite;
+      flex:0 0 auto;
+    }
+    @keyframes mvpPulse{
+      0%{transform:translateY(0) scale(1)}
+      50%{transform:translateY(-2px) scale(1.02)}
+      100%{transform:translateY(0) scale(1)}
+    }
+    @keyframes mvpWiggle{
+      0%,100%{transform:rotate(0deg)}
+      45%{transform:rotate(-6deg)}
+      55%{transform:rotate(6deg)}
+    }
+    @keyframes mvpDot{
+      0%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}
+      70%{box-shadow:0 0 0 10px rgba(34,197,94,0)}
+      100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
+    }
+    @media(max-width:420px){
+      .mvpCta{ right:10px; }
+      .mvpCta a{
+        min-width:170px;
+        padding:10px 10px;
+        max-width:240px; /* ✅ più spazio anche su mobile */
+      }
+    }
+
+    /* ==========================================================
+       🎮 MICRO-ANIMAZIONI "FIFA VIBES" (SAFE)
+       ========================================================== */
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+    }
+
+    /* (1) Entrata card + titoli */
+    body:not(.loaded) .card,
+    body:not(.loaded) .header,
+    body:not(.loaded) .nav{
+      opacity:0;
+      transform: translateY(10px);
+    }
+    body.loaded .header{ animation: fadeUp .55s ease-out both; }
+    body.loaded .card{ animation: cardIn .55s cubic-bezier(.2,.8,.2,1) both; }
+    body.loaded .card:nth-of-type(2){ animation-delay:.06s; }
+    body.loaded .card:nth-of-type(3){ animation-delay:.10s; }
+    body.loaded .card:nth-of-type(4){ animation-delay:.14s; }
+
+    h1{ transform-origin:center; }
+    body.loaded h1{ animation: titlePop .65s cubic-bezier(.2,1,.2,1) both; }
+
+    .heroCaption, .formationsTitle, .calledTitleCenter, .commentsTitle{ transform-origin:center; }
+    body.loaded .heroCaption,
+    body.loaded .formationsTitle,
+    body.loaded .calledTitleCenter,
+    body.loaded .commentsTitle{
+      animation: captionIn .55s ease-out both;
+    }
+
+    @keyframes fadeUp{ from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
+    @keyframes cardIn{
+      0%{opacity:0; transform:translateY(14px) scale(.985)}
+      60%{opacity:1; transform:translateY(0) scale(1.004)}
+      100%{opacity:1; transform:translateY(0) scale(1)}
+    }
+    @keyframes titlePop{
+      0%{opacity:0; transform:translateY(10px) scale(.98)}
+      70%{opacity:1; transform:translateY(0) scale(1.015)}
+      100%{opacity:1; transform:translateY(0) scale(1)}
+    }
+    @keyframes captionIn{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)} }
+
+    /* ticker shine sul pill risultato */
+    .resultPill{ position:relative; overflow:hidden; }
+    .resultPill::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.18) 45%, transparent 70%);
+      transform: translateX(-120%);
+      opacity:.85;
+      pointer-events:none;
+    }
+    body.loaded .resultPill::after{ animation: tickerShine 2.2s ease-in-out infinite; }
+    @keyframes tickerShine{
+      0%{transform:translateX(-120%); opacity:0}
+      30%{opacity:.85}
+      60%{opacity:.85}
+      100%{transform:translateX(120%); opacity:0}
+    }
+
+    /* coin kick più fisico */
+    .logo{ transform: translateZ(0); }
+    .logo.coinKick{ animation: coinKick .62s cubic-bezier(.2,1,.2,1); }
+    @keyframes coinKick{
+      0%{transform:rotateY(0deg) scale(1)}
+      35%{transform:rotateY(210deg) scale(1.06)}
+      70%{transform:rotateY(340deg) scale(.985)}
+      100%{transform:rotateY(360deg) scale(1)}
+    }
+
+    /* GK entrance + VS pop */
+    .formationsHead.gkIn .gkChip:first-child{
+      animation: slideInLeft .55s cubic-bezier(.2,.9,.2,1) both;
+    }
+    .formationsHead.gkIn .gkChip:last-child{
+      animation: slideInRight .55s cubic-bezier(.2,.9,.2,1) both;
+    }
+    .formationsHead.gkIn .vsBadge2{
+      animation: vsPop .5s cubic-bezier(.2,1,.2,1) both;
+      animation-delay:.08s;
+    }
+    @keyframes slideInLeft{ from{opacity:0; transform:translateX(-14px) scale(.99)} to{opacity:1; transform:translateX(0) scale(1)} }
+    @keyframes slideInRight{ from{opacity:0; transform:translateX(14px) scale(.99)} to{opacity:1; transform:translateX(0) scale(1)} }
+    @keyframes vsPop{
+      0%{opacity:0; transform:scale(.92)}
+      70%{opacity:1; transform:scale(1.06)}
+      100%{opacity:1; transform:scale(1)}
+    }
+
+    /* (3) pop punteggio */
+    .scoreNum.pop{ animation: scorePop .45s cubic-bezier(.2,1,.2,1); }
+    @keyframes scorePop{
+      0%{transform:scale(.88); opacity:.2}
+      65%{transform:scale(1.10); opacity:1}
+      100%{transform:scale(1); opacity:1}
+    }
+
+    /* crowd pulse sul resultBox */
+    .resultBox.crowd{ position:relative; overflow:hidden; }
+    .resultBox.crowd::before{
+      content:"";
+      position:absolute;
+      inset:-60% -60%;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.12), transparent 55%),
+        radial-gradient(circle at 70% 40%, rgba(255,255,255,.08), transparent 60%),
+        radial-gradient(circle at 45% 75%, rgba(255,255,255,.10), transparent 55%);
+      transform: translateZ(0);
+      opacity:0;
+      pointer-events:none;
+    }
+    body.loaded .resultBox.crowd::before{ animation: crowdPulse 3.2s ease-in-out infinite; }
+    @keyframes crowdPulse{
+      0%{opacity:0; transform:scale(1) rotate(0deg)}
+      40%{opacity:.55; transform:scale(1.02) rotate(2deg)}
+      70%{opacity:.35; transform:scale(1.01) rotate(-1deg)}
+      100%{opacity:0; transform:scale(1) rotate(0deg)}
+    }
+
+    /* (7) meteo pulse + shimmer while loading */
+    .weatherBox.pulsing{ animation: wxPulse 1.25s ease-in-out infinite; }
+    @keyframes wxPulse{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-1px)} }
+    .weatherBox.loading{ position:relative; overflow:hidden; }
+    .weatherBox.loading::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.10) 45%, transparent 70%);
+      transform: translateX(-120%);
+      pointer-events:none;
+      animation: tickerShine 1.4s ease-in-out infinite;
+    }
+
+    /* (5) spotlight MVP finale */
+    .mvpFinalWrap.spotlight{ position:relative; overflow:hidden; }
+    .mvpFinalWrap.spotlight::before{
+      content:"";
+      position:absolute;
+      inset:-60% -60%;
+      background:radial-gradient(circle at 50% 40%, rgba(250,204,21,.20), transparent 55%);
+      pointer-events:none;
+      opacity:0;
+    }
+    .mvpFinalWrap.spotlight::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.16) 45%, transparent 70%);
+      transform: translateX(-120%);
+      opacity:0;
+      pointer-events:none;
+    }
+    body.loaded .mvpFinalWrap.spotlight::before{ animation: spotGlow 2.6s ease-in-out infinite; }
+    body.loaded .mvpFinalWrap.spotlight::after{ animation: tickerShine 2.4s ease-in-out infinite; }
+    @keyframes spotGlow{
+      0%{opacity:0; transform:scale(1)}
+      45%{opacity:.85; transform:scale(1.02)}
+      100%{opacity:0; transform:scale(1)}
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <div class="header">
+    <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
+    <h1>Quelli della pensione</h1>
+    <div class="subtitle">Ogni maledetto giovedì • Ore 21 • Campo a 6 Aradeo</div>
+  </div>
+
+  <div class="card">
+    <div class="heroImgWrap">
+      <img src="foto.jpg" alt="Quelli della pensione">
+    </div>
+    <div class="heroCaption">OGNI MALEDETTO GIOVEDÌ</div>
+
+    <!-- ✅ PROTAGONISTI -->
+    <div class="protagonisti">
+      <div class="protagonisti-title">I PROTAGONISTI SIAMO NOI</div>
+
+      <div class="avatars-row" id="avatarsRow">
+        <img src="avatars/1.png" alt="">
+        <img src="avatars/2.png" alt="">
+        <img src="avatars/3.png" alt="">
+        <img src="avatars/4.png" alt="">
+        <img src="avatars/5.png" alt="">
+        <img src="avatars/6.png" alt="">
+        <img src="avatars/7.png" alt="">
+        <img src="avatars/8.png" alt="">
+        <img src="avatars/9.png" alt="">
+        <img src="avatars/10.png" alt="">
+        <img src="avatars/11.png" alt="">
+        <img src="avatars/12.png" alt="">
+        <img src="avatars/13.png" alt="">
+        <img src="avatars/14.png" alt="">
+        <img src="avatars/15.png" alt="">
+        <img src="avatars/16.png" alt="">
+        <img src="avatars/17.png" alt="">
+        <img src="avatars/18.png" alt="">
+        <img src="avatars/19.png" alt="">
+        <img src="avatars/20.png" alt="">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div id="status" class="muted">Caricamento…</div>
+    <div id="info"></div>
+
+    <!-- ✅ DUELLO PORTIERI (prima del RISULTATO) -->
+    <div id="gkPosterWrap" class="gkPosterWrap" style="display:none">
+      <img id="gkPosterImg" src="" alt="Duello portieri">
+    </div>
+
+    <!-- RISULTATO -->
+    <div id="resultHead" class="formationsHead" style="display:none">
+      <div class="formationsTitle">RISULTATO</div>
+
+      <div id="resultBox" class="resultBox">
+        <div class="resultTop">
+          <div class="resultPill">🏁 PARTITA TERMINATA</div>
+          <div class="resultTimePill">⏱ <span id="resultTime">—</span></div>
+        </div>
+
+        <div class="resultTeamsRow">
+          <div class="teamSide">
+            <img id="resultAvatarA" class="teamAvatar" src="avatars/default.png" alt="A">
+            <div id="teamLabelA" class="teamName">SQUADRA A</div>
+          </div>
+
+          <div class="vsBadge">VS</div>
+
+          <div class="teamSide right">
+            <div id="teamLabelB" class="teamName">SQUADRA B</div>
+            <img id="resultAvatarB" class="teamAvatar" src="avatars/default.png" alt="B">
+          </div>
+        </div>
+
+        <div class="scoresRow">
+          <div class="scoreCol">
+            <div id="scoreA" class="scoreNum">—</div>
+          </div>
+          <div class="dash">-</div>
+          <div class="scoreCol">
+            <div id="scoreB" class="scoreNum">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMENTI -->
+    <div id="commentsWrap" class="commentsWrap" style="display:none">
+      <div class="commentsTitle">COMMENTI A CALDO</div>
+
+      <div style="display:flex;justify-content:center;margin-top:-2px">
+        <span id="adminBadge" class="adminBadge">🔐 ADMIN</span>
+      </div>
+
+      <div class="muted" style="text-align:center;font-weight:800;margin-top:8px">
+        Commenta anche senza registrazione (nome facoltativo).
+      </div>
+
+      <div class="commentForm">
+        <input id="commentName" class="inputLike" type="text" maxlength="24" placeholder="Nome (facoltativo)">
+        <textarea id="commentInput" class="inputLike commentTextarea" maxlength="240" placeholder="Scrivi un commento..."></textarea>
+
+        <div class="commentActions">
+          <button id="commentSend" class="btn" type="button">📨 Invia</button>
+        </div>
+
+        <div id="commentError" class="commentError"></div>
+      </div>
+
+      <div id="commentsList" class="commentList"></div>
+    </div>
+
+    <!-- MVP -->
+    <div id="mvpBox" class="mvpBox" style="display:none">
+      <div class="mvpTitle">
+        <div id="mvpTitle">🏆 MVP</div>
+        <div id="mvpStatePill" class="pill" style="margin:0"></div>
+      </div>
+
+      <!-- ✅ modalità provvisoria (come prima) -->
+      <div id="mvpLiveWrap">
+        <div class="mvpMainRow">
+          <img id="mvpAvatar" class="mvpAvatar" src="avatars/default.png" alt="mvp">
+          <div>
+            <div id="mvpMain" class="mvpText">Caricamento…</div>
+            <div id="mvpSub" class="mvpSub"></div>
+          </div>
+        </div>
+
+        <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
+      </div>
+
+      <!-- ✅ modalità FINALE: immagine mvpsmall.png + scritta automatica -->
+      <div id="mvpFinalPoster" style="display:none">
+        <div class="mvpFinalWrap">
+          <img id="mvpSmallImg" src="mvpsmall.png" alt="MVP Finale">
+          <div class="mvpFinalCaption">
+            <div id="mvpSmallCaption" class="big">MVP • <span class="gold">—</span></div>
+            <div id="mvpSmallSub" class="sub">QUELLI DELLA PENSIONE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TITOLO MAPPA -->
+    <div id="fieldTitle" class="sectionCaption" style="display:none">
+      CAMPO DA GIOCO
+      <span class="sub">CALCIO A 6 ARADEO</span>
+    </div>
+
+    <!-- MAPPA -->
+    <div id="mapBox" class="mapWrap" style="display:none">
+      <iframe id="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=40.1239395,18.1203671&z=18&output=embed"></iframe>
+    </div>
+
+    <div id="mapActions" class="mapActions" style="display:none">
+      <a id="mapLink" class="btn" href="#" target="_blank" rel="noopener">📍 Portami al campo</a>
+      <a id="mapOpen" class="btn ghost" href="#" target="_blank" rel="noopener">🗺 Apri su Maps</a>
+    </div>
+
+    <!-- METEO -->
+    <div id="weatherBox" class="weatherBox" style="display:none">
+      <div class="weatherHead">
+        <div>🌤 Meteo partita</div>
+        <span id="weatherAlert" class="alertPill">—</span>
+      </div>
+      <div id="weatherBig" class="weatherBig">⏳</div>
+      <div id="weatherLine" class="weatherLine">Caricamento meteo…</div>
+      <div id="weatherMini" class="weatherMini"></div>
+    </div>
+
+    <!-- MARCATORI -->
+    <div id="scorersBox" style="display:none;margin-top:12px">
+      <div class="line"><b>⚽ Marcatori</b></div>
+      <div id="scorersText" class="muted"></div>
+    </div>
+
+    <!-- DISPONIBILI -->
+    <div id="calledTitle" class="calledTitleCenter">DISPONIBILI PER LA PARTITA</div>
+    <div id="called" class="playersWrap muted">—</div>
+
+    <!-- ✅ MIGLIORE IN CAMPO PARTITA PRECEDENTE (mostrato quando la partita NON è finita) -->
+    <div id="prevMvpHead" class="formationsHead" style="display:none">
+      <div class="formationsTitle">MIGLIORE IN CAMPO PARTITA PRECEDENTE</div>
+      <div class="prevMvpWrap">
+        <img id="prevMvpImg" src="mvpgiornata.jpg" alt="MVP partita precedente">
+      </div>
+    </div>
+
+    <!-- FORMAZIONI -->
+    <div id="formationsHead" class="formationsHead" style="display:none">
+      <div class="formationsTitle">FORMAZIONI</div>
+      <div class="vsRow">
+        <div class="gkChip">
+          <img id="gkAAvatar" class="gkAvatar" src="avatars/default.png" alt="GK A">
+          <div class="gkTxt">
+            <div id="gkAName" class="gkName">—</div>
+            <div class="gkNote">Portiere <span class="glove">🧤</span></div>
+          </div>
+        </div>
+
+        <div class="vsBadge2">VS</div>
+
+        <div class="gkChip" style="justify-content:flex-end;text-align:right">
+          <div class="gkTxt" style="align-items:flex-end">
+            <div id="gkBName" class="gkName">—</div>
+            <div class="gkNote">Portiere <span class="glove">🧤</span></div>
+          </div>
+          <img id="gkBAvatar" class="gkAvatar" src="avatars/default.png" alt="GK B">
+        </div>
+      </div>
+    </div>
+
+    <!-- SQUADRE -->
+    <div id="teamsBox" style="display:none;margin-top:12px">
+      <div class="line kit"><span id="tAIcon"></span><b>Squadra A</b></div>
+      <div id="teamA" class="playersWrap muted"></div>
+
+      <div class="line kit" style="margin-top:10px"><span id="tBIcon"></span><b>Squadra B</b></div>
+      <div id="teamB" class="playersWrap muted"></div>
+    </div>
+  </div>
+
+  <div class="card nav muted">
+    <a href="storico.html">📚 Storico</a>
+    <a href="marcatori.html">⚽ Marcatori</a>
+    <a href="mvp.html">🏆 Vota MVP</a>
+    <a href="foto.html">📸 Foto</a>
+    <a href="componenti.html">👥 Componenti</a>
+    <a href="admin.html">🔐 Admin</a>
+  </div>
+</div>
+
+<!-- ✅ CTA LATERALE MVP -->
+<div id="mvpCta" class="mvpCta" aria-hidden="true">
+  <a href="mvp.html" title="Vai a votare l'MVP">
+    <span class="dot" aria-hidden="true"></span>
+    <span class="ico" aria-hidden="true">🏆</span>
+    <span class="txt">
+      <div class="t1">Vota il tuo MVP</div>
+      <div class="t2">Votazione aperta</div>
+    </span>
+  </a>
+</div>
+
+<div id="toast" class="toast">—</div>
+<button id="themeToggle" class="fab">🌙</button>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+/* THEME */
+const themeBtn = document.getElementById("themeToggle");
+function setTheme(mode){
+  document.body.classList.toggle("dark", mode === "dark");
+  themeBtn.textContent = (mode === "dark") ? "☀️" : "🌙";
+  localStorage.setItem("qdp_theme", mode);
+}
+setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
+/* ✅ page enter */
+requestAnimationFrame(()=> document.body.classList.add("loaded"));
+themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+
+/* LOGO MONETA */
+const logoCoin = document.getElementById("logoCoin");
+function spinLogo(){
+  logoCoin.classList.remove("spin","coinKick");
+  void logoCoin.offsetWidth;
+  logoCoin.classList.add("coinKick");
+  setTimeout(()=> logoCoin.classList.remove("coinKick"), 700);
+}
+logoCoin.addEventListener("click", spinLogo);
+logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
+
+/* ✅ PROTAGONISTI: random + presidente al centro */
+(() => {
+  const row = document.getElementById("avatarsRow");
+  if(!row) return;
+
+  const imgs = Array.from(row.querySelectorAll("img"));
+
+  for(let i = imgs.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [imgs[i], imgs[j]] = [imgs[j], imgs[i]];
+  }
+  imgs.forEach(i => row.appendChild(i));
+
+  const mid = Math.floor(imgs.length / 2);
+  const pres = imgs[mid];
+  if(pres){
+    pres.style.transform = "scale(1.25)";
+    pres.style.borderColor = "gold";
+    pres.style.boxShadow = "0 0 18px rgba(255,215,0,.75)";
+  }
+})();
+
+/* SUPABASE */
+if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
+  alert("config.js non caricato o non valido");
+  throw new Error("Missing config");
+}
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* TOAST */
+const toastEl = document.getElementById("toast");
+let toastTimer = null;
+function showToast(msg, type="ok"){
+  toastEl.textContent = msg;
+  toastEl.className = "toast show " + (type==="err" ? "err" : "ok");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> toastEl.className = "toast", 1600);
+}
+
+/* ✅ voter_id (stesso di mvp.html) */
+function getOrCreateVoterId(){
+  const key = "qdp_voter_id";
+  let v = localStorage.getItem(key);
+  if(!v){
+    v = (crypto?.randomUUID ? crypto.randomUUID() :
+      "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{
+        const r=Math.random()*16|0, vv=c==="x"?r:(r&0x3|0x8); return vv.toString(16);
+      })
+    );
+    localStorage.setItem(key, v);
+  }
+  return v;
+}
+
+/* ✅ CTA MVP */
+const mvpCtaEl = document.getElementById("mvpCta");
+function setMvpCtaVisible(visible){
+  if(!mvpCtaEl) return;
+  mvpCtaEl.style.display = visible ? "block" : "none";
+  mvpCtaEl.setAttribute("aria-hidden", visible ? "false" : "true");
+}
+
+/* ✅ CTA MODE (vote / voted8s / off) */
+const mvpCtaLink = mvpCtaEl ? mvpCtaEl.querySelector("a") : null;
+const mvpCtaT1   = mvpCtaEl ? mvpCtaEl.querySelector(".t1") : null;
+const mvpCtaT2   = mvpCtaEl ? mvpCtaEl.querySelector(".t2") : null;
+const mvpCtaDot  = mvpCtaEl ? mvpCtaEl.querySelector(".dot") : null;
+
+const MVP_CTA_ORIG = {
+  href: mvpCtaLink ? mvpCtaLink.getAttribute("href") : "mvp.html",
+  t1: mvpCtaT1 ? mvpCtaT1.textContent : "Vota il tuo MVP",
+  t2: mvpCtaT2 ? mvpCtaT2.textContent : "Votazione aperta"
+};
+
+let mvpCtaTimer = null;
+
+function setMvpCtaMode(mode){
+  if(!mvpCtaEl || !mvpCtaLink || !mvpCtaT1 || !mvpCtaT2) return;
+
+  clearTimeout(mvpCtaTimer);
+  mvpCtaTimer = null;
+
+  if(mode === "vote"){
+    mvpCtaT1.textContent = MVP_CTA_ORIG.t1;
+    mvpCtaT2.textContent = MVP_CTA_ORIG.t2;
+    mvpCtaLink.setAttribute("href", MVP_CTA_ORIG.href);
+    mvpCtaLink.style.pointerEvents = "auto";
+    mvpCtaLink.style.opacity = "1";
+    if(mvpCtaDot) mvpCtaDot.style.background = "#22c55e";
+    setMvpCtaVisible(true);
+    return;
+  }
+
+  if(mode === "voted8s"){
+    mvpCtaT1.textContent = "✅ Hai già votato";
+    mvpCtaT2.textContent = "Grazie! 🙌";
+    mvpCtaLink.removeAttribute("href");
+    mvpCtaLink.style.pointerEvents = "none";
+    mvpCtaLink.style.opacity = "0.95";
+    if(mvpCtaDot) mvpCtaDot.style.background = "#22c55e";
+    setMvpCtaVisible(true);
+
+    mvpCtaTimer = setTimeout(()=> setMvpCtaVisible(false), 8000);
+    return;
+  }
+
+  setMvpCtaVisible(false);
+}
+
+/* ✅ check voto su Supabase */
+async function hasAlreadyVoted(matchId){
+  try{
+    const voterId = getOrCreateVoterId();
+    const { data, error } = await client
+      .from("mvp_votes")
+      .select("id")
+      .eq("match_id", matchId)
+      .eq("voter_id", voterId)
+      .limit(1);
+    if(error) return false;
+    return !!(data && data.length);
+  }catch(e){
+    return false;
+  }
+}
+
+/* DOM */
+const statusEl = document.getElementById("status");
+const infoEl = document.getElementById("info");
+
+/* ✅ DUELLO PORTIERI DOM */
+const gkPosterWrap = document.getElementById("gkPosterWrap");
+const gkPosterImg  = document.getElementById("gkPosterImg");
+
+/* ✅ MVP PARTITA PRECEDENTE DOM */
+const prevMvpHead = document.getElementById("prevMvpHead");
+const prevMvpImg  = document.getElementById("prevMvpImg");
+
+/* RISULTATO DOM */
+const resultHead = document.getElementById("resultHead");
+const resultTimeEl = document.getElementById("resultTime");
+const resultAvatarA = document.getElementById("resultAvatarA");
+const resultAvatarB = document.getElementById("resultAvatarB");
+const scoreAEl = document.getElementById("scoreA");
+const scoreBEl = document.getElementById("scoreB");
+const teamLabelA = document.getElementById("teamLabelA");
+const teamLabelB = document.getElementById("teamLabelB");
+const resultBoxEl = document.getElementById("resultBox");
+
+const calledEl = document.getElementById("called");
+const calledTitleEl = document.getElementById("calledTitle");
+
+const fieldTitleEl = document.getElementById("fieldTitle");
+const mapBox = document.getElementById("mapBox");
+const mapFrame = document.getElementById("mapFrame");
+const mapActions = document.getElementById("mapActions");
+const mapLink = document.getElementById("mapLink");
+const mapOpen = document.getElementById("mapOpen");
+
+const scorersBox = document.getElementById("scorersBox");
+const scorersText = document.getElementById("scorersText");
+
+const teamsBox = document.getElementById("teamsBox");
+const teamAEl = document.getElementById("teamA");
+const teamBEl = document.getElementById("teamB");
+const tAIcon = document.getElementById("tAIcon");
+const tBIcon = document.getElementById("tBIcon");
+
+const formationsHead = document.getElementById("formationsHead");
+const gkAAvatar = document.getElementById("gkAAvatar");
+const gkBAvatar = document.getElementById("gkBAvatar");
+const gkAName = document.getElementById("gkAName");
+const gkBName = document.getElementById("gkBName");
+
+/* MVP DOM */
+const mvpBox = document.getElementById("mvpBox");
+const mvpTitle = document.getElementById("mvpTitle");
+const mvpStatePill = document.getElementById("mvpStatePill");
+const mvpAvatar = document.getElementById("mvpAvatar");
+const mvpMain = document.getElementById("mvpMain");
+const mvpSub = document.getElementById("mvpSub");
+const mvpTop3 = document.getElementById("mvpTop3");
+const mvpLiveWrap = document.getElementById("mvpLiveWrap");
+
+/* ✅ MVP finale poster */
+const mvpFinalPoster = document.getElementById("mvpFinalPoster");
+const mvpSmallImg = document.getElementById("mvpSmallImg");
+const mvpSmallCaption = document.getElementById("mvpSmallCaption");
+const mvpSmallSub = document.getElementById("mvpSmallSub");
+
+/* METEO DOM */
+const weatherBox = document.getElementById("weatherBox");
+const weatherBig = document.getElementById("weatherBig");
+const weatherLine = document.getElementById("weatherLine");
+const weatherMini = document.getElementById("weatherMini");
+const weatherAlert = document.getElementById("weatherAlert");
+
+/* COMMENTI DOM */
+const commentsWrap = document.getElementById("commentsWrap");
+const commentName = document.getElementById("commentName");
+const commentInput = document.getElementById("commentInput");
+const commentSend = document.getElementById("commentSend");
+const commentError = document.getElementById("commentError");
+const commentsList = document.getElementById("commentsList");
+const adminBadge = document.getElementById("adminBadge");
+
+/* MAP */
+const FIXED_MAP_APP_URL = "https://maps.app.goo.gl/SfZ5e8wr9qXLVn826";
+const FIELD_LAT = 40.1239395;
+const FIELD_LNG = 18.1203671;
+
+/* AVATAR PATH */
+const AVATAR_BASE = "avatars/";
+const DEFAULT_AVATAR = "default.png";
+function avatarUrl(filename){
+  const f = String(filename || "").trim();
+  return AVATAR_BASE + (f ? f : DEFAULT_AVATAR);
+}
+
+/* HELPERS */
+function kitSVG(main, stripe){
+  return `
+  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M18 12 L26 6 H38 L46 12 L58 20 L52 33 L46 29 V58 H18 V29 L12 33 L6 20 Z"
+      fill="${main}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
+    <path d="M30 10 H34 V58 H30 Z" fill="${stripe}" opacity="0.85"/>
+  </svg>`;
+}
+function formatDateFull(iso){
+  try{
+    return new Date(iso).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  }catch(e){ return String(iso||""); }
+}
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function medal(i){
+  if(i===0) return "🥇";
+  if(i===1) return "🥈";
+  if(i===2) return "🥉";
+  return String(i+1);
+}
+function normName(s){
+  return String(s||"").trim().toLowerCase().replace(/\s+/g," ");
+}
+function isGK(player){
+  const r = String(player?.role||"").toLowerCase();
+  const p = String(player?.position||"").toLowerCase();
+  return r === "gk" || p.includes("port");
+}
+function isVoteOpen(match){
+  return (match?.vote_open === true) || (match?.voting_open === true);
+}
+
+/* ✅ Trova portiere SOLO dentro la squadra */
+function findKeeperForTeam(teamPlayers, keeperName){
+  const kName = normName(keeperName || "");
+  if(kName){
+    const byName = (teamPlayers||[]).find(p => normName(p?.name) === kName);
+    if(byName) return byName;
+  }
+  const byGK = (teamPlayers||[]).find(isGK);
+  if(byGK) return byGK;
+  return null;
+}
+
+/* ✅ DUELLO PORTIERI: mapping immagini */
+function pickGkPoster(ka, kb){
+  const a = normName(ka?.name || "");
+  const b = normName(kb?.name || "");
+  if(!a || !b) return "";
+
+  if( (a==="gianni" && b==="andrea") || (a==="andrea" && b==="gianni") ) return "gvsa.jpg";
+  if( (a==="gianni" && b==="tonino") || (a==="tonino" && b==="gianni") ) return "gvst.jpg";
+
+  return "";
+}
+
+/* MAP LINKS */
+function setupMapLinks(){
+  mapLink.href = FIXED_MAP_APP_URL;
+  mapOpen.href = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}`;
+}
+
+/* Profanity filter (semplice) */
+const BAD_WORDS = [
+  "cazzo","cazzi","merda","stronzo","stronzi","vaffanculo","vaff","porco","porcodio","dio cane",
+  "minchia","puttana","puttane","troia","bastardo","bastardi","testa di cazzo","coglione","coglioni"
+];
+function censorProfanity(text){
+  let out = String(text||"");
+  for(const w of BAD_WORDS){
+    const escaped = w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`\\b${escaped}\\b`, "gi");
+    out = out.replace(re, (m)=> "*".repeat(Math.min(12, m.length)));
+  }
+  return out;
+}
+function timeAgo(ts){
+  try{
+    const d = new Date(ts);
+    const diff = Math.floor((Date.now() - d.getTime())/1000);
+    if(diff < 60) return "ora";
+    const m = Math.floor(diff/60);
+    if(m < 60) return `${m} min`;
+    const h = Math.floor(m/60);
+    if(h < 24) return `${h} h`;
+    const days = Math.floor(h/24);
+    return `${days} g`;
+  }catch(e){ return ""; }
+}
+
+/* ✅ ADMIN state */
+let isAdmin = false;
+async function refreshAdminState(){
+  try{
+    const { data } = await client.auth.getSession();
+    isAdmin = !!data?.session;
+  }catch(e){
+    isAdmin = false;
+  }
+  if(adminBadge){
+    adminBadge.style.display = isAdmin ? "inline-flex" : "none";
+  }
+}
+
+/* COMMENTS state */
+let currentMatchId = null;
+let commentsChannel = null;
+
+/* Render comment */
+function renderCommentItem(c){
+  const when = timeAgo(c.created_at);
+  const txt = escapeHtml(c.text || "");
+  const displayName = (c.name && String(c.name).trim()) ? String(c.name).trim() : "Anonimo";
+  const delBtn = isAdmin
+    ? `<button class="iconBtn" type="button" data-del="${escapeHtml(c.id)}" title="Elimina commento">🗑️</button>`
+    : "";
+  return `
+    <div class="commentItem" data-id="${escapeHtml(c.id)}">
+      <div class="commentTop">
+        <div class="commentMeta">
+          <span class="pill" style="margin:0">${escapeHtml(displayName)}</span>
+          <span>•</span>
+          <span>${escapeHtml(when)}</span>
+        </div>
+        <div class="commentAdminActions">${delBtn}</div>
+      </div>
+      <div class="commentBubble">${txt}</div>
+    </div>
+  `;
+}
+
+/* Load comments */
+async function loadComments(matchId){
+  commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:800">Caricamento commenti…</div>`;
+
+  const { data: comments, error } = await client
+    .from("match_comments")
+    .select("*")
+    .eq("match_id", matchId)
+    .order("created_at",{ascending:false})
+    .limit(50);
+
+  if(error){
+    console.error(error);
+    commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:900">Errore caricamento commenti</div>`;
+    return;
+  }
+
+  if(!comments || comments.length === 0){
+    commentsList.innerHTML = `<div class="muted" style="text-align:center;font-weight:900">Nessun commento ancora. Spacca il ghiaccio 😄</div>`;
+    return;
+  }
+
+  commentsList.innerHTML = comments.map(renderCommentItem).join("");
+}
+
+/* Delete comment */
+async function deleteCommentById(id){
+  if(!isAdmin) return;
+
+  const ok = confirm("Eliminare questo commento?");
+  if(!ok) return;
+
+  const node = commentsList.querySelector(`.commentItem[data-id="${CSS.escape(id)}"]`);
+  if(node) node.style.opacity = "0.35";
+
+  try{
+    const { error } = await client
+      .from("match_comments")
+      .delete()
+      .eq("id", id);
+
+    if(error) throw error;
+
+    showToast("✅ Commento eliminato", "ok");
+
+    if(currentMatchId){
+      await refreshAdminState();
+      await loadComments(currentMatchId);
+    }
+  }catch(e){
+    console.error(e);
+    showToast("❌ Errore eliminazione (permessi/RLS)", "err");
+    if(node) node.style.opacity = "1";
+  }
+}
+
+/* Event delegation delete */
+commentsList.addEventListener("click", (ev)=>{
+  const btn = ev.target?.closest?.("[data-del]");
+  if(!btn) return;
+  const id = btn.getAttribute("data-del");
+  if(id) deleteCommentById(id);
+});
+
+/* Subscribe realtime */
+function subscribeComments(matchId){
+  try{
+    if(commentsChannel){
+      client.removeChannel(commentsChannel);
+      commentsChannel = null;
+    }
+  }catch(e){}
+
+  commentsChannel = client
+    .channel(`qdp-comments-${matchId}`)
+    .on('postgres_changes',
+      { event: '*', schema: 'public', table: 'match_comments', filter: `match_id=eq.${matchId}` },
+      async () => {
+        await refreshAdminState();
+        await loadComments(matchId);
+      }
+    )
+    .subscribe();
+}
+
+/* Submit comment */
+async function submitComment(matchId){
+  commentError.style.display = "none";
+  commentError.textContent = "";
+
+  const rawText = String(commentInput.value || "").trim();
+  const rawName = String(commentName.value || "").trim();
+
+  if(!rawText){
+    commentError.style.display = "block";
+    commentError.textContent = "Scrivi qualcosa prima di inviare 🙂";
+    return;
+  }
+
+  const cleanText = censorProfanity(rawText).slice(0,240);
+  const cleanName = censorProfanity(rawName).slice(0,24);
+  const finalName = cleanName ? cleanName : "Anonimo";
+
+  commentSend.disabled = true;
+  commentSend.textContent = "⏳ Invio…";
+
+  try{
+    const { error } = await client
+      .from("match_comments")
+      .insert({ match_id: matchId, name: finalName, text: cleanText });
+
+    if(error) throw error;
+
+    commentInput.value = "";
+    showToast("✅ Commento inviato", "ok");
+
+    await refreshAdminState();
+    await loadComments(matchId);
+  }catch(e){
+    console.error(e);
+    commentError.style.display = "block";
+    commentError.textContent = "Errore invio commento.";
+    showToast("❌ Errore invio commento", "err");
+  }finally{
+    commentSend.disabled = false;
+    commentSend.textContent = "📨 Invia";
+  }
+}
+commentSend.addEventListener("click", ()=>{ if(currentMatchId) submitComment(currentMatchId); });
+
+/* METEO (Open-Meteo) */
+function wxEmojiFromCode(code){
+  const c = Number(code);
+  if(c === 0) return "☀️";
+  if(c === 1) return "🌤️";
+  if(c === 2) return "⛅";
+  if(c === 3) return "☁️";
+  if([45,48].includes(c)) return "🌫️";
+  if([51,53,55].includes(c)) return "🌦️";
+  if([56,57,61,63,65,66,67,80,81,82].includes(c)) return "🌧️";
+  if([71,73,75,77].includes(c)) return "❄️";
+  if([95,96,99].includes(c)) return "⛈️";
+  return "🌥️";
+}
+function wxTextFromCode(code){
+  const c = Number(code);
+  if(c === 0) return "Sereno";
+  if(c === 1) return "Quasi sereno";
+  if(c === 2) return "Parzialmente nuvoloso";
+  if(c === 3) return "Nuvoloso";
+  if([45,48].includes(c)) return "Nebbia";
+  if([51,53,55].includes(c)) return "Pioviggine";
+  if([56,57].includes(c)) return "Pioggia gelata";
+  if([61,63,65].includes(c)) return "Pioggia";
+  if([66,67].includes(c)) return "Pioggia gelata";
+  if([71,73,75,77].includes(c)) return "Neve";
+  if([80,81,82].includes(c)) return "Rovesci";
+  if([95,96,99].includes(c)) return "Temporale";
+  return "Variabile";
+}
+function riskLevel({code, precipProb, wind, temp}){
+  const c = Number(code);
+  const pp = Number(precipProb ?? 0);
+  const w = Number(wind ?? 0);
+  const t = Number(temp ?? 0);
+
+  const isThunder = [95,96,99].includes(c);
+  const isSnow = [71,73,75,77].includes(c);
+  const isHeavyRain = [65,67,82].includes(c);
+
+  if(isThunder || isSnow || isHeavyRain || pp >= 70 || w >= 55) return "risk";
+  if(pp >= 35 || w >= 35 || t <= 4 || t >= 33) return "warn";
+  return "ok";
+}
+function setWeatherAlert(level, text){
+  weatherAlert.className =
+    "alertPill " + (level==="ok" ? "alert-ok" : level==="warn" ? "alert-warn" : "alert-risk");
+  weatherAlert.textContent = text;
+}
+async function loadWeather(matchDateISO, matchTimeStr){
+  weatherBox.style.display = "block";
+  weatherBig.textContent = "⏳";
+  weatherLine.textContent = "Caricamento meteo…";
+  weatherMini.textContent = "";
+  setWeatherAlert("warn","ATTENDI…");
+
+  weatherBox.classList.add("pulsing","loading");
+
+  try{
+    const hhmm = String(matchTimeStr||"21:00").slice(0,5);
+    const target = `${matchDateISO}T${hhmm}`;
+
+    const url =
+      "https://api.open-meteo.com/v1/forecast" +
+      `?latitude=${encodeURIComponent(FIELD_LAT)}` +
+      `&longitude=${encodeURIComponent(FIELD_LNG)}` +
+      "&hourly=temperature_2m,precipitation_probability,windspeed_10m,weathercode" +
+      "&timezone=Europe%2FRome";
+
+    const res = await fetch(url, {cache:"no-store"});
+    if(!res.ok) throw new Error("Meteo non disponibile");
+    const j = await res.json();
+
+    const times = j?.hourly?.time || [];
+    if(!times.length) throw new Error("Dati meteo vuoti");
+
+    let bestIdx = 0;
+    let bestDiff = Infinity;
+    const targetMs = new Date(target).getTime();
+
+    for(let i=0;i<times.length;i++){
+      const ms = new Date(times[i]).getTime();
+      const diff = Math.abs(ms - targetMs);
+      if(diff < bestDiff){
+        bestDiff = diff;
+        bestIdx = i;
+      }
+    }
+
+    const temp = j.hourly.temperature_2m?.[bestIdx];
+    const pp = j.hourly.precipitation_probability?.[bestIdx];
+    const wind = j.hourly.windspeed_10m?.[bestIdx];
+    const code = j.hourly.weathercode?.[bestIdx];
+
+    const emoji = wxEmojiFromCode(code);
+    const desc = wxTextFromCode(code);
+    const lvl = riskLevel({code, precipProb: pp, wind, temp});
+
+    if(lvl === "ok"){
+      setWeatherAlert("ok","✅ OK");
+      weatherLine.textContent = `Condizioni buone per giocare. ${emoji} ${desc}`;
+    }else if(lvl === "warn"){
+      setWeatherAlert("warn","⚠️ ATTENZIONE");
+      weatherLine.textContent = `${emoji} ${desc} • Occhio alle condizioni`;
+    }else{
+      setWeatherAlert("risk","⛔ RISCHIO PARTITA");
+      weatherLine.textContent = `${emoji} ${desc} • Possibile partita a rischio`;
+    }
+
+    weatherBig.textContent = emoji;
+    weatherMini.textContent =
+      `🌡 ${Math.round(temp)}°C  •  💧 ${pp}%  •  💨 ${Math.round(wind)} km/h  •  ⏰ ${hhmm}`;
+
+    weatherBox.classList.remove("pulsing","loading");
+  }catch(e){
+    console.error(e);
+    weatherBox.style.display = "block";
+    weatherBig.textContent = "🌦️";
+    setWeatherAlert("warn","⚠️ METEO");
+    weatherLine.textContent = "Meteo non disponibile al momento.";
+    weatherMini.textContent = "";
+    weatherBox.classList.remove("pulsing","loading");
+  }
+}
+
+/* ✅ MVP: ritorna info per caption finale */
+async function loadMVP(matchId, playersById){
+  try{
+    const { data: votes, error } = await client
+      .from("mvp_votes")
+      .select("voted_player")
+      .eq("match_id", matchId);
+
+    if(error) throw error;
+
+    const totalVotes = (votes || []).length;
+
+    const counts = new Map();
+    (votes||[]).forEach(v=>{
+      const id = String(v.voted_player || "");
+      if(!id) return;
+      counts.set(id, (counts.get(id)||0) + 1);
+    });
+
+    if(counts.size === 0){
+      mvpMain.textContent = "Nessun voto ancora.";
+      mvpSub.textContent = "";
+      mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
+      mvpTop3.style.display = "none";
+      return { totalVotes, topNames: [], topVotes: 0 };
+    }
+
+    const rows = [...counts.entries()]
+      .map(([id,c])=>{
+        const p = playersById.get(String(id));
+        return { id, name: p?.name || id, avatar: p?.avatar || DEFAULT_AVATAR, votes:c };
+      })
+      .sort((a,b)=> b.votes - a.votes || String(a.name).localeCompare(String(b.name),"it"));
+
+    const topVotes = rows[0].votes;
+    const tops = rows.filter(r=>r.votes===topVotes);
+    const topNames = tops.map(t=>t.name);
+
+    if(tops.length === 1){
+      mvpAvatar.src = avatarUrl(tops[0].avatar);
+      mvpMain.textContent = `${tops[0].name}`;
+      mvpSub.textContent = `${topVotes} voto/i`;
+    }else{
+      mvpAvatar.src = avatarUrl(tops[0].avatar);
+      mvpMain.textContent = `Parità: ${tops.map(t=>t.name).join(", ")}`;
+      mvpSub.textContent = `${topVotes} voto/i`;
+    }
+
+    const top3 = rows.slice(0,3);
+    mvpTop3.innerHTML = top3.map((r,i)=>`
+      <div class="mvpRow">
+        <div class="mvpLeft">
+          <div class="medal">${escapeHtml(medal(i))}</div>
+          <img class="mvpAvatar" style="width:36px;height:36px" src="${escapeHtml(avatarUrl(r.avatar))}" alt="">
+          <div>${escapeHtml(r.name)}</div>
+        </div>
+        <div>${r.votes}</div>
+      </div>
+    `).join("");
+    mvpTop3.style.display = "block";
+
+    return { totalVotes, topNames, topVotes };
+  }catch(e){
+    console.error(e);
+    mvpMain.textContent = "Errore MVP";
+    mvpSub.textContent = "";
+    mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
+    mvpTop3.style.display = "none";
+    return { totalVotes: 0, topNames: [], topVotes: 0 };
+  }
+}
+
+/* Render player pill */
+function renderPlayerPill(p){
+  const gk = isGK(p);
+  const nameHtml = gk ? (escapeHtml(p.name) + `<span class="glove">🧤</span>`) : escapeHtml(p.name);
+  const pos = String(p.position||"").trim();
+  const posHtml = pos ? escapeHtml(pos) : "—";
+  return `
+    <span class="playerPill">
+      <img class="playerAvatar" src="${escapeHtml(avatarUrl(p.avatar))}" alt="">
+      <span class="playerTxt">
+        <span class="playerName">${nameHtml}</span>
+        <span class="playerPos">${posHtml}</span>
+      </span>
+    </span>
+  `;
+}
+
+/* MAIN LOAD */
+async function load(){
+  await refreshAdminState();
+
+  const { data, error } = await client
+    .from("matches")
+    .select("*")
+    .order("match_date",{ascending:false})
+    .order("match_time",{ascending:false})
+    .limit(1);
+
+  if(error){
+    statusEl.textContent = "Errore caricamento partita";
+    infoEl.innerHTML = `<div class="muted">${escapeHtml(error.message)}</div>`;
+    weatherBox.style.display = "none";
+    fieldTitleEl.style.display = "none";
+    mapBox.style.display = "none";
+    mapActions.style.display = "none";
+    mvpBox.style.display = "none";
+    resultHead.style.display = "none";
+    gkPosterWrap.style.display = "none";
+    setMvpCtaMode("off");
+    if(prevMvpHead) prevMvpHead.style.display = "none";
+    return;
+  }
+
+  if(!data || !data.length){
+    statusEl.textContent = "Nessuna partita creata";
+    weatherBox.style.display = "none";
+    fieldTitleEl.style.display = "none";
+    mapBox.style.display = "none";
+    mapActions.style.display = "none";
+    mvpBox.style.display = "none";
+    resultHead.style.display = "none";
+    formationsHead.style.display = "none";
+    teamsBox.style.display = "none";
+    calledEl.textContent = "—";
+    commentsWrap.style.display = "none";
+    gkPosterWrap.style.display = "none";
+    setMvpCtaMode("off");
+    if(prevMvpHead) prevMvpHead.style.display = "none";
+    return;
+  }
+
+  const m = data[0];
+  statusEl.textContent = "Partita trovata ✅";
+
+  const time = String(m.match_time||"").slice(0,5);
+  const matchEnded =
+    (m.score_a !== null && m.score_a !== undefined) &&
+    (m.score_b !== null && m.score_b !== undefined);
+
+  const voteOpen = isVoteOpen(m);
+
+  // ✅ CTA:
+  if(matchEnded && voteOpen){
+    const already = await hasAlreadyVoted(m.id);
+    if(already) setMvpCtaMode("voted8s");
+    else setMvpCtaMode("vote");
+  }else{
+    setMvpCtaMode("off");
+  }
+
+  infoEl.innerHTML = `
+    <div class="line"><b>📅 ${escapeHtml(formatDateFull(m.match_date))}</b></div>
+    <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
+  `;
+
+  // Marcatori
+  if(m.scorers_text && String(m.scorers_text).trim() !== ""){
+    scorersBox.style.display="block";
+    scorersText.innerHTML = escapeHtml(m.scorers_text).replaceAll("\n","<br>");
+  }else{
+    scorersBox.style.display="none";
+  }
+
+  // Mappa + titolo (visibile SOLO se match NON terminato)
+  fieldTitleEl.style.display = matchEnded ? "none" : "block";
+  mapBox.style.display = matchEnded ? "none" : "block";
+  mapActions.style.display = matchEnded ? "none" : "flex";
+  if(!matchEnded){
+    mapFrame.src = `https://www.google.com/maps?q=${FIELD_LAT},${FIELD_LNG}&z=18&output=embed`;
+    setupMapLinks();
+  }
+
+  // Players ids
+  const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
+  const teamAIds = Array.isArray(m.team_a) ? m.team_a : [];
+  const teamBIds = Array.isArray(m.team_b) ? m.team_b : [];
+  const allIds = [...new Set([...calledIds, ...teamAIds, ...teamBIds].map(String))];
+
+  // Players
+  let players = [];
+  if(allIds.length){
+    const { data:p, error:pe } = await client
+      .from("players")
+      .select("id,name,role,position,avatar")
+      .in("id", allIds);
+    if(!pe) players = p || [];
+  }
+  const playersById = new Map(players.map(p=>[String(p.id), p]));
+
+  const aPlayers = teamAIds.map(id=>playersById.get(String(id))).filter(Boolean);
+  const bPlayers = teamBIds.map(id=>playersById.get(String(id))).filter(Boolean);
+
+  const ka = findKeeperForTeam(aPlayers, m.keeper_a);
+  const kb = findKeeperForTeam(bPlayers, m.keeper_b);
+
+  if(matchEnded){
+    if(prevMvpHead) prevMvpHead.style.display = "none";
+
+    const poster = pickGkPoster(ka, kb);
+    if(poster){
+      gkPosterImg.src = poster;
+      gkPosterWrap.style.display = "block";
+      gkPosterImg.onerror = () => {
+        gkPosterWrap.style.display = "none";
+        gkPosterImg.removeAttribute("src");
+      };
+    }else{
+      gkPosterWrap.style.display = "none";
+      gkPosterImg.removeAttribute("src");
+    }
+
+    resultHead.style.display = "block";
+    resultTimeEl.textContent = time || "—";
+
+    resultAvatarA.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
+    resultAvatarB.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
+
+    teamLabelA.textContent = "SQUADRA A";
+    teamLabelB.textContent = "SQUADRA B";
+
+    scoreAEl.textContent = (m.score_a ?? "—");
+    scoreBEl.textContent = (m.score_b ?? "—");
+
+    scoreAEl.classList.remove("pop"); scoreBEl.classList.remove("pop");
+    void scoreAEl.offsetWidth;
+    scoreAEl.classList.add("pop"); scoreBEl.classList.add("pop");
+    if(resultBoxEl) resultBoxEl.classList.add("crowd");
+
+    weatherBox.style.display = "none";
+    calledEl.style.display = "none";
+    calledTitleEl.style.display = "none";
+
+    currentMatchId = String(m.id);
+    commentsWrap.style.display = "block";
+    await refreshAdminState();
+    await loadComments(currentMatchId);
+    subscribeComments(currentMatchId);
+  }else{
+    resultHead.style.display = "none";
+    commentsWrap.style.display = "none";
+    currentMatchId = null;
+
+    if(resultBoxEl) resultBoxEl.classList.remove("crowd");
+
+    gkPosterWrap.style.display = "none";
+    gkPosterImg.removeAttribute("src");
+
+    if(prevMvpHead && prevMvpImg){
+      prevMvpHead.style.display = "block";
+      prevMvpImg.src = `mvpgiornata.jpg?v=${Date.now()}`;
+      prevMvpImg.onerror = () => {
+        prevMvpHead.style.display = "none";
+        prevMvpImg.removeAttribute("src");
+      };
+    }
+
+    try{
+      if(commentsChannel){
+        client.removeChannel(commentsChannel);
+        commentsChannel = null;
+      }
+    }catch(e){}
+
+    calledEl.style.display = "block";
+    calledTitleEl.style.display = "block";
+    await loadWeather(m.match_date, m.match_time);
+
+    if(calledIds.length){
+      const calledPlayers = calledIds.map(id => playersById.get(String(id))).filter(Boolean);
+      calledEl.classList.remove("muted");
+      calledEl.innerHTML = calledPlayers.map(renderPlayerPill).join("");
+    }else{
+      calledEl.classList.add("muted");
+      calledEl.textContent = "—";
+    }
+  }
+
+  // MVP:
+  if(voteOpen){
+    mvpBox.style.display = "block";
+    mvpLiveWrap.style.display = "block";
+    mvpFinalPoster.style.display = "none";
+
+    mvpTitle.textContent = "🏆 MVP (provvisorio)";
+    mvpStatePill.textContent = "🟢 Votazione aperta";
+    mvpMain.textContent = "Caricamento…";
+    mvpSub.textContent = "";
+    mvpAvatar.src = avatarUrl(DEFAULT_AVATAR);
+    mvpTop3.style.display = "none";
+
+    await loadMVP(m.id, playersById);
+  }else{
+    if(matchEnded){
+      mvpBox.style.display = "block";
+      mvpLiveWrap.style.display = "none";
+      mvpFinalPoster.style.display = "block";
+
+      mvpTitle.textContent = "🏆 MVP (finale)";
+      mvpStatePill.textContent = "🔒 Votazione chiusa";
+
+      const info = await loadMVP(m.id, playersById);
+
+      mvpSmallImg.src = `mvpsmall.png?v=${Date.now()}`;
+      mvpSmallImg.onerror = () => { mvpFinalPoster.style.display = "none"; };
+
+      let label = "—";
+      if(info?.topNames?.length === 1) label = info.topNames[0];
+      else if(info?.topNames?.length > 1) label = info.topNames.join(" / ");
+
+      mvpSmallCaption.innerHTML = `MVP • <span class="gold">${escapeHtml(label)}</span>`;
+      mvpSmallSub.textContent = "QUELLI DELLA PENSIONE";
+
+      const wrap = document.querySelector(".mvpFinalWrap");
+      if(wrap) wrap.classList.add("spotlight");
+
+      if((info?.totalVotes || 0) <= 0){
+        mvpBox.style.display = "none";
+      }
+    }else{
+      mvpBox.style.display = "none";
+      const wrap = document.querySelector(".mvpFinalWrap");
+      if(wrap) wrap.classList.remove("spotlight");
+    }
+  }
+
+  // Squadre + formazioni
+  const hasTeams = teamAIds.length || teamBIds.length;
+  if(hasTeams){
+    teamsBox.style.display = "block";
+    tAIcon.innerHTML = kitSVG("#facc15","#111");
+    tBIcon.innerHTML = kitSVG("#ef4444","#fff");
+
+    teamAEl.classList.remove("muted");
+    teamBEl.classList.remove("muted");
+
+    teamAEl.innerHTML = aPlayers.length ? aPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
+    teamBEl.innerHTML = bPlayers.length ? bPlayers.map(renderPlayerPill).join("") : `<span class="muted">—</span>`;
+
+    formationsHead.style.display = "block";
+
+    gkAAvatar.src = avatarUrl(ka?.avatar || DEFAULT_AVATAR);
+    gkBAvatar.src = avatarUrl(kb?.avatar || DEFAULT_AVATAR);
+
+    gkAName.innerHTML = ka ? (escapeHtml(ka.name) + `<span class="glove">🧤</span>`) : "—";
+    gkBName.innerHTML = kb ? (escapeHtml(kb.name) + `<span class="glove">🧤</span>`) : "—";
+
+    formationsHead.classList.remove("gkIn");
+    void formationsHead.offsetWidth;
+    formationsHead.classList.add("gkIn");
+  }else{
+    formationsHead.style.display = "none";
+    teamsBox.style.display = "none";
+  }
+}
+
+load();
+</script>
+</body>
+</html>
+<!-- by Marco82 -->
