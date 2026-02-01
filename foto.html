@@ -94,11 +94,10 @@
       max-width:100%;
     }
 
-    /* ✅ FIX: questa pill deve andare a capo e restare dentro il box */
+    /* ✅ FIX: niente display:flex !important (così JS può fare display:none) */
     .adminHint{
       width:100%;
-      white-space:normal !important;
-      display:flex !important;
+      white-space:normal;
       line-height:1.25;
     }
 
@@ -352,6 +351,9 @@ const topBox = document.getElementById("topBox");
 const topGrid = document.getElementById("topGrid");
 const topMini = document.getElementById("topMini");
 
+/* 🔒 FORZA ADMIN HINT NASCOSTO ALL'AVVIO */
+adminHint.style.display = "none";
+
 /* HELPERS */
 function showToast(msg, type="ok"){
   toast.classList.remove("show","bad","warn");
@@ -387,10 +389,12 @@ function isAdminSession(session){ return !!(session && session.user); }
 let adminOn = false;
 async function refreshAdminUI(){
   const session = await getSession();
-  adminOn = isAdminSession(session);
+  adminOn = (isAdminSession(session) === true);
+
   adminBtn.textContent = adminOn ? "🔐 Admin: ON" : "🔐 Admin: OFF";
   adminBtn.classList.toggle("warn", !adminOn);
   adminBtn.classList.toggle("ok", adminOn);
+
   adminHint.style.display = adminOn ? "inline-flex" : "none";
   return adminOn;
 }
@@ -413,6 +417,7 @@ adminBtn.onclick = async () => {
   if(error){
     console.error(error);
     showToast("Login fallito.", "bad");
+    await refreshAdminUI();
     return;
   }
   showToast("Admin attivo ✅");
@@ -445,12 +450,11 @@ let uploading = false;
 /* ✅ Top IDs per non duplicare in galleria */
 let topIds = new Set();
 
-/* ✅ CONTATORI (FIX) */
+/* ✅ CONTATORI */
 let cachedPhotos = [];
 let totalPhotosCount = 0;
 let topPhotosCount = 0;
 
-/* ✅ aggiorna pill contatore (1 sola funzione) */
 function updateCountPill(){
   const galleryCount = cachedPhotos.length;
   const total = totalPhotosCount;
@@ -706,7 +710,6 @@ async function loadTop30(){
 
     topGrid.innerHTML = rows.map(p => renderPhotoCard(p, true)).join("");
     await wireCardEvents(topGrid, rows);
-
   }catch(e){
     console.warn("top30 error", e);
     topIds = new Set();
@@ -739,7 +742,6 @@ async function loadGallery(){
   const all = data || [];
   totalPhotosCount = all.length;
 
-  /* ✅ non mostrare in Galleria quelle già presenti nel Top */
   cachedPhotos = all.filter(p => !topIds.has(String(p.id)));
 
   updateCountPill();
@@ -876,14 +878,8 @@ async function wireCardEvents(containerEl, photos){
 /* LOAD ALL */
 async function loadAll(){
   await refreshAdminUI();
-
-  // ordine importante:
-  // 1) carico TOP -> set topIds + topPhotosCount
-  // 2) carico galleria -> calcolo totalPhotosCount + cachedPhotos
   await loadTop30();
   await loadGallery();
-
-  // sicurezza: se per qualche motivo top non carica, la pill si aggiorna comunque
   updateCountPill();
 }
 
