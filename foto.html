@@ -287,7 +287,13 @@
       font-weight:900;
       backdrop-filter: blur(6px);
     }
-    .lb__close{
+    .lb__actions{
+      pointer-events:auto;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .lb__close, .lb__dl{
       pointer-events:auto;
       width:44px; height:44px;
       border-radius:14px;
@@ -297,6 +303,9 @@
       font-size:18px;
       font-weight:900;
       cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
     .lb__nav{
       position:absolute;
@@ -341,7 +350,7 @@
       border:1px solid rgba(255,255,255,.14);
       background:#000;
       box-shadow:0 18px 50px rgba(0,0,0,.45);
-      touch-action:none; /* important per pinch custom */
+      touch-action:none;
       position:relative;
     }
     .lb__img{
@@ -351,7 +360,7 @@
       user-select:none;
       -webkit-user-drag:none;
       transform: translate3d(0,0,0) scale(1);
-      transform-origin: 0 0; /* gestito via JS */
+      transform-origin: 0 0;
       will-change: transform;
       pointer-events:none;
     }
@@ -367,7 +376,7 @@
     }
 
     @media(max-width:520px){
-      .lb__nav{ display:none; } /* mobile: swipe */
+      .lb__nav{ display:none; }
       .lb__figure{ height:84vh; }
     }
   </style>
@@ -464,7 +473,12 @@
   <div class="lb__panel" role="dialog" aria-modal="true" aria-label="Foto">
     <div class="lb__topbar">
       <div id="lbCount" class="lb__badge">1/1</div>
-      <button class="lb__close" type="button" aria-label="Chiudi" data-lb-close>✕</button>
+
+      <!-- ✅ AZIONI TOP (Scarica + Chiudi) -->
+      <div class="lb__actions">
+        <button id="lbDownload" class="lb__dl" type="button" aria-label="Scarica foto" title="Scarica">⬇️</button>
+        <button class="lb__close" type="button" aria-label="Chiudi" data-lb-close title="Chiudi">✕</button>
+      </div>
     </div>
 
     <button class="lb__nav lb__prev" type="button" aria-label="Precedente">‹</button>
@@ -636,6 +650,7 @@ function updateCountPill(){
    - indicator 3/12
    - swipe
    - pinch zoom + doppio tap zoom
+   - ✅ scarica foto
    ========================================================== */
 const lb = document.getElementById("lb");
 const lbImg = document.getElementById("lbImg");
@@ -644,6 +659,7 @@ const lbCount = document.getElementById("lbCount");
 const lbStage = document.getElementById("lbStage");
 const lbPrev = lb.querySelector(".lb__prev");
 const lbNext = lb.querySelector(".lb__next");
+const lbDownload = document.getElementById("lbDownload");
 
 let lbList = [];     // [{src, cap}]
 let lbIndex = 0;
@@ -676,7 +692,6 @@ function resetTransform(){
   applyTransform();
 }
 function applyTransform(){
-  // transform origin 0,0
   lbImg.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
 }
 
@@ -712,6 +727,54 @@ function closeLightbox(){
 function nextLightbox(){ openLightbox(lbIndex + 1); }
 function prevLightbox(){ openLightbox(lbIndex - 1); }
 
+/* ✅ Scarica foto (con fallback se CORS blocca) */
+function guessExt(url){
+  const clean = (url || "").split("?")[0].toLowerCase();
+  if(clean.endsWith(".png")) return "png";
+  if(clean.endsWith(".webp")) return "webp";
+  if(clean.endsWith(".gif")) return "gif";
+  return "jpg";
+}
+async function downloadCurrentPhoto(){
+  try{
+    const item = lbList[lbIndex];
+    const url = item?.src || "";
+    if(!url) return showToast("Link non disponibile.", "bad");
+
+    lbDownload.disabled = true;
+    lbDownload.textContent = "⏳";
+
+    const ext = guessExt(url);
+    const filename = `QDP_foto_${lbIndex+1}.${ext}`;
+
+    // prova download via fetch->blob (può fallire per CORS)
+    const res = await fetch(url, { mode:"cors", cache:"no-store" });
+    if(!res.ok) throw new Error("Fetch failed");
+    const blob = await res.blob();
+
+    const a = document.createElement("a");
+    const objUrl = URL.createObjectURL(blob);
+    a.href = objUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(objUrl);
+
+    showToast("Download avviato ✅");
+  }catch(e){
+    console.warn("download fallback:", e);
+    // fallback: apri immagine in nuova scheda
+    const url = lbList?.[lbIndex]?.src || "";
+    if(url) window.open(url, "_blank", "noopener");
+    showToast("Apro la foto: salva da lì ✅", "warn");
+  }finally{
+    lbDownload.disabled = false;
+    lbDownload.textContent = "⬇️";
+  }
+}
+lbDownload.addEventListener("click", downloadCurrentPhoto);
+
 /* backdrop close */
 lb.addEventListener("click", (e)=>{
   if(e.target && e.target.hasAttribute("data-lb-close")) closeLightbox();
@@ -727,6 +790,10 @@ window.addEventListener("keydown", (e)=>{
   if(e.key === "Escape") closeLightbox();
   if(e.key === "ArrowRight") nextLightbox();
   if(e.key === "ArrowLeft") prevLightbox();
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s"){
+    e.preventDefault();
+    downloadCurrentPhoto();
+  }
 });
 
 /* pointer helpers */
@@ -743,12 +810,7 @@ function toStageCoords(pt){
 }
 
 function zoomAt(stagePt, targetScale){
-  // stagePt in coordinate del box (0..w,0..h)
-  const r = stageRect();
   const s = clamp(targetScale, minScale, maxScale);
-
-  // mantieni il punto sotto le dita "fermo"
-  // formula: newTx = stagePt.x - (stagePt.x - tx) * (s/scale)
   const newTx = stagePt.x - (stagePt.x - tx) * (s/scale);
   const newTy = stagePt.y - (stagePt.y - ty) * (s/scale);
 
@@ -770,7 +832,6 @@ function onPointerDown(e){
   if(e.pointerType !== "mouse"){
     const p = toStageCoords(getPoint(e));
     if(now - lastTapAt < 260){
-      // toggle zoom 1 <-> 2.5
       const target = (scale <= 1.05) ? 2.5 : 1;
       zoomAt(p, target);
     }
@@ -779,7 +840,6 @@ function onPointerDown(e){
   }
 
   if(pointers.size === 1 && scale > 1){
-    // drag solo se zoomato
     dragging = true;
     const p = getPoint(e);
     dragStart = {x:p.x, y:p.y, tx, ty};
@@ -810,9 +870,6 @@ function onPointerMove(e){
     const ratio = d / pinchStartDist;
     const targetScale = clamp(pinchStartScale * ratio, minScale, maxScale);
 
-    // zoom attorno al centro pinch
-    // per stabilità usiamo zoomAt ma partendo dai valori salvati
-    // ricostruiamo (tx,ty,scale) dal base:
     scale = pinchStartScale;
     tx = pinchStartTx;
     ty = pinchStartTy;
@@ -838,8 +895,6 @@ function onPointerUp(e){
   }
   if(pointers.size === 0){
     dragging = false;
-
-    // se torno quasi a 1, reset
     if(scale < 1.02){
       resetTransform();
     }
@@ -850,8 +905,8 @@ function onPointerUp(e){
 let swipeStart = null;
 function onSwipeStart(e){
   if(!lb.classList.contains("open")) return;
-  if(scale > 1.05) return; // se zoomato, no swipe gallery
-  if(e.pointerType === "mouse") return; // desktop usa frecce
+  if(scale > 1.05) return;
+  if(e.pointerType === "mouse") return;
   swipeStart = getPoint(e);
 }
 function onSwipeEnd(e){
@@ -1251,7 +1306,6 @@ async function wireCardEvents(containerEl, photos){
     if(img){
       img.style.cursor = "zoom-in";
       img.onclick = ()=>{
-        // trova index in lbList tramite src
         const src = (photo.path || "").trim();
         const i = lbList.findIndex(x => x.src === src);
         if(i >= 0) openLightbox(i);
