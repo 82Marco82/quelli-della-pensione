@@ -88,16 +88,29 @@
     }
     .subtitle{color:var(--muted);font-size:14px}
 
-    .heroImgWrap{border-radius:16px;overflow:hidden}
+    /* ==========================================================
+       ✅ HERO FOTO: NO SCHIACCIA, NO TAGLIA (foto.jpg)
+       ========================================================== */
+    .heroImgWrap{
+      border-radius:16px;
+      overflow:hidden;
+      background: radial-gradient(circle at center, #111 0%, #000 70%);
+      border:1px solid var(--border);
+    }
     .heroImgWrap img{
       width:100%;
+      height:auto;            /* ✅ mantiene proporzioni */
       display:block;
-      max-height:360px;
-      object-fit:cover;
+      object-fit:contain;     /* ✅ non taglia mai */
+      object-position:center;
+      max-height:none;        /* ✅ niente limiti che creano crop */
+      background:transparent;
     }
+    /* se la foto è molto alta, su mobile evitiamo che diventi infinita */
     @media(max-width:600px){
-      .heroImgWrap img{max-height:240px}
+      .heroImgWrap img{ max-height:70vh; }
     }
+
     .heroCaption{
       margin-top:10px;
       text-align:center;
@@ -1973,8 +1986,6 @@ async function load(){
   const voteOpen = isVoteOpen(m);
 
   // ✅ CTA:
-  // - SOLO partita finita + votazione aperta
-  // - se ha già votato: banner 8s e poi sparisce
   if(matchEnded && voteOpen){
     const already = await hasAlreadyVoted(m.id);
     if(already) setMvpCtaMode("voted8s");
@@ -2056,7 +2067,6 @@ async function load(){
     scoreAEl.textContent = (m.score_a ?? "—");
     scoreBEl.textContent = (m.score_b ?? "—");
 
-    /* ✅ (3) pop punteggio + crowd pulse */
     scoreAEl.classList.remove("pop"); scoreBEl.classList.remove("pop");
     void scoreAEl.offsetWidth;
     scoreAEl.classList.add("pop"); scoreBEl.classList.add("pop");
@@ -2146,7 +2156,6 @@ async function load(){
       mvpSmallCaption.innerHTML = `MVP • <span class="gold">${escapeHtml(label)}</span>`;
       mvpSmallSub.textContent = "QUELLI DELLA PENSIONE";
 
-      /* ✅ (5) spotlight MVP finale */
       const wrap = document.querySelector(".mvpFinalWrap");
       if(wrap) wrap.classList.add("spotlight");
 
@@ -2181,7 +2190,6 @@ async function load(){
     gkAName.innerHTML = ka ? (escapeHtml(ka.name) + `<span class="glove">🧤</span>`) : "—";
     gkBName.innerHTML = kb ? (escapeHtml(kb.name) + `<span class="glove">🧤</span>`) : "—";
 
-    /* ✅ (GK) entrata sincronizzata */
     formationsHead.classList.remove("gkIn");
     void formationsHead.offsetWidth;
     formationsHead.classList.add("gkIn");
