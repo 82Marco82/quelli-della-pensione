@@ -284,7 +284,7 @@
         </select>
       </label>
 
-      <div id="countPill" class="pill">📸 0 foto</div>
+      <div id="countPill" class="pill">📸 0 foto totali</div>
     </div>
 
     <div id="adminHint" class="pill adminHint" style="display:none; margin-top:10px">
@@ -444,6 +444,24 @@ let uploading = false;
 
 /* ✅ Top IDs per non duplicare in galleria */
 let topIds = new Set();
+
+/* ✅ CONTATORI (FIX) */
+let cachedPhotos = [];
+let totalPhotosCount = 0;
+let topPhotosCount = 0;
+
+/* ✅ aggiorna pill contatore (1 sola funzione) */
+function updateCountPill(){
+  const galleryCount = cachedPhotos.length;
+  const total = totalPhotosCount;
+  const top = topPhotosCount;
+
+  if(total === 0){
+    countPill.textContent = `📸 0 foto totali`;
+    return;
+  }
+  countPill.textContent = `📸 ${total} foto totali (${galleryCount} in galleria, ${top} in top)`;
+}
 
 /* UPLOAD */
 uploadBtn.onclick = async () => {
@@ -657,11 +675,10 @@ async function deleteComment(commentId){
 }
 
 /* LOAD PHOTOS */
-let cachedPhotos = [];
-
 async function loadTop30(){
   try{
     topIds = new Set();
+    topPhotosCount = 0;
 
     const since = new Date(Date.now() - 30*24*3600*1000).toISOString();
 
@@ -676,10 +693,12 @@ async function loadTop30(){
     if(error) throw error;
 
     const rows = data || [];
+    topPhotosCount = rows.length;
     rows.forEach(p => topIds.add(String(p.id)));
 
     if(rows.length === 0){
       topBox.style.display = "none";
+      topMini.textContent = "";
       return;
     }
     topBox.style.display = "block";
@@ -687,10 +706,13 @@ async function loadTop30(){
 
     topGrid.innerHTML = rows.map(p => renderPhotoCard(p, true)).join("");
     await wireCardEvents(topGrid, rows);
+
   }catch(e){
     console.warn("top30 error", e);
     topIds = new Set();
+    topPhotosCount = 0;
     topBox.style.display = "none";
+    topMini.textContent = "";
   }
 }
 
@@ -708,15 +730,19 @@ async function loadGallery(){
   if(error){
     console.error(error);
     grid.innerHTML = `<div class="muted">Errore caricamento foto.</div>`;
+    totalPhotosCount = 0;
+    cachedPhotos = [];
+    updateCountPill();
     return;
   }
 
   const all = data || [];
+  totalPhotosCount = all.length;
 
-  /* ✅ FIX: non mostrare in Galleria quelle già presenti nel Top */
+  /* ✅ non mostrare in Galleria quelle già presenti nel Top */
   cachedPhotos = all.filter(p => !topIds.has(String(p.id)));
 
-  countPill.textContent = `📸 ${cachedPhotos.length} foto`;
+  updateCountPill();
 
   grid.innerHTML = cachedPhotos.map(p => renderPhotoCard(p, false)).join("");
   await wireCardEvents(grid, cachedPhotos);
@@ -850,12 +876,18 @@ async function wireCardEvents(containerEl, photos){
 /* LOAD ALL */
 async function loadAll(){
   await refreshAdminUI();
+
+  // ordine importante:
+  // 1) carico TOP -> set topIds + topPhotosCount
+  // 2) carico galleria -> calcolo totalPhotosCount + cachedPhotos
   await loadTop30();
   await loadGallery();
+
+  // sicurezza: se per qualche motivo top non carica, la pill si aggiorna comunque
+  updateCountPill();
 }
 
 loadAll();
 </script>
 </body>
 </html>
-
