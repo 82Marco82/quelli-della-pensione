@@ -121,6 +121,41 @@
       text-transform:uppercase;
     }
 
+    /* ================================
+       👥 PROTAGONISTI (INDEX)
+       ================================ */
+    .protagonisti{
+      margin-top: 14px;
+      text-align: center;
+    }
+    .protagonisti-title{
+      font-family: 'Bebas Neue';
+      letter-spacing: 3px;
+      font-size: 22px;
+      margin-bottom: 10px;
+      opacity: .9;
+      text-transform:uppercase;
+    }
+    .avatars-row{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .avatars-row img{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      object-fit:cover;
+      border:2px solid #fff;
+      box-shadow:0 4px 12px rgba(0,0,0,.35);
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .avatars-row img:hover{
+      transform:scale(1.15);
+      box-shadow:0 6px 18px rgba(0,0,0,.45);
+    }
+
     /* Titolo sezione (stile hero) */
     .sectionCaption{
       margin-top:10px;
@@ -1009,6 +1044,34 @@
       <img src="foto.jpg" alt="Quelli della pensione">
     </div>
     <div class="heroCaption">OGNI MALEDETTO GIOVEDÌ</div>
+
+    <!-- ✅ PROTAGONISTI -->
+    <div class="protagonisti">
+      <div class="protagonisti-title">I PROTAGONISTI SIAMO NOI</div>
+
+      <div class="avatars-row" id="avatarsRow">
+        <img src="avatars/1.png" alt="">
+        <img src="avatars/2.png" alt="">
+        <img src="avatars/3.png" alt="">
+        <img src="avatars/4.png" alt="">
+        <img src="avatars/5.png" alt="">
+        <img src="avatars/6.png" alt="">
+        <img src="avatars/7.png" alt="">
+        <img src="avatars/8.png" alt="">
+        <img src="avatars/9.png" alt="">
+        <img src="avatars/10.png" alt="">
+        <img src="avatars/11.png" alt="">
+        <img src="avatars/12p.png" alt="">
+        <img src="avatars/13.png" alt="">
+        <img src="avatars/14.png" alt="">
+        <img src="avatars/15.png" alt="">
+        <img src="avatars/16.png" alt="">
+        <img src="avatars/17.png" alt="">
+        <img src="avatars/18.png" alt="">
+        <img src="avatars/19.png" alt="">
+        <img src="avatars/20.jpg" alt="">
+      </div>
+    </div>
   </div>
 
   <div class="card">
@@ -1232,13 +1295,11 @@ function setTheme(mode){
 setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
 /* ✅ page enter */
 requestAnimationFrame(()=> document.body.classList.add("loaded"));
-
 themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 
 /* LOGO MONETA */
 const logoCoin = document.getElementById("logoCoin");
 function spinLogo(){
-  // nuova animazione "kick" + fallback rimuovendo anche spin
   logoCoin.classList.remove("spin","coinKick");
   void logoCoin.offsetWidth;
   logoCoin.classList.add("coinKick");
@@ -1246,6 +1307,48 @@ function spinLogo(){
 }
 logoCoin.addEventListener("click", spinLogo);
 logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
+
+/* ✅ PROTAGONISTI: random + presidente (avatars/12p.png) evidenziato */
+(() => {
+  const row = document.getElementById("avatarsRow");
+  if(!row) return;
+
+  const imgs = Array.from(row.querySelectorAll("img"));
+
+  // shuffle
+  for(let i = imgs.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [imgs[i], imgs[j]] = [imgs[j], imgs[i]];
+  }
+  imgs.forEach(i => row.appendChild(i));
+
+  // trova il presidente (12p.png) e mettilo al centro + evidenzia
+  const isPresident = (img) => {
+    const src = (img.getAttribute("src") || "").toLowerCase();
+    return src.endsWith("/12p.png") || src.endsWith("12p.png");
+  };
+
+  const presIdx = imgs.findIndex(isPresident);
+
+  if(presIdx !== -1){
+    const mid = Math.floor(imgs.length / 2);
+    const pres = imgs[presIdx];
+
+    // sposta al centro (DOM)
+    const current = Array.from(row.querySelectorAll("img"));
+    const ref = current[mid] || null;
+    if(ref && pres !== ref){
+      row.insertBefore(pres, ref);
+    }else if(!ref){
+      row.appendChild(pres);
+    }
+
+    // evidenzia SOLO lui
+    pres.style.transform = "scale(1.25)";
+    pres.style.borderColor = "gold";
+    pres.style.boxShadow = "0 0 18px rgba(255,215,0,.75)";
+  }
+})();
 
 /* SUPABASE */
 if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY){
@@ -1769,7 +1872,6 @@ async function loadWeather(matchDateISO, matchTimeStr){
   weatherMini.textContent = "";
   setWeatherAlert("warn","ATTENDI…");
 
-  /* ✅ pulse + shimmer mentre carica */
   weatherBox.classList.add("pulsing","loading");
 
   try{
@@ -1827,7 +1929,6 @@ async function loadWeather(matchDateISO, matchTimeStr){
     weatherMini.textContent =
       `🌡 ${Math.round(temp)}°C  •  💧 ${pp}%  •  💨 ${Math.round(wind)} km/h  •  ⏰ ${hhmm}`;
 
-    /* ✅ stop loading */
     weatherBox.classList.remove("pulsing","loading");
   }catch(e){
     console.error(e);
@@ -1836,8 +1937,6 @@ async function loadWeather(matchDateISO, matchTimeStr){
     setWeatherAlert("warn","⚠️ METEO");
     weatherLine.textContent = "Meteo non disponibile al momento.";
     weatherMini.textContent = "";
-
-    /* ✅ stop loading */
     weatherBox.classList.remove("pulsing","loading");
   }
 }
