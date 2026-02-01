@@ -236,6 +236,140 @@
     .toast.show{display:block}
     .toast.bad{background:rgba(239,68,68,.10)}
     .toast.warn{background:rgba(245,158,11,.12)}
+
+    /* ==========================================================
+       ✅ NAV MENU IN FONDO (come QDP)
+       ========================================================== */
+    .navCard{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size:14px;
+    }
+    .navCard a{
+      color:var(--text);
+      text-decoration:none;
+      font-weight:800;
+    }
+
+    /* ==========================================================
+       ✅ LIGHTBOX Instagram-like (zoom/pinch + indicator)
+       ========================================================== */
+    .lb{ position:fixed; inset:0; z-index:9999; display:none; }
+    .lb.open{ display:block; }
+    .lb__backdrop{
+      position:absolute; inset:0;
+      background:rgba(0,0,0,.80);
+      backdrop-filter: blur(3px);
+    }
+    .lb__panel{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      padding:14px;
+    }
+    .lb__topbar{
+      position:absolute;
+      top:12px; left:12px; right:12px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      z-index:2;
+      pointer-events:none;
+    }
+    .lb__badge{
+      pointer-events:auto;
+      display:inline-flex; align-items:center; gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.35);
+      color:#fff;
+      font-weight:900;
+      backdrop-filter: blur(6px);
+    }
+    .lb__close{
+      pointer-events:auto;
+      width:44px; height:44px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.35);
+      color:#fff;
+      font-size:18px;
+      font-weight:900;
+      cursor:pointer;
+    }
+    .lb__nav{
+      position:absolute;
+      top:50%; transform:translateY(-50%);
+      width:46px; height:46px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.35);
+      color:#fff;
+      font-size:34px;
+      line-height:0;
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      user-select:none;
+      z-index:2;
+    }
+    .lb__prev{ left:12px; }
+    .lb__next{ right:12px; }
+
+    .lb__figure{
+      margin:0;
+      width:min(92vw, 980px);
+      height:min(86vh, 760px);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      position:relative;
+      z-index:1;
+    }
+
+    /* area che gestisce pinch/drag */
+    .lb__stage{
+      width:100%;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.14);
+      background:#000;
+      box-shadow:0 18px 50px rgba(0,0,0,.45);
+      touch-action:none; /* important per pinch custom */
+      position:relative;
+    }
+    .lb__img{
+      max-width:100%;
+      max-height:100%;
+      object-fit:contain;
+      user-select:none;
+      -webkit-user-drag:none;
+      transform: translate3d(0,0,0) scale(1);
+      transform-origin: 0 0; /* gestito via JS */
+      will-change: transform;
+      pointer-events:none;
+    }
+    .lb__cap{
+      color:rgba(255,255,255,.90);
+      font-weight:800;
+      text-align:center;
+      max-width:100%;
+      word-break:break-word;
+      font-size:13px;
+      letter-spacing:.2px;
+      padding:0 8px;
+    }
+
+    @media(max-width:520px){
+      .lb__nav{ display:none; } /* mobile: swipe */
+      .lb__figure{ height:84vh; }
+    }
   </style>
 </head>
 
@@ -311,6 +445,39 @@
     <div class="grid" id="grid" style="margin-top:12px"></div>
   </div>
 
+  <!-- ✅ MENU IN FONDO -->
+  <div class="card navCard muted">
+    <a href="storico.html">📚 Storico</a>
+    <a href="marcatori.html">⚽ Marcatori</a>
+    <a href="mvp.html">🏆 Vota MVP</a>
+    <a href="foto.html">📸 Foto</a>
+    <a href="componenti.html">👥 Componenti</a>
+    <a href="admin.html">🔐 Admin</a>
+  </div>
+
+</div>
+
+<!-- ✅ LIGHTBOX -->
+<div id="lb" class="lb" aria-hidden="true">
+  <div class="lb__backdrop" data-lb-close></div>
+
+  <div class="lb__panel" role="dialog" aria-modal="true" aria-label="Foto">
+    <div class="lb__topbar">
+      <div id="lbCount" class="lb__badge">1/1</div>
+      <button class="lb__close" type="button" aria-label="Chiudi" data-lb-close>✕</button>
+    </div>
+
+    <button class="lb__nav lb__prev" type="button" aria-label="Precedente">‹</button>
+
+    <figure class="lb__figure">
+      <div id="lbStage" class="lb__stage">
+        <img id="lbImg" class="lb__img" alt="">
+      </div>
+      <figcaption id="lbCap" class="lb__cap"></figcaption>
+    </figure>
+
+    <button class="lb__nav lb__next" type="button" aria-label="Successiva">›</button>
+  </div>
 </div>
 
 <script src="config.js"></script>
@@ -363,7 +530,6 @@ function showToast(msg, type="ok"){
   toast.classList.add("show");
   setTimeout(()=>toast.classList.remove("show"), 2200);
 }
-
 function escapeHtml(s){
   return String(s ?? "")
     .replaceAll("&","&amp;")
@@ -372,13 +538,11 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-
 function fmtDate(iso){
   try{
     return new Date(iso).toLocaleString("it-IT", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" });
   }catch(e){ return String(iso||""); }
 }
-
 async function getSession(){
   const { data } = await client.auth.getSession();
   return data?.session || null;
@@ -466,6 +630,251 @@ function updateCountPill(){
   }
   countPill.textContent = `📸 ${total} foto totali (${galleryCount} in galleria, ${top} in top)`;
 }
+
+/* ==========================================================
+   ✅ LIGHTBOX (instagram-like)
+   - indicator 3/12
+   - swipe
+   - pinch zoom + doppio tap zoom
+   ========================================================== */
+const lb = document.getElementById("lb");
+const lbImg = document.getElementById("lbImg");
+const lbCap = document.getElementById("lbCap");
+const lbCount = document.getElementById("lbCount");
+const lbStage = document.getElementById("lbStage");
+const lbPrev = lb.querySelector(".lb__prev");
+const lbNext = lb.querySelector(".lb__next");
+
+let lbList = [];     // [{src, cap}]
+let lbIndex = 0;
+
+// zoom state
+let scale = 1;
+let minScale = 1;
+let maxScale = 4;
+let tx = 0, ty = 0;
+
+// pointer/pinch
+let pointers = new Map();
+let pinchStartDist = 0;
+let pinchStartScale = 1;
+let pinchStartTx = 0, pinchStartTy = 0;
+let pinchCenter = {x:0,y:0};
+
+// drag
+let dragging = false;
+let dragStart = {x:0,y:0, tx:0, ty:0};
+
+// double tap
+let lastTapAt = 0;
+let lastTapPos = {x:0,y:0};
+
+function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+
+function resetTransform(){
+  scale = 1; tx = 0; ty = 0;
+  applyTransform();
+}
+function applyTransform(){
+  // transform origin 0,0
+  lbImg.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
+}
+
+function updateIndicator(){
+  lbCount.textContent = `${lbIndex + 1}/${lbList.length}`;
+}
+
+function openLightbox(i){
+  lbIndex = (i + lbList.length) % lbList.length;
+  const item = lbList[lbIndex];
+
+  lbImg.src = item.src;
+  lbImg.alt = "foto";
+  lbCap.textContent = item.cap || "";
+
+  resetTransform();
+  updateIndicator();
+
+  lb.classList.add("open");
+  lb.setAttribute("aria-hidden","false");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox(){
+  lb.classList.remove("open");
+  lb.setAttribute("aria-hidden","true");
+  document.body.style.overflow = "";
+  pointers.clear();
+  dragging = false;
+  setTimeout(()=> { lbImg.removeAttribute("src"); }, 120);
+}
+
+function nextLightbox(){ openLightbox(lbIndex + 1); }
+function prevLightbox(){ openLightbox(lbIndex - 1); }
+
+/* backdrop close */
+lb.addEventListener("click", (e)=>{
+  if(e.target && e.target.hasAttribute("data-lb-close")) closeLightbox();
+});
+
+/* nav */
+lbNext.addEventListener("click", nextLightbox);
+lbPrev.addEventListener("click", prevLightbox);
+
+/* keyboard */
+window.addEventListener("keydown", (e)=>{
+  if(!lb.classList.contains("open")) return;
+  if(e.key === "Escape") closeLightbox();
+  if(e.key === "ArrowRight") nextLightbox();
+  if(e.key === "ArrowLeft") prevLightbox();
+});
+
+/* pointer helpers */
+function getPoint(e){ return {x: e.clientX, y: e.clientY}; }
+function dist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.hypot(dx,dy); }
+function mid(a,b){ return {x:(a.x+b.x)/2, y:(a.y+b.y)/2}; }
+
+function stageRect(){
+  return lbStage.getBoundingClientRect();
+}
+function toStageCoords(pt){
+  const r = stageRect();
+  return { x: pt.x - r.left, y: pt.y - r.top };
+}
+
+function zoomAt(stagePt, targetScale){
+  // stagePt in coordinate del box (0..w,0..h)
+  const r = stageRect();
+  const s = clamp(targetScale, minScale, maxScale);
+
+  // mantieni il punto sotto le dita "fermo"
+  // formula: newTx = stagePt.x - (stagePt.x - tx) * (s/scale)
+  const newTx = stagePt.x - (stagePt.x - tx) * (s/scale);
+  const newTy = stagePt.y - (stagePt.y - ty) * (s/scale);
+
+  scale = s;
+  tx = newTx;
+  ty = newTy;
+
+  applyTransform();
+}
+
+function onPointerDown(e){
+  if(!lb.classList.contains("open")) return;
+
+  lbStage.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, getPoint(e));
+
+  // doppio tap (solo touch/pen)
+  const now = Date.now();
+  if(e.pointerType !== "mouse"){
+    const p = toStageCoords(getPoint(e));
+    if(now - lastTapAt < 260){
+      // toggle zoom 1 <-> 2.5
+      const target = (scale <= 1.05) ? 2.5 : 1;
+      zoomAt(p, target);
+    }
+    lastTapAt = now;
+    lastTapPos = p;
+  }
+
+  if(pointers.size === 1 && scale > 1){
+    // drag solo se zoomato
+    dragging = true;
+    const p = getPoint(e);
+    dragStart = {x:p.x, y:p.y, tx, ty};
+  }
+
+  if(pointers.size === 2){
+    const pts = [...pointers.values()];
+    pinchStartDist = dist(pts[0], pts[1]);
+    pinchStartScale = scale;
+    pinchStartTx = tx;
+    pinchStartTy = ty;
+    pinchCenter = toStageCoords(mid(pts[0], pts[1]));
+    dragging = false;
+  }
+}
+
+function onPointerMove(e){
+  if(!lb.classList.contains("open")) return;
+  if(!pointers.has(e.pointerId)) return;
+
+  pointers.set(e.pointerId, getPoint(e));
+
+  if(pointers.size === 2){
+    const pts = [...pointers.values()];
+    const d = dist(pts[0], pts[1]);
+    if(pinchStartDist <= 0) return;
+
+    const ratio = d / pinchStartDist;
+    const targetScale = clamp(pinchStartScale * ratio, minScale, maxScale);
+
+    // zoom attorno al centro pinch
+    // per stabilità usiamo zoomAt ma partendo dai valori salvati
+    // ricostruiamo (tx,ty,scale) dal base:
+    scale = pinchStartScale;
+    tx = pinchStartTx;
+    ty = pinchStartTy;
+    zoomAt(pinchCenter, targetScale);
+    return;
+  }
+
+  if(pointers.size === 1 && dragging){
+    const p = getPoint(e);
+    tx = dragStart.tx + (p.x - dragStart.x);
+    ty = dragStart.ty + (p.y - dragStart.y);
+    applyTransform();
+  }
+}
+
+function onPointerUp(e){
+  if(!lb.classList.contains("open")) return;
+
+  pointers.delete(e.pointerId);
+
+  if(pointers.size < 2){
+    pinchStartDist = 0;
+  }
+  if(pointers.size === 0){
+    dragging = false;
+
+    // se torno quasi a 1, reset
+    if(scale < 1.02){
+      resetTransform();
+    }
+  }
+}
+
+/* swipe per cambiare foto quando NON zoomato */
+let swipeStart = null;
+function onSwipeStart(e){
+  if(!lb.classList.contains("open")) return;
+  if(scale > 1.05) return; // se zoomato, no swipe gallery
+  if(e.pointerType === "mouse") return; // desktop usa frecce
+  swipeStart = getPoint(e);
+}
+function onSwipeEnd(e){
+  if(!swipeStart) return;
+  const end = getPoint(e);
+  const dx = end.x - swipeStart.x;
+  const dy = end.y - swipeStart.y;
+  swipeStart = null;
+
+  if(Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy)){
+    if(dx < 0) nextLightbox();
+    else prevLightbox();
+  }
+}
+
+lbStage.addEventListener("pointerdown", (e)=>{ onSwipeStart(e); onPointerDown(e); });
+lbStage.addEventListener("pointermove", onPointerMove);
+lbStage.addEventListener("pointerup", (e)=>{ onPointerUp(e); onSwipeEnd(e); });
+lbStage.addEventListener("pointercancel", onPointerUp);
+
+/* ==========================================================
+   APP LOGIC
+   ========================================================== */
 
 /* UPLOAD */
 uploadBtn.onclick = async () => {
@@ -750,6 +1159,22 @@ async function loadGallery(){
   await wireCardEvents(grid, cachedPhotos);
 }
 
+/* ✅ Costruisce lista lightbox (Top + Gallery) senza duplicati */
+function rebuildLightboxList(topRows, galleryRows){
+  const map = new Map();
+  const push = (p)=>{
+    const src = (p?.path || "").trim();
+    if(!src) return;
+    const id = String(p.id);
+    if(map.has(id)) return;
+    map.set(id, { src, cap: (p.caption || "").trim() });
+  };
+  (topRows || []).forEach(push);
+  (galleryRows || []).forEach(push);
+  lbList = [...map.values()];
+}
+
+/* Render */
 function renderPhotoCard(photo, isTop){
   const id = escapeHtml(photo.id);
   const likes = Number(photo.likes || 0);
@@ -766,9 +1191,9 @@ function renderPhotoCard(photo, isTop){
   const likeDisabled = liked ? "disabled" : "";
 
   return `
-    <div class="photoCard" data-id="${id}">
+    <div class="photoCard" data-id="${id}" data-src="${escapeHtml(url)}" data-cap="${escapeHtml(cap)}">
       <div class="imgWrap">
-        <img src="${escapeHtml(url)}" alt="foto">
+        <img src="${escapeHtml(url)}" alt="foto" loading="lazy">
         <div class="imgTopActions">
           <div class="chip">${badge}</div>
           ${adminOn ? `<button class="chip chipBtn js-del" type="button">🗑️ Elimina</button>` : ``}
@@ -820,6 +1245,19 @@ async function wireCardEvents(containerEl, photos){
     const id = card.getAttribute("data-id");
     const photo = photos.find(p => String(p.id) === String(id));
     if(!photo) continue;
+
+    // ✅ click immagine -> lightbox
+    const img = card.querySelector(".imgWrap img");
+    if(img){
+      img.style.cursor = "zoom-in";
+      img.onclick = ()=>{
+        // trova index in lbList tramite src
+        const src = (photo.path || "").trim();
+        const i = lbList.findIndex(x => x.src === src);
+        if(i >= 0) openLightbox(i);
+        else openLightbox(0);
+      };
+    }
 
     const likeBtn = card.querySelector(".js-like");
     if(likeBtn) likeBtn.onclick = () => likePhoto(photo);
@@ -878,8 +1316,79 @@ async function wireCardEvents(containerEl, photos){
 /* LOAD ALL */
 async function loadAll(){
   await refreshAdminUI();
-  await loadTop30();
-  await loadGallery();
+
+  // carico top
+  let topRows = [];
+  try{
+    topIds = new Set();
+    topPhotosCount = 0;
+
+    const since = new Date(Date.now() - 30*24*3600*1000).toISOString();
+
+    const { data, error } = await client
+      .from(TABLE_PHOTOS)
+      .select("id,created_at,path,file_path,caption,likes")
+      .gte("created_at", since)
+      .order("likes", { ascending:false })
+      .order("created_at", { ascending:false })
+      .limit(6);
+
+    if(error) throw error;
+
+    topRows = data || [];
+    topPhotosCount = topRows.length;
+    topRows.forEach(p => topIds.add(String(p.id)));
+
+    if(topRows.length === 0){
+      topBox.style.display = "none";
+      topMini.textContent = "";
+    }else{
+      topBox.style.display = "block";
+      topMini.textContent = `Mostro ${topRows.length} foto`;
+      topGrid.innerHTML = topRows.map(p => renderPhotoCard(p, true)).join("");
+      await wireCardEvents(topGrid, topRows);
+    }
+  }catch(e){
+    console.warn("top30 error", e);
+    topRows = [];
+    topIds = new Set();
+    topPhotosCount = 0;
+    topBox.style.display = "none";
+    topMini.textContent = "";
+  }
+
+  // carico gallery
+  const sort = sortSelect.value;
+  const orderByLikes = (sort === "likes");
+  let galleryRows = [];
+
+  try{
+    const { data, error } = await client
+      .from(TABLE_PHOTOS)
+      .select("id,created_at,path,file_path,caption,likes")
+      .order(orderByLikes ? "likes" : "created_at", { ascending:false })
+      .order("created_at", { ascending:false })
+      .limit(60);
+
+    if(error) throw error;
+
+    const all = data || [];
+    totalPhotosCount = all.length;
+    galleryRows = all.filter(p => !topIds.has(String(p.id)));
+    cachedPhotos = galleryRows;
+
+    grid.innerHTML = cachedPhotos.map(p => renderPhotoCard(p, false)).join("");
+    await wireCardEvents(grid, cachedPhotos);
+  }catch(e){
+    console.error(e);
+    grid.innerHTML = `<div class="muted">Errore caricamento foto.</div>`;
+    totalPhotosCount = 0;
+    cachedPhotos = [];
+  }
+
+  // ✅ rebuild lightbox list (top + gallery)
+  rebuildLightboxList(topRows, galleryRows);
+
   updateCountPill();
 }
 
