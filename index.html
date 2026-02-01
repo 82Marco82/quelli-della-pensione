@@ -99,14 +99,13 @@
     }
     .heroImgWrap img{
       width:100%;
-      height:auto;            /* ✅ mantiene proporzioni */
+      height:auto;
       display:block;
-      object-fit:contain;     /* ✅ non taglia mai */
+      object-fit:contain;
       object-position:center;
-      max-height:none;        /* ✅ niente limiti che creano crop */
+      max-height:none;
       background:transparent;
     }
-    /* se la foto è molto alta, su mobile evitiamo che diventi infinita */
     @media(max-width:600px){
       .heroImgWrap img{ max-height:70vh; }
     }
@@ -434,6 +433,67 @@
       .scoreNum{font-size:60px}
       .dash{font-size:48px}
       .teamSide{min-width:0}
+    }
+
+    /* ✅✅✅ VITTORIA BOX */
+    .vittoriaBox{
+      display:none;
+      margin-top:12px;
+      text-align:center;
+      opacity:0;
+      transform: translateY(10px) scale(.96);
+    }
+    .vittoriaBox img{
+      width:100%;
+      max-width:420px;
+      border-radius:18px;
+      display:block;
+      margin:0 auto;
+      box-shadow: 0 18px 45px rgba(0,0,0,.25);
+    }
+    .vittoriaBox.show{
+      opacity:1;
+      animation:
+        qdpPop .45s cubic-bezier(.2,.9,.2,1.2) both,
+        qdpShake .9s ease-in-out .50s 3;
+    }
+    @keyframes qdpPop{
+      0%   { opacity:0; transform: translateY(14px) scale(.90); }
+      60%  { opacity:1; transform: translateY(0) scale(1.02); }
+      100% { opacity:1; transform: translateY(0) scale(1.00); }
+    }
+    @keyframes qdpShake{
+      0%   { transform: translateY(0) rotate(0deg); }
+      15%  { transform: translateY(-1px) rotate(-1.2deg); }
+      30%  { transform: translateY(0) rotate(1.2deg); }
+      45%  { transform: translateY(-1px) rotate(-1deg); }
+      60%  { transform: translateY(0) rotate(1deg); }
+      75%  { transform: translateY(-1px) rotate(-.7deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    /* ✅✅✅ PAREGGIO BOX (NUOVO) */
+    .pareggioBox{
+      display:none;
+      margin-top:12px;
+      text-align:center;
+      opacity:0;
+      transform: translateY(10px) scale(.96);
+    }
+    .pareggioBox img{
+      width:100%;
+      max-width:420px;
+      border-radius:18px;
+      display:block;
+      margin:0 auto;
+      box-shadow: 0 18px 45px rgba(0,0,0,.25);
+    }
+    /* pop + shake continuo (finché resta visibile) */
+    .pareggioBox.show{
+      opacity:1;
+      animation:
+        qdpPop .45s cubic-bezier(.2,.9,.2,1.2) both,
+        qdpShake .55s ease-in-out .50s infinite;
     }
 
     /* MVP box */
@@ -796,7 +856,7 @@
       border-radius:999px;
       padding:10px 12px;
       min-width:190px;
-      max-width:260px; /* ✅ più spazio */
+      max-width:260px;
       cursor:pointer;
       user-select:none;
       animation: mvpPulse 1.4s ease-in-out infinite;
@@ -813,8 +873,6 @@
       animation: mvpWiggle 2.8s ease-in-out infinite;
     }
     .mvpCta .txt{min-width:0}
-
-    /* ✅ TESTO: niente tronco, va a capo se serve */
     .mvpCta .t1{
       font-weight:900;
       letter-spacing:.6px;
@@ -861,7 +919,7 @@
       .mvpCta a{
         min-width:170px;
         padding:10px 10px;
-        max-width:240px; /* ✅ più spazio anche su mobile */
+        max-width:240px;
       }
     }
 
@@ -873,7 +931,6 @@
       *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
     }
 
-    /* (1) Entrata card + titoli */
     body:not(.loaded) .card,
     body:not(.loaded) .header,
     body:not(.loaded) .nav{
@@ -910,7 +967,6 @@
     }
     @keyframes captionIn{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)} }
 
-    /* ticker shine sul pill risultato */
     .resultPill{ position:relative; overflow:hidden; }
     .resultPill::after{
       content:"";
@@ -929,7 +985,6 @@
       100%{transform:translateX(120%); opacity:0}
     }
 
-    /* coin kick più fisico */
     .logo{ transform: translateZ(0); }
     .logo.coinKick{ animation: coinKick .62s cubic-bezier(.2,1,.2,1); }
     @keyframes coinKick{
@@ -939,7 +994,6 @@
       100%{transform:rotateY(360deg) scale(1)}
     }
 
-    /* GK entrance + VS pop */
     .formationsHead.gkIn .gkChip:first-child{
       animation: slideInLeft .55s cubic-bezier(.2,.9,.2,1) both;
     }
@@ -958,7 +1012,6 @@
       100%{opacity:1; transform:scale(1)}
     }
 
-    /* (3) pop punteggio */
     .scoreNum.pop{ animation: scorePop .45s cubic-bezier(.2,1,.2,1); }
     @keyframes scorePop{
       0%{transform:scale(.88); opacity:.2}
@@ -966,7 +1019,6 @@
       100%{transform:scale(1); opacity:1}
     }
 
-    /* crowd pulse sul resultBox */
     .resultBox.crowd{ position:relative; overflow:hidden; }
     .resultBox.crowd::before{
       content:"";
@@ -988,7 +1040,6 @@
       100%{opacity:0; transform:scale(1) rotate(0deg)}
     }
 
-    /* (7) meteo pulse + shimmer while loading */
     .weatherBox.pulsing{ animation: wxPulse 1.25s ease-in-out infinite; }
     @keyframes wxPulse{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-1px)} }
     .weatherBox.loading{ position:relative; overflow:hidden; }
@@ -1002,7 +1053,6 @@
       animation: tickerShine 1.4s ease-in-out infinite;
     }
 
-    /* (5) spotlight MVP finale */
     .mvpFinalWrap.spotlight{ position:relative; overflow:hidden; }
     .mvpFinalWrap.spotlight::before{
       content:"";
@@ -1119,6 +1169,16 @@
       </div>
     </div>
 
+    <!-- ✅✅✅ VITTORIA - SOTTO RISULTATO, PRIMA DEI COMMENTI -->
+    <div id="vittoriaBox" class="vittoriaBox" aria-hidden="true">
+      <img id="vittoriaImg" src="" alt="Vittoria">
+    </div>
+
+    <!-- ✅✅✅ PAREGGIO - SOTTO RISULTATO, PRIMA DEI COMMENTI -->
+    <div id="pareggioBox" class="pareggioBox" aria-hidden="true">
+      <img id="pareggioImg" src="" alt="Pareggio">
+    </div>
+
     <!-- COMMENTI -->
     <div id="commentsWrap" class="commentsWrap" style="display:none">
       <div class="commentsTitle">COMMENTI A CALDO</div>
@@ -1152,7 +1212,6 @@
         <div id="mvpStatePill" class="pill" style="margin:0"></div>
       </div>
 
-      <!-- ✅ modalità provvisoria (come prima) -->
       <div id="mvpLiveWrap">
         <div class="mvpMainRow">
           <img id="mvpAvatar" class="mvpAvatar" src="avatars/default.png" alt="mvp">
@@ -1165,7 +1224,6 @@
         <div id="mvpTop3" class="mvpTop3" style="display:none"></div>
       </div>
 
-      <!-- ✅ modalità FINALE: immagine mvpsmall.png + scritta automatica -->
       <div id="mvpFinalPoster" style="display:none">
         <div class="mvpFinalWrap">
           <img id="mvpSmallImg" src="mvpsmall.png" alt="MVP Finale">
@@ -1177,13 +1235,11 @@
       </div>
     </div>
 
-    <!-- TITOLO MAPPA -->
     <div id="fieldTitle" class="sectionCaption" style="display:none">
       CAMPO DA GIOCO
       <span class="sub">CALCIO A 6 ARADEO</span>
     </div>
 
-    <!-- MAPPA -->
     <div id="mapBox" class="mapWrap" style="display:none">
       <iframe id="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
         src="https://www.google.com/maps?q=40.1239395,18.1203671&z=18&output=embed"></iframe>
@@ -1194,7 +1250,6 @@
       <a id="mapOpen" class="btn ghost" href="#" target="_blank" rel="noopener">🗺 Apri su Maps</a>
     </div>
 
-    <!-- METEO -->
     <div id="weatherBox" class="weatherBox" style="display:none">
       <div class="weatherHead">
         <div>🌤 Meteo partita</div>
@@ -1205,17 +1260,14 @@
       <div id="weatherMini" class="weatherMini"></div>
     </div>
 
-    <!-- MARCATORI -->
     <div id="scorersBox" style="display:none;margin-top:12px">
       <div class="line"><b>⚽ Marcatori</b></div>
       <div id="scorersText" class="muted"></div>
     </div>
 
-    <!-- DISPONIBILI -->
     <div id="calledTitle" class="calledTitleCenter">DISPONIBILI PER LA PARTITA</div>
     <div id="called" class="playersWrap muted">—</div>
 
-    <!-- ✅ MIGLIORE IN CAMPO PARTITA PRECEDENTE (mostrato quando la partita NON è finita) -->
     <div id="prevMvpHead" class="formationsHead" style="display:none">
       <div class="formationsTitle">MIGLIORE IN CAMPO PARTITA PRECEDENTE</div>
       <div class="prevMvpWrap">
@@ -1223,7 +1275,6 @@
       </div>
     </div>
 
-    <!-- FORMAZIONI -->
     <div id="formationsHead" class="formationsHead" style="display:none">
       <div class="formationsTitle">FORMAZIONI</div>
       <div class="vsRow">
@@ -1247,7 +1298,6 @@
       </div>
     </div>
 
-    <!-- SQUADRE -->
     <div id="teamsBox" style="display:none;margin-top:12px">
       <div class="line kit"><span id="tAIcon"></span><b>Squadra A</b></div>
       <div id="teamA" class="playersWrap muted"></div>
@@ -1267,7 +1317,6 @@
   </div>
 </div>
 
-<!-- ✅ CTA LATERALE MVP -->
 <div id="mvpCta" class="mvpCta" aria-hidden="true">
   <a href="mvp.html" title="Vai a votare l'MVP">
     <span class="dot" aria-hidden="true"></span>
@@ -1315,14 +1364,12 @@ logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
 
   const imgs = Array.from(row.querySelectorAll("img"));
 
-  // shuffle
   for(let i = imgs.length - 1; i > 0; i--){
     const j = Math.floor(Math.random() * (i + 1));
     [imgs[i], imgs[j]] = [imgs[j], imgs[i]];
   }
   imgs.forEach(i => row.appendChild(i));
 
-  // trova il presidente (12p.png) e mettilo al centro + evidenzia
   const isPresident = (img) => {
     const src = (img.getAttribute("src") || "").toLowerCase();
     return src.endsWith("/12p.png") || src.endsWith("12p.png");
@@ -1334,7 +1381,6 @@ logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
     const mid = Math.floor(imgs.length / 2);
     const pres = imgs[presIdx];
 
-    // sposta al centro (DOM)
     const current = Array.from(row.querySelectorAll("img"));
     const ref = current[mid] || null;
     if(ref && pres !== ref){
@@ -1343,7 +1389,6 @@ logoCoin.addEventListener("touchstart", spinLogo, {passive:true});
       row.appendChild(pres);
     }
 
-    // evidenzia SOLO lui
     pres.style.transform = "scale(1.25)";
     pres.style.borderColor = "gold";
     pres.style.boxShadow = "0 0 18px rgba(255,215,0,.75)";
@@ -1365,6 +1410,66 @@ function showToast(msg, type="ok"){
   toastEl.className = "toast show " + (type==="err" ? "err" : "ok");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(()=> toastEl.className = "toast", 1600);
+}
+
+/* ✅✅✅ VITTORIA (LOGICA + 15s) */
+const vittoriaBox = document.getElementById("vittoriaBox");
+const vittoriaImg = document.getElementById("vittoriaImg");
+let vittoriaTimer = null;
+
+function showVittoria(src){
+  if(!vittoriaBox || !vittoriaImg) return;
+  if(!src) return hideVittoria();
+
+  vittoriaBox.style.display = "block";
+  vittoriaBox.setAttribute("aria-hidden","false");
+  vittoriaImg.src = src;
+
+  vittoriaBox.classList.remove("show");
+  void vittoriaBox.offsetWidth;
+  vittoriaBox.classList.add("show");
+
+  clearTimeout(vittoriaTimer);
+  vittoriaTimer = setTimeout(()=> hideVittoria(), 15000);
+}
+function hideVittoria(){
+  if(!vittoriaBox || !vittoriaImg) return;
+  clearTimeout(vittoriaTimer);
+  vittoriaTimer = null;
+  vittoriaBox.classList.remove("show");
+  vittoriaBox.style.display = "none";
+  vittoriaBox.setAttribute("aria-hidden","true");
+  vittoriaImg.removeAttribute("src");
+}
+
+/* ✅✅✅ PAREGGIO (LOGICA + 15s) */
+const pareggioBox = document.getElementById("pareggioBox");
+const pareggioImg = document.getElementById("pareggioImg");
+let pareggioTimer = null;
+
+function showPareggio(src){
+  if(!pareggioBox || !pareggioImg) return;
+  if(!src) return hidePareggio();
+
+  pareggioBox.style.display = "block";
+  pareggioBox.setAttribute("aria-hidden","false");
+  pareggioImg.src = src;
+
+  pareggioBox.classList.remove("show");
+  void pareggioBox.offsetWidth;
+  pareggioBox.classList.add("show");
+
+  clearTimeout(pareggioTimer);
+  pareggioTimer = setTimeout(()=> hidePareggio(), 15000);
+}
+function hidePareggio(){
+  if(!pareggioBox || !pareggioImg) return;
+  clearTimeout(pareggioTimer);
+  pareggioTimer = null;
+  pareggioBox.classList.remove("show");
+  pareggioBox.style.display = "none";
+  pareggioBox.setAttribute("aria-hidden","true");
+  pareggioImg.removeAttribute("src");
 }
 
 /* ✅ voter_id (stesso di mvp.html) */
@@ -1458,11 +1563,9 @@ async function hasAlreadyVoted(matchId){
 const statusEl = document.getElementById("status");
 const infoEl = document.getElementById("info");
 
-/* ✅ DUELLO PORTIERI DOM */
 const gkPosterWrap = document.getElementById("gkPosterWrap");
 const gkPosterImg  = document.getElementById("gkPosterImg");
 
-/* ✅ MVP PARTITA PRECEDENTE DOM */
 const prevMvpHead = document.getElementById("prevMvpHead");
 const prevMvpImg  = document.getElementById("prevMvpImg");
 
@@ -1512,7 +1615,6 @@ const mvpSub = document.getElementById("mvpSub");
 const mvpTop3 = document.getElementById("mvpTop3");
 const mvpLiveWrap = document.getElementById("mvpLiveWrap");
 
-/* ✅ MVP finale poster */
 const mvpFinalPoster = document.getElementById("mvpFinalPoster");
 const mvpSmallImg = document.getElementById("mvpSmallImg");
 const mvpSmallCaption = document.getElementById("mvpSmallCaption");
@@ -1608,6 +1710,52 @@ function pickGkPoster(ka, kb){
   if( (a==="gianni" && b==="andrea") || (a==="andrea" && b==="gianni") ) return "gvsa.jpg";
   if( (a==="gianni" && b==="tonino") || (a==="tonino" && b==="gianni") ) return "gvst.jpg";
 
+  return "";
+}
+
+/* ✅✅✅ ESITO IMMAGINI (vincono/pareggiano) */
+/* Regola richiesta: se NON risulta NESSUN portiere tra (Gianni, Andrea, Tonino) in A o B -> NON mostra nulla */
+const ALLOWED_GK = new Set(["gianni","andrea","tonino"]);
+
+const VITTORIA_IMG_A = "vittoria_gianni.png";
+const VITTORIA_IMG_ANDREA = "vittoria_andrea.png";
+const VITTORIA_IMG_TONINO = "vittoria_tonino.png";
+
+const PAREGGIO_IMG_ANDREA = "pareggioA.png";
+const PAREGGIO_IMG_TONINO = "pareggioT.png";
+
+function canShowEsito(ka, kb){
+  const a = normName(ka?.name || "");
+  const b = normName(kb?.name || "");
+  return ALLOWED_GK.has(a) || ALLOWED_GK.has(b);
+}
+
+function pickPareggioImage({ scoreA, scoreB, keeperBName }){
+  const a = Number(scoreA);
+  const b = Number(scoreB);
+  const kb = normName(keeperBName || "");
+  if(Number.isFinite(a) && Number.isFinite(b) && a === b){
+    if(kb === "andrea") return PAREGGIO_IMG_ANDREA;
+    if(kb === "tonino") return PAREGGIO_IMG_TONINO;
+  }
+  return "";
+}
+
+function pickVittoriaImage({ scoreA, scoreB, keeperBName }){
+  const a = Number(scoreA);
+  const b = Number(scoreB);
+  const kb = normName(keeperBName || "");
+  if(Number.isFinite(a) && Number.isFinite(b)){
+    if(a > b){
+      // Squadra A vince -> Gianni
+      return VITTORIA_IMG_A;
+    }
+    if(b > a){
+      // Squadra B vince -> in base al portiere B
+      if(kb === "andrea") return VITTORIA_IMG_ANDREA;
+      if(kb === "tonino") return VITTORIA_IMG_TONINO;
+    }
+  }
   return "";
 }
 
@@ -2053,6 +2201,7 @@ async function load(){
     gkPosterWrap.style.display = "none";
     setMvpCtaMode("off");
     if(prevMvpHead) prevMvpHead.style.display = "none";
+    hideVittoria(); hidePareggio();
     return;
   }
 
@@ -2071,6 +2220,7 @@ async function load(){
     gkPosterWrap.style.display = "none";
     setMvpCtaMode("off");
     if(prevMvpHead) prevMvpHead.style.display = "none";
+    hideVittoria(); hidePareggio();
     return;
   }
 
@@ -2084,7 +2234,6 @@ async function load(){
 
   const voteOpen = isVoteOpen(m);
 
-  // ✅ CTA:
   if(matchEnded && voteOpen){
     const already = await hasAlreadyVoted(m.id);
     if(already) setMvpCtaMode("voted8s");
@@ -2098,7 +2247,6 @@ async function load(){
     <div class="line"><b>⏰ ${escapeHtml(time)}</b></div>
   `;
 
-  // Marcatori
   if(m.scorers_text && String(m.scorers_text).trim() !== ""){
     scorersBox.style.display="block";
     scorersText.innerHTML = escapeHtml(m.scorers_text).replaceAll("\n","<br>");
@@ -2106,7 +2254,6 @@ async function load(){
     scorersBox.style.display="none";
   }
 
-  // Mappa + titolo (visibile SOLO se match NON terminato)
   fieldTitleEl.style.display = matchEnded ? "none" : "block";
   mapBox.style.display = matchEnded ? "none" : "block";
   mapActions.style.display = matchEnded ? "none" : "flex";
@@ -2115,13 +2262,11 @@ async function load(){
     setupMapLinks();
   }
 
-  // Players ids
   const calledIds = Array.isArray(m.called_up) ? m.called_up : [];
   const teamAIds = Array.isArray(m.team_a) ? m.team_a : [];
   const teamBIds = Array.isArray(m.team_b) ? m.team_b : [];
   const allIds = [...new Set([...calledIds, ...teamAIds, ...teamBIds].map(String))];
 
-  // Players
   let players = [];
   if(allIds.length){
     const { data:p, error:pe } = await client
@@ -2175,6 +2320,28 @@ async function load(){
     calledEl.style.display = "none";
     calledTitleEl.style.display = "none";
 
+    /* ✅✅✅ ESITO: PAREGGIO o VITTORIA (solo se almeno 1 portiere tra Gianni/Andrea/Tonino) */
+    hideVittoria(); hidePareggio();
+
+    if(canShowEsito(ka, kb)){
+      const imgP = pickPareggioImage({
+        scoreA: m.score_a,
+        scoreB: m.score_b,
+        keeperBName: kb?.name || ""
+      });
+
+      if(imgP){
+        showPareggio(imgP);
+      }else{
+        const imgV = pickVittoriaImage({
+          scoreA: m.score_a,
+          scoreB: m.score_b,
+          keeperBName: kb?.name || ""
+        });
+        if(imgV) showVittoria(imgV);
+      }
+    }
+
     currentMatchId = String(m.id);
     commentsWrap.style.display = "block";
     await refreshAdminState();
@@ -2184,6 +2351,8 @@ async function load(){
     resultHead.style.display = "none";
     commentsWrap.style.display = "none";
     currentMatchId = null;
+
+    hideVittoria(); hidePareggio();
 
     if(resultBoxEl) resultBoxEl.classList.remove("crowd");
 
@@ -2220,7 +2389,6 @@ async function load(){
     }
   }
 
-  // MVP:
   if(voteOpen){
     mvpBox.style.display = "block";
     mvpLiveWrap.style.display = "block";
@@ -2268,7 +2436,6 @@ async function load(){
     }
   }
 
-  // Squadre + formazioni
   const hasTeams = teamAIds.length || teamBIds.length;
   if(hasTeams){
     teamsBox.style.display = "block";
