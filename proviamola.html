@@ -89,6 +89,124 @@
     .subtitle{color:var(--muted);font-size:14px}
 
     /* ==========================================================
+       🎬 INTRO EPICA (3) — overlay, tap per skip
+       ========================================================== */
+    .introOverlay{
+      position:fixed;
+      inset:0;
+      z-index:10000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255,255,255,.10), transparent 55%),
+        linear-gradient(180deg, #000 0%, #050505 100%);
+      color:#fff;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .25s ease;
+    }
+    .introOverlay.show{
+      opacity:1;
+      pointer-events:auto;
+    }
+    .introInner{
+      width:min(92vw, 560px);
+      text-align:center;
+      padding:18px 14px;
+    }
+    .introKicker{
+      font-family:'Bebas Neue';
+      letter-spacing:4px;
+      font-size:22px;
+      opacity:.0;
+      transform:translateY(10px);
+      animation: introUp .55s ease-out .20s forwards;
+      text-transform:uppercase;
+    }
+    .introTitle{
+      margin-top:10px;
+      font-family:'Bebas Neue';
+      letter-spacing:4px;
+      font-size:56px;
+      line-height:1;
+      opacity:0;
+      transform:translateY(12px) scale(.98);
+      animation: introTitle .65s cubic-bezier(.2,1,.2,1) .45s forwards;
+      text-transform:uppercase;
+      text-shadow:0 18px 55px rgba(0,0,0,.55);
+    }
+    .introLine{
+      margin-top:16px;
+      font-weight:900;
+      letter-spacing:1.2px;
+      opacity:0;
+      transform:translateY(10px);
+      animation: introUp .55s ease-out 1.20s forwards;
+      text-transform:uppercase;
+    }
+    .introPromise{
+      margin-top:10px;
+      font-family:'Bebas Neue';
+      letter-spacing:3px;
+      font-size:38px;
+      line-height:1.05;
+      opacity:0;
+      transform:translateY(10px) scale(.99);
+      animation: introPromise .60s cubic-bezier(.2,1,.2,1) 1.45s forwards;
+      text-transform:uppercase;
+    }
+    .introPromise .gold{
+      color:#facc15;
+      text-shadow: 0 0 18px rgba(250,204,21,.25), 0 18px 55px rgba(0,0,0,.55);
+    }
+    .introFlashLogo{
+      margin:18px auto 0;
+      width:86px;height:86px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Bebas Neue';
+      font-size:38px;
+      letter-spacing:2px;
+      background:linear-gradient(135deg,#111,#333);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 18px 60px rgba(0,0,0,.55);
+      opacity:0;
+      transform:scale(.86);
+      animation: introLogo .55s cubic-bezier(.2,1,.2,1) 2.25s forwards;
+    }
+    .introHint{
+      margin-top:14px;
+      font-size:12px;
+      letter-spacing:2px;
+      opacity:.55;
+      text-transform:uppercase;
+    }
+
+    .introOverlay.hide{
+      opacity:0;
+      pointer-events:none;
+    }
+
+    @keyframes introUp{
+      to{opacity:1; transform:translateY(0)}
+    }
+    @keyframes introTitle{
+      0%{opacity:0; transform:translateY(12px) scale(.98)}
+      70%{opacity:1; transform:translateY(0) scale(1.02)}
+      100%{opacity:1; transform:translateY(0) scale(1)}
+    }
+    @keyframes introPromise{
+      0%{opacity:0; transform:translateY(10px) scale(.99)}
+      65%{opacity:1; transform:translateY(0) scale(1.03)}
+      100%{opacity:1; transform:translateY(0) scale(1)}
+    }
+    @keyframes introLogo{
+      0%{opacity:0; transform:scale(.86) rotate(-6deg)}
+      60%{opacity:1; transform:scale(1.06) rotate(2deg)}
+      100%{opacity:1; transform:scale(1) rotate(0)}
+    }
+
+    /* ==========================================================
        ✅ HERO FOTO: NO SCHIACCIA, NO TAGLIA (foto.jpg)
        ========================================================== */
     .heroImgWrap{
@@ -435,11 +553,13 @@
       .teamSide{min-width:0}
     }
 
-    /* ✅✅✅ VITTORIA BOX (NUOVO) */
+    /* ✅✅✅ VITTORIA BOX */
     .vittoriaBox{
       display:none;
       margin-top:12px;
       text-align:center;
+      opacity:0;
+      transform: translateY(10px) scale(.96);
     }
     .vittoriaBox img{
       width:100%;
@@ -448,10 +568,6 @@
       display:block;
       margin:0 auto;
       box-shadow: 0 18px 45px rgba(0,0,0,.25);
-    }
-    .vittoriaBox{
-      opacity:0;
-      transform: translateY(10px) scale(.96);
     }
     .vittoriaBox.show{
       opacity:1;
@@ -472,6 +588,29 @@
       60%  { transform: translateY(0) rotate(1deg); }
       75%  { transform: translateY(-1px) rotate(-.7deg); }
       100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    /* ✅✅✅ PAREGGIO BOX (NUOVO) */
+    .pareggioBox{
+      display:none;
+      margin-top:12px;
+      text-align:center;
+      opacity:0;
+      transform: translateY(10px) scale(.96);
+    }
+    .pareggioBox img{
+      width:100%;
+      max-width:420px;
+      border-radius:18px;
+      display:block;
+      margin:0 auto;
+      box-shadow: 0 18px 45px rgba(0,0,0,.25);
+    }
+    .pareggioBox.show{
+      opacity:1;
+      animation:
+        qdpPop .45s cubic-bezier(.2,.9,.2,1.2) both,
+        qdpShake .55s ease-in-out .50s infinite;
     }
 
     /* MVP box */
@@ -907,6 +1046,7 @@
 
     @media (prefers-reduced-motion: reduce){
       *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+      .introOverlay{ display:none !important; }
     }
 
     body:not(.loaded) .card,
@@ -1060,6 +1200,19 @@
 </head>
 
 <body>
+
+<!-- 🎬 INTRO EPICA -->
+<div id="introOverlay" class="introOverlay" aria-hidden="true">
+  <div class="introInner">
+    <div class="introKicker">QUELLI DELLA PENSIONE</div>
+    <div class="introTitle">QDP</div>
+    <div class="introLine">NON È UNA PARTITA</div>
+    <div class="introPromise">È UNA <span class="gold">PROMESSA</span></div>
+    <div class="introFlashLogo" aria-hidden="true">QDP</div>
+    <div class="introHint">TAP PER SALTARE</div>
+  </div>
+</div>
+
 <div class="wrap">
   <div class="header">
     <div id="logoCoin" class="logo" title="Tocca per girare 🪙">QDP</div>
@@ -1147,9 +1300,14 @@
       </div>
     </div>
 
-    <!-- ✅✅✅ VITTORIA (NUOVO) - SOTTO RISULTATO, PRIMA DEI COMMENTI -->
+    <!-- ✅✅✅ VITTORIA - SOTTO RISULTATO, PRIMA DEI COMMENTI -->
     <div id="vittoriaBox" class="vittoriaBox" aria-hidden="true">
       <img id="vittoriaImg" src="" alt="Vittoria">
+    </div>
+
+    <!-- ✅✅✅ PAREGGIO - SOTTO RISULTATO, PRIMA DEI COMMENTI -->
+    <div id="pareggioBox" class="pareggioBox" aria-hidden="true">
+      <img id="pareggioImg" src="" alt="Pareggio">
     </div>
 
     <!-- COMMENTI -->
@@ -1307,6 +1465,60 @@
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
+/* ==============================
+   🎬 INTRO EPICA (3)
+   - 1 volta per tab (sessionStorage)
+   - tap per saltare
+   - quando finisce => body.loaded
+   ============================== */
+(function(){
+  const overlay = document.getElementById("introOverlay");
+  if(!overlay) { document.body.classList.add("loaded"); return; }
+
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduce){
+    overlay.style.display = "none";
+    document.body.classList.add("loaded");
+    return;
+  }
+
+  const KEY = "qdp_intro_seen";
+  const alreadySeen = sessionStorage.getItem(KEY) === "1";
+
+  function finishIntro(){
+    overlay.classList.add("hide");
+    overlay.setAttribute("aria-hidden","true");
+    setTimeout(()=>{
+      overlay.style.display = "none";
+      document.body.classList.add("loaded");
+    }, 260);
+  }
+
+  function startIntro(){
+    sessionStorage.setItem(KEY, "1");
+    overlay.style.display = "flex";
+    overlay.classList.add("show");
+    overlay.setAttribute("aria-hidden","false");
+
+    // auto-finish dopo 3.1s (sincronizzato con animazioni)
+    setTimeout(finishIntro, 3100);
+
+    // tap/click per skip
+    overlay.addEventListener("click", finishIntro, { once:true });
+    overlay.addEventListener("touchstart", finishIntro, { once:true, passive:true });
+    window.addEventListener("keydown", (e)=>{
+      if(e.key === "Escape" || e.key === " " || e.key === "Enter") finishIntro();
+    }, { once:true });
+  }
+
+  if(alreadySeen){
+    overlay.style.display = "none";
+    document.body.classList.add("loaded");
+  }else{
+    startIntro();
+  }
+})();
+
 /* THEME */
 const themeBtn = document.getElementById("themeToggle");
 function setTheme(mode){
@@ -1315,8 +1527,6 @@ function setTheme(mode){
   localStorage.setItem("qdp_theme", mode);
 }
 setTheme(localStorage.getItem("qdp_theme") === "dark" ? "dark" : "light");
-/* ✅ page enter */
-requestAnimationFrame(()=> document.body.classList.add("loaded"));
 themeBtn.onclick = () => setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 
 /* LOGO MONETA */
@@ -1403,9 +1613,7 @@ function showVittoria(src){
   vittoriaBox.classList.add("show");
 
   clearTimeout(vittoriaTimer);
-  vittoriaTimer = setTimeout(()=>{
-    hideVittoria();
-  }, 15000);
+  vittoriaTimer = setTimeout(()=> hideVittoria(), 15000);
 }
 function hideVittoria(){
   if(!vittoriaBox || !vittoriaImg) return;
@@ -1415,6 +1623,36 @@ function hideVittoria(){
   vittoriaBox.style.display = "none";
   vittoriaBox.setAttribute("aria-hidden","true");
   vittoriaImg.removeAttribute("src");
+}
+
+/* ✅✅✅ PAREGGIO (LOGICA + 15s) */
+const pareggioBox = document.getElementById("pareggioBox");
+const pareggioImg = document.getElementById("pareggioImg");
+let pareggioTimer = null;
+
+function showPareggio(src){
+  if(!pareggioBox || !pareggioImg) return;
+  if(!src) return hidePareggio();
+
+  pareggioBox.style.display = "block";
+  pareggioBox.setAttribute("aria-hidden","false");
+  pareggioImg.src = src;
+
+  pareggioBox.classList.remove("show");
+  void pareggioBox.offsetWidth;
+  pareggioBox.classList.add("show");
+
+  clearTimeout(pareggioTimer);
+  pareggioTimer = setTimeout(()=> hidePareggio(), 15000);
+}
+function hidePareggio(){
+  if(!pareggioBox || !pareggioImg) return;
+  clearTimeout(pareggioTimer);
+  pareggioTimer = null;
+  pareggioBox.classList.remove("show");
+  pareggioBox.style.display = "none";
+  pareggioBox.setAttribute("aria-hidden","true");
+  pareggioImg.removeAttribute("src");
 }
 
 /* ✅ voter_id (stesso di mvp.html) */
@@ -1658,19 +1896,39 @@ function pickGkPoster(ka, kb){
   return "";
 }
 
-/* ✅✅✅ VITTORIA: mapping immagini */
+/* ✅✅✅ ESITO IMMAGINI (vincono/pareggiano) */
+const ALLOWED_GK = new Set(["gianni","andrea","tonino"]);
+
 const VITTORIA_IMG_A = "vittoria_gianni.png";
 const VITTORIA_IMG_ANDREA = "vittoria_andrea.png";
 const VITTORIA_IMG_TONINO = "vittoria_tonino.png";
+
+const PAREGGIO_IMG_ANDREA = "pareggioA.png";
+const PAREGGIO_IMG_TONINO = "pareggioT.png";
+
+function canShowEsito(ka, kb){
+  const a = normName(ka?.name || "");
+  const b = normName(kb?.name || "");
+  return ALLOWED_GK.has(a) || ALLOWED_GK.has(b);
+}
+
+function pickPareggioImage({ scoreA, scoreB, keeperBName }){
+  const a = Number(scoreA);
+  const b = Number(scoreB);
+  const kb = normName(keeperBName || "");
+  if(Number.isFinite(a) && Number.isFinite(b) && a === b){
+    if(kb === "andrea") return PAREGGIO_IMG_ANDREA;
+    if(kb === "tonino") return PAREGGIO_IMG_TONINO;
+  }
+  return "";
+}
 
 function pickVittoriaImage({ scoreA, scoreB, keeperBName }){
   const a = Number(scoreA);
   const b = Number(scoreB);
   const kb = normName(keeperBName || "");
-
   if(Number.isFinite(a) && Number.isFinite(b)){
     if(a > b){
-      // Squadra A vince -> Gianni (come richiesto)
       return VITTORIA_IMG_A;
     }
     if(b > a){
@@ -1788,7 +2046,7 @@ async function deleteCommentById(id){
   const ok = confirm("Eliminare questo commento?");
   if(!ok) return;
 
-  const node = commentsList.querySelector(`.commentItem[data-id="${CSS.escape(id)}"]`);
+  const node = commentsList.querySelector(\`.commentItem[data-id="\${CSS.escape(id)}"]\`);
   if(node) node.style.opacity = "0.35";
 
   try{
@@ -1830,9 +2088,9 @@ function subscribeComments(matchId){
   }catch(e){}
 
   commentsChannel = client
-    .channel(`qdp-comments-${matchId}`)
+    .channel(\`qdp-comments-\${matchId}\`)
     .on('postgres_changes',
-      { event: '*', schema: 'public', table: 'match_comments', filter: `match_id=eq.${matchId}` },
+      { event: '*', schema: 'public', table: 'match_comments', filter: \`match_id=eq.\${matchId}\` },
       async () => {
         await refreshAdminState();
         await loadComments(matchId);
@@ -2123,7 +2381,7 @@ async function load(){
     gkPosterWrap.style.display = "none";
     setMvpCtaMode("off");
     if(prevMvpHead) prevMvpHead.style.display = "none";
-    hideVittoria();
+    hideVittoria(); hidePareggio();
     return;
   }
 
@@ -2142,7 +2400,7 @@ async function load(){
     gkPosterWrap.style.display = "none";
     setMvpCtaMode("off");
     if(prevMvpHead) prevMvpHead.style.display = "none";
-    hideVittoria();
+    hideVittoria(); hidePareggio();
     return;
   }
 
@@ -2242,14 +2500,26 @@ async function load(){
     calledEl.style.display = "none";
     calledTitleEl.style.display = "none";
 
-    /* ✅✅✅ VITTORIA: mostra sotto risultato e prima commenti */
-    const imgV = pickVittoriaImage({
-      scoreA: m.score_a,
-      scoreB: m.score_b,
-      keeperBName: kb?.name || ""
-    });
-    if(imgV) showVittoria(imgV);
-    else hideVittoria();
+    hideVittoria(); hidePareggio();
+
+    if(canShowEsito(ka, kb)){
+      const imgP = pickPareggioImage({
+        scoreA: m.score_a,
+        scoreB: m.score_b,
+        keeperBName: kb?.name || ""
+      });
+
+      if(imgP){
+        showPareggio(imgP);
+      }else{
+        const imgV = pickVittoriaImage({
+          scoreA: m.score_a,
+          scoreB: m.score_b,
+          keeperBName: kb?.name || ""
+        });
+        if(imgV) showVittoria(imgV);
+      }
+    }
 
     currentMatchId = String(m.id);
     commentsWrap.style.display = "block";
@@ -2261,7 +2531,7 @@ async function load(){
     commentsWrap.style.display = "none";
     currentMatchId = null;
 
-    hideVittoria();
+    hideVittoria(); hidePareggio();
 
     if(resultBoxEl) resultBoxEl.classList.remove("crowd");
 
